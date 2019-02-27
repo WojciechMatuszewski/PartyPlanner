@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parser": "@typescript-eslint/parser",
   "env": {
     "es6": true,
@@ -14,16 +14,10 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "rules": {
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false
-      }
-    ]
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "plugins": ["@typescript-eslint"],
   "globals": {

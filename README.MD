@@ -2,5 +2,4 @@
 
 ### Todo
 
-- better eslint support
-- testing with react testing library
+- workbox integration ( will probably have to wait for better support or use next offline package )
