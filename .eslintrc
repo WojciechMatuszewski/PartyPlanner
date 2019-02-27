@@ -1,0 +1,39 @@
+{
+  "extends": ["eslint:recommended"],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true,
+    "serviceworker": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false
+      }
+    ]
+  },
+  "plugins": ["@typescript-eslint"],
+  "globals": {
+    "window": true,
+    "document": true,
+    "localStorage": true,
+    "FormData": true,
+    "FileReader": true,
+    "Blob": true,
+    "navigator": true,
+    "workbox": true
+  }
+}

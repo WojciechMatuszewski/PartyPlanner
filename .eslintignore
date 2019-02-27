@@ -1,0 +1,8 @@
+node_modules
+.git
+.next
+/npm-debug.log
+.env
+.DS_Store
+/.env.production
+next.config.js

@@ -1,0 +1,24 @@
+{
+  "presets": [
+    "next/babel",
+    "@zeit/next-typescript/babel",
+    [
+      "@emotion/babel-preset-css-prop",
+      {
+        "autoLabel": true,
+        "labelFormat": "[local]"
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": "css"
+      }
+    ],
+    ["emotion", { "inline": true }],
+    ["inline-import", { "extensions": [".css"] }]
+  ]
+}
