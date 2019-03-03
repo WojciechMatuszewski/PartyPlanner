@@ -134,14 +134,23 @@ const localizer = BigCalendar.momentLocalizer(moment);
 
 const UserCalendar: React.FC = () => {
   const isOnMobile = useMedia('(max-width: 800px)');
+  const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
   const [calendarView, setCalendarView] = React.useState<View>(
     isOnMobile ? 'day' : 'month'
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
     setCalendarView('day');
   }, [isOnMobile]);
+
+  React.useEffect(() => {
+    if (calendarView === 'month' || document == undefined) return;
+    const element = document.getElementsByClassName('rbc-time-content')[0];
+    const offsetToSet =
+      (element as HTMLDivElement).offsetWidth - element.clientWidth;
+    setScrollXOffset(offsetToSet);
+  }, [calendarView]);
 
   return (
     <BigCalendar
@@ -154,6 +163,13 @@ const UserCalendar: React.FC = () => {
         .rbc-show-more {
           padding-left: 10px;
           padding-top: 2px;
+        }
+        .rbc-time-view {
+          overflow: hidden;
+        }
+        .rbc-time-content {
+          padding-right: ${scrollXOffset}px;
+          box-sizing: content-box;
         }
       `}
       localizer={localizer}
