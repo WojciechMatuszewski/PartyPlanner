@@ -139,7 +139,7 @@ const UserCalendar: React.FC = () => {
     isOnMobile ? 'day' : 'month'
   );
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
     setCalendarView('day');
   }, [isOnMobile]);
