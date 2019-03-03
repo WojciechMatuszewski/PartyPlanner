@@ -18,7 +18,17 @@
         "style": "css"
       }
     ],
-    ["emotion", { "inline": true }],
-    ["inline-import", { "extensions": [".css"] }]
+    [
+      "import",
+      {
+        "libraryName": "ant-design-pro",
+        "libraryDirectory": "lib",
+        "style": "css",
+        "camel2DashComponentName": false
+      },
+      "ant-design-pro"
+    ],
+
+    ["emotion", { "inline": true }]
   ]
 }

@@ -1,19 +1,9 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { Button, Input } from "antd";
-const StyledDiv = styled.div`
-  width: 100px;
-  background: red;
-  height: 100px;
-`;
-
+import React from 'react';
+import UserCalendar from '../src/components/UserCalendar/UserCalendar';
 const Index: React.FC = () => {
   return (
     <div>
-      <StyledDiv />
-      <Button>Works</Button>
-      <Input />
-      works
+      <UserCalendar />
     </div>
   );
 };
