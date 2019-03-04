@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { Button, Input } from "antd";
+import React from 'react';
+import styled from '@emotion/styled';
+import { ApolloConsumer } from 'react-apollo';
 const StyledDiv = styled.div`
   width: 100px;
   background: red;
@@ -10,10 +10,12 @@ const StyledDiv = styled.div`
 const Index: React.FC = () => {
   return (
     <div>
-      <StyledDiv />
-      <Button>Works</Button>
-      <Input />
-      works
+      <ApolloConsumer>
+        {client => {
+          console.log(client);
+          return <div>Works</div>;
+        }}
+      </ApolloConsumer>
     </div>
   );
 };
