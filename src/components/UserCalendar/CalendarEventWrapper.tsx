@@ -15,6 +15,7 @@ import {
   EventWrapperProps as _EventWrapperProps,
   Event
 } from 'react-big-calendar';
+import { ColorTint } from './ColorTints';
 
 interface EventWrapperProps<T extends Event = Event>
   extends _EventWrapperProps<T> {
@@ -22,11 +23,18 @@ interface EventWrapperProps<T extends Event = Event>
   continuesAfter: boolean;
 }
 
+interface EventTileWrapperProps {
+  isDay: boolean;
+  colorTint: ColorTint;
+}
+
 const EventTileWrapper = styled(animated.div, {
   shouldForwardProp: prop => prop !== 'isDay'
 })`
-  background: rgba(124, 179, 66, 0.7) !important;
-  border-left: 3px solid #7cb342 !important;
+  background: ${(props: EventTileWrapperProps) =>
+    props.colorTint.weekTileColor} !important;
+  border-left: 3px solid
+    ${(props: EventTileWrapperProps) => props.colorTint.weekBorderColor} !important;
   border-right: 0 !important;
   border-top: 0 !important;
   border-bottom: 0 !important;
@@ -36,8 +44,11 @@ const EventTileWrapper = styled(animated.div, {
   @media screen and (min-width: 800px) {
     &.clicked {
       z-index: 99;
-      background: rgba(124, 179, 66, 1) !important;
-      transform: scale(${({ isDay }: { isDay: boolean }) => (isDay ? 1 : 1.1)});
+      background: ${(props: EventTileWrapperProps) =>
+        props.colorTint.weekBorderColor} !important;
+      transform: scale(
+        ${({ isDay }: EventTileWrapperProps) => (isDay ? 1 : 1.1)}
+      );
     }
   }
 `;
@@ -55,10 +66,21 @@ const MonthCalendarWrapper = styled.div`
   padding-left: 10px;
   overflow: hidden;
   position: relative;
-  background: ${(props: { longerThanOneDay: boolean }) =>
-    props.longerThanOneDay ? 'rgba(124, 179, 66, 0.2)' : 'transparent'};
+  background: ${(props: { longerThanOneDay: boolean; colorTint: ColorTint }) =>
+    props.longerThanOneDay
+      ? `${props.colorTint.spanningMoreThanOneDayColor}`
+      : 'transparent'};
   .ant-badge-status-processing {
-    background: #7cb342;
+    background: ${(props: { colorTint: ColorTint }) =>
+      props.colorTint.dotColor};
+  }
+  .ant-badge-status-success {
+    background: ${(props: { colorTint: ColorTint }) =>
+      props.colorTint.dotColor};
+  }
+  .ant-badge-status-processing::after {
+    border: 1px solid
+      ${(props: { colorTint: ColorTint }) => props.colorTint.dotColor};
   }
   @media screen and (min-width: 800px) {
     transition: transform 0.3s ease;
@@ -100,6 +122,7 @@ const OtherCalendarEventWrapper: React.FC<
 
   return (
     <EventTileWrapper
+      colorTint={props.event.colorTint}
       isDay={props.isDay}
       className={`rbc-event ${clicked ? 'clicked' : ''}`}
       style={{ ...props.parsedStyles, ...animationProps }}
@@ -178,6 +201,7 @@ const MonthCalendarEventWrapper: React.FC<
   return (
     <CalendarEventPopover onVisibilityChange={toggleClicked}>
       <MonthCalendarWrapper
+        colorTint={props.event.colorTint}
         longerThanOneDay={isLongerThanOneDay}
         className={wrapperClasses}
         onMouseEnter={handleMouseEnter}

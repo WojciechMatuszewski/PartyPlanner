@@ -6,7 +6,8 @@ import { AvatarList } from 'ant-design-pro';
 import useMedia from '../../hooks/useMedia';
 
 const CalendarEventPopoverWrapper = styled.div`
-  width: 300px;
+  width: ${(props: { isInModal: boolean }) =>
+    props.isInModal ? '100%' : '300px'};
   .title {
     margin: 0;
   }
@@ -62,7 +63,7 @@ const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
   isInModal
 }) => {
   return (
-    <CalendarEventPopoverWrapper>
+    <CalendarEventPopoverWrapper isInModal={isInModal}>
       <CalendarEventPopoverToolbar>
         <Icon type="edit" />
         <Icon type="delete" />
@@ -134,7 +135,7 @@ const CalendarEventPopover: React.FC<{
   const isOnMobile = useMedia('(max-width:800px)');
   function handleMobileClick() {
     Modal.info({
-      icon: () => <div />,
+      icon: <div />,
       centered: true,
       okText: 'Close',
       maskClosable: true,
