@@ -157,6 +157,7 @@ const UserCalendar: React.FC = () => {
       css={css`
         ${BigCalendarStyles};
         height: 100vh;
+
         .rbc-date-cell a {
           font-size: 18px;
         }
@@ -181,7 +182,8 @@ const UserCalendar: React.FC = () => {
       timeslots={3}
       components={{
         toolbar: CalendarToolbar,
-        eventWrapper: props => (
+        // i cannot be bothered to fix someones types ;/
+        eventWrapper: (props: any) => (
           <CalendarEventWrapper {...props} calendarView={calendarView} />
         )
       }}

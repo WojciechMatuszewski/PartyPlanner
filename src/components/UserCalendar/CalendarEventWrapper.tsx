@@ -1,5 +1,5 @@
 import React from 'react';
-import { EventWrapperProps } from 'react-big-calendar';
+
 import styled from '@emotion/styled';
 import { Badge } from 'antd';
 import { useSpring, animated } from 'react-spring';
@@ -10,6 +10,17 @@ import {
 } from '../../shared/styles';
 import CalendarEventPopover from './CalendarEventPopover';
 import { CalendarEvent } from './UserCalendar';
+import classNames from 'classnames';
+import {
+  EventWrapperProps as _EventWrapperProps,
+  Event
+} from 'react-big-calendar';
+
+interface EventWrapperProps<T extends Event = Event>
+  extends _EventWrapperProps<T> {
+  continuesPrior: boolean;
+  continuesAfter: boolean;
+}
 
 const EventTileWrapper = styled(animated.div, {
   shouldForwardProp: prop => prop !== 'isDay'
@@ -44,14 +55,17 @@ const MonthCalendarWrapper = styled.div`
   padding-left: 10px;
   overflow: hidden;
   position: relative;
+  background: ${(props: { longerThanOneDay: boolean }) =>
+    props.longerThanOneDay ? 'rgba(124, 179, 66, 0.2)' : 'transparent'};
   .ant-badge-status-processing {
     background: #7cb342;
   }
   @media screen and (min-width: 800px) {
     transition: transform 0.3s ease;
-    &:hover {
+    &:hover,
+    &.otherPartHovered {
       cursor: pointer;
-      background: #eee;
+      background: white;
     }
     &.clicked {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -66,6 +80,9 @@ const MonthCalendarInnerWrapper = styled.div`
   flex-direction: row;
   flex-wrap: nowrap;
   white-space: nowrap;
+  span {
+    font-weight: bold;
+  }
 `;
 
 const OtherCalendarEventWrapper: React.FC<
@@ -100,22 +117,79 @@ const OtherCalendarEventWrapper: React.FC<
 const MonthCalendarEventWrapper: React.FC<
   EventWrapperProps<CalendarEvent>
 > = props => {
-  const start = moment(props.event.start).format('h:mma');
-  const end = moment(props.event.end).format('h:mma');
+  function getCorrectClasses() {
+    if (props.continuesPrior) {
+      return {
+        lookup: `${props.event.id}-continuesAfter`,
+        self: `${props.event.id}-continuesPrior`
+      };
+    } else if (props.continuesAfter) {
+      return {
+        lookup: `${props.event.id}-continuesPrior`,
+        self: `${props.event.id}-continuesAfter`
+      };
+    } else return null;
+  }
 
+  const spanningIds = getCorrectClasses();
+
+  function checkAndReturnOtherEventPart() {
+    if (!spanningIds) return null;
+    const elem = document.getElementById(spanningIds.lookup);
+    if (!elem) return null;
+    return elem;
+  }
+
+  const start = moment(props.event.start);
+  const end = moment(props.event.end);
+
+  const isLongerThanOneDay = !end.isSame(start, 'day');
   const [clicked, setClicked] = React.useState<boolean>(false);
 
+  const wrapperClasses = classNames({
+    clicked: clicked
+  });
+
   function toggleClicked() {
+    if (spanningIds) {
+      const elem = document.getElementById(spanningIds.lookup);
+      if (elem && !clicked) {
+        elem.classList.add('clicked');
+      }
+      if (elem && clicked) {
+        elem.classList.remove('clicked');
+      }
+    }
     setClicked(!clicked);
+  }
+
+  function handleMouseEnter() {
+    const elem = checkAndReturnOtherEventPart();
+    if (!elem) return;
+    elem.classList.add('otherPartHovered');
+  }
+
+  function handleMouseLeave() {
+    const elem = checkAndReturnOtherEventPart();
+    if (!elem) return;
+    elem.classList.remove('otherPartHovered');
   }
 
   return (
     <CalendarEventPopover onVisibilityChange={toggleClicked}>
-      <MonthCalendarWrapper className={clicked ? 'clicked' : ''}>
-        <MonthCalendarInnerWrapper className="calendarPopupContainer">
-          <Badge status={clicked ? 'processing' : 'success'} />
+      <MonthCalendarWrapper
+        longerThanOneDay={isLongerThanOneDay}
+        className={wrapperClasses}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        id={`${spanningIds ? spanningIds.self : ''}`}
+      >
+        <MonthCalendarInnerWrapper>
+          {!props.continuesPrior && (
+            <Badge status={clicked ? 'processing' : 'success'} />
+          )}
           <span css={[NotWrappingTextStyles]}>
-            {props.event.title} {start} - {end}
+            {props.event.title} {start.format('h:mma')} - {end.format('h:mma')}
           </span>
         </MonthCalendarInnerWrapper>
       </MonthCalendarWrapper>
@@ -124,7 +198,7 @@ const MonthCalendarEventWrapper: React.FC<
 };
 
 class CalendarEventWrapper extends React.Component<
-  EventWrapperProps<any> & { calendarView: string }
+  EventWrapperProps<CalendarEvent> & { calendarView: string }
 > {
   private isMonth() {
     return this.props.calendarView === 'month';
