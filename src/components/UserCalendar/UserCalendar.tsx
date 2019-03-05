@@ -11,7 +11,8 @@ import { CalendarEvents } from './Events';
 const localizer = BigCalendar.momentLocalizer(moment);
 
 const OverriddenCalendarStyles = css`
-  height: 100vh;
+  height: calc(100vh - 64px);
+  width: 100%;
   .rbc-date-cell a {
     font-size: 18px;
   }

@@ -1,12 +1,8 @@
 import React from 'react';
-import UserCalendar from '../src/components/UserCalendar/UserCalendar';
+import Home from '../src/components/Home';
 
 const Index: React.FC = () => {
-  return (
-    <div>
-      <UserCalendar />
-    </div>
-  );
+  return <Home />;
 };
 
 export default Index;
