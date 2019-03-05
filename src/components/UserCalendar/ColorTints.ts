@@ -27,9 +27,16 @@ export const calendarTints: ColorTint[] = [
     weekBorderColor: '#f4511e',
     weekTileColor: 'rgb(244,81,30, 0.7)',
     spanningMoreThanOneDayColor: 'rgb(244,81,30, 0.2)'
+  },
+  {
+    name: 'magenta',
+    dotColor: '#EB2F96',
+    weekBorderColor: '#EB2F96',
+    weekTileColor: 'rgb(235,47,150,0.7)',
+    spanningMoreThanOneDayColor: 'rgb(235,47,150,0.2)'
   }
 ];
 
 export function getCalendarColorTint() {
-  return calendarTints[Math.floor(Math.random() * 3) + 0];
+  return calendarTints[Math.floor(Math.random() * calendarTints.length) + 0];
 }
