@@ -36,11 +36,7 @@ const MobileToolbarView: React.FC<ToolbarProps> = props => {
         {props.label}
       </h2>
       <div style={{ display: 'flex' }}>
-        <Button
-          type="primary"
-          shape="circle"
-          onClick={() => props.onNavigate('PREV')}
-        >
+        <Button shape="circle" onClick={() => props.onNavigate('PREV')}>
           <Icon type="left" />
         </Button>
         <Button
@@ -49,11 +45,7 @@ const MobileToolbarView: React.FC<ToolbarProps> = props => {
         >
           Today
         </Button>
-        <Button
-          type="primary"
-          shape="circle"
-          onClick={() => props.onNavigate('NEXT')}
-        >
+        <Button shape="circle" onClick={() => props.onNavigate('NEXT')}>
           <Icon type="right" />
         </Button>
       </div>

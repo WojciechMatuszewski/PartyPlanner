@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Icon, Popover } from 'antd';
+import { Icon, Popover, Modal } from 'antd';
 import { FlexBoxVerticallyCenteredStyles } from '../../shared/styles';
 import { AvatarList } from 'ant-design-pro';
+import useMedia from '../../hooks/useMedia';
 
 const CalendarEventPopoverWrapper = styled.div`
-  width: 300px;
+  width: ${(props: { isInModal: boolean }) =>
+    props.isInModal ? '100%' : '300px'};
   .title {
     margin: 0;
   }
@@ -34,6 +36,11 @@ const CalendarEventPopoverWrapper = styled.div`
   }
 `;
 
+const ModalClickContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 const CalendarEventPopoverToolbar = styled.div`
   display: flex;
   font-size: 18px;
@@ -52,14 +59,16 @@ const CalendarEventPopoverToolbar = styled.div`
   }
 `;
 
-const CalendarEventPopoverContent: React.FC = () => {
+const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
+  isInModal
+}) => {
   return (
-    <CalendarEventPopoverWrapper>
+    <CalendarEventPopoverWrapper isInModal={isInModal}>
       <CalendarEventPopoverToolbar>
         <Icon type="edit" />
         <Icon type="delete" />
         <Icon type="message" />
-        <Icon type="close" />
+        {!isInModal && <Icon type="close" />}
       </CalendarEventPopoverToolbar>
       <h2>Some nice meetup</h2>
       <div className="item-wrapper">
@@ -119,17 +128,33 @@ const CalendarEventPopoverContent: React.FC = () => {
   );
 };
 
-const CalendarEventPopover: React.FC<{ children: React.ReactNode }> = ({
-  children
-}) => {
-  return (
+const CalendarEventPopover: React.FC<{
+  children: React.ReactNode;
+  onVisibilityChange?: (visible: boolean) => void;
+}> = ({ children, onVisibilityChange }) => {
+  const isOnMobile = useMedia('(max-width:800px)');
+  function handleMobileClick() {
+    Modal.info({
+      icon: <div />,
+      centered: true,
+      okText: 'Close',
+      maskClosable: true,
+      content: <CalendarEventPopoverContent isInModal={true} />
+    });
+  }
+
+  return !isOnMobile ? (
     <Popover
-      placement="bottom"
-      content={<CalendarEventPopoverContent />}
+      content={<CalendarEventPopoverContent isInModal={false} />}
       trigger="click"
+      onVisibleChange={onVisibilityChange}
     >
       {children}
     </Popover>
+  ) : (
+    <ModalClickContainer onClick={handleMobileClick}>
+      {children}
+    </ModalClickContainer>
   );
 };
 
