@@ -48,6 +48,14 @@ const HomeHeroControlsWrapper = styled.div`
     border: 0;
     border-radius: 21px;
     color: #fff;
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px #0554b7;
+    }
+    &:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 8px #0554b7;
+    }
   }
 `;
 
