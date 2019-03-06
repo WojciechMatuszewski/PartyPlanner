@@ -1,12 +1,15 @@
 import React from 'react';
 import * as yup from 'yup';
 import { Formik, FastField } from 'formik';
-import { Form, Button } from 'antd';
+import { Form, Button, Icon } from 'antd';
 import FormikInputField from '../../shared/formikInputField';
 import styled from '@emotion/styled';
 
 const validationSchema = yup.object().shape({
-  email: yup.string().email(),
+  email: yup
+    .string()
+    .email()
+    .required(),
   password: yup
     .string()
     .required()
@@ -41,17 +44,21 @@ const LoginForm: React.FC = () => {
           <FastField
             component={FormikInputField}
             type="email"
+            name="email"
+            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Your email address"
             size="large"
           />
           <FastField
             component={FormikInputField}
             type="password"
+            name="password"
+            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Your password"
             size="large"
           />
           <LoginControlsWrapper>
-            <Button size="large" type="primary">
+            <Button htmlType="submit" size="large" type="primary">
               Login
             </Button>
             <a>Forgot password ? </a>

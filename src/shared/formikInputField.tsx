@@ -10,9 +10,16 @@ const FormikInputField: React.FC<FieldProps & InputProps> = ({
   form,
   ...antdInputProps
 }) => {
+  const errorFeedback = form.errors[field.name];
+  const isInvalid = form.errors[field.name] && form.touched[field.name];
+  const isValid = !form.errors[field.name] && form.touched[field.name];
   return (
-    <FormItem>
-      <Input {...antdInputProps} />
+    <FormItem
+      hasFeedback={true}
+      help={isInvalid ? errorFeedback : null}
+      validateStatus={isInvalid ? 'error' : isValid ? 'success' : ''}
+    >
+      <Input {...antdInputProps} {...field} />
     </FormItem>
   );
 };

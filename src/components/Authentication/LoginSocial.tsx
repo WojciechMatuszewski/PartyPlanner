@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 const ButtonsWrapper = styled.div`
   button {
     margin-bottom: 10px;
+    border: 0;
   }
 `;
 
