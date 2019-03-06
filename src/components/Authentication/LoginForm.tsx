@@ -4,8 +4,11 @@ import { Formik, FastField } from 'formik';
 import { Form, Button, Icon } from 'antd';
 import FormikInputField from '../../shared/formikInputField';
 import styled from '@emotion/styled';
-
-const validationSchema = yup.object().shape({
+interface FormValues {
+  email: string;
+  password: string;
+}
+const validationSchema = yup.object().shape<FormValues>({
   email: yup
     .string()
     .email()
@@ -16,11 +19,6 @@ const validationSchema = yup.object().shape({
     .min(6)
     .max(12)
 });
-
-interface FormValues {
-  email: string;
-  password: string;
-}
 
 const initialValues: FormValues = {
   email: '',
