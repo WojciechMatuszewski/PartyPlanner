@@ -16,24 +16,24 @@ interface FormValues {
 const validationSchema = yup.object().shape<FormValues>({
   userName: yup
     .string()
-    .required()
-    .min(2)
-    .max(15),
+    .required('This field is required')
+    .min(2, 'UserName has to be at least 2 characters long')
+    .max(12, 'UserName can have maximum length of 12 characters'),
   email: yup
     .string()
-    .required()
-    .email(),
+    .required('This field is required')
+    .email('Please enter a valid email'),
   password: yup
     .string()
-    .required()
-    .min(6)
-    .max(12),
+    .required('This field is required')
+    .min(6, 'Password has to be at least 6 characters long')
+    .max(12, 'Password can have maximum length of 12 characters'),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords do not match')
-    .required()
-    .min(6)
-    .max(12)
+    .required('This field is required')
+    .min(6, 'Password has to be at least 6 characters long')
+    .max(12, 'Password can have maximum length of 12 characters')
 });
 
 const initialValues: FormValues = {

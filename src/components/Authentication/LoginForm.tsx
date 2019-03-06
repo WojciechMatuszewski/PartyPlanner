@@ -11,13 +11,13 @@ interface FormValues {
 const validationSchema = yup.object().shape<FormValues>({
   email: yup
     .string()
-    .email()
-    .required(),
+    .email('Please enter a valid email')
+    .required('This field is required'),
   password: yup
     .string()
-    .required()
-    .min(6)
-    .max(12)
+    .required('This field is required')
+    .min(6, 'Password has to be at least 6 characters long')
+    .max(12, 'Password can have maximum length of 12 characters')
 });
 
 const initialValues: FormValues = {
