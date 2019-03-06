@@ -14,9 +14,9 @@ const LayoutStyles = css`
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Layout css={LayoutStyles}>
+    <Layout css={LayoutStyles} tagName="main">
       <AppHeader />
-      <Layout.Content>{children}</Layout.Content>
+      <Layout.Content tagName="section">{children}</Layout.Content>
     </Layout>
   );
 };
