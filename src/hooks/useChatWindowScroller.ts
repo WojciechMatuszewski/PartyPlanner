@@ -2,6 +2,7 @@ import { Styler } from 'stylefire';
 import React, { useEffect } from 'react';
 
 import { styler, tween } from 'popmotion';
+import { smooth } from '@popmotion/popcorn';
 
 interface ReturnProps {
   scrollToBottom: (duration?: number) => void;
@@ -16,12 +17,14 @@ function useChatWindowScroller(
   function scrollToBottom(duration: number = 200) {
     currentAnimationRef.current = tween({
       from: elementRef.current!.scrollTop,
-      to: elementRef.current!.scrollHeight,
+      to: elementRef.current!.scrollTop + 40,
       duration
-    }).start({
-      update: (value: number) => stylerRef.current!.set('scrollTop', value),
-      complete: () => (currentAnimationRef.current = null)
-    });
+    })
+      .pipe(smooth(200))
+      .start({
+        update: (value: number) => stylerRef.current!.set('scrollTop', value),
+        complete: () => (currentAnimationRef.current = null)
+      });
   }
 
   useEffect(() => {

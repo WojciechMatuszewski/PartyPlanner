@@ -2,8 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import ChatMessages from './ChatMessages';
 import ChatInput from './ChatInput';
-import useChatWindowScrollPosition from '../../hooks/useChatWindowScrollPosition';
-import useChatWindowScroller from '../../hooks/useChatWindowScroller';
+import useChatWindow from '../../hooks/useChatWindow';
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -34,18 +33,20 @@ const NewMessagesBelowNotifier = styled.div`
 
 const ChatWindow: React.FC = () => {
   const chatMessagesInnerRef = React.useRef<HTMLDivElement>(null);
-  const { isWithinBottomLockRange } = useChatWindowScrollPosition(
+
+  const { scrollToBottom, isWithinBottomLockRange } = useChatWindow(
     chatMessagesInnerRef
   );
-  const { scrollToBottom } = useChatWindowScroller(chatMessagesInnerRef);
 
-  function onNewChatMessage() {}
+  function onNewChatMessage() {
+    scrollToBottom(250);
+  }
 
-  // chat messages needs a way to notify about new message
-  // chat input needs a way to notify about new message
   return (
     <ChatWindowWrapper>
       <ChatMessages
+        scrollToBottom={scrollToBottom}
+        isWithinBottomLockRange={isWithinBottomLockRange}
         onNewMessage={onNewChatMessage}
         ref={chatMessagesInnerRef}
       />
