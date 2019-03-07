@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import useChatWindow from '../../hooks/useChatWindow';
-import { Subject } from 'rxjs';
 import { animated } from 'react-spring';
 
 const ChatMessagesWrapper = styled(animated.div)`
@@ -10,39 +8,34 @@ const ChatMessagesWrapper = styled(animated.div)`
   overflow-y: scroll;
   padding: 0 15px;
   h1 {
-    background: red;
+    background: transparent;
     margin: 20px;
   }
 `;
 
-const ChatMessages: React.FC = () => {
-  const newMessageSubject$: Subject<void> = new Subject();
-  const { scrollHandler, ref, wheelHandler } = useChatWindow();
+interface Props {
+  onNewMessage: () => void;
+}
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setState(prevState => [
-        ...prevState,
-        <h1 key={prevState.length + 1}>works</h1>
-      ]);
-      newMessageSubject$.next();
-    }, 300);
-    return () => clearInterval(interval);
-  }, []);
+const ChatMessages = React.forwardRef(
+  (props: Props, ref: React.Ref<HTMLDivElement>) => {
+    const [state, setState] = React.useState<React.ReactNode[]>(
+      Array.from({ length: 30 }, (_, index) => <h1 key={index}>Works</h1>)
+    );
 
-  const [state, setState] = React.useState([
-    ...Array.from({ length: 40 }, (_, index) => <h1 key={index}>Works</h1>)
-  ]);
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setState(prevState => [
+          ...prevState,
+          <h1 key={prevState.length}>Works</h1>
+        ]);
+        props.onNewMessage();
+      }, 1000);
+      return () => clearInterval(interval);
+    }, []);
 
-  return (
-    <ChatMessagesWrapper
-      onWheel={wheelHandler}
-      ref={ref}
-      onScroll={scrollHandler}
-    >
-      {state}
-    </ChatMessagesWrapper>
-  );
-};
+    return <ChatMessagesWrapper ref={ref}>{state}</ChatMessagesWrapper>;
+  }
+);
 
 export default ChatMessages;
