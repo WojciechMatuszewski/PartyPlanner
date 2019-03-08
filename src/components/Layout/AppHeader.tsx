@@ -25,7 +25,7 @@ const LayoutHeaderStyles = css`
 
 const AppHeader: React.FC = () => {
   return (
-    <Layout.Header css={LayoutHeaderStyles} tagName="header">
+    <Layout.Header css={LayoutHeaderStyles}>
       <Menu
         theme="light"
         mode="horizontal"

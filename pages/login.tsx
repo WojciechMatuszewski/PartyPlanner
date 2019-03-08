@@ -1,14 +1,12 @@
 import React from 'react';
-
-import LoginForm from '../src/components/Authentication/LoginForm';
-import LoginSocial from '../src/components/Authentication/LoginSocial';
 import { useSpring } from 'react-spring';
-
 import {
-  AuthImageWrapper,
   AuthWrapper,
+  AuthImageWrapper,
   AuthInnerWrapper
-} from '../src/components/Authentication/styles';
+} from '@components/Authentication/styles';
+import LoginForm from '@components/Authentication/LoginForm';
+import LoginSocial from '@components/Authentication/LoginSocial';
 
 const Login: React.FC = () => {
   const styles = useSpring({

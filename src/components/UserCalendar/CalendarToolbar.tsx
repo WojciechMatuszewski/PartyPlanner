@@ -6,10 +6,10 @@ import ButtonGroup from 'antd/lib/button/button-group';
 import css from '@emotion/css';
 import { Radio } from 'antd';
 import {
-  NotWrappingTextStyles,
-  FlexBoxVerticallyCenteredStyles
-} from '../../shared/styles';
-import useMedia from '../../hooks/useMedia';
+  FlexBoxVerticallyCenteredStyles,
+  NotWrappingTextStyles
+} from '@shared/styles';
+import useMedia from '@hooks/useMedia';
 
 const ToolbarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
