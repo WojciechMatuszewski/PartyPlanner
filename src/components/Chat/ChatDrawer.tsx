@@ -1,7 +1,7 @@
 import React from 'react';
-import { Drawer, Icon } from 'antd';
-import { FlexBoxFullCenteredStyles } from '../../shared/styles';
+import { Icon, Drawer } from 'antd';
 import css from '@emotion/css';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { DrawerProps } from 'antd/lib/drawer';
 
 const BaseTriggerStyles = css`

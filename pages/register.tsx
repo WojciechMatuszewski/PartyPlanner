@@ -3,9 +3,9 @@ import {
   AuthWrapper,
   AuthImageWrapper,
   AuthInnerWrapper
-} from '../src/components/Authentication/styles';
-import RegisterForm from '../src/components/Authentication/RegisterForm';
-import RegisterPizzaSvg from '../src/components/Authentication/RegisterPizzaSvg';
+} from '@components/Authentication/styles';
+import RegisterPizzaSvg from '@components/Authentication/RegisterPizzaSvg';
+import RegisterForm from '@components/Authentication/RegisterForm';
 
 const Register: React.FC = () => {
   return (

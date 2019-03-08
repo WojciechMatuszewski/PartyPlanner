@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Icon, Popover, Modal } from 'antd';
-import { FlexBoxVerticallyCenteredStyles } from '../../shared/styles';
 import { AvatarList } from 'ant-design-pro';
-import useMedia from '../../hooks/useMedia';
+import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
+import useMedia from '@hooks/useMedia';
 
 const CalendarEventPopoverWrapper = styled.div`
   width: ${(props: { isInModal: boolean }) =>

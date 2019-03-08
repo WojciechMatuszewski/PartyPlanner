@@ -4,14 +4,15 @@ import classNames from 'classnames';
 import CalendarEventPopover from './CalendarEventPopover';
 
 import styled from '@emotion/styled';
-import {
-  FlexBoxVerticallyCenteredStyles,
-  NotWrappingTextStyles
-} from '../../shared/styles';
+
 import { ColorTint } from './ColorTints';
 import { Badge } from 'antd';
 import { CorrectedEventWrapperProps } from './CalendarEventWrapper';
 import { CalendarEvent } from './Events';
+import {
+  FlexBoxVerticallyCenteredStyles,
+  NotWrappingTextStyles
+} from '@shared/styles';
 
 const MonthCalendarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
