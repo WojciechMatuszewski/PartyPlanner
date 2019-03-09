@@ -1,9 +1,9 @@
 import React from 'react';
-import ChatsList from '../src/components/Chat/ChatsList';
 import { Layout } from 'antd';
 import css from '@emotion/css';
-import ChatWindow from '../src/components/Chat/ChatWindow';
-import ChatUsers from '../src/components/Chat/ChatUsers';
+import ChatsList from '@components/Chat/ChatsList';
+import ChatWindow from '@components/Chat/ChatWindow';
+import ChatUsers from '@components/Chat/ChatUsers';
 
 const LayoutStyles = css`
   height: calc(100vh - 64px);
@@ -12,7 +12,7 @@ const LayoutStyles = css`
 
 const Chat: React.FC = () => {
   return (
-    <Layout css={LayoutStyles} tagName="section">
+    <Layout css={LayoutStyles}>
       <ChatsList />
       <ChatWindow />
       <ChatUsers />

@@ -3,14 +3,15 @@ import {
   AuthWrapper,
   AuthImageWrapper,
   AuthInnerWrapper
-} from '../src/components/Authentication/styles';
-import RegisterForm from '../src/components/Authentication/RegisterForm';
+} from '@components/Authentication/styles';
+import RegisterPizzaSvg from '@components/Authentication/RegisterPizzaSvg';
+import RegisterForm from '@components/Authentication/RegisterForm';
 
 const Register: React.FC = () => {
   return (
     <AuthWrapper>
       <AuthImageWrapper>
-        <img src="../static/pizza-sharing.svg" />
+        <RegisterPizzaSvg />
       </AuthImageWrapper>
       <AuthInnerWrapper>
         <h1>Register</h1>

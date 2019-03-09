@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-
-import Sider from 'antd/lib/layout/Sider';
+import { Layout } from 'antd';
+const { Sider } = Layout;
 
 const ChatSider: React.FC<{
   children: React.ReactNode;

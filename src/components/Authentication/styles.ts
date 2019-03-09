@@ -72,14 +72,16 @@ export const AuthImageWrapper = styled.div`
   padding-right: 100px;
 
   @media screen and (max-width: 1440px) {
-    img {
+    img,
+    svg {
       width: 100%;
     }
     padding-right: 50px;
   }
 
   @media screen and (min-width: 1441px) {
-    img {
+    img,
+    svg {
       width: 800px;
     }
   }

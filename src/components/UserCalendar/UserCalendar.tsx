@@ -5,8 +5,9 @@ import moment from 'moment';
 import BigCalendar, { View } from 'react-big-calendar';
 import CalendarToolbar from './CalendarToolbar';
 import CalendarEventWrapper from './CalendarEventWrapper';
-import useMedia from '../../hooks/useMedia';
+
 import { CalendarEvents } from './Events';
+import useMedia from '@hooks/useMedia';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 

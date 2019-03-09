@@ -1,8 +1,9 @@
 import React from 'react';
-import useMedia from '../../hooks/useMedia';
+
 import ChatsListDrawer from './ChatDrawer';
 import ChatsListSider from './ChatSider';
 import ChatsListSearch from './ChatsListSearch';
+import useMedia from '@hooks/useMedia';
 
 const ChatsList: React.FC = () => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
