@@ -9,6 +9,10 @@ import fetch from 'isomorphic-unfetch';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
+interface Options {
+  getToken: () => string | null;
+}
+
 export function isBrowser() {
   return (process as any).browser;
 }
@@ -18,9 +22,9 @@ if (!isBrowser()) {
   (global as any).fetch = fetch;
 }
 
-function create(initialState: any, { getToken }: any) {
+function create(initialState: any, { getToken }: Options) {
   const httpLink = createHttpLink({
-    uri: 'https://api.graph.cool/simple/v1/cj5geu3slxl7t0127y8sity9r',
+    uri: 'http://localhost:4000/graphql',
     credentials: 'same-origin'
   });
 

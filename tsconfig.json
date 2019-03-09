@@ -23,7 +23,7 @@
       "@pages/*": ["./pages/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@shared/*": ["./src/shared/*"],
-      "@apollo/*": ["./generated"]
+      "@generated/*": ["./generated/*"]
     }
   }
 }

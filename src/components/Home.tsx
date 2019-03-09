@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Button } from 'antd';
 import { useSpring, animated } from 'react-spring';
+import { withRouter, WithRouterProps } from 'next/router';
 
 const HomeHeroImage = styled.div`
   width: 100%;
@@ -59,7 +60,7 @@ const HomeHeroControlsWrapper = styled.div`
   }
 `;
 
-const Home: React.FC = () => {
+const Home: React.FC<WithRouterProps> = ({ router }) => {
   const animationStyles = useSpring({ opacity: 1, from: { opacity: 0 } });
   return (
     <HomeHeroImage>
@@ -67,12 +68,16 @@ const Home: React.FC = () => {
         <h1>Simplify your party life</h1>
         <h3>Organize, make plans, schedule, invite others!</h3>
         <HomeHeroControlsWrapper>
-          <Button>Register now</Button>
-          <Button>Login now</Button>
+          <Button onClick={() => router && router.push('/register')}>
+            Register now
+          </Button>
+          <Button onClick={() => router && router.push('/login')}>
+            Login now
+          </Button>
         </HomeHeroControlsWrapper>
       </HomeHeroText>
     </HomeHeroImage>
   );
 };
 
-export default Home;
+export default withRouter(Home);

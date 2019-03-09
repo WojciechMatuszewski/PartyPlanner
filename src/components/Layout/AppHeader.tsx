@@ -1,6 +1,8 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import css from '@emotion/css';
+import Link from 'next/link';
+import { withRouter, WithRouterProps } from 'next/router';
 
 const LayoutHeaderStyles = css`
   padding: 0;
@@ -23,21 +25,33 @@ const LayoutHeaderStyles = css`
   z-index: 10;
 `;
 
-const AppHeader: React.FC = () => {
+const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
   return (
     <Layout.Header css={LayoutHeaderStyles}>
       <Menu
+        selectedKeys={[router && router.pathname ? router.pathname : '/']}
         theme="light"
         mode="horizontal"
-        defaultSelectedKeys={['2']}
         style={{ lineHeight: '64px' }}
       >
-        <Menu.Item key="1">Home</Menu.Item>
-        <Menu.Item key="2">nav 2</Menu.Item>
-        <Menu.Item key="3">nav 3</Menu.Item>
+        <Menu.Item key="/">
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="/login">
+          <Link href="/login">
+            <a>Login</a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="/register">
+          <Link href="register">
+            <a>Register</a>
+          </Link>
+        </Menu.Item>
       </Menu>
     </Layout.Header>
   );
 };
 
-export default AppHeader;
+export default withRouter(AppHeader);

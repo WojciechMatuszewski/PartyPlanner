@@ -8,13 +8,12 @@ import { NextAppContext, AppComponentType } from 'next/app';
 import { IncomingMessage } from 'http';
 import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
 
-function parseCookies(req: IncomingMessage | null = null, options = {}) {
+function parseCookies(req?: IncomingMessage, options = {}) {
   return cookie.parse(
     req ? req.headers.cookie || '' : document.cookie,
     options
   );
 }
-
 export default (App: AppComponentType<any>) => {
   return class WithData extends React.Component {
     public static displayName = `WithData(${App.displayName})`;
@@ -23,7 +22,7 @@ export default (App: AppComponentType<any>) => {
       const {
         Component,
         router,
-        ctx: { req, res }
+        ctx: { res, req }
       } = ctx;
       const apollo = initApollo(
         {},
@@ -31,9 +30,7 @@ export default (App: AppComponentType<any>) => {
           getToken: () => parseCookies(req).token
         }
       );
-
       (ctx.ctx as any).apolloClient = apollo;
-
       let appProps = {};
       if (App.getInitialProps) {
         appProps = await App.getInitialProps(ctx);
@@ -85,9 +82,7 @@ export default (App: AppComponentType<any>) => {
       // `getDataFromTree` renders the component first, the client is passed off as a property.
       // After that rendering is done using Next's normal rendering pipeline
       this.apolloClient = initApollo(props.apolloState, {
-        getToken: () => {
-          return parseCookies().token;
-        }
+        getToken: () => parseCookies().token
       });
     }
 
