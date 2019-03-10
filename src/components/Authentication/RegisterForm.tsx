@@ -1,20 +1,29 @@
 import React from 'react';
 import * as yup from 'yup';
+import { withRouter, WithRouterProps } from 'next/router';
 import { Formik, FastField, Field } from 'formik';
 import { Form, Button } from 'antd';
+import FormikInputField from '@shared/formikInputField';
+import { SignupComponent } from '@generated/graphql';
 
-import FormikInputField from '../../shared/formikInputField';
-import { withRouter, WithRouterProps } from 'next/router';
+import { saveToken } from './AuthService';
+import GraphqlError from '@components/GraphqlError';
 
 interface FormValues {
-  userName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 const validationSchema = yup.object().shape<FormValues>({
-  userName: yup
+  firstName: yup
+    .string()
+    .required('This field is required')
+    .min(2, 'UserName has to be at least 2 characters long')
+    .max(12, 'UserName can have maximum length of 12 characters'),
+  lastName: yup
     .string()
     .required('This field is required')
     .min(2, 'UserName has to be at least 2 characters long')
@@ -37,7 +46,8 @@ const validationSchema = yup.object().shape<FormValues>({
 });
 
 const initialValues: FormValues = {
-  userName: '',
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
   confirmPassword: ''
@@ -50,62 +60,92 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
   }
 
   return (
-    <Formik
-      onSubmit={() => {}}
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-    >
-      {({ handleSubmit }) => (
-        <Form onSubmit={handleSubmit}>
-          <FastField
-            component={FormikInputField}
-            name="userName"
-            type="text"
-            size="large"
-            placeholder="Your Username"
-          />
-          <FastField
-            component={FormikInputField}
-            name="email"
-            type="email"
-            size="large"
-            placeholder="Your Email"
-          />
-          <Field
-            component={FormikInputField}
-            name="password"
-            type="password"
-            size="large"
-            placeholder="Your Password"
-          />
-          <Field
-            component={FormikInputField}
-            name="confirmPassword"
-            type="password"
-            size="large"
-            placeholder="Confirm Password"
-          />
-          <Button
-            style={{ marginBottom: 10 }}
-            block={true}
-            size="large"
-            type="primary"
-            htmlType="submit"
-          >
-            Register
-          </Button>
-          <Button
-            htmlType="button"
-            onClick={handleGoToLoginClick}
-            block={true}
-            size="large"
-            type="default"
-          >
-            Already have account? Login
-          </Button>
-        </Form>
+    <SignupComponent>
+      {(mutate, { loading, error }) => (
+        <Formik
+          onSubmit={async formValues => {
+            const response = await mutate({ variables: formValues });
+            if (response && response.data) {
+              saveToken(response.data.signup.token);
+            }
+            if (!error && router) {
+              router.push('/login');
+            }
+          }}
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+        >
+          {({ handleSubmit }) => (
+            <Form onSubmit={handleSubmit}>
+              <FastField
+                component={FormikInputField}
+                name="firstName"
+                type="text"
+                size="large"
+                placeholder="Your First Name"
+                aria-label="firstName-field"
+              />
+              <FastField
+                component={FormikInputField}
+                name="lastName"
+                type="text"
+                size="large"
+                placeholder="Your Last Name"
+                aria-label="lastName-field"
+              />
+              <FastField
+                component={FormikInputField}
+                name="email"
+                type="email"
+                size="large"
+                placeholder="Your Email"
+                aria-label="email-field"
+              />
+              <Field
+                component={FormikInputField}
+                name="password"
+                type="password"
+                size="large"
+                placeholder="Your Password"
+                aria-label="password-field"
+              />
+              <Field
+                component={FormikInputField}
+                name="confirmPassword"
+                type="password"
+                size="large"
+                placeholder="Confirm Password"
+                aria-label="confirmPassword-field"
+              />
+              <Button
+                loading={loading}
+                style={{ marginBottom: 10 }}
+                block={true}
+                size="large"
+                type="primary"
+                htmlType="submit"
+                data-testid="register-submit"
+              >
+                Register
+              </Button>
+              <Button
+                disabled={loading}
+                htmlType="button"
+                onClick={handleGoToLoginClick}
+                block={true}
+                size="large"
+                type="default"
+              >
+                Already have account? Login
+              </Button>
+              <div style={{ marginTop: 24 }}>
+                <GraphqlError error={error} />
+              </div>
+            </Form>
+          )}
+        </Formik>
       )}
-    </Formik>
+    </SignupComponent>
   );
 };
 

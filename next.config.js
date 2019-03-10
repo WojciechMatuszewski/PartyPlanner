@@ -14,7 +14,7 @@ module.exports = composePlugins([withTypescript, withCSS], {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@components': path.resolve(__dirname, 'src/components'),
-      '@apollo': path.resolve(__dirname, 'generated'),
+      '@generated': path.resolve(__dirname, 'generated'),
       '@shared': path.resolve(__dirname, 'src/shared'),
       '@pages': path.resolve(__dirname, 'pages'),
       '@hooks': path.resolve(__dirname, 'src/hooks')

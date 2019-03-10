@@ -10,10 +10,13 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-export const LoginSocial: React.FC = () => {
+export const LoginSocial: React.FC<{ disabledFromMutation: boolean }> = ({
+  disabledFromMutation
+}) => {
   return (
     <ButtonsWrapper>
       <Button
+        disabled={disabledFromMutation}
         style={{ background: '#4267b2' }}
         block={true}
         type="primary"
@@ -23,6 +26,7 @@ export const LoginSocial: React.FC = () => {
         Login with Facebook
       </Button>
       <Button
+        disabled={disabledFromMutation}
         type="primary"
         size="large"
         style={{ background: '#1da1f2' }}
@@ -32,6 +36,7 @@ export const LoginSocial: React.FC = () => {
         Login With Twitter
       </Button>
       <Button
+        disabled={disabledFromMutation}
         css={css`
           .anticon {
             color: #dc4e41;

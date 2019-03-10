@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "lib": ["dom", "es2017", "webworker"],
+    "lib": ["dom", "es2017", "webworker", "es2015"],
     "moduleResolution": "node",
     "allowJs": true,
     "noEmit": true,
@@ -23,7 +23,7 @@
       "@pages/*": ["./pages/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@shared/*": ["./src/shared/*"],
-      "@apollo/*": ["./generated"]
+      "@generated/*": ["./generated/*"]
     }
   }
 }

@@ -4,6 +4,11 @@ import { Formik, FastField } from 'formik';
 import { Form, Button, Icon } from 'antd';
 import FormikInputField from '../../shared/formikInputField';
 import styled from '@emotion/styled';
+import { LoginMutation, LoginVariables } from '@generated/graphql';
+import { MutationFn, MutationResult } from 'react-apollo';
+import { withRouter, WithRouterProps } from 'next/router';
+import GraphqlError from '@components/GraphqlError';
+import { saveToken } from './AuthService';
 interface FormValues {
   email: string;
   password: string;
@@ -30,16 +35,28 @@ const LoginControlsWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC<
+  {
+    mutate: MutationFn<LoginMutation, LoginVariables>;
+    mutationResult: MutationResult<LoginMutation>;
+  } & WithRouterProps
+> = ({ mutate, mutationResult: { loading, error }, router }) => {
   return (
     <Formik
-      onSubmit={() => {}}
+      onSubmit={async formValues => {
+        const response = await mutate({ variables: formValues });
+        if (!error && response && response.data && router) {
+          saveToken(response.data.login.token);
+          router.push('/dashboard');
+        }
+      }}
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <FastField
+            aria-label="email-field"
             component={FormikInputField}
             type="email"
             name="email"
@@ -48,6 +65,7 @@ const LoginForm: React.FC = () => {
             size="large"
           />
           <FastField
+            aria-label="password-field"
             component={FormikInputField}
             type="password"
             name="password"
@@ -56,15 +74,24 @@ const LoginForm: React.FC = () => {
             size="large"
           />
           <LoginControlsWrapper>
-            <Button htmlType="submit" size="large" type="primary">
+            <Button
+              loading={loading}
+              htmlType="submit"
+              size="large"
+              type="primary"
+              data-testid="login-submit"
+            >
               Login
             </Button>
             <a>Forgot password ? </a>
           </LoginControlsWrapper>
+          <div style={{ marginTop: 24 }}>
+            <GraphqlError error={error} />
+          </div>
         </Form>
       )}
     </Formik>
   );
 };
 
-export default LoginForm;
+export default withRouter(LoginForm);
