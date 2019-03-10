@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Menu } from 'antd';
+import { Menu, Icon } from 'antd';
 import { css } from '@emotion/core';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 const DashboardBannerImage = styled.div`
   width: 100%;
   max-height: 312px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.5);
   flex: 1;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -36,7 +36,6 @@ const DashboardBannerName = styled.div`
   bottom: 60px;
   h1 {
     margin-bottom: 0;
-    color: white;
   }
 `;
 
@@ -85,7 +84,10 @@ const DashboardBanner: React.FC = () => {
       <DashboardBannerImage>
         <img src="../static/security.svg" />
         <ChangeBannerPhotoButtonWrapper>
-          <ChangeBannerPhotoButton>Edit Cover</ChangeBannerPhotoButton>
+          <ChangeBannerPhotoButton>
+            <Icon type="setting" style={{ marginRight: 5 }} />
+            Edit Cover
+          </ChangeBannerPhotoButton>
         </ChangeBannerPhotoButtonWrapper>
       </DashboardBannerImage>
       <DashboardBannerName>

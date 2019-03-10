@@ -13,10 +13,6 @@ const DashboardAnchor: React.FC = () => {
     >
       <Link href="#Your-Info" title="Your Info" />
       <Link href="#Your-Friends" title="Your Friends" />
-      <Link href="#API" title="API">
-        <Link href="#Anchor-Props" title="Anchor Props" />
-        <Link href="#Link-Props" title="Link Props" />
-      </Link>
     </Anchor>
   );
 };
