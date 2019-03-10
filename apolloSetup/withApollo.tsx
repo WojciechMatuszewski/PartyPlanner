@@ -8,7 +8,7 @@ import { NextAppContext, AppComponentType } from 'next/app';
 import { IncomingMessage } from 'http';
 import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
 
-function parseCookies(req?: IncomingMessage, options = {}) {
+export function parseCookies(req?: IncomingMessage, options = {}) {
   return cookie.parse(
     req ? req.headers.cookie || '' : document.cookie,
     options

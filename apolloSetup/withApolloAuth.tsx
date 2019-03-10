@@ -3,8 +3,13 @@ import { NextContext } from 'next';
 import { ApolloClient } from 'apollo-boost';
 import redirect from './redirect';
 import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
+import { parseCookies } from './withApollo';
 
-export const withApolloAuth = <WrappedComponentProps extends object>(
+export const withApolloAuth = ({
+  userHasToBe
+}: {
+  userHasToBe: 'authenticated' | 'notAuthenticated';
+}) => <WrappedComponentProps extends object>(
   WrappedComponent: React.ComponentType<WrappedComponentProps>
 ) => {
   const displayName =
@@ -17,21 +22,39 @@ export const withApolloAuth = <WrappedComponentProps extends object>(
         isVirtualCall?: boolean;
       }
     ) {
+      function checkCookieValidity() {
+        const { token } = parseCookies(ctx.req);
+        if (!token && userHasToBe === 'authenticated') {
+          ctx.pathname !== '/login' && redirect(ctx, '/login');
+          return {};
+        }
+        if (!token && userHasToBe === 'notAuthenticated') {
+          return {};
+        }
+      }
+
+      async function checkEndpoint() {
+        try {
+          const response = await ctx.apolloClient.query<MeQueryQuery>({
+            query: MeQueryDocument
+          });
+          if (userHasToBe === 'notAuthenticated') {
+            redirect(ctx, '/dashboard');
+          }
+          return {
+            me: response.data.me
+          };
+        } catch (e) {
+          ctx.pathname !== '/login' && redirect(ctx, '/login');
+          return {};
+        }
+      }
       if (ctx.isVirtualCall) {
         return ctx;
       }
-      try {
-        const response = await ctx.apolloClient.query<MeQueryQuery>({
-          query: MeQueryDocument
-        });
-        return {
-          me: response.data.me
-        };
-      } catch (e) {
-        redirect(ctx, '/');
-        // message.error('You are not authenticated!');
-        return {};
-      }
+
+      checkCookieValidity();
+      await checkEndpoint();
     }
 
     public render() {

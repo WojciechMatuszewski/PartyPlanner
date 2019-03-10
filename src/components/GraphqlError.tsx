@@ -12,7 +12,7 @@ const GraphqlError: React.FC<{ error?: ApolloError }> = React.memo(
           : error.graphQLErrors[0].message.message;
     }
     return error && error.graphQLErrors ? (
-      <Alert type="error" message={message} />
+      <Alert type="error" message={message} showIcon={true} />
     ) : null;
   }
 );
