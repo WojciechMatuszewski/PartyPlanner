@@ -33,28 +33,24 @@ export const withApolloAuth = ({
         }
       }
 
-      async function checkEndpoint() {
-        try {
-          const response = await ctx.apolloClient.query<MeQueryQuery>({
-            query: MeQueryDocument
-          });
-          if (userHasToBe === 'notAuthenticated') {
-            redirect(ctx, '/dashboard');
-          }
-          return {
-            me: response.data.me
-          };
-        } catch (e) {
-          ctx.pathname !== '/login' && redirect(ctx, '/login');
-          return {};
-        }
-      }
       if (ctx.isVirtualCall) {
         return ctx;
       }
-
       checkCookieValidity();
-      await checkEndpoint();
+      try {
+        const response = await ctx.apolloClient.query<MeQueryQuery>({
+          query: MeQueryDocument
+        });
+        if (userHasToBe === 'notAuthenticated') {
+          redirect(ctx, '/dashboard');
+        }
+        return {
+          me: response.data.me
+        };
+      } catch (e) {
+        ctx.pathname !== '/login' && redirect(ctx, '/login');
+        return { ala: 'ma kota' };
+      }
     }
 
     public render() {
