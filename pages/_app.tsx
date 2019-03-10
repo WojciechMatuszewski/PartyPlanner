@@ -5,6 +5,12 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
 import withApollo from '../apolloSetup/withApollo';
 import AppLayout from '@components/Layout/AppLayout';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
+Router.onRouteChangeStart = () => NProgress.start();
+Router.onRouteChangeComplete = () => NProgress.done();
+Router.onRouteChangeError = () => NProgress.done();
 
 class MyApp extends App<{
   apolloClient: ApolloClient<NormalizedCacheObject>;
