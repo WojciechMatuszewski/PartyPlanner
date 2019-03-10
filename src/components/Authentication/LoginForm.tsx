@@ -5,10 +5,10 @@ import { Form, Button, Icon } from 'antd';
 import FormikInputField from '../../shared/formikInputField';
 import styled from '@emotion/styled';
 import { LoginMutation, LoginVariables } from '@generated/graphql';
-
 import { MutationFn, MutationResult } from 'react-apollo';
 import { withRouter, WithRouterProps } from 'next/router';
 import GraphqlError from '@components/GraphqlError';
+import { saveToken } from './AuthService';
 interface FormValues {
   email: string;
   password: string;
@@ -45,8 +45,8 @@ const LoginForm: React.FC<
     <Formik
       onSubmit={async formValues => {
         const response = await mutate({ variables: formValues });
-
         if (!error && response && response.data && router) {
+          saveToken(response.data.login.token);
           router.push('/dashboard');
         }
       }}

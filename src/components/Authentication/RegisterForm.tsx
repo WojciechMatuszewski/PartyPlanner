@@ -83,6 +83,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
                 type="text"
                 size="large"
                 placeholder="Your First Name"
+                aria-label="firstName-field"
               />
               <FastField
                 component={FormikInputField}
@@ -90,6 +91,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
                 type="text"
                 size="large"
                 placeholder="Your Last Name"
+                aria-label="lastName-field"
               />
               <FastField
                 component={FormikInputField}
@@ -97,6 +99,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
                 type="email"
                 size="large"
                 placeholder="Your Email"
+                aria-label="email-field"
               />
               <Field
                 component={FormikInputField}
@@ -104,6 +107,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
                 type="password"
                 size="large"
                 placeholder="Your Password"
+                aria-label="password-field"
               />
               <Field
                 component={FormikInputField}
@@ -111,6 +115,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
                 type="password"
                 size="large"
                 placeholder="Confirm Password"
+                aria-label="confirmPassword-field"
               />
               <Button
                 loading={loading}
