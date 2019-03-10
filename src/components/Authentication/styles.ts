@@ -61,6 +61,8 @@ export const AuthInnerWrapper = styled.div`
   @media screen and (max-width: 550px) {
     width: 100%;
     padding: 20px;
+    margin-top: 0;
+    box-shadow: none;
   }
 `;
 
