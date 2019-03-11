@@ -136,7 +136,7 @@ const DashboardBanner: React.FC = () => {
   return (
     <DashboardWrapper>
       <DashboardBannerImage>
-        <img src="../static/security.svg" />
+        <img src="../static/profile-banner-default.svg" />
         <ChangeBannerPhotoButtonWrapper>
           <ChangeBannerPhotoButton>
             <Icon type="setting" style={{ marginRight: 5 }} />
