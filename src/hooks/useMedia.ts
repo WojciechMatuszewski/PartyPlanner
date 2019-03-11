@@ -8,8 +8,8 @@ function useMedia(mediaQuery: string): boolean {
     const onChangeHandler = (event: MediaQueryListEvent) =>
       setMatches(event.matches);
     const matcher = window.matchMedia(mediaQuery);
-    matcher.addEventListener('change', onChangeHandler);
-    return () => matcher.removeEventListener('change', onChangeHandler);
+    matcher.addListener(onChangeHandler);
+    return () => matcher.addListener(onChangeHandler);
   }, [mediaQuery]);
 
   React.useEffect(() => {
