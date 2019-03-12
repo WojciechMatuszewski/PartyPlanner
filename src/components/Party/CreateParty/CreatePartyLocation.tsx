@@ -1,10 +1,11 @@
 import React from 'react';
-import { Form, Input, Button, Icon } from 'antd';
+import { Form, Button, Select, notification } from 'antd';
 import css from '@emotion/css';
-import { isBrowser } from '@apolloSetup/initApollo';
+
 import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
+import useBrowserGeolocation from '@hooks/useBrowserGeolocation';
 
 const FormItemStyles = css`
   flex: 1;
@@ -19,69 +20,84 @@ const FormItemButtonWrapper = styled.div`
   }
 `;
 
-function useBrowserGeolocation() {
-  const [state, setState] = React.useState<{
-    isAvailable: boolean | 'unknown';
-    position: Position | null;
-  }>({
-    isAvailable: isBrowser() ? !!navigator.geolocation : 'unknown',
-    position: null
-  });
-
-  React.useEffect(() => {
-    if (state.isAvailable === 'unknown') {
-      setState(prevState => ({
-        ...prevState,
-        isAvailable: !!navigator.geolocation
-      }));
-    }
-  }, []);
-
-  function getPosition(): Promise<Position | undefined> {
-    return new Promise(resolve => {
-      if (!state.isAvailable) resolve();
-      navigator.geolocation.getCurrentPosition(position => {
-        setState({ isAvailable: true, position });
-        resolve(position);
-      });
-    });
+function locateMe() {
+  const { getPosition } = useBrowserGeolocation();
+  async function getAddress(position: Position) {
+    return await axiosMapBoxInstance.get(
+      `/geocoding/v5/mapbox.places/${position!.coords.longitude},${
+        position!.coords.latitude
+      }.json?types=address`
+    );
   }
-
-  return { ...state, getPosition };
+  async function locateMe() {
+    try {
+      const position = (await getPosition()) as Position;
+      const { data } = await getAddress(position);
+      return { data, error: false };
+    } catch (e) {
+      return { data: null, error: true };
+    }
+  }
+  return locateMe;
 }
 
 const CreatePartyLocation: React.FC = () => {
-  const { isAvailable, getPosition } = useBrowserGeolocation();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { isAvailable } = useBrowserGeolocation();
+  const [isLoadingLocateMe, setIsLoadingLocateMe] = React.useState<boolean>(
+    false
+  );
+  const [locations, setLocations] = React.useState<any[]>([]);
+  const getUserAddress = locateMe();
 
   async function handleButtonClick() {
-    const position = await getPosition();
-    if (!position) return;
-    setIsLoading(true);
-    await axiosMapBoxInstance.get(
-      `/geocoding/v5/mapbox.places/${position.coords.longitude},${
-        position.coords.latitude
-      }.json?types=address`
+    setIsLoadingLocateMe(true);
+    const { error } = await getUserAddress();
+    if (error) {
+      notification.error({
+        message: 'An error occured',
+        description:
+          'Page was not able to automatically fetch your location, please enter it manually'
+      });
+    }
+    setIsLoadingLocateMe(false);
+  }
+
+  async function handleLocationSearch(searchQuery: string) {
+    const { data } = await axiosMapBoxInstance.get(
+      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL`
     );
-    setIsLoading(false);
+    setLocations(data.features);
   }
 
   return (
     <FormItemButtonWrapper>
       <Form.Item
         css={[FormItemStyles]}
-        validateStatus={isLoading ? 'validating' : undefined}
+        validateStatus={isLoadingLocateMe ? 'validating' : undefined}
         hasFeedback={true}
       >
-        <Input
-          prefix={<Icon type="environment" />}
+        <Select
+          disabled={isLoadingLocateMe}
+          allowClear={true}
+          showSearch={true}
+          dropdownMatchSelectWidth={true}
+          showArrow={true}
           placeholder={
-            isLoading ? 'Searching for your location...' : 'Pick location'
+            isLoadingLocateMe
+              ? 'Searching for your location...'
+              : 'Type here to search for a location'
           }
-        />
+          onSearch={async value => await handleLocationSearch(value)}
+        >
+          {locations.map((location, index) => (
+            <Select.Option key={index} value={location.place_name}>
+              {location.place_name}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
       <Button
-        disabled={!isAvailable}
+        disabled={!isAvailable || isLoadingLocateMe}
         onClick={handleButtonClick}
         type="dashed"
         block={false}
