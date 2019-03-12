@@ -11,7 +11,9 @@ export interface CorrectedEventWrapperProps<T extends Event = Event>
 }
 
 class CalendarEventWrapper extends React.Component<
-  CorrectedEventWrapperProps<CalendarEvent> & { calendarView: string }
+  CorrectedEventWrapperProps<CalendarEvent> & {
+    calendarView: string;
+  }
 > {
   private isMonth() {
     return this.props.calendarView === 'month';

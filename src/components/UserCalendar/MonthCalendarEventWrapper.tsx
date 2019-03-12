@@ -2,9 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import classNames from 'classnames';
 import CalendarEventPopover from './CalendarEventPopover';
-
 import styled from '@emotion/styled';
-
 import { ColorTint } from './ColorTints';
 import { Badge } from 'antd';
 import { CorrectedEventWrapperProps } from './CalendarEventWrapper';
@@ -13,6 +11,7 @@ import {
   FlexBoxVerticallyCenteredStyles,
   NotWrappingTextStyles
 } from '@shared/styles';
+import { CalendarContext } from './UserCalendar';
 
 const MonthCalendarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
@@ -121,12 +120,13 @@ const MonthCalendarEventWrapper: React.FC<
     elem.classList.remove('otherPartHovered');
   }
 
+  const calendarContext = React.useContext(CalendarContext);
+
   return (
     <CalendarEventPopover onVisibilityChange={toggleClicked}>
       <MonthCalendarWrapper
-        onClick={e => {
-          e.stopPropagation();
-          e.preventDefault();
+        onClick={() => {
+          calendarContext.onMonthEventClicked();
         }}
         colorTint={props.event.colorTint}
         longerThanOneDay={isLongerThanOneDay}

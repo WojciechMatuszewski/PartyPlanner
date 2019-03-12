@@ -5,10 +5,9 @@ import moment from 'moment';
 import BigCalendar, { View } from 'react-big-calendar';
 import CalendarToolbar from './CalendarToolbar';
 import CalendarEventWrapper from './CalendarEventWrapper';
-
 import { CalendarEvents } from './Events';
 import useMedia from '@hooks/useMedia';
-import { Modal, Typography } from 'antd';
+import CalendarCreateEventModal from './CalendarCreateEventModal';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -30,15 +29,11 @@ const OverriddenCalendarStyles = css`
       background: transparent;
     }
   }
-  /* .rbc-day-bg {
-    @media screen and (min-width: 800px) {
-      &:hover {
-        background: white;
-        cursor: pointer;
-      }
-    }
-  } */
 `;
+
+export const CalendarContext = React.createContext({
+  onMonthEventClicked: () => {}
+});
 
 const UserCalendar: React.FC = () => {
   const isOnMobile = useMedia('(max-width: 800px)');
@@ -46,6 +41,12 @@ const UserCalendar: React.FC = () => {
   const [calendarView, setCalendarView] = React.useState<View>(
     isOnMobile ? 'day' : 'month'
   );
+
+  const canShowCreateModal = React.useRef<boolean>(true);
+
+  function onMonthEventClickHandler() {
+    canShowCreateModal.current = false;
+  }
 
   React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
@@ -79,24 +80,25 @@ const UserCalendar: React.FC = () => {
         view={calendarView}
         step={15}
         timeslots={3}
-        onSelectSlot={({ start }) => {
-          Modal.confirm({
-            title: 'Do you wish to create new party?',
-            content: (
-              <React.Fragment>
-                <Typography.Text type="secondary">
-                  You picked {moment(start).format('MMMM Do YYYY')}
-                </Typography.Text>
-              </React.Fragment>
-            ),
-            okText: 'Proceed'
-          });
+        onSelectSlot={({ start, end }) => {
+          // this is a hack!!!!
+          if (!canShowCreateModal.current) {
+            canShowCreateModal.current = true;
+            return;
+          }
+          CalendarCreateEventModal(start, end);
         }}
         components={{
           toolbar: CalendarToolbar,
           // i cannot be bothered to fix someones types ;/
           eventWrapper: (props: any) => (
-            <CalendarEventWrapper {...props} calendarView={calendarView} />
+            <CalendarContext.Provider
+              value={{
+                onMonthEventClicked: onMonthEventClickHandler
+              }}
+            >
+              <CalendarEventWrapper {...props} calendarView={calendarView} />
+            </CalendarContext.Provider>
           )
         }}
       />
