@@ -38,15 +38,15 @@ const ChatWindow: React.FC = () => {
     chatMessagesInnerRef
   );
 
-  function onNewChatMessage() {
-    scrollToBottom(250);
-  }
+  const onNewChatMessage = React.useCallback(() => {
+    if (isWithinBottomLockRange) {
+      scrollToBottom(250);
+    }
+  }, [isWithinBottomLockRange]);
 
   return (
     <ChatWindowWrapper>
       <ChatMessages
-        scrollToBottom={scrollToBottom}
-        isWithinBottomLockRange={isWithinBottomLockRange}
         onNewMessage={onNewChatMessage}
         ref={chatMessagesInnerRef}
       />

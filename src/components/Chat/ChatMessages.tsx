@@ -16,28 +16,26 @@ const ChatMessagesWrapper = styled(animated.div)`
 
 interface Props {
   onNewMessage: (duration?: number) => void;
-  isWithinBottomLockRange: boolean;
-  scrollToBottom: VoidFunction;
 }
 
 const ChatMessages = React.forwardRef(
-  (_: Props, ref: React.Ref<HTMLDivElement>) => {
-    const [state] = React.useState<React.ReactNode[]>(
+  (props: Props, ref: React.Ref<HTMLDivElement>) => {
+    const [state, setState] = React.useState<React.ReactNode[]>(
       Array.from({ length: 30 }, (_, index) => (
         <h1 key={index}>Works {index}</h1>
       ))
     );
 
-    // useEffect(() => {
-    //   const interval = setInterval(() => {
-    //     setState(prevState => [
-    //       ...prevState,
-    //       <h1 key={prevState.length}>Works {prevState.length}</h1>
-    //     ]);
-    //     props.isWithinBottomLockRange && props.onNewMessage();
-    //   }, 100);
-    //   return () => clearInterval(interval);
-    // }, [props.isWithinBottomLockRange]);
+    React.useEffect(() => {
+      const interval = setInterval(() => {
+        setState(prevState => [
+          ...prevState,
+          <h1 key={prevState.length}>Works {prevState.length}</h1>
+        ]);
+        props.onNewMessage();
+      }, 100);
+      return () => clearInterval(interval);
+    });
 
     // useEffect(() => {
     //   props.scrollToBottom(0);
