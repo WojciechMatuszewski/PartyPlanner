@@ -8,10 +8,7 @@ import CalendarEventWrapper from './CalendarEventWrapper';
 
 import { CalendarEvents } from './Events';
 import useMedia from '@hooks/useMedia';
-
-import CalendarNewPartyModal, {
-  CalendarNewPartyModalProps
-} from './CalendarNewPartyModal';
+import { Modal, Typography } from 'antd';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -49,12 +46,6 @@ const UserCalendar: React.FC = () => {
   const [calendarView, setCalendarView] = React.useState<View>(
     isOnMobile ? 'day' : 'month'
   );
-  const [createPartyModalState, setCreatePartyModalState] = React.useState<
-    CalendarNewPartyModalProps
-  >({
-    isVisible: false,
-    selectedDate: ''
-  });
 
   React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
@@ -71,7 +62,6 @@ const UserCalendar: React.FC = () => {
 
   return (
     <React.Fragment>
-      <CalendarNewPartyModal {...createPartyModalState} />
       <BigCalendar
         css={css`
           ${BigCalendarStyles};
@@ -89,12 +79,19 @@ const UserCalendar: React.FC = () => {
         view={calendarView}
         step={15}
         timeslots={3}
-        onSelectSlot={({ start }) =>
-          setCreatePartyModalState({
-            isVisible: true,
-            selectedDate: start
-          })
-        }
+        onSelectSlot={({ start }) => {
+          Modal.confirm({
+            title: 'Do you wish to create new party?',
+            content: (
+              <React.Fragment>
+                <Typography.Text type="secondary">
+                  You picked {moment(start).format('MMMM Do YYYY')}
+                </Typography.Text>
+              </React.Fragment>
+            ),
+            okText: 'Proceed'
+          });
+        }}
         components={{
           toolbar: CalendarToolbar,
           // i cannot be bothered to fix someones types ;/

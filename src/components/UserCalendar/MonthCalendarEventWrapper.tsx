@@ -124,6 +124,10 @@ const MonthCalendarEventWrapper: React.FC<
   return (
     <CalendarEventPopover onVisibilityChange={toggleClicked}>
       <MonthCalendarWrapper
+        onClick={e => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
         colorTint={props.event.colorTint}
         longerThanOneDay={isLongerThanOneDay}
         className={wrapperClasses}
