@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Typography } from 'antd';
 
 interface Props {
   title: string;
@@ -16,6 +17,11 @@ const DashboardTileWrapper = styled.div`
 
   @media screen and (max-width: 1100px) {
     width: 100%;
+  }
+
+  @media screen and (max-width: 680px) {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
   }
 `;
 
@@ -42,7 +48,7 @@ const DashboardTile: React.FC<Props> = ({ title, anchorLink }) => {
     <DashboardTileWrapper>
       <DashboardTileTitle>
         <a href={anchorLink}>
-          <h1>{title}</h1>
+          <Typography.Title type="secondary">{title}</Typography.Title>
         </a>
       </DashboardTileTitle>
       <DashboardTileContent>sosososo</DashboardTileContent>

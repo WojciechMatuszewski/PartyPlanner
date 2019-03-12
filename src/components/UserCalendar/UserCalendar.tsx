@@ -9,6 +9,10 @@ import CalendarEventWrapper from './CalendarEventWrapper';
 import { CalendarEvents } from './Events';
 import useMedia from '@hooks/useMedia';
 
+import CalendarNewPartyModal, {
+  CalendarNewPartyModalProps
+} from './CalendarNewPartyModal';
+
 const localizer = BigCalendar.momentLocalizer(moment);
 
 const OverriddenCalendarStyles = css`
@@ -29,6 +33,14 @@ const OverriddenCalendarStyles = css`
       background: transparent;
     }
   }
+  /* .rbc-day-bg {
+    @media screen and (min-width: 800px) {
+      &:hover {
+        background: white;
+        cursor: pointer;
+      }
+    }
+  } */
 `;
 
 const UserCalendar: React.FC = () => {
@@ -37,6 +49,12 @@ const UserCalendar: React.FC = () => {
   const [calendarView, setCalendarView] = React.useState<View>(
     isOnMobile ? 'day' : 'month'
   );
+  const [createPartyModalState, setCreatePartyModalState] = React.useState<
+    CalendarNewPartyModalProps
+  >({
+    isVisible: false,
+    selectedDate: ''
+  });
 
   React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
@@ -52,30 +70,40 @@ const UserCalendar: React.FC = () => {
   }, [calendarView]);
 
   return (
-    <BigCalendar
-      css={css`
-        ${BigCalendarStyles};
-        ${OverriddenCalendarStyles};
-        .rbc-time-content {
-          padding-right: ${scrollXOffset}px;
-          box-sizing: content-box;
+    <React.Fragment>
+      <CalendarNewPartyModal {...createPartyModalState} />
+      <BigCalendar
+        css={css`
+          ${BigCalendarStyles};
+          ${OverriddenCalendarStyles};
+          .rbc-time-content {
+            padding-right: ${scrollXOffset}px;
+            box-sizing: content-box;
+          }
+        `}
+        selectable={!isOnMobile}
+        localizer={localizer}
+        events={CalendarEvents}
+        defaultDate={new Date(2015, 3, 12)}
+        onView={setCalendarView}
+        view={calendarView}
+        step={15}
+        timeslots={3}
+        onSelectSlot={({ start }) =>
+          setCreatePartyModalState({
+            isVisible: true,
+            selectedDate: start
+          })
         }
-      `}
-      localizer={localizer}
-      events={CalendarEvents}
-      defaultDate={new Date(2015, 3, 12)}
-      onView={setCalendarView}
-      view={calendarView}
-      step={15}
-      timeslots={3}
-      components={{
-        toolbar: CalendarToolbar,
-        // i cannot be bothered to fix someones types ;/
-        eventWrapper: (props: any) => (
-          <CalendarEventWrapper {...props} calendarView={calendarView} />
-        )
-      }}
-    />
+        components={{
+          toolbar: CalendarToolbar,
+          // i cannot be bothered to fix someones types ;/
+          eventWrapper: (props: any) => (
+            <CalendarEventWrapper {...props} calendarView={calendarView} />
+          )
+        }}
+      />
+    </React.Fragment>
   );
 };
 

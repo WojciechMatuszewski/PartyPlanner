@@ -1,8 +1,13 @@
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '../../shared/styles';
-import { animated } from 'react-spring';
+import posed from 'react-pose';
 
-export const AuthWrapper = styled(animated.div)`
+export const AuthWrapper = styled(
+  posed.div({
+    enter: { y: 0, opacity: 1 },
+    exit: { y: 40, opacity: 0 }
+  })
+)`
   min-height: calc(100vh - 64px);
   padding: 0 20px;
   box-sizing: border-box;
