@@ -1,11 +1,16 @@
 import React from 'react';
-import { Form, Button, Select, notification } from 'antd';
+import { Form, Button, Select, notification, Spin, Empty } from 'antd';
 import css from '@emotion/css';
-
 import styled from '@emotion/styled';
-import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
+import {
+  FlexBoxVerticallyCenteredStyles,
+  FlexBoxFullCenteredStyles
+} from '@shared/styles';
 import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
-import useBrowserGeolocation from '@hooks/useBrowserGeolocation';
+import useBrowserGeolocation from '@hooks/useGeolocation';
+import useUserLocation from '@hooks/useUserLocation';
+import axios, { AxiosResponse, Canceler } from 'axios';
+import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 
 const FormItemStyles = css`
   flex: 1;
@@ -20,25 +25,13 @@ const FormItemButtonWrapper = styled.div`
   }
 `;
 
-function locateMe() {
-  const { getPosition } = useBrowserGeolocation();
-  async function getAddress(position: Position) {
-    return await axiosMapBoxInstance.get(
-      `/geocoding/v5/mapbox.places/${position!.coords.longitude},${
-        position!.coords.latitude
-      }.json?types=address`
-    );
-  }
-  async function locateMe() {
-    try {
-      const position = (await getPosition()) as Position;
-      const { data } = await getAddress(position);
-      return { data, error: false };
-    } catch (e) {
-      return { data: null, error: true };
-    }
-  }
-  return locateMe;
+interface MapboxLocationSearchResult {
+  id: string;
+  place_name: string;
+}
+
+interface MapboxAxiosResponse {
+  features: MapboxLocationSearchResult[];
 }
 
 const CreatePartyLocation: React.FC = () => {
@@ -46,27 +39,55 @@ const CreatePartyLocation: React.FC = () => {
   const [isLoadingLocateMe, setIsLoadingLocateMe] = React.useState<boolean>(
     false
   );
-  const [locations, setLocations] = React.useState<any[]>([]);
-  const getUserAddress = locateMe();
+  const getUserAddress = useUserLocation();
+  const CancelToken = axios.CancelToken;
+  const axiosCanceler = React.useRef<Canceler>(() => null);
+
+  async function handleLocationSearch(searchQuery: string) {
+    axiosCanceler.current();
+    return await axiosMapBoxInstance.get(
+      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL`,
+      {
+        cancelToken: new CancelToken(
+          canceler => (axiosCanceler.current = canceler)
+        )
+      }
+    );
+  }
+
+  function axiosResponseTransformer(
+    response: AxiosResponse<MapboxAxiosResponse>
+  ): MapboxLocationSearchResult[] {
+    return response.data.features;
+  }
+
+  const {
+    state: locationsState,
+    inputProps: {
+      onChange: locationOnChangeHandler,
+      value: locationInputValue
+    },
+    helperProps: {
+      setInputValue: setLocationSearchValue,
+      setResults: setLocationResults
+    }
+  } = useRxjsTypeahead(handleLocationSearch, axiosResponseTransformer);
 
   async function handleButtonClick() {
     setIsLoadingLocateMe(true);
-    const { error } = await getUserAddress();
+    const { error, data } = await getUserAddress();
     if (error) {
       notification.error({
         message: 'An error occured',
         description:
           'Page was not able to automatically fetch your location, please enter it manually'
       });
+      setIsLoadingLocateMe(false);
+      return;
     }
+    setLocationResults(data.features);
+    setLocationSearchValue(data.features[0].place_name);
     setIsLoadingLocateMe(false);
-  }
-
-  async function handleLocationSearch(searchQuery: string) {
-    const { data } = await axiosMapBoxInstance.get(
-      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL`
-    );
-    setLocations(data.features);
   }
 
   return (
@@ -82,15 +103,32 @@ const CreatePartyLocation: React.FC = () => {
           showSearch={true}
           dropdownMatchSelectWidth={true}
           showArrow={true}
+          value={locationInputValue ? locationInputValue : undefined}
+          onSelect={(value: string) => setLocationSearchValue(value)}
+          notFoundContent={
+            locationsState.loading ? (
+              <div
+                css={css`
+                  ${FlexBoxFullCenteredStyles};
+                  width: 100%;
+                  height: 130px;
+                `}
+              >
+                <Spin />
+              </div>
+            ) : (
+              <Empty />
+            )
+          }
           placeholder={
             isLoadingLocateMe
               ? 'Searching for your location...'
               : 'Type here to search for a location'
           }
-          onSearch={async value => await handleLocationSearch(value)}
+          onSearch={locationOnChangeHandler}
         >
-          {locations.map((location, index) => (
-            <Select.Option key={index} value={location.place_name}>
+          {locationsState.results.map(location => (
+            <Select.Option key={location.id} value={location.place_name}>
               {location.place_name}
             </Select.Option>
           ))}
