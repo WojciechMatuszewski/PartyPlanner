@@ -23,7 +23,9 @@
       "@pages/*": ["./pages/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@shared/*": ["./src/shared/*"],
-      "@generated/*": ["./generated/*"]
+      "@generated/*": ["./generated/*"],
+      "@apolloSetup/*": ["./apolloSetup/*"],
+      "@axios/*": ["axios/*"]
     }
   }
 }
