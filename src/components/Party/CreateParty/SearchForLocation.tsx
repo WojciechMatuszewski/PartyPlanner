@@ -33,17 +33,19 @@ interface UserSearchedLocation extends UserLocation {
 }
 
 interface Props {
-  localizeMeButtonState: LocalizeMeButtonState;
+  state: LocalizeMeButtonState;
 }
 
 const SearchForLocation: React.FC<
   Props & {
     formik: FormikContext<CreatePartyForm>;
   }
-> = ({ formik: { setFieldValue, touched, errors }, localizeMeButtonState }) => {
+> = ({
+  formik: { setFieldValue, touched, errors },
+  state: localizeMeButtonState
+}) => {
   const CancelToken = axios.CancelToken;
   const axiosCanceler = React.useRef<Canceler>(() => null);
-
   async function handleLocationSearch(searchQuery: string) {
     axiosCanceler.current();
     return await axiosMapBoxInstance.get(
@@ -86,9 +88,9 @@ const SearchForLocation: React.FC<
     if (localizeMeButtonState.location.placeName.trim() === '') return;
     setInputValue(localizeMeButtonState.location.placeName);
     setResults([
-      ...state.results,
       { ...localizeMeButtonState.location, id: Math.random().toString() }
     ]);
+    setFieldValue('location', localizeMeButtonState.location);
   }, [localizeMeButtonState.location]);
 
   return (

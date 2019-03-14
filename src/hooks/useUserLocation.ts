@@ -1,7 +1,7 @@
 import useGeolocation, { GeolocationCoords } from './useGeolocation';
 import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
 
-async function getAddress({ latitude, longitude }: GeolocationCoords) {
+export async function getAddress({ latitude, longitude }: GeolocationCoords) {
   return await axiosMapBoxInstance.get(
     `/geocoding/v5/mapbox.places/${longitude},${latitude}.json?types=address`
   );
@@ -21,6 +21,7 @@ function useUserLocation() {
     try {
       const coords = (await getCoords()) as GeolocationCoords;
       const { data } = await getAddress(coords);
+
       return {
         data: { placeName: data.features[0].place_name, coords: coords },
         error: false

@@ -20,7 +20,9 @@ module.exports = {
     '@pages/(.*)': '<rootDir>/pages/$1',
     '@shared/(.*)': '<rootDir>/src/shared/$1',
     '@generated/(.*)': '<rootDir>/generated/$1',
-    '@hooks/(.*)': '<rootDir>/src/hooks/$1'
+    '@hooks/(.*)': '<rootDir>/src/hooks/$1',
+    '@apolloSetup/(.*)': '<rootDir>/apolloSetup/$1',
+    '@axios/(.*)': '<rootDir>/axios/$1'
   },
 
   transformIgnorePatterns: ['<rootDir>/node_modules/', 'jest.*']

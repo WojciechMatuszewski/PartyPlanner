@@ -38,20 +38,68 @@ export interface LocalizeMeButtonState {
   location: UserLocation;
 }
 
+const initialLocalizeMeButtonState: LocalizeMeButtonState = {
+  loading: false,
+  location: {
+    coords: { latitude: 0, longitude: 0 },
+    placeName: ''
+  }
+};
+
+enum LocalizeMeButtonActions {
+  setLoading = 'SET_LOADING',
+  setLocation = 'SET_LOCATION'
+}
+
+export interface SetLoadingAction {
+  type: LocalizeMeButtonActions.setLoading;
+  payload: boolean;
+}
+
+export interface SetLocationAction {
+  type: LocalizeMeButtonActions.setLocation;
+  payload: UserLocation;
+}
+
+export const setLocalizeMeButtonLoading = (
+  loading: boolean
+): SetLoadingAction => ({
+  type: LocalizeMeButtonActions.setLoading,
+  payload: loading
+});
+
+export const setLocalizeMeButtonLocation = (
+  location: UserLocation
+): SetLocationAction => ({
+  type: LocalizeMeButtonActions.setLocation,
+  payload: location
+});
+
+function reducer(
+  state: LocalizeMeButtonState = initialLocalizeMeButtonState,
+  action: SetLoadingAction | SetLocationAction
+): LocalizeMeButtonState {
+  switch (action.type) {
+    case LocalizeMeButtonActions.setLoading:
+      return { ...state, loading: action.payload };
+    case LocalizeMeButtonActions.setLocation:
+      action;
+      return { ...state, loading: false, location: action.payload };
+    default:
+      return state;
+  }
+}
+
 const CreatePartyLocation: React.FC = () => {
-  const [localizeMeButtonState, setLocalizeMeButtonState] = React.useState<
-    LocalizeMeButtonState
-  >({
-    loading: false,
-    location: {
-      coords: { latitude: 0, longitude: 0 },
-      placeName: ''
-    }
-  });
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    initialLocalizeMeButtonState
+  );
+
   return (
     <PartyLocationWrapper>
-      <SearchForLocation localizeMeButtonState={localizeMeButtonState} />
-      <LocalizeMeButton setter={setLocalizeMeButtonState} />
+      <SearchForLocation state={state} />
+      <LocalizeMeButton state={state} dispatch={dispatch} />
     </PartyLocationWrapper>
   );
 };

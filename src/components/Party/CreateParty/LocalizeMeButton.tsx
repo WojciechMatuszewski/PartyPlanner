@@ -1,19 +1,24 @@
 import React from 'react';
 import { Button, notification } from 'antd';
 import useUserLocation from '@hooks/useUserLocation';
-import { LocalizeMeButtonState } from './CreatePartyLocation';
+import {
+  LocalizeMeButtonState,
+  SetLoadingAction,
+  SetLocationAction,
+  setLocalizeMeButtonLoading,
+  setLocalizeMeButtonLocation
+} from './CreatePartyLocation';
 
 interface Props {
-  setter: React.Dispatch<React.SetStateAction<LocalizeMeButtonState>>;
+  state: LocalizeMeButtonState;
+  dispatch: React.Dispatch<SetLoadingAction | SetLocationAction>;
 }
 
-const LocalizeMeButton: React.FC<Props> = ({ setter }) => {
+const LocalizeMeButton: React.FC<Props> = ({ state, dispatch }) => {
   const getUserAddress = useUserLocation();
-  const [loading, setLoading] = React.useState<boolean>(false);
 
   async function handleButtonClick() {
-    setLoading(true);
-    setter(prevState => ({ ...prevState, loading: true }));
+    dispatch(setLocalizeMeButtonLoading(true));
     const { error, data } = await getUserAddress();
     if (error) {
       notification.error({
@@ -22,11 +27,10 @@ const LocalizeMeButton: React.FC<Props> = ({ setter }) => {
           'Page was not able to automatically fetch your location, please enter it manually'
       });
     }
-    setter(prevState => ({ ...prevState, loading: false }));
+    dispatch(setLocalizeMeButtonLoading(false));
     if (data) {
-      setter({ location: data, loading: false });
+      dispatch(setLocalizeMeButtonLocation(data));
     }
-    setLoading(false);
   }
 
   return (
@@ -34,7 +38,8 @@ const LocalizeMeButton: React.FC<Props> = ({ setter }) => {
       type="dashed"
       block={false}
       onClick={handleButtonClick}
-      loading={loading}
+      loading={state.loading}
+      data-testid="LocalizeMeButton"
     >
       Localize me
     </Button>
