@@ -9,6 +9,7 @@ import { Formik, FormikErrors, FormikTouched, FastField } from 'formik';
 import moment from 'moment';
 import { RangePickerValue } from 'antd/lib/date-picker/interface';
 import FormikInputField from '@shared/formikInputField';
+import { UserLocation } from '@hooks/useUserLocation';
 
 const CreatePartyFormWrapper = styled.div`
   max-width: 1440px;
@@ -27,19 +28,21 @@ const initialValues = {
   location: ''
 };
 
-interface CreatePartyForm {
+export type PartyLocation = UserLocation;
+
+export interface CreatePartyForm {
   title: string;
   description: string;
   date: RangePickerValue;
-  location: string;
+  location: PartyLocation;
 }
 
-const validationSchema = yup.object().shape<any>({
+const validationSchema = yup.object().shape<CreatePartyForm>({
   title: yup
     .string()
-    .min(2)
+    .min(2, 'At least 2 characters')
     .max(20)
-    .required(),
+    .required('This field is required'),
   description: yup.string(),
   date: yup
     .mixed()
@@ -53,7 +56,16 @@ const validationSchema = yup.object().shape<any>({
       return value.length === 2 && bothElementsAreMomentInstances;
     })
     .required(),
-  location: yup.string().required()
+  location: yup
+    .object()
+    .shape({
+      placeName: yup.string().required(),
+      coords: yup.object().shape({
+        latitude: yup.number().required(),
+        longitude: yup.number().required()
+      })
+    })
+    .required()
 });
 
 const CreateParty: React.FC = () => {
@@ -103,8 +115,12 @@ const CreateParty: React.FC = () => {
                 />
                 <Form.Item
                   hasFeedback={true}
-                  validateStatus={getValidateStatus(errors, touched, 'date')}
-                  help={getFieldErrors(errors, touched, 'date')}
+                  validateStatus={getValidateStatus(
+                    errors as any,
+                    touched as any,
+                    'date'
+                  )}
+                  help={getFieldErrors(errors as any, touched as any, 'date')}
                 >
                   <DatePicker.RangePicker
                     onChange={dates => setFieldValue('date', dates)}

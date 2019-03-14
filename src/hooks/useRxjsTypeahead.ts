@@ -8,7 +8,6 @@ import {
   filter,
   switchMap
 } from 'rxjs/operators';
-import { AxiosResponse } from 'axios';
 
 interface UseTypeaheadInputProps {
   onChange: (value: string) => void;
@@ -91,7 +90,7 @@ function reducer(
 // tried typing this function with T extends any[] but weird things would happen
 export function useRxjsTypeahead<ResultType = any>(
   fetchFunction: (value: string) => Promise<any>,
-  transformFunction: (axiosResponse: any) => ResultType[]
+  transformFunction: (response: any) => ResultType[]
 ) {
   const [state, dispatch] = React.useReducer<
     TypeaheadReducer<ResultType[]>,
@@ -115,7 +114,7 @@ export function useRxjsTypeahead<ResultType = any>(
 
   const typeaheadOperator = (
     source: Observable<string>
-  ): Observable<AxiosResponse<any>> =>
+  ): Observable<ResponseType[]> =>
     source.pipe(
       debounceTime(300),
       distinctUntilChanged(),

@@ -1,11 +1,14 @@
 import React from 'react';
-import { Select, Spin, Empty } from 'antd';
+import { Select, Spin, Empty, Form } from 'antd';
 import axios, { Canceler, AxiosResponse } from 'axios';
 import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
 import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 import { UserLocation } from '@hooks/useUserLocation';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { connect, FormikContext } from 'formik';
+import { CreatePartyForm } from '../CreateParty';
+import { LocalizeMeButtonState } from './CreatePartyLocation';
 
 const SpinnerWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
@@ -30,10 +33,14 @@ interface UserSearchedLocation extends UserLocation {
 }
 
 interface Props {
-  onLocationSelected: (location: UserLocation) => void;
+  localizeMeButtonState: LocalizeMeButtonState;
 }
 
-const SearchForLocation: React.FC<Props> = () => {
+const SearchForLocation: React.FC<
+  Props & {
+    formik: FormikContext<CreatePartyForm>;
+  }
+> = ({ formik: { setFieldValue, touched, errors }, localizeMeButtonState }) => {
   const CancelToken = axios.CancelToken;
   const axiosCanceler = React.useRef<Canceler>(() => null);
 
@@ -62,37 +69,73 @@ const SearchForLocation: React.FC<Props> = () => {
     }));
   }
 
+  function onSelect(value: string) {
+    const { placeName, coords }: UserSearchedLocation = state.results.filter(
+      place => place.placeName === value
+    )[0];
+    setFieldValue('location', { placeName, coords });
+  }
+
   const {
     state,
-    inputProps: { onChange, value }
+    inputProps: { onChange, value },
+    helperProps: { setInputValue, setResults }
   } = useRxjsTypeahead(handleLocationSearch, axiosResponseTransformer);
 
+  React.useEffect(() => {
+    if (localizeMeButtonState.location.placeName.trim() === '') return;
+    setInputValue(localizeMeButtonState.location.placeName);
+    setResults([
+      ...state.results,
+      { ...localizeMeButtonState.location, id: Math.random().toString() }
+    ]);
+  }, [localizeMeButtonState.location]);
+
   return (
-    <Select
-      allowClear={true}
-      showSearch={true}
-      onSearch={onChange}
-      onChange={onChange}
-      dropdownMatchSelectWidth={true}
-      showArrow={true}
-      value={value ? value : undefined}
-      notFoundContent={
-        state.loading ? (
-          <SpinnerWrapper>
-            <Spin />
-          </SpinnerWrapper>
-        ) : state.results.length <= 0 ? (
-          <Empty />
-        ) : null
+    <Form.Item
+      help={
+        touched.location && errors.location
+          ? 'Please enter a valid location'
+          : null
       }
+      validateStatus={
+        touched.location ? (errors.location ? 'error' : 'success') : undefined
+      }
+      hasFeedback={true}
     >
-      {state.results.map(location => (
-        <Select.Option key={location.id} value={location.placeName}>
-          {location.placeName}
-        </Select.Option>
-      ))}
-    </Select>
+      <Select
+        disabled={localizeMeButtonState.loading}
+        allowClear={true}
+        showSearch={true}
+        onSearch={onChange}
+        onChange={onChange}
+        onSelect={onSelect}
+        dropdownMatchSelectWidth={true}
+        showArrow={true}
+        placeholder={
+          localizeMeButtonState.loading
+            ? 'Searching for your location'
+            : 'Search for location...'
+        }
+        value={value ? value : undefined}
+        notFoundContent={
+          state.loading ? (
+            <SpinnerWrapper>
+              <Spin />
+            </SpinnerWrapper>
+          ) : state.results.length <= 0 ? (
+            <Empty />
+          ) : null
+        }
+      >
+        {state.results.map(location => (
+          <Select.Option key={location.id} value={location.placeName}>
+            {location.placeName}
+          </Select.Option>
+        ))}
+      </Select>
+    </Form.Item>
   );
 };
 
-export default SearchForLocation;
+export default connect<Props, CreatePartyForm>(SearchForLocation);
