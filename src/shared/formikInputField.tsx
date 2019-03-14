@@ -19,7 +19,11 @@ const FormikInputField: React.FC<FieldProps & InputProps> = ({
       help={isInvalid ? errorFeedback : null}
       validateStatus={isInvalid ? 'error' : isValid ? 'success' : ''}
     >
-      <Input {...antdInputProps} {...field} />
+      {antdInputProps.type === 'textArea' ? (
+        <Input.TextArea {...field} {...antdInputProps as any} />
+      ) : (
+        <Input {...field} {...antdInputProps} />
+      )}
     </FormItem>
   );
 };
