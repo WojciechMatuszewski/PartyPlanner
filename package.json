@@ -51,6 +51,7 @@
     "jest-dom": "^3.1.2",
     "jest-runner-eslint": "^0.7.3",
     "jest-transform-css": "^2.0.0",
+    "react-hooks-testing-library": "^0.3.7",
     "react-testing-library": "^6.0.0",
     "tsconfig-paths-jest": "0.0.1",
     "typescript": "^3.3.3333"
