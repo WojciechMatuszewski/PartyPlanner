@@ -1,150 +1,107 @@
 import React from 'react';
-import { Form, Button, Select, notification, Spin, Empty } from 'antd';
-import css from '@emotion/css';
+import LocalizeMeButton from './LocalizeMeButton';
 import styled from '@emotion/styled';
-import {
-  FlexBoxVerticallyCenteredStyles,
-  FlexBoxFullCenteredStyles
-} from '@shared/styles';
-import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
-import useBrowserGeolocation from '@hooks/useGeolocation';
-import useUserLocation from '@hooks/useUserLocation';
-import axios, { AxiosResponse, Canceler } from 'axios';
-import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import SearchForLocation from './SearchForLocation';
+import { UserLocation } from '@hooks/useUserLocation';
 
-const FormItemStyles = css`
-  flex: 1;
-  margin-right: 12px;
-`;
-
-const FormItemButtonWrapper = styled.div`
-  ${FlexBoxVerticallyCenteredStyles}
+const PartyLocationWrapper = styled.div`
   width: 100%;
+  ${FlexBoxFullCenteredStyles};
+  .ant-form-item {
+    margin: 0;
+    width: 100%;
+    padding-right: 12px;
+  }
   button {
-    margin-bottom: 24px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  margin-bottom: 24px;
+
+  @media screen and (max-width: 992px) {
+    flex-direction: column;
+    button {
+      width: 100%;
+      order: 1;
+      margin-top: 0;
+    }
+    .ant-form-item {
+      order: 2;
+      padding-right: 0;
+    }
   }
 `;
 
-interface MapboxLocationSearchResult {
-  id: string;
-  place_name: string;
+export interface LocalizeMeButtonState {
+  loading: boolean;
+  location: UserLocation;
 }
 
-interface MapboxAxiosResponse {
-  features: MapboxLocationSearchResult[];
+const initialLocalizeMeButtonState: LocalizeMeButtonState = {
+  loading: false,
+  location: {
+    coords: { latitude: 0, longitude: 0 },
+    placeName: ''
+  }
+};
+
+enum LocalizeMeButtonActions {
+  setLoading = 'SET_LOADING',
+  setLocation = 'SET_LOCATION'
+}
+
+export interface SetLoadingAction {
+  type: LocalizeMeButtonActions.setLoading;
+  payload: boolean;
+}
+
+export interface SetLocationAction {
+  type: LocalizeMeButtonActions.setLocation;
+  payload: UserLocation;
+}
+
+export const setLocalizeMeButtonLoading = (
+  loading: boolean
+): SetLoadingAction => ({
+  type: LocalizeMeButtonActions.setLoading,
+  payload: loading
+});
+
+export const setLocalizeMeButtonLocation = (
+  location: UserLocation
+): SetLocationAction => ({
+  type: LocalizeMeButtonActions.setLocation,
+  payload: location
+});
+
+function reducer(
+  state: LocalizeMeButtonState = initialLocalizeMeButtonState,
+  action: SetLoadingAction | SetLocationAction
+): LocalizeMeButtonState {
+  switch (action.type) {
+    case LocalizeMeButtonActions.setLoading:
+      return { ...state, loading: action.payload };
+    case LocalizeMeButtonActions.setLocation:
+      action;
+      return { ...state, loading: false, location: action.payload };
+    default:
+      return state;
+  }
 }
 
 const CreatePartyLocation: React.FC = () => {
-  const { isAvailable } = useBrowserGeolocation();
-  const [isLoadingLocateMe, setIsLoadingLocateMe] = React.useState<boolean>(
-    false
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    initialLocalizeMeButtonState
   );
-  const getUserAddress = useUserLocation();
-  const CancelToken = axios.CancelToken;
-  const axiosCanceler = React.useRef<Canceler>(() => null);
-
-  async function handleLocationSearch(searchQuery: string) {
-    axiosCanceler.current();
-    return await axiosMapBoxInstance.get(
-      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL`,
-      {
-        cancelToken: new CancelToken(
-          canceler => (axiosCanceler.current = canceler)
-        )
-      }
-    );
-  }
-
-  function axiosResponseTransformer(
-    response: AxiosResponse<MapboxAxiosResponse>
-  ): MapboxLocationSearchResult[] {
-    return response.data.features;
-  }
-
-  const {
-    state: locationsState,
-    inputProps: {
-      onChange: locationOnChangeHandler,
-      value: locationInputValue
-    },
-    helperProps: {
-      setInputValue: setLocationSearchValue,
-      setResults: setLocationResults
-    }
-  } = useRxjsTypeahead(handleLocationSearch, axiosResponseTransformer);
-
-  async function handleButtonClick() {
-    setIsLoadingLocateMe(true);
-    const { error, data } = await getUserAddress();
-    if (error) {
-      notification.error({
-        message: 'An error occured',
-        description:
-          'Page was not able to automatically fetch your location, please enter it manually'
-      });
-      setIsLoadingLocateMe(false);
-      return;
-    }
-    setLocationResults(data.features);
-    setLocationSearchValue(data.features[0].place_name);
-    setIsLoadingLocateMe(false);
-  }
 
   return (
-    <FormItemButtonWrapper>
-      <Form.Item
-        css={[FormItemStyles]}
-        validateStatus={isLoadingLocateMe ? 'validating' : undefined}
-        hasFeedback={true}
-      >
-        <Select
-          disabled={isLoadingLocateMe}
-          allowClear={true}
-          showSearch={true}
-          dropdownMatchSelectWidth={true}
-          showArrow={true}
-          value={locationInputValue ? locationInputValue : undefined}
-          onSelect={(value: string) => setLocationSearchValue(value)}
-          notFoundContent={
-            locationsState.loading ? (
-              <div
-                css={css`
-                  ${FlexBoxFullCenteredStyles};
-                  width: 100%;
-                  height: 130px;
-                `}
-              >
-                <Spin />
-              </div>
-            ) : (
-              <Empty />
-            )
-          }
-          placeholder={
-            isLoadingLocateMe
-              ? 'Searching for your location...'
-              : 'Type here to search for a location'
-          }
-          onSearch={locationOnChangeHandler}
-        >
-          {locationsState.results.map(location => (
-            <Select.Option key={location.id} value={location.place_name}>
-              {location.place_name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Button
-        disabled={!isAvailable || isLoadingLocateMe}
-        onClick={handleButtonClick}
-        type="dashed"
-        block={false}
-        className="button"
-      >
-        Localize me
-      </Button>
-    </FormItemButtonWrapper>
+    <PartyLocationWrapper>
+      <SearchForLocation state={state} />
+      <LocalizeMeButton state={state} dispatch={dispatch} />
+    </PartyLocationWrapper>
   );
 };
 
-export default CreatePartyLocation;
+export default React.memo(CreatePartyLocation);
