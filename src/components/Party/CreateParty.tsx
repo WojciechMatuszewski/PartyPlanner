@@ -12,12 +12,17 @@ import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
 
 const CreatePartyFormWrapper = styled.div`
-  max-width: 1440px;
+  width: 100%;
   padding: 20px;
   box-sizing: border-box;
   width: 100%;
   background: white;
   min-height: calc(100vh - 64px);
+  margin: 0 auto;
+`;
+
+const InnerWrapper = styled.div`
+  max-width: 1440px;
   margin: 0 auto;
 `;
 
@@ -95,99 +100,101 @@ const CreateParty: React.FC = () => {
 
   return (
     <CreatePartyFormWrapper>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={() => null}
-      >
-        {({ handleSubmit, setFieldValue, errors, touched }) => (
-          <Form layout="horizontal" onSubmit={handleSubmit}>
-            <Row gutter={32}>
-              <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                <FastField
-                  component={FormikInputField}
-                  size="large"
-                  name="title"
-                  placeholder="Name your party"
-                  prefix={
-                    <Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                />
-                <Form.Item
-                  hasFeedback={true}
-                  validateStatus={getValidateStatus(
-                    errors as any,
-                    touched as any,
-                    'date'
-                  )}
-                  help={getFieldErrors(errors as any, touched as any, 'date')}
-                >
-                  <DatePicker.RangePicker
-                    onChange={dates => setFieldValue('date', dates)}
-                    name="date"
-                    showTime={true}
-                    style={{ width: '100%' }}
-                  />
-                </Form.Item>
-              </Col>
-
-              {!isBreakingTheGrid && (
+      <InnerWrapper>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={() => null}
+        >
+          {({ handleSubmit, setFieldValue, errors, touched }) => (
+            <Form layout="horizontal" onSubmit={handleSubmit}>
+              <Row gutter={32}>
                 <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                  <Button type="primary" size="large" htmlType="submit">
+                  <FastField
+                    component={FormikInputField}
+                    size="large"
+                    name="title"
+                    placeholder="Name your party"
+                    prefix={
+                      <Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
+                  />
+                  <Form.Item
+                    hasFeedback={true}
+                    validateStatus={getValidateStatus(
+                      errors as any,
+                      touched as any,
+                      'date'
+                    )}
+                    help={getFieldErrors(errors as any, touched as any, 'date')}
+                  >
+                    <DatePicker.RangePicker
+                      onChange={dates => setFieldValue('date', dates)}
+                      name="date"
+                      showTime={true}
+                      style={{ width: '100%' }}
+                    />
+                  </Form.Item>
+                </Col>
+
+                {!isBreakingTheGrid && (
+                  <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                    <Button type="primary" size="large" htmlType="submit">
+                      Save
+                    </Button>
+                  </Col>
+                )}
+              </Row>
+
+              <Row gutter={32}>
+                <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                  <Form.Item>
+                    <Tabs defaultActiveKey="1" onChange={() => {}}>
+                      <Tabs.TabPane tab="Information's" key="1">
+                        <CreatePartyLocation />
+                        <FastField
+                          component={FormikInputField}
+                          name="description"
+                          type="textArea"
+                          autosize={{ minRows: 4 }}
+                        />
+                      </Tabs.TabPane>
+                      <Tabs.TabPane tab="Find Time" key="2">
+                        Content of Tab Pane 2
+                      </Tabs.TabPane>
+                    </Tabs>
+                  </Form.Item>
+                </Col>
+
+                <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                  <Form.Item>
+                    <Tabs defaultActiveKey="1" onChange={() => {}}>
+                      <Tabs.TabPane tab="Invite friends" key="1">
+                        <Input
+                          placeholder="Search your friends"
+                          prefix={
+                            <Icon
+                              type="team"
+                              style={{ color: 'rgba(0,0,0,.25)' }}
+                            />
+                          }
+                        />
+                      </Tabs.TabPane>
+                    </Tabs>
+                  </Form.Item>
+                </Col>
+              </Row>
+              {isBreakingTheGrid && (
+                <FormItem>
+                  <Button type="primary" block={true} htmlType="submit">
                     Save
                   </Button>
-                </Col>
+                </FormItem>
               )}
-            </Row>
-
-            <Row gutter={32}>
-              <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                <Form.Item>
-                  <Tabs defaultActiveKey="1" onChange={() => {}}>
-                    <Tabs.TabPane tab="Information's" key="1">
-                      <CreatePartyLocation />
-                      <FastField
-                        component={FormikInputField}
-                        name="description"
-                        type="textArea"
-                        autosize={{ minRows: 4 }}
-                      />
-                    </Tabs.TabPane>
-                    <Tabs.TabPane tab="Find Time" key="2">
-                      Content of Tab Pane 2
-                    </Tabs.TabPane>
-                  </Tabs>
-                </Form.Item>
-              </Col>
-
-              <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                <Form.Item>
-                  <Tabs defaultActiveKey="1" onChange={() => {}}>
-                    <Tabs.TabPane tab="Invite friends" key="1">
-                      <Input
-                        placeholder="Search your friends"
-                        prefix={
-                          <Icon
-                            type="team"
-                            style={{ color: 'rgba(0,0,0,.25)' }}
-                          />
-                        }
-                      />
-                    </Tabs.TabPane>
-                  </Tabs>
-                </Form.Item>
-              </Col>
-            </Row>
-            {isBreakingTheGrid && (
-              <FormItem>
-                <Button type="primary" block={true} htmlType="submit">
-                  Save
-                </Button>
-              </FormItem>
-            )}
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+      </InnerWrapper>
     </CreatePartyFormWrapper>
   );
 };
