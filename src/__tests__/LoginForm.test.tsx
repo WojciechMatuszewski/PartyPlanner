@@ -66,6 +66,6 @@ describe('Login Form', () => {
         variables: { email: 'test@test.pl', password: 'password' }
       })
     );
-    expect(document.cookie).toBe('token=ala ma kota');
+    expect(document.cookie).toBe('token=ala%20ma%20kota');
   });
 });
