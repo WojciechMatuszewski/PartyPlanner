@@ -26,17 +26,20 @@ export const withApolloAuth = ({
         const { token } = parseCookies(ctx.req);
         if (!token && userHasToBe === 'authenticated') {
           ctx.pathname !== '/login' && redirect(ctx, '/login');
-          return {};
+          return true;
         }
         if (!token && userHasToBe === 'notAuthenticated') {
-          return {};
+          return true;
         }
       }
 
       if (ctx.isVirtualCall) {
         return ctx;
       }
-      checkCookieValidity();
+
+      const shouldReturnEmpty = checkCookieValidity();
+      if (shouldReturnEmpty) return {};
+
       try {
         const response = await ctx.apolloClient.query<MeQueryQuery>({
           query: MeQueryDocument
@@ -49,7 +52,7 @@ export const withApolloAuth = ({
         };
       } catch (e) {
         ctx.pathname !== '/login' && redirect(ctx, '/login');
-        return { ala: 'ma kota' };
+        return {};
       }
     }
 

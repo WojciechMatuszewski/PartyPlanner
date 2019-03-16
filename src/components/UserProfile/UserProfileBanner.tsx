@@ -7,7 +7,7 @@ import {
   FlexBoxVerticallyCenteredStyles
 } from '@shared/styles';
 
-const DashboardBannerImage = styled.div`
+const UserProfileBannerImage = styled.div`
   width: 100%;
   max-height: 312px;
   background: rgba(255, 255, 255, 0.5);
@@ -27,7 +27,7 @@ const DashboardBannerImage = styled.div`
   }
 `;
 
-const DashboardWrapper = styled.div`
+const UserProfileWrapper = styled.div`
   width: 100%;
   position: relative;
   margin: 0 auto;
@@ -38,7 +38,7 @@ const DashboardWrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const DashboardBannerName = styled.div`
+const UserProfileBannerName = styled.div`
   position: absolute;
   left: 136px;
   bottom: 60px;
@@ -88,7 +88,7 @@ const ChangeBannerPhotoButton = styled.button`
   }
 `;
 
-const DashboardBannerMenuStyles = css`
+const UserProfileBannerMenuStyles = css`
   padding-left: 136px;
 
   @media screen and (max-width: 680px) {
@@ -132,10 +132,10 @@ const UserNameAvatarWrapper = styled.div`
   }
 `;
 
-const DashboardBanner: React.FC = () => {
+const UserProfileBanner: React.FC = () => {
   return (
-    <DashboardWrapper>
-      <DashboardBannerImage>
+    <UserProfileWrapper>
+      <UserProfileBannerImage>
         <img src="../static/profile-banner-default.svg" />
         <ChangeBannerPhotoButtonWrapper>
           <ChangeBannerPhotoButton>
@@ -143,22 +143,22 @@ const DashboardBanner: React.FC = () => {
             Edit Cover
           </ChangeBannerPhotoButton>
         </ChangeBannerPhotoButtonWrapper>
-      </DashboardBannerImage>
+      </UserProfileBannerImage>
       <UserNameAvatarWrapper>
         <UserImageWrapper>
           <img src="../static/person.png" />
         </UserImageWrapper>
-        <DashboardBannerName>
+        <UserProfileBannerName>
           <h1>Wojciech Matuszewski</h1>
-        </DashboardBannerName>
+        </UserProfileBannerName>
       </UserNameAvatarWrapper>
-      <Menu css={DashboardBannerMenuStyles} mode="horizontal">
+      <Menu css={UserProfileBannerMenuStyles} mode="horizontal">
         <Menu.Item>Info</Menu.Item>
         <Menu.Item>Friends</Menu.Item>
         <Menu.Item>Parties</Menu.Item>
       </Menu>
-    </DashboardWrapper>
+    </UserProfileWrapper>
   );
 };
 
-export default DashboardBanner;
+export default UserProfileBanner;

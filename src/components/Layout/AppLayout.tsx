@@ -1,7 +1,8 @@
 import React from 'react';
 import { Layout } from 'antd';
-import AppHeader from './AppHeader';
+
 import css from '@emotion/css';
+import AppHeader from './AppHeader/AppHeader';
 
 const LayoutStyles = css`
   min-height: 100vh;

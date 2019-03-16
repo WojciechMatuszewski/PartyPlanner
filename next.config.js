@@ -4,6 +4,7 @@ const withCSS = require('@zeit/next-css');
 const composePlugins = require('next-compose-plugins');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
+const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 if (typeof require !== 'undefined') {
   require.extensions['.css'] = file => {};
@@ -18,6 +19,9 @@ module.exports = composePlugins([withTypescript, withCSS], {
       new Dotenv({
         path: path.join(__dirname, '.env'),
         systemvars: true
+      }),
+      new FilterWarningsPlugin({
+        exclude: /mini-css-extract-plugin[^]*Conflicting order between:/
       })
     ];
 

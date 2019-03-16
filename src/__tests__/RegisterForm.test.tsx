@@ -50,6 +50,6 @@ describe('RegisterForm', () => {
       target: { value: RegisterData.confirmPassword }
     });
     fireEvent.click(getByTestId('register-submit'));
-    await wait(() => expect(document.cookie).toBe('token=ala ma psa123'));
+    await wait(() => expect(document.cookie).toBe('token=ala%20ma%20psa123'));
   });
 });

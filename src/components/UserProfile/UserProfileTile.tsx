@@ -7,7 +7,7 @@ interface Props {
   anchorLink: string;
 }
 
-const DashboardTileWrapper = styled.div`
+const UserProfileTileWrapper = styled.div`
   width: 900px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -25,7 +25,7 @@ const DashboardTileWrapper = styled.div`
   }
 `;
 
-const DashboardTileTitle = styled.div`
+const UserProfileTileTitle = styled.div`
   width: 100%;
   background: white;
   border-bottom: 1px solid #d9d9d9;
@@ -35,7 +35,7 @@ const DashboardTileTitle = styled.div`
   }
 `;
 
-const DashboardTileContent = styled.div`
+const UserProfileTileContent = styled.div`
   width: 100%;
   padding: 15px;
   box-sizing: border-box;
@@ -43,17 +43,17 @@ const DashboardTileContent = styled.div`
   background: rgba(255, 255, 255, 0.5);
 `;
 
-const DashboardTile: React.FC<Props> = ({ title, anchorLink }) => {
+const UserProfileTile: React.FC<Props> = ({ title, anchorLink }) => {
   return (
-    <DashboardTileWrapper>
-      <DashboardTileTitle>
+    <UserProfileTileWrapper>
+      <UserProfileTileTitle>
         <a href={anchorLink}>
           <Typography.Title type="secondary">{title}</Typography.Title>
         </a>
-      </DashboardTileTitle>
-      <DashboardTileContent>sosososo</DashboardTileContent>
-    </DashboardTileWrapper>
+      </UserProfileTileTitle>
+      <UserProfileTileContent>sosososo</UserProfileTileContent>
+    </UserProfileTileWrapper>
   );
 };
 
-export default DashboardTile;
+export default UserProfileTile;

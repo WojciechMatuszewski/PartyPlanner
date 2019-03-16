@@ -1,7 +1,9 @@
+import cookie from 'cookie';
+
 export function saveToken(token: string) {
-  document.cookie = `token=${token}`;
+  document.cookie = cookie.serialize('token', token);
 }
 
 export function getToken(): string | null {
-  return document.cookie;
+  return cookie.parse(document.cookie).token;
 }
