@@ -31,6 +31,7 @@ class MyDocument extends Document<EmotionCritical> {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <link rel="stylesheet" href="../static/nprogress.css" />
+          <link rel="stylesheet" href="../static/utils.css" />
         </Head>
         <body className="custom_class">
           <Main />
