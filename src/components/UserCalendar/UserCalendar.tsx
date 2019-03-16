@@ -30,16 +30,37 @@ const OverriddenCalendarStyles = css`
     }
   }
 `;
+interface ControlCalendarProps {
+  controlled?: boolean;
+  selectable?: boolean;
+  controlledView?:
+    | 'month'
+    | 'week'
+    | 'work_week'
+    | 'day'
+    | 'agenda'
+    | undefined;
+}
 
-export const CalendarContext = React.createContext({
-  onMonthEventClicked: () => {}
+export const CalendarContext = React.createContext<
+  { onMonthEventClicked: VoidFunction } & ControlCalendarProps
+>({
+  onMonthEventClicked: () => {},
+  controlled: false,
+  selectable: false,
+  controlledView: undefined
 });
 
-const UserCalendar: React.FC = () => {
+const UserCalendar: React.FC<ControlCalendarProps> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
   const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
+
   const [calendarView, setCalendarView] = React.useState<View>(
-    isOnMobile ? 'day' : 'month'
+    props.controlled
+      ? (props.controlledView as any)
+      : isOnMobile
+      ? 'day'
+      : 'month'
   );
 
   const canShowCreateModal = React.useRef<boolean>(true);
@@ -72,7 +93,7 @@ const UserCalendar: React.FC = () => {
             box-sizing: content-box;
           }
         `}
-        selectable={!isOnMobile}
+        selectable={!props.controlled ? !isOnMobile : props.selectable}
         localizer={localizer}
         events={CalendarEvents}
         defaultDate={new Date(2015, 3, 12)}
@@ -89,21 +110,40 @@ const UserCalendar: React.FC = () => {
           CalendarCreateEventModal(start, end);
         }}
         components={{
-          toolbar: CalendarToolbar,
-          // i cannot be bothered to fix someones types ;/
-          eventWrapper: (props: any) => (
+          toolbar: toolbarProps => (
             <CalendarContext.Provider
               value={{
+                ...props,
                 onMonthEventClicked: onMonthEventClickHandler
               }}
             >
-              <CalendarEventWrapper {...props} calendarView={calendarView} />
+              <CalendarToolbar {...toolbarProps} />
+            </CalendarContext.Provider>
+          ),
+          // i cannot be bothered to fix someones types ;/
+          eventWrapper: (eventWrapperProps: any) => (
+            <CalendarContext.Provider
+              value={{
+                ...props,
+                onMonthEventClicked: onMonthEventClickHandler
+              }}
+            >
+              <CalendarEventWrapper
+                {...eventWrapperProps}
+                calendarView={calendarView}
+              />
             </CalendarContext.Provider>
           )
         }}
       />
     </React.Fragment>
   );
+};
+
+UserCalendar.defaultProps = {
+  controlled: false,
+  controlledView: 'week',
+  selectable: false
 };
 
 export default UserCalendar;

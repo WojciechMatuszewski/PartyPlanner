@@ -106,8 +106,8 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                 <Link href="/user-profile">
                   <a>
                     <UserDefaultAvatar
-                      firstName={data!.me!.firstName}
-                      lastName={data!.me!.lastName}
+                      firstName={data && data.me ? data.me.firstName : ''}
+                      lastName={data && data.me ? data.me.lastName : ''}
                     />
                   </a>
                 </Link>

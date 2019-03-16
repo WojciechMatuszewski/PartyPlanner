@@ -110,7 +110,12 @@ const SearchForLocation: React.FC<
         allowClear={true}
         showSearch={true}
         onSearch={onChange}
-        onChange={onChange}
+        onChange={value => {
+          onChange(value);
+          if (value == undefined) {
+            setFieldValue('location', {});
+          }
+        }}
         onSelect={onSelect}
         dropdownMatchSelectWidth={true}
         showArrow={true}

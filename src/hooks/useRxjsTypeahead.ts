@@ -118,6 +118,7 @@ export function useRxjsTypeahead<ResultType = any>(
     source.pipe(
       debounceTime(300),
       distinctUntilChanged(),
+      filter(str => !!str),
       map((str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim()),
       filter(str => !!str),
       tap(() => dispatch(SetLoading(true))),
