@@ -3,6 +3,7 @@ import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
+import { MeQueryComponent } from '@generated/graphql';
 
 const PosedTileWrapper = styled(
   posed.div({
@@ -32,12 +33,18 @@ const PosedTileWrapper = styled(
 
 const UserDashboardTitle: React.FC = () => {
   return (
-    <PoseGroup>
-      <PosedTileWrapper key={1} initialPose={'exit'}>
-        <Typography.Text>Welcome</Typography.Text>
-        <Typography.Title>Mateusz</Typography.Title>
-      </PosedTileWrapper>
-    </PoseGroup>
+    <MeQueryComponent fetchPolicy="cache-only">
+      {({ data }) => (
+        <PoseGroup>
+          <PosedTileWrapper key={1} initialPose={'exit'}>
+            <Typography.Text>Welcome</Typography.Text>
+            <Typography.Title>
+              {data && data.me && data.me.firstName}
+            </Typography.Title>
+          </PosedTileWrapper>
+        </PoseGroup>
+      )}
+    </MeQueryComponent>
   );
 };
 

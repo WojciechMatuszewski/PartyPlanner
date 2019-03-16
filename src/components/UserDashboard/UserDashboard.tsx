@@ -11,9 +11,13 @@ const UserDashboardWrapper = styled.div`
   padding: 20px;
   width: 100%;
   min-height: calc(100vh - 64px);
+  ${FlexBoxFullCenteredStyles};
   @media screen and (max-width: 780px) {
     padding: 0;
     padding-bottom: 12px;
+  }
+  @media screen and (max-width: 1050px) {
+    display: block;
   }
 `;
 
