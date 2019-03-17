@@ -10,6 +10,8 @@ import moment from 'moment';
 import { RangePickerValue } from 'antd/lib/date-picker/interface';
 import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
+import UserCalendar from '@components/UserCalendar/UserCalendar';
+import css from '@emotion/css';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
@@ -158,8 +160,21 @@ const CreateParty: React.FC = () => {
                           autosize={{ minRows: 4 }}
                         />
                       </Tabs.TabPane>
-                      <Tabs.TabPane tab="Find Time" key="2">
-                        Content of Tab Pane 2
+                      <Tabs.TabPane
+                        tab="Find Time"
+                        key="2"
+                        css={css`
+                          .rbc-calendar {
+                            max-height: 400px;
+                            min-height: 100px;
+                          }
+                        `}
+                      >
+                        <UserCalendar
+                          controlled={true}
+                          controlledView="day"
+                          selectable={false}
+                        />
                       </Tabs.TabPane>
                     </Tabs>
                   </Form.Item>

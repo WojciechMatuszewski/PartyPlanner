@@ -4,6 +4,7 @@ import { Icon, Popover, Modal } from 'antd';
 import { AvatarList } from 'ant-design-pro';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
+import { CalendarContext } from './UserCalendar';
 
 const CalendarEventPopoverWrapper = styled.div`
   width: ${(props: { isInModal: boolean }) =>
@@ -133,8 +134,11 @@ const CalendarEventPopover: React.FC<{
   onVisibilityChange?: (visible: boolean) => void;
 }> = ({ children, onVisibilityChange }) => {
   const isOnMobile = useMedia('(max-width:800px)');
+  const calendarContext = React.useContext(CalendarContext);
+
   function handleMobileClick() {
     Modal.info({
+      className: 'user-calendar-modal',
       icon: <div />,
       centered: true,
       okText: 'Close',
@@ -143,7 +147,11 @@ const CalendarEventPopover: React.FC<{
     });
   }
 
-  return !isOnMobile ? (
+  return calendarContext.controlled ? (
+    <ModalClickContainer onClick={handleMobileClick}>
+      {children}
+    </ModalClickContainer>
+  ) : !isOnMobile ? (
     <Popover
       content={<CalendarEventPopoverContent isInModal={false} />}
       trigger="click"

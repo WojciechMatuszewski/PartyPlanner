@@ -1,3 +1,9 @@
 .ant-dropdown-hidden {
   display: none;
 }
+
+@media screen and (max-width: 680px) {
+  .user-calendar-modal .ant-modal-confirm-content {
+    margin-left: 0 !important;
+  }
+}

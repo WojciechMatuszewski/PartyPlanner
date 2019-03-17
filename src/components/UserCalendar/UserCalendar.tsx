@@ -30,23 +30,52 @@ const OverriddenCalendarStyles = css`
     }
   }
 `;
+interface ControlCalendarProps {
+  controlled?: boolean;
+  selectable?: boolean;
+  controlledView?:
+    | 'month'
+    | 'week'
+    | 'work_week'
+    | 'day'
+    | 'agenda'
+    | undefined;
+}
 
-export const CalendarContext = React.createContext({
-  onMonthEventClicked: () => {}
+interface CalendarContext extends ControlCalendarProps {
+  onMonthEventClicked: VoidFunction;
+}
+
+export const CalendarContext = React.createContext<CalendarContext>({
+  onMonthEventClicked: () => {},
+  controlled: false,
+  selectable: false,
+  controlledView: undefined
 });
 
-const UserCalendar: React.FC = () => {
+const UserCalendar: React.FC<ControlCalendarProps> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
   const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
-  const [calendarView, setCalendarView] = React.useState<View>(
-    isOnMobile ? 'day' : 'month'
-  );
-
   const canShowCreateModal = React.useRef<boolean>(true);
+
+  const [calendarView, setCalendarView] = React.useState<View>(
+    props.controlled
+      ? (props.controlledView as any)
+      : isOnMobile
+      ? 'day'
+      : 'month'
+  );
 
   function onMonthEventClickHandler() {
     canShowCreateModal.current = false;
   }
+
+  const [contextState] = React.useState<CalendarContext>({
+    onMonthEventClicked: onMonthEventClickHandler,
+    controlled: props.controlled,
+    controlledView: props.controlledView,
+    selectable: props.selectable
+  });
 
   React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
@@ -62,7 +91,7 @@ const UserCalendar: React.FC = () => {
   }, [calendarView]);
 
   return (
-    <React.Fragment>
+    <CalendarContext.Provider value={contextState}>
       <BigCalendar
         css={css`
           ${BigCalendarStyles};
@@ -72,7 +101,7 @@ const UserCalendar: React.FC = () => {
             box-sizing: content-box;
           }
         `}
-        selectable={!isOnMobile}
+        selectable={!props.controlled ? !isOnMobile : props.selectable}
         localizer={localizer}
         events={CalendarEvents}
         defaultDate={new Date(2015, 3, 12)}
@@ -91,19 +120,22 @@ const UserCalendar: React.FC = () => {
         components={{
           toolbar: CalendarToolbar,
           // i cannot be bothered to fix someones types ;/
-          eventWrapper: (props: any) => (
-            <CalendarContext.Provider
-              value={{
-                onMonthEventClicked: onMonthEventClickHandler
-              }}
-            >
-              <CalendarEventWrapper {...props} calendarView={calendarView} />
-            </CalendarContext.Provider>
+          eventWrapper: (eventWrapperProps: any) => (
+            <CalendarEventWrapper
+              {...eventWrapperProps}
+              calendarView={calendarView}
+            />
           )
         }}
       />
-    </React.Fragment>
+    </CalendarContext.Provider>
   );
+};
+
+UserCalendar.defaultProps = {
+  controlled: false,
+  controlledView: 'week',
+  selectable: false
 };
 
 export default UserCalendar;

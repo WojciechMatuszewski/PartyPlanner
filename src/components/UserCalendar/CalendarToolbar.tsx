@@ -1,21 +1,21 @@
 import React from 'react';
 import { ToolbarProps, View } from 'react-big-calendar';
-import { Button, Icon } from 'antd';
+import { Button, Icon, DatePicker } from 'antd';
 import styled from '@emotion/styled';
 import ButtonGroup from 'antd/lib/button/button-group';
 import css from '@emotion/css';
 import { Radio } from 'antd';
-import {
-  FlexBoxVerticallyCenteredStyles,
-  NotWrappingTextStyles
-} from '@shared/styles';
+import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
+import moment from 'moment';
+import { CalendarContext } from './UserCalendar';
 
 const ToolbarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
   width: 100%;
   justify-content: space-between;
-  padding: 10px;
+  padding: ${(props: { controlled?: boolean }) =>
+    props.controlled ? '10px 0' : '10px'};
   h2 {
     margin: 0;
     @media screen and (max-width: 800px) {
@@ -24,17 +24,28 @@ const ToolbarWrapper = styled.div`
   }
 `;
 
+const DatePickerStyles = css`
+  position: relative;
+  & input {
+    border-radius: 0;
+  }
+  outline: 0;
+  &:hover {
+    z-index: 2;
+  }
+`;
+
 const MobileToolbarView: React.FC<ToolbarProps> = props => {
+  const { controlled } = React.useContext(CalendarContext);
+
   return (
-    <ToolbarWrapper>
-      <h2
-        css={css`
-          ${NotWrappingTextStyles};
-          text-overflow: ellipsis;
-        `}
-      >
-        {props.label}
-      </h2>
+    <ToolbarWrapper controlled={controlled}>
+      <DatePicker
+        onChange={momentDate => props.onNavigate('DATE', momentDate.toDate())}
+        value={moment(props.date)}
+        defaultValue={moment(props.date)}
+        css={[DatePickerStyles]}
+      />
       <div style={{ display: 'flex' }}>
         <Button shape="circle" onClick={() => props.onNavigate('PREV')}>
           <Icon type="left" />
@@ -62,6 +73,12 @@ const DesktopToolbarView: React.FC<ToolbarProps> = props => {
           Back
         </Button>
         <Button onClick={() => props.onNavigate('TODAY')}>Today</Button>
+        <DatePicker
+          onChange={momentDate => props.onNavigate('DATE', momentDate.toDate())}
+          value={moment(props.date)}
+          defaultValue={moment(props.date)}
+          css={[DatePickerStyles]}
+        />
         <Button onClick={() => props.onNavigate('NEXT')}>
           Next
           <Icon type="right" />
@@ -95,7 +112,11 @@ const DesktopToolbarView: React.FC<ToolbarProps> = props => {
 
 const CalendarToolbar: React.FC<ToolbarProps> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
-  return isOnMobile ? (
+  const calendarContext = React.useContext(CalendarContext);
+
+  return calendarContext.controlled ? (
+    <MobileToolbarView {...props} />
+  ) : isOnMobile ? (
     <MobileToolbarView {...props} />
   ) : (
     <DesktopToolbarView {...props} />
