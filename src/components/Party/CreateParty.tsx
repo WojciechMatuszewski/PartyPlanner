@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Row, Col, DatePicker, Tabs, Button, Icon } from 'antd';
+import { Form, Row, Col, DatePicker, Tabs, Button, Icon } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
@@ -12,6 +12,7 @@ import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
 import UserCalendar from '@components/UserCalendar/UserCalendar';
 import css from '@emotion/css';
+import AddFriends from './CreateParty/AddFriends';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
@@ -41,6 +42,7 @@ export interface CreatePartyForm {
   description: string;
   date: RangePickerValue;
   location: PartyLocation;
+  invitedFriends: string[];
 }
 
 const validationSchema = yup.object().shape<CreatePartyForm>({
@@ -71,7 +73,8 @@ const validationSchema = yup.object().shape<CreatePartyForm>({
         longitude: yup.number().required()
       })
     })
-    .required()
+    .required(),
+  invitedFriends: yup.array().of(yup.string())
 });
 
 const CreateParty: React.FC = () => {
@@ -184,15 +187,7 @@ const CreateParty: React.FC = () => {
                   <Form.Item>
                     <Tabs defaultActiveKey="1" onChange={() => {}}>
                       <Tabs.TabPane tab="Invite friends" key="1">
-                        <Input
-                          placeholder="Search your friends"
-                          prefix={
-                            <Icon
-                              type="team"
-                              style={{ color: 'rgba(0,0,0,.25)' }}
-                            />
-                          }
-                        />
+                        <AddFriends />
                       </Tabs.TabPane>
                     </Tabs>
                   </Form.Item>

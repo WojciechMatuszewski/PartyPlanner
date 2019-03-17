@@ -218,6 +218,12 @@ export interface PartyWhereInput {
   games_some?: Maybe<GameWhereInput>;
 
   games_none?: Maybe<GameWhereInput>;
+
+  members_every?: Maybe<UserWhereInput>;
+
+  members_some?: Maybe<UserWhereInput>;
+
+  members_none?: Maybe<UserWhereInput>;
 }
 
 export interface UserWhereInput {
@@ -412,6 +418,34 @@ export interface UserWhereInput {
   /** All values that are not contained in given list. */
   socialmedia_not_in?: Maybe<SocialMediaType[]>;
 
+  avatar?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  avatar_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  avatar_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  avatar_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  avatar_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  avatar_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  avatar_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  avatar_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  avatar_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  avatar_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  avatar_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  avatar_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  avatar_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  avatar_not_ends_with?: Maybe<string>;
+
   parties_every?: Maybe<PartyWhereInput>;
 
   parties_some?: Maybe<PartyWhereInput>;
@@ -423,6 +457,12 @@ export interface UserWhereInput {
   friends_some?: Maybe<UserWhereInput>;
 
   friends_none?: Maybe<UserWhereInput>;
+
+  pendingInvitations_every?: Maybe<UserWhereInput>;
+
+  pendingInvitations_some?: Maybe<UserWhereInput>;
+
+  pendingInvitations_none?: Maybe<UserWhereInput>;
 
   chats_every?: Maybe<ChatWhereInput>;
 
@@ -710,39 +750,17 @@ export interface PartyCreateInput {
 
   isPublic?: Maybe<boolean>;
 
-  author: UserCreateOneWithoutPartiesInput;
+  author: UserCreateOneInput;
 
   games?: Maybe<GameCreateManyInput>;
+
+  members?: Maybe<UserCreateManyWithoutPartiesInput>;
 }
 
-export interface UserCreateOneWithoutPartiesInput {
-  create?: Maybe<UserCreateWithoutPartiesInput>;
+export interface UserCreateOneInput {
+  create?: Maybe<UserCreateInput>;
 
   connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutPartiesInput {
-  email: string;
-
-  firstName: string;
-
-  lastName: string;
-
-  password: string;
-
-  deleted?: Maybe<boolean>;
-
-  socialmedia?: Maybe<SocialMediaType>;
-
-  friends?: Maybe<UserCreateManyInput>;
-
-  chats?: Maybe<ChatCreateManyWithoutMembersInput>;
-}
-
-export interface UserCreateManyInput {
-  create?: Maybe<UserCreateInput[]>;
-
-  connect?: Maybe<UserWhereUniqueInput[]>;
 }
 
 export interface UserCreateInput {
@@ -758,25 +776,31 @@ export interface UserCreateInput {
 
   socialmedia?: Maybe<SocialMediaType>;
 
-  parties?: Maybe<PartyCreateManyWithoutAuthorInput>;
+  avatar?: Maybe<string>;
+
+  parties?: Maybe<PartyCreateManyWithoutMembersInput>;
 
   friends?: Maybe<UserCreateManyInput>;
+
+  pendingInvitations?: Maybe<UserCreateManyInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
 }
 
-export interface PartyCreateManyWithoutAuthorInput {
-  create?: Maybe<PartyCreateWithoutAuthorInput[]>;
+export interface PartyCreateManyWithoutMembersInput {
+  create?: Maybe<PartyCreateWithoutMembersInput[]>;
 
   connect?: Maybe<PartyWhereUniqueInput[]>;
 }
 
-export interface PartyCreateWithoutAuthorInput {
+export interface PartyCreateWithoutMembersInput {
   title: string;
 
   description: string;
 
   isPublic?: Maybe<boolean>;
+
+  author: UserCreateOneInput;
 
   games?: Maybe<GameCreateManyInput>;
 }
@@ -793,6 +817,12 @@ export interface GameCreateInput {
   cover?: Maybe<string>;
 
   type: GameType;
+}
+
+export interface UserCreateManyInput {
+  create?: Maybe<UserCreateInput[]>;
+
+  connect?: Maybe<UserWhereUniqueInput[]>;
 }
 
 export interface ChatCreateManyWithoutMembersInput {
@@ -819,10 +849,32 @@ export interface MessageCreateWithoutChatInput {
   author: UserCreateOneInput;
 }
 
-export interface UserCreateOneInput {
-  create?: Maybe<UserCreateInput>;
+export interface UserCreateManyWithoutPartiesInput {
+  create?: Maybe<UserCreateWithoutPartiesInput[]>;
 
-  connect?: Maybe<UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[]>;
+}
+
+export interface UserCreateWithoutPartiesInput {
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  password: string;
+
+  deleted?: Maybe<boolean>;
+
+  socialmedia?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
+
+  friends?: Maybe<UserCreateManyInput>;
+
+  pendingInvitations?: Maybe<UserCreateManyInput>;
+
+  chats?: Maybe<ChatCreateManyWithoutMembersInput>;
 }
 
 export interface UserCreateManyWithoutChatsInput {
@@ -844,9 +896,13 @@ export interface UserCreateWithoutChatsInput {
 
   socialmedia?: Maybe<SocialMediaType>;
 
-  parties?: Maybe<PartyCreateManyWithoutAuthorInput>;
+  avatar?: Maybe<string>;
+
+  parties?: Maybe<PartyCreateManyWithoutMembersInput>;
 
   friends?: Maybe<UserCreateManyInput>;
+
+  pendingInvitations?: Maybe<UserCreateManyInput>;
 }
 
 export interface MessageCreateInput {
@@ -894,63 +950,21 @@ export interface PartyUpdateDataInput {
 
   isPublic?: Maybe<boolean>;
 
-  author?: Maybe<UserUpdateOneRequiredWithoutPartiesInput>;
+  author?: Maybe<UserUpdateOneRequiredInput>;
 
   games?: Maybe<GameUpdateManyInput>;
+
+  members?: Maybe<UserUpdateManyWithoutPartiesInput>;
 }
 
-export interface UserUpdateOneRequiredWithoutPartiesInput {
-  create?: Maybe<UserCreateWithoutPartiesInput>;
+export interface UserUpdateOneRequiredInput {
+  create?: Maybe<UserCreateInput>;
 
   connect?: Maybe<UserWhereUniqueInput>;
 
-  update?: Maybe<UserUpdateWithoutPartiesDataInput>;
+  update?: Maybe<UserUpdateDataInput>;
 
-  upsert?: Maybe<UserUpsertWithoutPartiesInput>;
-}
-
-export interface UserUpdateWithoutPartiesDataInput {
-  email?: Maybe<string>;
-
-  firstName?: Maybe<string>;
-
-  lastName?: Maybe<string>;
-
-  password?: Maybe<string>;
-
-  deleted?: Maybe<boolean>;
-
-  socialmedia?: Maybe<SocialMediaType>;
-
-  friends?: Maybe<UserUpdateManyInput>;
-
-  chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
-}
-
-export interface UserUpdateManyInput {
-  create?: Maybe<UserCreateInput[]>;
-
-  connect?: Maybe<UserWhereUniqueInput[]>;
-
-  set?: Maybe<UserWhereUniqueInput[]>;
-
-  disconnect?: Maybe<UserWhereUniqueInput[]>;
-
-  delete?: Maybe<UserWhereUniqueInput[]>;
-
-  update?: Maybe<UserUpdateWithWhereUniqueNestedInput[]>;
-
-  updateMany?: Maybe<UserUpdateManyWithWhereNestedInput[]>;
-
-  deleteMany?: Maybe<UserScalarWhereInput[]>;
-
-  upsert?: Maybe<UserUpsertWithWhereUniqueNestedInput[]>;
-}
-
-export interface UserUpdateWithWhereUniqueNestedInput {
-  where: UserWhereUniqueInput;
-
-  data: UserUpdateDataInput;
+  upsert?: Maybe<UserUpsertNestedInput>;
 }
 
 export interface UserUpdateDataInput {
@@ -966,15 +980,19 @@ export interface UserUpdateDataInput {
 
   socialmedia?: Maybe<SocialMediaType>;
 
-  parties?: Maybe<PartyUpdateManyWithoutAuthorInput>;
+  avatar?: Maybe<string>;
+
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
   friends?: Maybe<UserUpdateManyInput>;
+
+  pendingInvitations?: Maybe<UserUpdateManyInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 }
 
-export interface PartyUpdateManyWithoutAuthorInput {
-  create?: Maybe<PartyCreateWithoutAuthorInput[]>;
+export interface PartyUpdateManyWithoutMembersInput {
+  create?: Maybe<PartyCreateWithoutMembersInput[]>;
 
   connect?: Maybe<PartyWhereUniqueInput[]>;
 
@@ -984,27 +1002,29 @@ export interface PartyUpdateManyWithoutAuthorInput {
 
   delete?: Maybe<PartyWhereUniqueInput[]>;
 
-  update?: Maybe<PartyUpdateWithWhereUniqueWithoutAuthorInput[]>;
+  update?: Maybe<PartyUpdateWithWhereUniqueWithoutMembersInput[]>;
 
   updateMany?: Maybe<PartyUpdateManyWithWhereNestedInput[]>;
 
   deleteMany?: Maybe<PartyScalarWhereInput[]>;
 
-  upsert?: Maybe<PartyUpsertWithWhereUniqueWithoutAuthorInput[]>;
+  upsert?: Maybe<PartyUpsertWithWhereUniqueWithoutMembersInput[]>;
 }
 
-export interface PartyUpdateWithWhereUniqueWithoutAuthorInput {
+export interface PartyUpdateWithWhereUniqueWithoutMembersInput {
   where: PartyWhereUniqueInput;
 
-  data: PartyUpdateWithoutAuthorDataInput;
+  data: PartyUpdateWithoutMembersDataInput;
 }
 
-export interface PartyUpdateWithoutAuthorDataInput {
+export interface PartyUpdateWithoutMembersDataInput {
   title?: Maybe<string>;
 
   description?: Maybe<string>;
 
   isPublic?: Maybe<boolean>;
+
+  author?: Maybe<UserUpdateOneRequiredInput>;
 
   games?: Maybe<GameUpdateManyInput>;
 }
@@ -1341,282 +1361,38 @@ export interface PartyUpdateManyDataInput {
   isPublic?: Maybe<boolean>;
 }
 
-export interface PartyUpsertWithWhereUniqueWithoutAuthorInput {
+export interface PartyUpsertWithWhereUniqueWithoutMembersInput {
   where: PartyWhereUniqueInput;
 
-  update: PartyUpdateWithoutAuthorDataInput;
+  update: PartyUpdateWithoutMembersDataInput;
 
-  create: PartyCreateWithoutAuthorInput;
+  create: PartyCreateWithoutMembersInput;
 }
 
-export interface ChatUpdateManyWithoutMembersInput {
-  create?: Maybe<ChatCreateWithoutMembersInput[]>;
+export interface UserUpdateManyInput {
+  create?: Maybe<UserCreateInput[]>;
 
-  connect?: Maybe<ChatWhereUniqueInput[]>;
+  connect?: Maybe<UserWhereUniqueInput[]>;
 
-  set?: Maybe<ChatWhereUniqueInput[]>;
+  set?: Maybe<UserWhereUniqueInput[]>;
 
-  disconnect?: Maybe<ChatWhereUniqueInput[]>;
+  disconnect?: Maybe<UserWhereUniqueInput[]>;
 
-  delete?: Maybe<ChatWhereUniqueInput[]>;
+  delete?: Maybe<UserWhereUniqueInput[]>;
 
-  update?: Maybe<ChatUpdateWithWhereUniqueWithoutMembersInput[]>;
+  update?: Maybe<UserUpdateWithWhereUniqueNestedInput[]>;
 
-  deleteMany?: Maybe<ChatScalarWhereInput[]>;
+  updateMany?: Maybe<UserUpdateManyWithWhereNestedInput[]>;
 
-  upsert?: Maybe<ChatUpsertWithWhereUniqueWithoutMembersInput[]>;
+  deleteMany?: Maybe<UserScalarWhereInput[]>;
+
+  upsert?: Maybe<UserUpsertWithWhereUniqueNestedInput[]>;
 }
 
-export interface ChatUpdateWithWhereUniqueWithoutMembersInput {
-  where: ChatWhereUniqueInput;
+export interface UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
 
-  data: ChatUpdateWithoutMembersDataInput;
-}
-
-export interface ChatUpdateWithoutMembersDataInput {
-  party?: Maybe<PartyUpdateOneRequiredInput>;
-
-  messages?: Maybe<MessageUpdateManyWithoutChatInput>;
-}
-
-export interface MessageUpdateManyWithoutChatInput {
-  create?: Maybe<MessageCreateWithoutChatInput[]>;
-
-  connect?: Maybe<MessageWhereUniqueInput[]>;
-
-  set?: Maybe<MessageWhereUniqueInput[]>;
-
-  disconnect?: Maybe<MessageWhereUniqueInput[]>;
-
-  delete?: Maybe<MessageWhereUniqueInput[]>;
-
-  update?: Maybe<MessageUpdateWithWhereUniqueWithoutChatInput[]>;
-
-  updateMany?: Maybe<MessageUpdateManyWithWhereNestedInput[]>;
-
-  deleteMany?: Maybe<MessageScalarWhereInput[]>;
-
-  upsert?: Maybe<MessageUpsertWithWhereUniqueWithoutChatInput[]>;
-}
-
-export interface MessageUpdateWithWhereUniqueWithoutChatInput {
-  where: MessageWhereUniqueInput;
-
-  data: MessageUpdateWithoutChatDataInput;
-}
-
-export interface MessageUpdateWithoutChatDataInput {
-  content?: Maybe<string>;
-
-  author?: Maybe<UserUpdateOneRequiredInput>;
-}
-
-export interface UserUpdateOneRequiredInput {
-  create?: Maybe<UserCreateInput>;
-
-  connect?: Maybe<UserWhereUniqueInput>;
-
-  update?: Maybe<UserUpdateDataInput>;
-
-  upsert?: Maybe<UserUpsertNestedInput>;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-
-  create: UserCreateInput;
-}
-
-export interface MessageUpdateManyWithWhereNestedInput {
-  where: MessageScalarWhereInput;
-
-  data: MessageUpdateManyDataInput;
-}
-
-export interface MessageScalarWhereInput {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<MessageScalarWhereInput[]>;
-  /** Logical OR on all given filters. */
-  OR?: Maybe<MessageScalarWhereInput[]>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<MessageScalarWhereInput[]>;
-
-  id?: Maybe<string>;
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<string>;
-  /** All values that are contained in given list. */
-  id_in?: Maybe<string[]>;
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<string[]>;
-  /** All values less than the given value. */
-  id_lt?: Maybe<string>;
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<string>;
-  /** All values greater than the given value. */
-  id_gt?: Maybe<string>;
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<string>;
-  /** All values containing the given string. */
-  id_contains?: Maybe<string>;
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<string>;
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<string>;
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<string>;
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<string>;
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<string>;
-
-  content?: Maybe<string>;
-  /** All values that are not equal to given value. */
-  content_not?: Maybe<string>;
-  /** All values that are contained in given list. */
-  content_in?: Maybe<string[]>;
-  /** All values that are not contained in given list. */
-  content_not_in?: Maybe<string[]>;
-  /** All values less than the given value. */
-  content_lt?: Maybe<string>;
-  /** All values less than or equal the given value. */
-  content_lte?: Maybe<string>;
-  /** All values greater than the given value. */
-  content_gt?: Maybe<string>;
-  /** All values greater than or equal the given value. */
-  content_gte?: Maybe<string>;
-  /** All values containing the given string. */
-  content_contains?: Maybe<string>;
-  /** All values not containing the given string. */
-  content_not_contains?: Maybe<string>;
-  /** All values starting with the given string. */
-  content_starts_with?: Maybe<string>;
-  /** All values not starting with the given string. */
-  content_not_starts_with?: Maybe<string>;
-  /** All values ending with the given string. */
-  content_ends_with?: Maybe<string>;
-  /** All values not ending with the given string. */
-  content_not_ends_with?: Maybe<string>;
-
-  createdAt?: Maybe<DateTime>;
-  /** All values that are not equal to given value. */
-  createdAt_not?: Maybe<DateTime>;
-  /** All values that are contained in given list. */
-  createdAt_in?: Maybe<DateTime[]>;
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: Maybe<DateTime[]>;
-  /** All values less than the given value. */
-  createdAt_lt?: Maybe<DateTime>;
-  /** All values less than or equal the given value. */
-  createdAt_lte?: Maybe<DateTime>;
-  /** All values greater than the given value. */
-  createdAt_gt?: Maybe<DateTime>;
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: Maybe<DateTime>;
-
-  updatedAt?: Maybe<DateTime>;
-  /** All values that are not equal to given value. */
-  updatedAt_not?: Maybe<DateTime>;
-  /** All values that are contained in given list. */
-  updatedAt_in?: Maybe<DateTime[]>;
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: Maybe<DateTime[]>;
-  /** All values less than the given value. */
-  updatedAt_lt?: Maybe<DateTime>;
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: Maybe<DateTime>;
-  /** All values greater than the given value. */
-  updatedAt_gt?: Maybe<DateTime>;
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: Maybe<DateTime>;
-}
-
-export interface MessageUpdateManyDataInput {
-  content?: Maybe<string>;
-}
-
-export interface MessageUpsertWithWhereUniqueWithoutChatInput {
-  where: MessageWhereUniqueInput;
-
-  update: MessageUpdateWithoutChatDataInput;
-
-  create: MessageCreateWithoutChatInput;
-}
-
-export interface ChatScalarWhereInput {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<ChatScalarWhereInput[]>;
-  /** Logical OR on all given filters. */
-  OR?: Maybe<ChatScalarWhereInput[]>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<ChatScalarWhereInput[]>;
-
-  id?: Maybe<string>;
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<string>;
-  /** All values that are contained in given list. */
-  id_in?: Maybe<string[]>;
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<string[]>;
-  /** All values less than the given value. */
-  id_lt?: Maybe<string>;
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<string>;
-  /** All values greater than the given value. */
-  id_gt?: Maybe<string>;
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<string>;
-  /** All values containing the given string. */
-  id_contains?: Maybe<string>;
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<string>;
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<string>;
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<string>;
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<string>;
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<string>;
-
-  createdAt?: Maybe<DateTime>;
-  /** All values that are not equal to given value. */
-  createdAt_not?: Maybe<DateTime>;
-  /** All values that are contained in given list. */
-  createdAt_in?: Maybe<DateTime[]>;
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: Maybe<DateTime[]>;
-  /** All values less than the given value. */
-  createdAt_lt?: Maybe<DateTime>;
-  /** All values less than or equal the given value. */
-  createdAt_lte?: Maybe<DateTime>;
-  /** All values greater than the given value. */
-  createdAt_gt?: Maybe<DateTime>;
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: Maybe<DateTime>;
-
-  updatedAt?: Maybe<DateTime>;
-  /** All values that are not equal to given value. */
-  updatedAt_not?: Maybe<DateTime>;
-  /** All values that are contained in given list. */
-  updatedAt_in?: Maybe<DateTime[]>;
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: Maybe<DateTime[]>;
-  /** All values less than the given value. */
-  updatedAt_lt?: Maybe<DateTime>;
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: Maybe<DateTime>;
-  /** All values greater than the given value. */
-  updatedAt_gt?: Maybe<DateTime>;
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: Maybe<DateTime>;
-}
-
-export interface ChatUpsertWithWhereUniqueWithoutMembersInput {
-  where: ChatWhereUniqueInput;
-
-  update: ChatUpdateWithoutMembersDataInput;
-
-  create: ChatCreateWithoutMembersInput;
+  data: UserUpdateDataInput;
 }
 
 export interface UserUpdateManyWithWhereNestedInput {
@@ -1816,6 +1592,34 @@ export interface UserScalarWhereInput {
   socialmedia_in?: Maybe<SocialMediaType[]>;
   /** All values that are not contained in given list. */
   socialmedia_not_in?: Maybe<SocialMediaType[]>;
+
+  avatar?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  avatar_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  avatar_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  avatar_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  avatar_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  avatar_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  avatar_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  avatar_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  avatar_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  avatar_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  avatar_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  avatar_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  avatar_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  avatar_not_ends_with?: Maybe<string>;
 }
 
 export interface UserUpdateManyDataInput {
@@ -1830,6 +1634,8 @@ export interface UserUpdateManyDataInput {
   deleted?: Maybe<boolean>;
 
   socialmedia?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
 }
 
 export interface UserUpsertWithWhereUniqueNestedInput {
@@ -1840,7 +1646,317 @@ export interface UserUpsertWithWhereUniqueNestedInput {
   create: UserCreateInput;
 }
 
-export interface UserUpsertWithoutPartiesInput {
+export interface ChatUpdateManyWithoutMembersInput {
+  create?: Maybe<ChatCreateWithoutMembersInput[]>;
+
+  connect?: Maybe<ChatWhereUniqueInput[]>;
+
+  set?: Maybe<ChatWhereUniqueInput[]>;
+
+  disconnect?: Maybe<ChatWhereUniqueInput[]>;
+
+  delete?: Maybe<ChatWhereUniqueInput[]>;
+
+  update?: Maybe<ChatUpdateWithWhereUniqueWithoutMembersInput[]>;
+
+  deleteMany?: Maybe<ChatScalarWhereInput[]>;
+
+  upsert?: Maybe<ChatUpsertWithWhereUniqueWithoutMembersInput[]>;
+}
+
+export interface ChatUpdateWithWhereUniqueWithoutMembersInput {
+  where: ChatWhereUniqueInput;
+
+  data: ChatUpdateWithoutMembersDataInput;
+}
+
+export interface ChatUpdateWithoutMembersDataInput {
+  party?: Maybe<PartyUpdateOneRequiredInput>;
+
+  messages?: Maybe<MessageUpdateManyWithoutChatInput>;
+}
+
+export interface MessageUpdateManyWithoutChatInput {
+  create?: Maybe<MessageCreateWithoutChatInput[]>;
+
+  connect?: Maybe<MessageWhereUniqueInput[]>;
+
+  set?: Maybe<MessageWhereUniqueInput[]>;
+
+  disconnect?: Maybe<MessageWhereUniqueInput[]>;
+
+  delete?: Maybe<MessageWhereUniqueInput[]>;
+
+  update?: Maybe<MessageUpdateWithWhereUniqueWithoutChatInput[]>;
+
+  updateMany?: Maybe<MessageUpdateManyWithWhereNestedInput[]>;
+
+  deleteMany?: Maybe<MessageScalarWhereInput[]>;
+
+  upsert?: Maybe<MessageUpsertWithWhereUniqueWithoutChatInput[]>;
+}
+
+export interface MessageUpdateWithWhereUniqueWithoutChatInput {
+  where: MessageWhereUniqueInput;
+
+  data: MessageUpdateWithoutChatDataInput;
+}
+
+export interface MessageUpdateWithoutChatDataInput {
+  content?: Maybe<string>;
+
+  author?: Maybe<UserUpdateOneRequiredInput>;
+}
+
+export interface MessageUpdateManyWithWhereNestedInput {
+  where: MessageScalarWhereInput;
+
+  data: MessageUpdateManyDataInput;
+}
+
+export interface MessageScalarWhereInput {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<MessageScalarWhereInput[]>;
+  /** Logical OR on all given filters. */
+  OR?: Maybe<MessageScalarWhereInput[]>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<MessageScalarWhereInput[]>;
+
+  id?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  id_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  id_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  id_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  id_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  id_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  id_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  id_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  id_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  id_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  id_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  id_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  id_not_ends_with?: Maybe<string>;
+
+  content?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  content_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  content_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  content_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  content_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  content_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  content_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  content_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  content_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  content_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  content_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  content_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  content_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  content_not_ends_with?: Maybe<string>;
+
+  createdAt?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  createdAt_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  createdAt_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  createdAt_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  createdAt_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: Maybe<DateTime>;
+
+  updatedAt?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  updatedAt_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  updatedAt_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: Maybe<DateTime>;
+}
+
+export interface MessageUpdateManyDataInput {
+  content?: Maybe<string>;
+}
+
+export interface MessageUpsertWithWhereUniqueWithoutChatInput {
+  where: MessageWhereUniqueInput;
+
+  update: MessageUpdateWithoutChatDataInput;
+
+  create: MessageCreateWithoutChatInput;
+}
+
+export interface ChatScalarWhereInput {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<ChatScalarWhereInput[]>;
+  /** Logical OR on all given filters. */
+  OR?: Maybe<ChatScalarWhereInput[]>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<ChatScalarWhereInput[]>;
+
+  id?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  id_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  id_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  id_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  id_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  id_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  id_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  id_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  id_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  id_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  id_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  id_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  id_not_ends_with?: Maybe<string>;
+
+  createdAt?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  createdAt_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  createdAt_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  createdAt_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  createdAt_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: Maybe<DateTime>;
+
+  updatedAt?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  updatedAt_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  updatedAt_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: Maybe<DateTime>;
+}
+
+export interface ChatUpsertWithWhereUniqueWithoutMembersInput {
+  where: ChatWhereUniqueInput;
+
+  update: ChatUpdateWithoutMembersDataInput;
+
+  create: ChatCreateWithoutMembersInput;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+
+  create: UserCreateInput;
+}
+
+export interface UserUpdateManyWithoutPartiesInput {
+  create?: Maybe<UserCreateWithoutPartiesInput[]>;
+
+  connect?: Maybe<UserWhereUniqueInput[]>;
+
+  set?: Maybe<UserWhereUniqueInput[]>;
+
+  disconnect?: Maybe<UserWhereUniqueInput[]>;
+
+  delete?: Maybe<UserWhereUniqueInput[]>;
+
+  update?: Maybe<UserUpdateWithWhereUniqueWithoutPartiesInput[]>;
+
+  updateMany?: Maybe<UserUpdateManyWithWhereNestedInput[]>;
+
+  deleteMany?: Maybe<UserScalarWhereInput[]>;
+
+  upsert?: Maybe<UserUpsertWithWhereUniqueWithoutPartiesInput[]>;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutPartiesInput {
+  where: UserWhereUniqueInput;
+
+  data: UserUpdateWithoutPartiesDataInput;
+}
+
+export interface UserUpdateWithoutPartiesDataInput {
+  email?: Maybe<string>;
+
+  firstName?: Maybe<string>;
+
+  lastName?: Maybe<string>;
+
+  password?: Maybe<string>;
+
+  deleted?: Maybe<boolean>;
+
+  socialmedia?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
+
+  friends?: Maybe<UserUpdateManyInput>;
+
+  pendingInvitations?: Maybe<UserUpdateManyInput>;
+
+  chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutPartiesInput {
+  where: UserWhereUniqueInput;
+
   update: UserUpdateWithoutPartiesDataInput;
 
   create: UserCreateWithoutPartiesInput;
@@ -1891,9 +2007,13 @@ export interface UserUpdateWithoutChatsDataInput {
 
   socialmedia?: Maybe<SocialMediaType>;
 
-  parties?: Maybe<PartyUpdateManyWithoutAuthorInput>;
+  avatar?: Maybe<string>;
+
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
   friends?: Maybe<UserUpdateManyInput>;
+
+  pendingInvitations?: Maybe<UserUpdateManyInput>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutChatsInput {
@@ -1941,9 +2061,11 @@ export interface PartyUpdateInput {
 
   isPublic?: Maybe<boolean>;
 
-  author?: Maybe<UserUpdateOneRequiredWithoutPartiesInput>;
+  author?: Maybe<UserUpdateOneRequiredInput>;
 
   games?: Maybe<GameUpdateManyInput>;
+
+  members?: Maybe<UserUpdateManyWithoutPartiesInput>;
 }
 
 export interface UserUpdateInput {
@@ -1959,9 +2081,13 @@ export interface UserUpdateInput {
 
   socialmedia?: Maybe<SocialMediaType>;
 
-  parties?: Maybe<PartyUpdateManyWithoutAuthorInput>;
+  avatar?: Maybe<string>;
+
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
   friends?: Maybe<UserUpdateManyInput>;
+
+  pendingInvitations?: Maybe<UserUpdateManyInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 }
@@ -1998,6 +2124,8 @@ export interface UserUpdateManyMutationInput {
   deleted?: Maybe<boolean>;
 
   socialmedia?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
 }
 
 export interface GameUpdateManyMutationInput {
@@ -2157,7 +2285,9 @@ export enum UserOrderByInput {
   DeletedAsc = 'deleted_ASC',
   DeletedDesc = 'deleted_DESC',
   SocialmediaAsc = 'socialmedia_ASC',
-  SocialmediaDesc = 'socialmedia_DESC'
+  SocialmediaDesc = 'socialmedia_DESC',
+  AvatarAsc = 'avatar_ASC',
+  AvatarDesc = 'avatar_DESC'
 }
 
 export enum GameOrderByInput {
@@ -2257,10 +2387,34 @@ export type MeQueryMe = {
   lastName: string;
 };
 
-import * as ReactApollo from 'react-apollo';
-import * as React from 'react';
+export type FriendsOfUserQueryVariables = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<UserOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type FriendsOfUserQueryQuery = {
+  __typename?: 'Query';
+
+  getUsers: (Maybe<FriendsOfUserQueryGetUsers>)[];
+};
+
+export type FriendsOfUserQueryGetUsers = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+};
 
 import gql from 'graphql-tag';
+import * as React from 'react';
+import * as ReactApollo from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
 
 // ====================================================
 // Components
@@ -2295,30 +2449,16 @@ export class SignupComponent extends React.Component<
     );
   }
 }
-export type SignupProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<SignupMutation, SignupVariables>
-> &
-  TChildProps;
-export type SignupMutationFn = ReactApollo.MutationFn<
-  SignupMutation,
-  SignupVariables
->;
-export function SignupHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        SignupMutation,
-        SignupVariables,
-        SignupProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
+export function useSignup(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
     SignupMutation,
-    SignupVariables,
-    SignupProps<TChildProps>
-  >(SignupDocument, operationOptions);
+    SignupVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<SignupMutation, SignupVariables>(
+    SignupDocument,
+    baseOptions
+  );
 }
 export const LoginDocument = gql`
   mutation Login($email: String!, $password: String!) {
@@ -2339,30 +2479,16 @@ export class LoginComponent extends React.Component<
     );
   }
 }
-export type LoginProps<TChildProps = any> = Partial<
-  ReactApollo.MutateProps<LoginMutation, LoginVariables>
-> &
-  TChildProps;
-export type LoginMutationFn = ReactApollo.MutationFn<
-  LoginMutation,
-  LoginVariables
->;
-export function LoginHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        LoginMutation,
-        LoginVariables,
-        LoginProps<TChildProps>
-      >
-    | undefined
-) {
-  return ReactApollo.graphql<
-    TProps,
+export function useLogin(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
     LoginMutation,
-    LoginVariables,
-    LoginProps<TChildProps>
-  >(LoginDocument, operationOptions);
+    LoginVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<LoginMutation, LoginVariables>(
+    LoginDocument,
+    baseOptions
+  );
 }
 export const MeQueryDocument = gql`
   query MeQuery {
@@ -2386,24 +2512,57 @@ export class MeQueryComponent extends React.Component<
     );
   }
 }
-export type MeQueryProps<TChildProps = any> = Partial<
-  ReactApollo.DataProps<MeQueryQuery, MeQueryVariables>
-> &
-  TChildProps;
-export function MeQueryHOC<TProps, TChildProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        MeQueryQuery,
-        MeQueryVariables,
-        MeQueryProps<TChildProps>
-      >
-    | undefined
+export function useMeQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<MeQueryVariables>
 ) {
-  return ReactApollo.graphql<
-    TProps,
-    MeQueryQuery,
-    MeQueryVariables,
-    MeQueryProps<TChildProps>
-  >(MeQueryDocument, operationOptions);
+  return ReactApolloHooks.useQuery<MeQueryQuery, MeQueryVariables>(
+    MeQueryDocument,
+    baseOptions
+  );
+}
+export const FriendsOfUserQueryDocument = gql`
+  query FriendsOfUserQuery(
+    $where: UserWhereInput
+    $orderBy: UserOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    getUsers(
+      where: $where
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      orderBy: $orderBy
+    ) {
+      firstName
+      lastName
+    }
+  }
+`;
+export class FriendsOfUserQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<FriendsOfUserQueryQuery, FriendsOfUserQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<FriendsOfUserQueryQuery, FriendsOfUserQueryVariables>
+        query={FriendsOfUserQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useFriendsOfUserQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<FriendsOfUserQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    FriendsOfUserQueryQuery,
+    FriendsOfUserQueryVariables
+  >(FriendsOfUserQueryDocument, baseOptions);
 }
