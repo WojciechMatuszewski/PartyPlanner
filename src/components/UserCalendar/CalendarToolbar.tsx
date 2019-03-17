@@ -14,7 +14,8 @@ const ToolbarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
   width: 100%;
   justify-content: space-between;
-  padding: 10px;
+  padding: ${(props: { controlled?: boolean }) =>
+    props.controlled ? '10px 0' : '10px'};
   h2 {
     margin: 0;
     @media screen and (max-width: 800px) {
@@ -35,8 +36,10 @@ const DatePickerStyles = css`
 `;
 
 const MobileToolbarView: React.FC<ToolbarProps> = props => {
+  const { controlled } = React.useContext(CalendarContext);
+
   return (
-    <ToolbarWrapper>
+    <ToolbarWrapper controlled={controlled}>
       <DatePicker
         onChange={momentDate => props.onNavigate('DATE', momentDate.toDate())}
         value={moment(props.date)}

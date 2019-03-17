@@ -42,9 +42,11 @@ interface ControlCalendarProps {
     | undefined;
 }
 
-export const CalendarContext = React.createContext<
-  { onMonthEventClicked: VoidFunction } & ControlCalendarProps
->({
+interface CalendarContext extends ControlCalendarProps {
+  onMonthEventClicked: VoidFunction;
+}
+
+export const CalendarContext = React.createContext<CalendarContext>({
   onMonthEventClicked: () => {},
   controlled: false,
   selectable: false,
@@ -54,6 +56,7 @@ export const CalendarContext = React.createContext<
 const UserCalendar: React.FC<ControlCalendarProps> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
   const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
+  const canShowCreateModal = React.useRef<boolean>(true);
 
   const [calendarView, setCalendarView] = React.useState<View>(
     props.controlled
@@ -63,11 +66,16 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
       : 'month'
   );
 
-  const canShowCreateModal = React.useRef<boolean>(true);
-
   function onMonthEventClickHandler() {
     canShowCreateModal.current = false;
   }
+
+  const [contextState] = React.useState<CalendarContext>({
+    onMonthEventClicked: onMonthEventClickHandler,
+    controlled: props.controlled,
+    controlledView: props.controlledView,
+    selectable: props.selectable
+  });
 
   React.useEffect(() => {
     if (!isOnMobile || (calendarView === 'day' && isOnMobile)) return;
@@ -83,7 +91,7 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
   }, [calendarView]);
 
   return (
-    <React.Fragment>
+    <CalendarContext.Provider value={contextState}>
       <BigCalendar
         css={css`
           ${BigCalendarStyles};
@@ -110,33 +118,17 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
           CalendarCreateEventModal(start, end);
         }}
         components={{
-          toolbar: toolbarProps => (
-            <CalendarContext.Provider
-              value={{
-                ...props,
-                onMonthEventClicked: onMonthEventClickHandler
-              }}
-            >
-              <CalendarToolbar {...toolbarProps} />
-            </CalendarContext.Provider>
-          ),
+          toolbar: CalendarToolbar,
           // i cannot be bothered to fix someones types ;/
           eventWrapper: (eventWrapperProps: any) => (
-            <CalendarContext.Provider
-              value={{
-                ...props,
-                onMonthEventClicked: onMonthEventClickHandler
-              }}
-            >
-              <CalendarEventWrapper
-                {...eventWrapperProps}
-                calendarView={calendarView}
-              />
-            </CalendarContext.Provider>
+            <CalendarEventWrapper
+              {...eventWrapperProps}
+              calendarView={calendarView}
+            />
           )
         }}
       />
-    </React.Fragment>
+    </CalendarContext.Provider>
   );
 };
 

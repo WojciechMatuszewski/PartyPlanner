@@ -138,6 +138,7 @@ const CalendarEventPopover: React.FC<{
 
   function handleMobileClick() {
     Modal.info({
+      className: 'user-calendar-modal',
       icon: <div />,
       centered: true,
       okText: 'Close',
