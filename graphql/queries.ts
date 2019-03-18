@@ -11,8 +11,8 @@ export const ME_QUERY = gql`
   }
 `;
 
-export const FRIENDS_OF_USER_QUERY = gql`
-  query FriendsOfUserQuery(
+export const PAGINATE_USERS_QUERY = gql`
+  query PaginateUsersQuery(
     $where: UserWhereInput
     $orderBy: UserOrderByInput
     $skip: Int
@@ -21,7 +21,7 @@ export const FRIENDS_OF_USER_QUERY = gql`
     $first: Int
     $last: Int
   ) {
-    getUsers(
+    paginateUsers(
       where: $where
       skip: $skip
       after: $after
@@ -30,8 +30,18 @@ export const FRIENDS_OF_USER_QUERY = gql`
       last: $last
       orderBy: $orderBy
     ) {
-      firstName
-      lastName
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          avatar
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;

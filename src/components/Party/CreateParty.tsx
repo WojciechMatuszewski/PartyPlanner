@@ -19,7 +19,7 @@ const CreatePartyFormWrapper = styled.div`
   padding: 20px;
   box-sizing: border-box;
   background: white;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 66px);
   margin: 0 auto;
 `;
 

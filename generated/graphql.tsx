@@ -2387,7 +2387,7 @@ export type MeQueryMe = {
   lastName: string;
 };
 
-export type FriendsOfUserQueryVariables = {
+export type PaginateUsersQueryVariables = {
   where?: Maybe<UserWhereInput>;
   orderBy?: Maybe<UserOrderByInput>;
   skip?: Maybe<number>;
@@ -2397,18 +2397,44 @@ export type FriendsOfUserQueryVariables = {
   last?: Maybe<number>;
 };
 
-export type FriendsOfUserQueryQuery = {
+export type PaginateUsersQueryQuery = {
   __typename?: 'Query';
 
-  getUsers: (Maybe<FriendsOfUserQueryGetUsers>)[];
+  paginateUsers: PaginateUsersQueryPaginateUsers;
 };
 
-export type FriendsOfUserQueryGetUsers = {
+export type PaginateUsersQueryPaginateUsers = {
+  __typename?: 'UserConnection';
+
+  edges: (Maybe<PaginateUsersQueryEdges>)[];
+
+  pageInfo: PaginateUsersQueryPageInfo;
+};
+
+export type PaginateUsersQueryEdges = {
+  __typename?: 'UserEdge';
+
+  node: PaginateUsersQueryNode;
+};
+
+export type PaginateUsersQueryNode = {
   __typename?: 'User';
+
+  id: string;
 
   firstName: string;
 
   lastName: string;
+
+  avatar: Maybe<string>;
+};
+
+export type PaginateUsersQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
 };
 
 import gql from 'graphql-tag';
@@ -2520,8 +2546,8 @@ export function useMeQuery(
     baseOptions
   );
 }
-export const FriendsOfUserQueryDocument = gql`
-  query FriendsOfUserQuery(
+export const PaginateUsersQueryDocument = gql`
+  query PaginateUsersQuery(
     $where: UserWhereInput
     $orderBy: UserOrderByInput
     $skip: Int
@@ -2530,7 +2556,7 @@ export const FriendsOfUserQueryDocument = gql`
     $first: Int
     $last: Int
   ) {
-    getUsers(
+    paginateUsers(
       where: $where
       skip: $skip
       after: $after
@@ -2539,30 +2565,40 @@ export const FriendsOfUserQueryDocument = gql`
       last: $last
       orderBy: $orderBy
     ) {
-      firstName
-      lastName
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          avatar
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
 `;
-export class FriendsOfUserQueryComponent extends React.Component<
+export class PaginateUsersQueryComponent extends React.Component<
   Partial<
-    ReactApollo.QueryProps<FriendsOfUserQueryQuery, FriendsOfUserQueryVariables>
+    ReactApollo.QueryProps<PaginateUsersQueryQuery, PaginateUsersQueryVariables>
   >
 > {
   render() {
     return (
-      <ReactApollo.Query<FriendsOfUserQueryQuery, FriendsOfUserQueryVariables>
-        query={FriendsOfUserQueryDocument}
+      <ReactApollo.Query<PaginateUsersQueryQuery, PaginateUsersQueryVariables>
+        query={PaginateUsersQueryDocument}
         {...(this as any)['props'] as any}
       />
     );
   }
 }
-export function useFriendsOfUserQuery(
-  baseOptions?: ReactApolloHooks.QueryHookOptions<FriendsOfUserQueryVariables>
+export function usePaginateUsersQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<PaginateUsersQueryVariables>
 ) {
   return ReactApolloHooks.useQuery<
-    FriendsOfUserQueryQuery,
-    FriendsOfUserQueryVariables
-  >(FriendsOfUserQueryDocument, baseOptions);
+    PaginateUsersQueryQuery,
+    PaginateUsersQueryVariables
+  >(PaginateUsersQueryDocument, baseOptions);
 }
