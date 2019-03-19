@@ -20,11 +20,12 @@ interface BaseProps {
   listItems: Maybe<PaginateUsersQueryEdges>[];
   filterValue: string | undefined;
   shouldUseGrid: boolean;
+  canShowLoadMore: boolean;
 }
 
 type Props = BaseProps & Omit<ListProps, 'dataSource'>;
 
-const AddFriendList: React.FC<Props> = props => {
+const InviteFriendList: React.FC<Props> = props => {
   function includesNormalized(root: string) {
     return props.filterValue && props.filterValue.length > 0
       ? root.toLocaleLowerCase().includes(props.filterValue.toLocaleLowerCase())
@@ -39,6 +40,8 @@ const AddFriendList: React.FC<Props> = props => {
     );
   }
 
+  let filteredListItems = filterListItems(props.listItems);
+
   return (
     <List
       css={css`
@@ -47,12 +50,16 @@ const AddFriendList: React.FC<Props> = props => {
         }
       `}
       loading={props.loading}
-      loadMore={props.loadMore}
+      loadMore={
+        props.canShowLoadMore && filteredListItems.length > 0
+          ? props.loadMore
+          : null
+      }
       grid={props.shouldUseGrid ? gridOptions : undefined}
-      dataSource={filterListItems(props.listItems)}
+      dataSource={filteredListItems}
       renderItem={props.renderItem}
     />
   );
 };
 
-export default AddFriendList;
+export default InviteFriendList;

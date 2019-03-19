@@ -2,6 +2,8 @@ import React from 'react';
 import { PaginateUsersQueryEdges } from '@generated/graphql';
 import { List, Badge, Icon, Typography } from 'antd';
 import UserDefaultAvatar from '@components/UserDefaultAvatar';
+import css from '@emotion/css';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 interface Props {
   onInvite: (id: string) => void;
@@ -11,7 +13,7 @@ interface Props {
   edge: PaginateUsersQueryEdges;
 }
 
-const AddFriendListItem: React.FC<Props> = props => {
+const InviteFriendListItem: React.FC<Props> = props => {
   const {
     node: { id }
   } = props.edge;
@@ -39,6 +41,9 @@ const AddFriendListItem: React.FC<Props> = props => {
       <List.Item.Meta
         title={props.edge.node.firstName + ' ' + props.edge.node.lastName}
         description={props.shouldUseGrid ? getActions() : null}
+        css={css`
+          ${FlexBoxFullCenteredStyles}
+        `}
         avatar={
           <Badge
             count={
@@ -65,4 +70,4 @@ const AddFriendListItem: React.FC<Props> = props => {
   );
 };
 
-export default AddFriendListItem;
+export default InviteFriendListItem;

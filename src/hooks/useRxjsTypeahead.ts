@@ -97,6 +97,9 @@ export function useRxjsTypeahead<ResultType = any>(
     any
   >(reducer, null, initializer);
   const [inputValue, setInputValue] = React.useState('');
+  const fetchFunctionRef = React.useRef<(value: string) => Promise<any>>(
+    fetchFunction
+  );
 
   const typeaheadSubject = React.useRef<Subject<string>>(new Subject());
 
@@ -122,7 +125,7 @@ export function useRxjsTypeahead<ResultType = any>(
       map((str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim()),
       filter(str => !!str),
       tap(() => dispatch(SetLoading(true))),
-      switchMap(value => from(fetchFunction(value)))
+      switchMap(value => from(fetchFunctionRef.current(value)))
     );
 
   function onChange(value: string) {
@@ -140,6 +143,9 @@ export function useRxjsTypeahead<ResultType = any>(
     setResults: results => dispatch(SetResults(results))
   });
 
+  React.useEffect(() => {
+    fetchFunctionRef.current = fetchFunction;
+  }, [fetchFunction]);
   React.useEffect(effectFunction, []);
   return {
     inputProps: getInputProps(),

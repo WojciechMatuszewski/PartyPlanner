@@ -12,7 +12,7 @@ import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
 import UserCalendar from '@components/UserCalendar/UserCalendar';
 import css from '@emotion/css';
-import AddFriends from './CreateParty/AddFriends';
+import InviteFriend from './CreateParty/InviteFriend/InviteFriend';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
@@ -187,7 +187,7 @@ const CreateParty: React.FC = () => {
                   <Form.Item>
                     <Tabs defaultActiveKey="1" onChange={() => {}}>
                       <Tabs.TabPane tab="Invite friends" key="1">
-                        <AddFriends />
+                        <InviteFriend />
                       </Tabs.TabPane>
                     </Tabs>
                   </Form.Item>
