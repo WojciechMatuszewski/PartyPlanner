@@ -2,23 +2,15 @@ import React from 'react';
 import { Menu, Icon, Drawer } from 'antd';
 import useMedia from '@hooks/useMedia';
 import { ApolloConsumer } from 'react-apollo';
-import cookie from 'cookie';
-import redirect from '@apolloSetup/redirect';
+
 import Link from 'next/link';
 import { MeQueryComponent } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
 import css from '@emotion/css';
-import { ApolloClient } from 'apollo-boost';
+
 import UserDefaultAvatar from '@components/UserDefaultAvatar';
 import { WithRouterProps, withRouter } from 'next/router';
-
-async function handleLogout(client: ApolloClient<any>) {
-  document.cookie = cookie.serialize('token', '', {
-    maxAge: -1
-  });
-  await client.cache.reset();
-  redirect({} as any, '/login');
-}
+import { handleLogout } from '@components/Authentication/AuthService';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -189,8 +181,8 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                   <Link href="/user-profile">
                     <a>
                       <UserDefaultAvatar
-                        firstName={data!.me!.firstName}
-                        lastName={data!.me!.lastName}
+                        firstName={data && data.me ? data.me.firstName : ''}
+                        lastName={data && data.me ? data.me.lastName : ''}
                       />
                     </a>
                   </Link>

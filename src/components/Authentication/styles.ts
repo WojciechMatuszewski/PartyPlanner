@@ -8,7 +8,7 @@ export const AuthWrapper = styled(
     exit: { y: 40, opacity: 0 }
   })
 )`
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 66px);
   padding: 0 20px;
   box-sizing: border-box;
   margin: 0 auto;

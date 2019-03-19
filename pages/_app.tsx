@@ -7,6 +7,7 @@ import withApollo from '../apolloSetup/withApollo';
 import AppLayout from '@components/Layout/AppLayout';
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 
 Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
@@ -30,9 +31,11 @@ class MyApp extends App<{
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
-          <AppLayout>
-            <Component {...pageProps} />
-          </AppLayout>
+          <ApolloHooksProvider client={apolloClient}>
+            <AppLayout>
+              <Component {...pageProps} />
+            </AppLayout>
+          </ApolloHooksProvider>
         </ApolloProvider>
       </Container>
     );

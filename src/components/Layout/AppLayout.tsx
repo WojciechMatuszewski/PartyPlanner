@@ -6,10 +6,12 @@ import AppHeader from './AppHeader/AppHeader';
 
 const LayoutStyles = css`
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   .ant-layout-content {
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 66px);
     display: flex;
+    position: relative;
+    overflow: hidden;
   }
 `;
 

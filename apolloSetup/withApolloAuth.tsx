@@ -4,6 +4,7 @@ import { ApolloClient } from 'apollo-boost';
 import redirect from './redirect';
 import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
 import { parseCookies } from './withApollo';
+import { handleLogout } from '@components/Authentication/AuthService';
 
 export const withApolloAuth = ({
   userHasToBe
@@ -51,7 +52,7 @@ export const withApolloAuth = ({
           me: response.data.me
         };
       } catch (e) {
-        ctx.pathname !== '/login' && redirect(ctx, '/login');
+        await handleLogout(ctx.apolloClient);
         return {};
       }
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Row, Col, DatePicker, Tabs, Button, Icon } from 'antd';
+import { Form, Row, Col, DatePicker, Tabs, Button, Icon } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
@@ -12,13 +12,14 @@ import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
 import UserCalendar from '@components/UserCalendar/UserCalendar';
 import css from '@emotion/css';
+import InviteFriend from './CreateParty/InviteFriend/InviteFriend';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
   background: white;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 66px);
   margin: 0 auto;
 `;
 
@@ -41,6 +42,7 @@ export interface CreatePartyForm {
   description: string;
   date: RangePickerValue;
   location: PartyLocation;
+  invitedFriends: string[];
 }
 
 const validationSchema = yup.object().shape<CreatePartyForm>({
@@ -71,7 +73,8 @@ const validationSchema = yup.object().shape<CreatePartyForm>({
         longitude: yup.number().required()
       })
     })
-    .required()
+    .required(),
+  invitedFriends: yup.array().of(yup.string())
 });
 
 const CreateParty: React.FC = () => {
@@ -184,15 +187,7 @@ const CreateParty: React.FC = () => {
                   <Form.Item>
                     <Tabs defaultActiveKey="1" onChange={() => {}}>
                       <Tabs.TabPane tab="Invite friends" key="1">
-                        <Input
-                          placeholder="Search your friends"
-                          prefix={
-                            <Icon
-                              type="team"
-                              style={{ color: 'rgba(0,0,0,.25)' }}
-                            />
-                          }
-                        />
+                        <InviteFriend />
                       </Tabs.TabPane>
                     </Tabs>
                   </Form.Item>
