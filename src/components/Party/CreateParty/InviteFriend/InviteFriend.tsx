@@ -18,7 +18,7 @@ import {
   initialInviteFriendState,
   InviteFriendActionCreators
 } from './InviteFriendStateReducer';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import InviteFriendSearchInput from './InviteFriendSearchInput';
 import InviteFriendLoadMoreButton from './InviteFriendLoadMoreButton';
 import { connect } from 'formik';
@@ -105,6 +105,7 @@ const InviteFriend: React.FC<{
     const fetchQuery = constructFetchQuery(state.resultsState.fetchResults, '');
     fetchQuery.where.id_not_in.pop();
     const data = await getData(fetchQuery);
+    if (!data) return;
     // TODO:
     dispatch(SetResultsState({ fetchInfo: data.paginateUsers.pageInfo }));
   }
@@ -112,6 +113,7 @@ const InviteFriend: React.FC<{
   const typeaheadFunctionCallback = React.useCallback(async () => {
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
+    if (!data) return;
     dispatch(
       SetResultsState({
         fetchInfo: data.paginateUsers.pageInfo,
@@ -137,6 +139,7 @@ const InviteFriend: React.FC<{
     dispatch(SetFetchQuery(fetchQuery));
     async function initialFetch() {
       const data = await getData(fetchQuery);
+      if (!data) return;
       dispatch(
         SetLoadingState({
           initiallyLoaded: true,
@@ -151,19 +154,32 @@ const InviteFriend: React.FC<{
       );
     }
     initialFetch();
+    message.config({ maxCount: 1 });
   }, []);
 
   async function getData(variables: PaginateUsersQueryVariables) {
-    const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
-      query: PaginateUsersQueryDocument,
-      variables: variables
-    });
-    return data;
+    try {
+      const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
+        query: PaginateUsersQueryDocument,
+        variables: variables
+      });
+      return data;
+    } catch (e) {
+      dispatch(
+        SetLoadingState({
+          initiallyLoaded: true,
+          initiallyLoading: false,
+          loadingMore: false
+        })
+      );
+      message.error('Something went wrong!');
+    }
   }
 
   async function handleLoadMore() {
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
+    if (!data) return;
     dispatch(
       SetResultsState({
         fetchInfo: data.paginateUsers.pageInfo,

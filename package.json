@@ -79,6 +79,7 @@
     "emotion": "^10.0.9",
     "emotion-server": "^10.0.9",
     "formik": "^1.5.1",
+    "fuse.js": "^3.4.4",
     "graphql": "^14.1.1",
     "isomorphic-unfetch": "^3.0.0",
     "less": "^3.9.0",

@@ -3,6 +3,7 @@ import { ListProps, ListGridType } from 'antd/lib/list';
 import { List } from 'antd';
 import css from '@emotion/css';
 import React from 'react';
+import { useFuzzySearch } from '@hooks/useFuzzySearch';
 
 const gridOptions: ListGridType = {
   gutter: 16,
@@ -26,21 +27,15 @@ interface BaseProps {
 type Props = BaseProps & Omit<ListProps, 'dataSource'>;
 
 const InviteFriendList: React.FC<Props> = props => {
-  function includesNormalized(root: string) {
-    return props.filterValue && props.filterValue.length > 0
-      ? root.toLocaleLowerCase().includes(props.filterValue.toLocaleLowerCase())
-      : true;
-  }
-
-  function filterListItems(listItems: Maybe<PaginateUsersQueryEdges>[]) {
-    return listItems.filter(
-      listItem =>
-        includesNormalized(listItem!.node.firstName) ||
-        includesNormalized(listItem!.node.lastName)
-    );
-  }
-
-  let filteredListItems = filterListItems(props.listItems);
+  const filteredListItems = useFuzzySearch<PaginateUsersQueryEdges>(
+    props.filterValue || '',
+    props.listItems as PaginateUsersQueryEdges[],
+    {
+      keys: ['node.firstName', 'node.lastName'] as any,
+      shouldSort: true,
+      tokenize: true
+    }
+  );
 
   return (
     <List

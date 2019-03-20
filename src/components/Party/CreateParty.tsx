@@ -135,7 +135,8 @@ const CreateParty: React.FC = () => {
                     <DatePicker.RangePicker
                       onChange={dates => setFieldValue('date', dates)}
                       name="date"
-                      showTime={true}
+                      showTime={{ format: 'hh:mm' }}
+                      format="YYYY-MM-DD:hh:mm"
                       style={{ width: '100%' }}
                     />
                   </Form.Item>
