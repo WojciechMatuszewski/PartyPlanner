@@ -16,7 +16,12 @@ interface Props {
 const InviteFriendLoadMoreButton: React.FC<Props> = props => {
   return (
     <ButtonWrapper>
-      <Button onClick={props.onLoadMoreClick}>Load More</Button>
+      <Button
+        data-testid="InviteFriendLoadMoreButton"
+        onClick={props.onLoadMoreClick}
+      >
+        Load More
+      </Button>
     </ButtonWrapper>
   );
 };

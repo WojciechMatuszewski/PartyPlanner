@@ -5,7 +5,6 @@ import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 interface Props {
   typeaheadCallback: () => Promise<any>;
   onChangeHandler: (value: string) => void;
-  shouldBeDisabled: boolean;
   fetchQueryUpdater: () => void;
   inputDisabled: boolean;
   inputLoading: boolean;
@@ -45,6 +44,7 @@ const InviteFriendSearchInput: React.FC<Props> = props => {
       validateStatus={props.inputLoading ? 'validating' : undefined}
     >
       <Input.Search
+        data-testid="InviteFriendSearchInput"
         disabled={props.inputDisabled}
         onChange={handleOnChange}
         value={inputProps.value}

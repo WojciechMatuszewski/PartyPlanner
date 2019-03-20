@@ -30,6 +30,8 @@ const SpinnerContainer = styled.div`
   width: 100%;
 `;
 
+const NUM_OF_USERS_PER_PAGE = 10;
+
 function getQueryConstructor(userId: string) {
   return function(
     results: Maybe<PaginateUsersQueryEdges>[],
@@ -43,7 +45,8 @@ function getQueryConstructor(userId: string) {
           { firstName_contains: searchValue },
           { lastName_contains: searchValue }
         ]
-      }
+      },
+      first: NUM_OF_USERS_PER_PAGE
     };
   };
 }
@@ -63,6 +66,7 @@ const InviteFriend: React.FC<{
     SetLoadingState,
     SetFetchQuery,
     SetResultsState
+    // SetShouldIgnoreTypeaheadCallback
   } = InviteFriendActionCreators;
   const { loading: meDataLoading, data: meData } = useMeQuery({
     fetchPolicy: 'cache-first'
@@ -101,10 +105,15 @@ const InviteFriend: React.FC<{
     const fetchQuery = constructFetchQuery(state.resultsState.fetchResults, '');
     fetchQuery.where.id_not_in.pop();
     const data = await getData(fetchQuery);
+    // TODO:
+    // if (!data.paginateUsers.pageInfo.hasNextPage) {
+    //   dispatch(SetShouldIgnoreTypeaheadCallback(true));
+    // }
     dispatch(SetResultsState({ fetchInfo: data.paginateUsers.pageInfo }));
   }
 
   const typeaheadFunctionCallback = React.useCallback(async () => {
+    if (state.shouldIgnoreTypeaheadCallback) return;
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
     dispatch(
@@ -114,7 +123,7 @@ const InviteFriend: React.FC<{
       })
     );
     dispatch(SetLoadingState({ loadingMore: false }));
-  }, [state.fetchQuery]);
+  }, [state.fetchQuery, state.shouldIgnoreTypeaheadCallback]);
 
   React.useEffect(() => {
     const fetchQuery = constructFetchQuery(
@@ -151,10 +160,7 @@ const InviteFriend: React.FC<{
   async function getData(variables: PaginateUsersQueryVariables) {
     const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
       query: PaginateUsersQueryDocument,
-      variables: {
-        ...variables,
-        first: 1
-      }
+      variables: variables
     });
     return data;
   }
@@ -182,7 +188,6 @@ const InviteFriend: React.FC<{
         inputDisabled={shouldInputBeDisabled}
         fetchQueryUpdater={inputFetchQueryUpdater}
         typeaheadCallback={typeaheadFunctionCallback}
-        shouldBeDisabled={shouldInputBeDisabled}
         inputLoading={state.loadingState.loadingMore}
       />
       <InviteFriendList

@@ -55,6 +55,7 @@
     "jest-transform-css": "^2.0.0",
     "react-hooks-testing-library": "^0.3.7",
     "react-testing-library": "^6.0.0",
+    "rxjs-marbles": "^5.0.0",
     "tsconfig-paths-jest": "0.0.1",
     "typescript": "^3.3.3333",
     "webpack-filter-warnings-plugin": "^1.2.1"

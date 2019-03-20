@@ -20,14 +20,18 @@ const InviteFriendListItem: React.FC<Props> = props => {
 
   const alreadyInvitedActions = [
     <Typography.Text type="danger" key={1}>
-      <p style={{ marginBottom: 0 }} onClick={() => props.onRemove(id)}>
+      <p
+        style={{ marginBottom: 0 }}
+        data-testid="RemoveAction"
+        onClick={() => props.onRemove(id)}
+      >
         Cancel
       </p>
     </Typography.Text>
   ];
 
   const toBeInvitedActions = [
-    <a onClick={() => props.onInvite(id)} key={2}>
+    <a data-testid="InviteAction" onClick={() => props.onInvite(id)} key={2}>
       Invite
     </a>
   ];
