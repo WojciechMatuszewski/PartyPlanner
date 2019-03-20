@@ -106,14 +106,10 @@ const InviteFriend: React.FC<{
     fetchQuery.where.id_not_in.pop();
     const data = await getData(fetchQuery);
     // TODO:
-    // if (!data.paginateUsers.pageInfo.hasNextPage) {
-    //   dispatch(SetShouldIgnoreTypeaheadCallback(true));
-    // }
     dispatch(SetResultsState({ fetchInfo: data.paginateUsers.pageInfo }));
   }
 
   const typeaheadFunctionCallback = React.useCallback(async () => {
-    if (state.shouldIgnoreTypeaheadCallback) return;
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
     dispatch(
@@ -123,7 +119,7 @@ const InviteFriend: React.FC<{
       })
     );
     dispatch(SetLoadingState({ loadingMore: false }));
-  }, [state.fetchQuery, state.shouldIgnoreTypeaheadCallback]);
+  }, [state.fetchQuery]);
 
   React.useEffect(() => {
     const fetchQuery = constructFetchQuery(
