@@ -89,17 +89,23 @@ const InviteFriend: React.FC<{
     (state.loadingState.initiallyLoaded &&
       state.resultsState.fetchResults.length === 0);
 
-  function personInvited(id: string) {
-    return invited.includes(id);
-  }
-  function handleInvitePerson(id: string) {
-    setInvited(prevInvited => [...prevInvited, id]);
-  }
-  function handleRemovePerson(id: string) {
-    setInvited(prevInvited =>
-      prevInvited.filter(currInvited => currInvited !== id)
-    );
-  }
+  const personInvited = React.useCallback(
+    (id: string) => invited.includes(id),
+    [invited]
+  );
+
+  const handleInvitePerson = React.useCallback(
+    (id: string) => setInvited(prevInvited => [...prevInvited, id]),
+    []
+  );
+
+  const handleRemovePerson = React.useCallback(
+    (id: string) =>
+      setInvited(prevInvited =>
+        prevInvited.filter(currInvited => currInvited !== id)
+      ),
+    []
+  );
 
   async function inputFetchQueryUpdater() {
     const fetchQuery = constructFetchQuery(state.resultsState.fetchResults, '');

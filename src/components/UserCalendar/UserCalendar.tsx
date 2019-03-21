@@ -138,4 +138,4 @@ UserCalendar.defaultProps = {
   selectable: false
 };
 
-export default UserCalendar;
+export default React.memo(UserCalendar);

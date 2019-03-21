@@ -26,6 +26,9 @@ const CreatePartyFormWrapper = styled.div`
 const InnerWrapper = styled.div`
   max-width: 1440px;
   margin: 0 auto;
+  @media screen and (min-width: 992px) {
+    margin-top: 30px;
+  }
 `;
 
 const initialValues = {
@@ -161,6 +164,7 @@ const CreateParty: React.FC = () => {
                           component={FormikInputField}
                           name="description"
                           type="textArea"
+                          placeholder="Description"
                           autosize={{ minRows: 4 }}
                         />
                       </Tabs.TabPane>
@@ -169,8 +173,7 @@ const CreateParty: React.FC = () => {
                         key="2"
                         css={css`
                           .rbc-calendar {
-                            max-height: 400px;
-                            min-height: 100px;
+                            max-height: 100%;
                           }
                         `}
                       >

@@ -74,4 +74,4 @@ const InviteFriendListItem: React.FC<Props> = props => {
   );
 };
 
-export default InviteFriendListItem;
+export default React.memo(InviteFriendListItem);
