@@ -18,7 +18,7 @@ import {
   initialInviteFriendState,
   InviteFriendActionCreators
 } from './InviteFriendStateReducer';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import InviteFriendSearchInput from './InviteFriendSearchInput';
 import InviteFriendLoadMoreButton from './InviteFriendLoadMoreButton';
 import { connect } from 'formik';
@@ -29,6 +29,8 @@ const SpinnerContainer = styled.div`
   ${FlexBoxFullCenteredStyles};
   width: 100%;
 `;
+
+const NUM_OF_USERS_PER_PAGE = 10;
 
 function getQueryConstructor(userId: string) {
   return function(
@@ -43,14 +45,15 @@ function getQueryConstructor(userId: string) {
           { firstName_contains: searchValue },
           { lastName_contains: searchValue }
         ]
-      }
+      },
+      first: NUM_OF_USERS_PER_PAGE
     };
   };
 }
 
 const InviteFriend: React.FC<{
   formik: FormikContext<CreatePartyForm>;
-}> = () => {
+}> = props => {
   const apolloClient = useApolloClient();
   const shouldUseGrid = useMedia('(min-width:992px)');
   const [invited, setInvited] = React.useState<string[]>([]);
@@ -63,6 +66,7 @@ const InviteFriend: React.FC<{
     SetLoadingState,
     SetFetchQuery,
     SetResultsState
+    // SetShouldIgnoreTypeaheadCallback
   } = InviteFriendActionCreators;
   const { loading: meDataLoading, data: meData } = useMeQuery({
     fetchPolicy: 'cache-first'
@@ -85,28 +89,40 @@ const InviteFriend: React.FC<{
     (state.loadingState.initiallyLoaded &&
       state.resultsState.fetchResults.length === 0);
 
-  function personInvited(id: string) {
-    return invited.includes(id);
-  }
-  function handleInvitePerson(id: string) {
-    setInvited(prevInvited => [...prevInvited, id]);
-  }
-  function handleRemovePerson(id: string) {
-    setInvited(prevInvited =>
-      prevInvited.filter(currInvited => currInvited !== id)
-    );
-  }
+  const personInvited = React.useCallback(
+    (id: string) => invited.includes(id),
+    [invited]
+  );
+
+  const handleInvitePerson = React.useCallback(
+    (id: string) => {
+      setInvited(prevInvited => [...prevInvited, id]);
+      props.formik.setFieldValue('invitedFriends', invited);
+    },
+    [invited]
+  );
+
+  const handleRemovePerson = React.useCallback(
+    (id: string) =>
+      setInvited(prevInvited =>
+        prevInvited.filter(currInvited => currInvited !== id)
+      ),
+    []
+  );
 
   async function inputFetchQueryUpdater() {
     const fetchQuery = constructFetchQuery(state.resultsState.fetchResults, '');
     fetchQuery.where.id_not_in.pop();
     const data = await getData(fetchQuery);
+    if (!data) return;
+    // TODO:
     dispatch(SetResultsState({ fetchInfo: data.paginateUsers.pageInfo }));
   }
 
   const typeaheadFunctionCallback = React.useCallback(async () => {
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
+    if (!data) return;
     dispatch(
       SetResultsState({
         fetchInfo: data.paginateUsers.pageInfo,
@@ -132,6 +148,7 @@ const InviteFriend: React.FC<{
     dispatch(SetFetchQuery(fetchQuery));
     async function initialFetch() {
       const data = await getData(fetchQuery);
+      if (!data) return;
       dispatch(
         SetLoadingState({
           initiallyLoaded: true,
@@ -146,22 +163,32 @@ const InviteFriend: React.FC<{
       );
     }
     initialFetch();
+    message.config({ maxCount: 1 });
   }, []);
 
   async function getData(variables: PaginateUsersQueryVariables) {
-    const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
-      query: PaginateUsersQueryDocument,
-      variables: {
-        ...variables,
-        first: 1
-      }
-    });
-    return data;
+    try {
+      const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
+        query: PaginateUsersQueryDocument,
+        variables: variables
+      });
+      return data;
+    } catch (e) {
+      dispatch(
+        SetLoadingState({
+          initiallyLoaded: true,
+          initiallyLoading: false,
+          loadingMore: false
+        })
+      );
+      message.error('Something went wrong!');
+    }
   }
 
   async function handleLoadMore() {
     dispatch(SetLoadingState({ loadingMore: true }));
     const data = await getData(state.fetchQuery);
+    if (!data) return;
     dispatch(
       SetResultsState({
         fetchInfo: data.paginateUsers.pageInfo,
@@ -182,7 +209,6 @@ const InviteFriend: React.FC<{
         inputDisabled={shouldInputBeDisabled}
         fetchQueryUpdater={inputFetchQueryUpdater}
         typeaheadCallback={typeaheadFunctionCallback}
-        shouldBeDisabled={shouldInputBeDisabled}
         inputLoading={state.loadingState.loadingMore}
       />
       <InviteFriendList

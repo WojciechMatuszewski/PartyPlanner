@@ -8,33 +8,33 @@ export interface ColorTint {
 
 export const calendarTints: ColorTint[] = [
   {
+    name: 'blue',
+    dotColor: '#096dd9',
+    weekBorderColor: '#096dd9',
+    weekTileColor: 'rgba(9,109,217, 0.7)',
+    spanningMoreThanOneDayColor: 'rgba(9,109,217, 0.2)'
+  },
+  {
+    name: 'gold',
+    dotColor: '#009688',
+    weekBorderColor: '#009688',
+    weekTileColor: 'rgba(0,150,136, 0.7)',
+    spanningMoreThanOneDayColor: 'rgba(0,150,136, 0.2)'
+  },
+  {
     name: 'green',
-    dotColor: '#52c41a',
-    weekBorderColor: '#7cb342',
-    weekTileColor: 'rgba(124,179,66,0.7)',
-    spanningMoreThanOneDayColor: 'rgba(124,179,66,0.2)'
-  },
-  {
-    name: 'purple',
-    dotColor: '#8e24aa',
-    weekBorderColor: '#8e24aa',
-    weekTileColor: 'rgb(142,36,170, 0.7)',
-    spanningMoreThanOneDayColor: 'rgb(142,36,170, 0.2)'
-  },
-  {
-    name: 'orange',
-    dotColor: '#f4511e',
-    weekBorderColor: '#f4511e',
-    weekTileColor: 'rgb(244,81,30, 0.7)',
-    spanningMoreThanOneDayColor: 'rgb(244,81,30, 0.2)'
-  },
-  {
-    name: 'magenta',
-    dotColor: '#EB2F96',
-    weekBorderColor: '#EB2F96',
-    weekTileColor: 'rgb(235,47,150,0.7)',
-    spanningMoreThanOneDayColor: 'rgb(235,47,150,0.2)'
+    dotColor: '#5b8c00',
+    weekBorderColor: '#5b8c00',
+    weekTileColor: 'rgba(91,140,0, 0.7)',
+    spanningMoreThanOneDayColor: 'rgba(91,140,0, 0.2)'
   }
+  // {
+  //   name: 'magenta',
+  //   dotColor: '#EB2F96',
+  //   weekBorderColor: '#EB2F96',
+  //   weekTileColor: 'rgb(235,47,150,0.7)',
+  //   spanningMoreThanOneDayColor: 'rgba(235,47,150,0.2)'
+  // }
 ];
 
 export function getCalendarColorTint() {

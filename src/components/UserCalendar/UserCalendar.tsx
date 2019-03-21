@@ -12,8 +12,8 @@ import CalendarCreateEventModal from './CalendarCreateEventModal';
 const localizer = BigCalendar.momentLocalizer(moment);
 
 const OverriddenCalendarStyles = css`
-  height: calc(100vh - 64px);
   width: 100%;
+  height: auto;
   .rbc-date-cell a {
     font-size: 18px;
   }
@@ -138,4 +138,4 @@ UserCalendar.defaultProps = {
   selectable: false
 };
 
-export default UserCalendar;
+export default React.memo(UserCalendar);
