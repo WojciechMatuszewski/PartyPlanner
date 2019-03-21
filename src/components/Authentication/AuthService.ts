@@ -1,3 +1,4 @@
+import { SingletonRouter } from 'next/router';
 import cookie from 'cookie';
 import { ApolloClient } from 'apollo-boost';
 import redirect from '@apolloSetup/redirect';
@@ -16,4 +17,9 @@ export async function handleLogout(client: ApolloClient<any>) {
   });
   await client.cache.reset();
   redirect({} as any, '/login');
+}
+
+export function handleLogin(token: string, router: SingletonRouter<any>) {
+  saveToken(token);
+  router && router.push('/dashboard');
 }

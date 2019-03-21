@@ -6,7 +6,7 @@ import { Form, Button } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { SignupComponent } from '@generated/graphql';
 
-import { saveToken } from './AuthService';
+import { handleLogin } from './AuthService';
 import GraphqlError from '@components/GraphqlError';
 
 interface FormValues {
@@ -64,12 +64,14 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
       {(mutate, { loading, error }) => (
         <Formik
           onSubmit={async formValues => {
-            const response = await mutate({ variables: formValues });
-            if (response && response.data) {
-              saveToken(response.data.signup.token);
-            }
-            if (!error && router) {
-              router.push('/login');
+            try {
+              const response = await mutate({ variables: formValues });
+              if (!error && response && response.data && router) {
+                handleLogin(response.data.signup.token, router);
+              }
+            } catch (e) {
+              // error state handled by GraphqlError component
+              return null;
             }
           }}
           validationSchema={validationSchema}

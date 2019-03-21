@@ -5,6 +5,7 @@ import RegisterForm from '@components/Authentication/RegisterForm';
 import { render, fireEvent, wait } from 'react-testing-library';
 import { SIGNUP_MUTATION } from '../../graphql/mutations';
 import React from 'react';
+import MockNextContext from '../globalMocks/NextContext';
 
 const RegisterData = {
   firstName: 'Wojtek',
@@ -30,9 +31,11 @@ describe('RegisterForm', () => {
       }
     ];
     const { getByLabelText, getByTestId } = render(
-      <MockedProvider mocks={mocks}>
-        return <RegisterForm />;
-      </MockedProvider>
+      <MockNextContext>
+        <MockedProvider mocks={mocks}>
+          return <RegisterForm />;
+        </MockedProvider>
+      </MockNextContext>
     );
     fireEvent.change(getByLabelText('firstName-field'), {
       target: { value: RegisterData.firstName }
