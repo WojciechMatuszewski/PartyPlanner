@@ -25,7 +25,8 @@
       "@shared/*": ["./src/shared/*"],
       "@generated/*": ["./generated/*"],
       "@apolloSetup/*": ["./apolloSetup/*"],
-      "@axios/*": ["axios/*"]
+      "@axios/*": ["axios/*"],
+      "@customIcons/*": ["custom-icons/*"]
     }
   }
 }

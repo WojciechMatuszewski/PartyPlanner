@@ -2,15 +2,15 @@ import React from 'react';
 import { Menu, Icon, Drawer } from 'antd';
 import useMedia from '@hooks/useMedia';
 import { ApolloConsumer } from 'react-apollo';
-
+import SignoutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
 import { MeQueryComponent } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
 import css from '@emotion/css';
-
 import UserDefaultAvatar from '@components/UserDefaultAvatar';
 import { WithRouterProps, withRouter } from 'next/router';
 import { handleLogout } from '@components/Authentication/AuthService';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -38,6 +38,19 @@ const AuthMobileVerySmallStyles = css`
       padding: 0 15px;
     }
   }
+
+  .anticon {
+    margin-right: 0 !important;
+  }
+
+  .ant-menu-item {
+    ${FlexBoxFullCenteredStyles};
+  }
+`;
+
+const CustomIconStyles = css`
+  font-size: 16px !important;
+  color: #8c8c8c !important;
 `;
 
 const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
@@ -188,7 +201,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                   </Link>
                 </Menu.Item>
                 <Menu.Item onClick={() => handleLogout(client)}>
-                  <Icon type="disconnect" />
+                  <Icon component={SignoutIcon} css={[CustomIconStyles]} />
                 </Menu.Item>
                 <Menu.Item onClick={() => setDrawerVisible(true)}>
                   <Icon type="bars" />
