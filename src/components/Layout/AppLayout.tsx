@@ -15,10 +15,13 @@ const LayoutStyles = css`
   }
 `;
 
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AppLayout: React.FC<{
+  children: React.ReactNode;
+  withHeader: boolean;
+}> = ({ children, withHeader }) => {
   return (
     <Layout css={LayoutStyles}>
-      <AppHeader />
+      {withHeader && <AppHeader />}
       <Layout.Content>{children}</Layout.Content>
     </Layout>
   );

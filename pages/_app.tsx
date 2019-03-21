@@ -13,26 +13,30 @@ Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
+const PAGES_WITHOUT_HEADER = ['/social-auth'];
+
 class MyApp extends App<{
   apolloClient: ApolloClient<NormalizedCacheObject>;
+  withHeader: boolean;
 }> {
   public static async getInitialProps({ Component, ctx }: NextAppContext) {
     let pageProps = {};
-
+    let withHeader = true;
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return { pageProps };
+    if (PAGES_WITHOUT_HEADER.includes(ctx.pathname)) withHeader = false;
+    return { pageProps, withHeader };
   }
   public render() {
-    const { Component, pageProps, apolloClient } = this.props;
+    const { Component, pageProps, apolloClient, withHeader } = this.props;
 
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
           <ApolloHooksProvider client={apolloClient}>
-            <AppLayout>
+            <AppLayout withHeader={withHeader}>
               <Component {...pageProps} />
             </AppLayout>
           </ApolloHooksProvider>
