@@ -31,11 +31,19 @@ const InnerWrapper = styled.div`
   }
 `;
 
-const initialValues = {
+const initialValues: CreatePartyForm = {
   title: '',
   description: '',
   date: [undefined, undefined],
-  location: ''
+  location: {
+    coords: {
+      latitude: 0,
+      longitude: 0
+    },
+    placeName: ''
+  },
+
+  invitedFriends: []
 };
 
 export type PartyLocation = UserLocation;
@@ -138,8 +146,8 @@ const CreateParty: React.FC = () => {
                     <DatePicker.RangePicker
                       onChange={dates => setFieldValue('date', dates)}
                       name="date"
-                      showTime={{ format: 'hh:mm' }}
-                      format="YYYY-MM-DD:hh:mm"
+                      showTime={{ format: 'hh:mm', use12Hours: false }}
+                      format="YYYY-MM-DD HH:mm"
                       style={{ width: '100%' }}
                     />
                   </Form.Item>

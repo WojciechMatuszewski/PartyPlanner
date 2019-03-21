@@ -53,7 +53,7 @@ function getQueryConstructor(userId: string) {
 
 const InviteFriend: React.FC<{
   formik: FormikContext<CreatePartyForm>;
-}> = () => {
+}> = props => {
   const apolloClient = useApolloClient();
   const shouldUseGrid = useMedia('(min-width:992px)');
   const [invited, setInvited] = React.useState<string[]>([]);
@@ -95,8 +95,11 @@ const InviteFriend: React.FC<{
   );
 
   const handleInvitePerson = React.useCallback(
-    (id: string) => setInvited(prevInvited => [...prevInvited, id]),
-    []
+    (id: string) => {
+      setInvited(prevInvited => [...prevInvited, id]);
+      props.formik.setFieldValue('invitedFriends', invited);
+    },
+    [invited]
   );
 
   const handleRemovePerson = React.useCallback(
