@@ -1,9 +1,9 @@
 import React from 'react';
 import { PaginateUsersQueryEdges } from '@generated/graphql';
 import { List, Badge, Icon, Typography } from 'antd';
-import UserDefaultAvatar from '@components/UserDefaultAvatar';
 import css from '@emotion/css';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import UserAvatar from '@components/UserDefaultAvatar';
 
 interface Props {
   onInvite: (id: string) => void;
@@ -63,10 +63,7 @@ const InviteFriendListItem: React.FC<Props> = props => {
             }
             offset={[-5, 28]}
           >
-            <UserDefaultAvatar
-              firstName={props.edge.node.firstName}
-              lastName={props.edge.node.lastName}
-            />
+            <UserAvatar userData={props.edge.node} />
           </Badge>
         }
       />

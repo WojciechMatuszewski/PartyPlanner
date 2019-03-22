@@ -2,10 +2,11 @@ import React from 'react';
 import { Button, Icon } from 'antd';
 import css from '@emotion/css';
 import SpotifyIcon from '@customIcons/spotify.svg';
-
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import socialLoginPopup from '@shared/socialLoginPopup';
+import { handleLogin } from './AuthService';
+import { withRouter, WithRouterProps } from 'next/router';
 
 const getSocialProviderUrl = (provider: 'spotify' | 'facebook' | 'twitter') =>
   `http://localhost:4000/auth/${provider}`;
@@ -57,8 +58,8 @@ const SpotifyButtonStyles = css`
   }
 `;
 
-export const LoginSocial: React.FC<{ disabledFromMutation: boolean }> = ({
-  disabledFromMutation
+export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRouterProps> = ({
+  disabledFromMutation, router
 }) => {
   return (
     <ButtonsWrapper>
@@ -68,7 +69,8 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean }> = ({
         type="default"
         size={'large'}
         onClick={async () => {
-          await socialLoginPopup(getSocialProviderUrl('spotify'));
+          const token = await socialLoginPopup(getSocialProviderUrl('spotify'));
+          handleLogin(token, router);
         }}
         css={[SpotifyButtonStyles]}
       >
@@ -105,4 +107,4 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean }> = ({
   );
 };
 
-export default LoginSocial;
+export default withRouter(LoginSocial);

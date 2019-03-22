@@ -19,7 +19,10 @@ export async function handleLogout(client: ApolloClient<any>) {
   redirect({} as any, '/login');
 }
 
-export function handleLogin(token: string, router: SingletonRouter<any>) {
+export function handleLogin(
+  token: string,
+  router: SingletonRouter<any> | undefined
+) {
   saveToken(token);
   router && router.push('/dashboard');
 }
