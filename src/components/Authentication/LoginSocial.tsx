@@ -6,10 +6,10 @@ import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import socialLoginPopup from '@shared/socialLoginPopup';
 import { handleLogin } from './AuthService';
-import { withRouter, WithRouterProps } from 'next/router';
+import { WithRouterProps } from 'next/router';
 
 const getSocialProviderUrl = (provider: 'spotify' | 'facebook' | 'twitter') =>
-  `http://localhost:4000/auth/${provider}`;
+  `${process.env.BACKEND_URL}/auth/${provider}`;
 
 const ButtonsWrapper = styled.div`
   button {
@@ -58,9 +58,20 @@ const SpotifyButtonStyles = css`
   }
 `;
 
-export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRouterProps> = ({
-  disabledFromMutation, router
-}) => {
+export const LoginSocial: React.FC<
+  { disabledFromMutation: boolean } & WithRouterProps
+> = ({ disabledFromMutation }) => {
+  async function handleSocialLogin(
+    provider: 'spotify' | 'twitter' | 'facebook'
+  ) {
+    try {
+      const token = await socialLoginPopup(getSocialProviderUrl(provider));
+      handleLogin(token);
+    } catch (e) {
+      // empty for now, it's being handled by popup
+    }
+  }
+
   return (
     <ButtonsWrapper>
       <Button
@@ -68,10 +79,7 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRoute
         block={true}
         type="default"
         size={'large'}
-        onClick={async () => {
-          const token = await socialLoginPopup(getSocialProviderUrl('spotify'));
-          handleLogin(token, router);
-        }}
+        onClick={async () => await handleSocialLogin('spotify')}
         css={[SpotifyButtonStyles]}
       >
         <Icon component={SpotifyIcon} css={[SpotifyIconStyles]} />
@@ -84,9 +92,7 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRoute
         type="primary"
         icon="facebook"
         size="large"
-        onClick={async () => {
-          await socialLoginPopup(getSocialProviderUrl('facebook'));
-        }}
+        onClick={async () => await handleSocialLogin('facebook')}
       >
         Login with Facebook
       </Button>
@@ -97,9 +103,7 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRoute
         style={{ background: '#1da1f2' }}
         icon="twitter"
         block={true}
-        onClick={async () => {
-          await socialLoginPopup(getSocialProviderUrl('twitter'));
-        }}
+        onClick={async () => await handleSocialLogin('twitter')}
       >
         Login With Twitter
       </Button>
@@ -107,4 +111,4 @@ export const LoginSocial: React.FC<{ disabledFromMutation: boolean } & WithRoute
   );
 };
 
-export default withRouter(LoginSocial);
+export default LoginSocial;

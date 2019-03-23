@@ -14,6 +14,21 @@ const ExceptionStyles = css`
 const SocialAuth: React.FC<WithRouterProps> = ({ router }) => {
   const routerQuery = router && router.query;
 
+  function handleSuccess() {
+    if (!window.opener) {
+      router && router.push('/');
+      return null;
+    }
+    window.opener.postMessage(routerQuery!.jwt, 'http://localhost:3000');
+  }
+
+  function handleError() {
+    if (!window.opener) {
+      return null;
+    }
+    window.opener.postMessage('close', 'http://localhost:3000');
+  }
+
   const isSuccessful =
     routerQuery && routerQuery.jwt && routerQuery.state === 'success';
 
@@ -22,13 +37,7 @@ const SocialAuth: React.FC<WithRouterProps> = ({ router }) => {
   const shouldNotBeHere =
     routerQuery && (!routerQuery.state || !routerQuery.jwt);
 
-  if (isSuccessful && isBrowser()) {
-    if (!window.opener) {
-      router && router.push('/');
-      return null;
-    }
-    window.opener.postMessage(routerQuery!.jwt, 'http://localhost:3000');
-  }
+  if (isSuccessful && isBrowser()) handleSuccess();
 
   if (isNotSuccessful) {
     return (
@@ -36,7 +45,11 @@ const SocialAuth: React.FC<WithRouterProps> = ({ router }) => {
         title="Oops!"
         desc="Something went wrong"
         img={'../static/warning.svg'}
-        actions={<Button type="primary">Close this window</Button>}
+        actions={
+          <Button type="primary" onClick={handleError}>
+            Close this window
+          </Button>
+        }
         css={[ExceptionStyles]}
       />
     );
