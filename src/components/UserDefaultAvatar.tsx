@@ -2,21 +2,24 @@ import React from 'react';
 import { Avatar } from 'antd';
 import { AvatarProps } from 'antd/lib/avatar';
 
-interface Props {
-  firstName: string;
-  lastName: string;
+interface UserDataObj {
+  firstName?: string;
+  lastName?: string;
+  avatar?: string | null;
 }
-const UserDefaultAvatar: React.FC<Props & AvatarProps> = ({
-  firstName,
-  lastName,
+
+const UserAvatar: React.FC<{ userData: UserDataObj } & AvatarProps> = ({
+  userData: { firstName, lastName, avatar },
   ...rest
 }) => {
-  return (
+  return avatar ? (
+    <Avatar src={avatar} />
+  ) : (
     <Avatar style={{ background: '#1890ff', color: 'white' }} {...rest}>
-      {firstName[0]}
-      {lastName[0]}
+      {firstName ? firstName[0] : ''}
+      {lastName ? lastName[0] : ''}
     </Avatar>
   );
 };
 
-export default UserDefaultAvatar;
+export default UserAvatar;

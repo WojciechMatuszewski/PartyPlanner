@@ -25,6 +25,7 @@ export const withApolloAuth = ({
     ) {
       function checkCookieValidity() {
         const { token } = parseCookies(ctx.req);
+
         if (!token && userHasToBe === 'authenticated') {
           ctx.pathname !== '/login' && redirect(ctx, '/login');
           return true;
@@ -39,6 +40,7 @@ export const withApolloAuth = ({
       }
 
       const shouldReturnEmpty = checkCookieValidity();
+
       if (shouldReturnEmpty) return {};
 
       try {

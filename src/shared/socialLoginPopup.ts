@@ -54,10 +54,13 @@ export const socialLoginPopup = (myUrl: string): Promise<string> => {
         authWindow.close();
         return reject('Origin not allowed!');
       }
-      if (event.data) {
+      if (event.data === 'close') {
+        authWindow.close();
+        return reject();
+      } else if (event.data !== 'close') {
         authWindow.close();
         return resolve(event.data);
-      } else {
+      } else if (!event.data) {
         authWindow.close();
         return reject('Data not found');
       }

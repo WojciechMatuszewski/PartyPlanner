@@ -66,8 +66,8 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
           onSubmit={async formValues => {
             try {
               const response = await mutate({ variables: formValues });
-              if (!error && response && response.data && router) {
-                handleLogin(response.data.signup.token, router);
+              if (!error && response && response.data) {
+                handleLogin(response.data.signup.token);
               }
             } catch (e) {
               // error state handled by GraphqlError component

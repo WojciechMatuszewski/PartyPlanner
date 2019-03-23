@@ -211,7 +211,41 @@ export interface PartyWhereInput {
   /** All values that are not equal to given value. */
   isPublic_not?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  startDate_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  startDate_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  startDate_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  startDate_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  startDate_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  startDate_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  startDate_gte?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  endDate_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  endDate_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  endDate_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  endDate_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  endDate_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  endDate_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  endDate_gte?: Maybe<DateTime>;
+
   author?: Maybe<UserWhereInput>;
+
+  location?: Maybe<LocationWhereInput>;
 
   games_every?: Maybe<GameWhereInput>;
 
@@ -410,13 +444,13 @@ export interface UserWhereInput {
   /** All values that are not equal to given value. */
   deleted_not?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
   /** All values that are not equal to given value. */
-  socialmedia_not?: Maybe<SocialMediaType>;
+  provider_not?: Maybe<SocialMediaType>;
   /** All values that are contained in given list. */
-  socialmedia_in?: Maybe<SocialMediaType[]>;
+  provider_in?: Maybe<SocialMediaType[]>;
   /** All values that are not contained in given list. */
-  socialmedia_not_in?: Maybe<SocialMediaType[]>;
+  provider_not_in?: Maybe<SocialMediaType[]>;
 
   avatar?: Maybe<string>;
   /** All values that are not equal to given value. */
@@ -446,6 +480,34 @@ export interface UserWhereInput {
   /** All values not ending with the given string. */
   avatar_not_ends_with?: Maybe<string>;
 
+  thirdPartyId?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  thirdPartyId_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  thirdPartyId_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  thirdPartyId_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  thirdPartyId_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  thirdPartyId_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  thirdPartyId_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  thirdPartyId_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  thirdPartyId_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  thirdPartyId_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  thirdPartyId_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  thirdPartyId_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  thirdPartyId_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  thirdPartyId_not_ends_with?: Maybe<string>;
+
   parties_every?: Maybe<PartyWhereInput>;
 
   parties_some?: Maybe<PartyWhereInput>;
@@ -469,6 +531,103 @@ export interface UserWhereInput {
   chats_some?: Maybe<ChatWhereInput>;
 
   chats_none?: Maybe<ChatWhereInput>;
+}
+
+export interface LocationWhereInput {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<LocationWhereInput[]>;
+  /** Logical OR on all given filters. */
+  OR?: Maybe<LocationWhereInput[]>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<LocationWhereInput[]>;
+
+  id?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  id_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  id_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  id_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  id_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  id_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  id_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  id_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  id_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  id_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  id_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  id_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  id_not_ends_with?: Maybe<string>;
+
+  placeName?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  placeName_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  placeName_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  placeName_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  placeName_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  placeName_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  placeName_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  placeName_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  placeName_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  placeName_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  placeName_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  placeName_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  placeName_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  placeName_not_ends_with?: Maybe<string>;
+
+  latitude?: Maybe<number>;
+  /** All values that are not equal to given value. */
+  latitude_not?: Maybe<number>;
+  /** All values that are contained in given list. */
+  latitude_in?: Maybe<number[]>;
+  /** All values that are not contained in given list. */
+  latitude_not_in?: Maybe<number[]>;
+  /** All values less than the given value. */
+  latitude_lt?: Maybe<number>;
+  /** All values less than or equal the given value. */
+  latitude_lte?: Maybe<number>;
+  /** All values greater than the given value. */
+  latitude_gt?: Maybe<number>;
+  /** All values greater than or equal the given value. */
+  latitude_gte?: Maybe<number>;
+
+  longitude?: Maybe<number>;
+  /** All values that are not equal to given value. */
+  longitude_not?: Maybe<number>;
+  /** All values that are contained in given list. */
+  longitude_in?: Maybe<number[]>;
+  /** All values that are not contained in given list. */
+  longitude_not_in?: Maybe<number[]>;
+  /** All values less than the given value. */
+  longitude_lt?: Maybe<number>;
+  /** All values less than or equal the given value. */
+  longitude_lte?: Maybe<number>;
+  /** All values greater than the given value. */
+  longitude_gt?: Maybe<number>;
+  /** All values greater than or equal the given value. */
+  longitude_gte?: Maybe<number>;
 }
 
 export interface GameWhereInput {
@@ -713,6 +872,10 @@ export interface MessageWhereUniqueInput {
   id?: Maybe<string>;
 }
 
+export interface LocationWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
 export interface PartyWhereUniqueInput {
   id?: Maybe<string>;
 }
@@ -730,6 +893,8 @@ export interface GameWhereUniqueInput {
 }
 
 export interface ChatCreateInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   members?: Maybe<UserCreateManyWithoutChatsInput>;
@@ -744,13 +909,21 @@ export interface PartyCreateOneInput {
 }
 
 export interface PartyCreateInput {
+  id?: Maybe<string>;
+
   title: string;
 
   description: string;
 
   isPublic?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+
   author: UserCreateOneInput;
+
+  location: LocationCreateOneInput;
 
   games?: Maybe<GameCreateManyInput>;
 
@@ -764,6 +937,8 @@ export interface UserCreateOneInput {
 }
 
 export interface UserCreateInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -774,9 +949,11 @@ export interface UserCreateInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   parties?: Maybe<PartyCreateManyWithoutMembersInput>;
 
@@ -794,15 +971,39 @@ export interface PartyCreateManyWithoutMembersInput {
 }
 
 export interface PartyCreateWithoutMembersInput {
+  id?: Maybe<string>;
+
   title: string;
 
   description: string;
 
   isPublic?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+
   author: UserCreateOneInput;
 
+  location: LocationCreateOneInput;
+
   games?: Maybe<GameCreateManyInput>;
+}
+
+export interface LocationCreateOneInput {
+  create?: Maybe<LocationCreateInput>;
+
+  connect?: Maybe<LocationWhereUniqueInput>;
+}
+
+export interface LocationCreateInput {
+  id?: Maybe<string>;
+
+  placeName: string;
+
+  latitude: number;
+
+  longitude: number;
 }
 
 export interface GameCreateManyInput {
@@ -812,6 +1013,8 @@ export interface GameCreateManyInput {
 }
 
 export interface GameCreateInput {
+  id?: Maybe<string>;
+
   title: string;
 
   cover?: Maybe<string>;
@@ -832,6 +1035,8 @@ export interface ChatCreateManyWithoutMembersInput {
 }
 
 export interface ChatCreateWithoutMembersInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   messages?: Maybe<MessageCreateManyWithoutChatInput>;
@@ -844,6 +1049,8 @@ export interface MessageCreateManyWithoutChatInput {
 }
 
 export interface MessageCreateWithoutChatInput {
+  id?: Maybe<string>;
+
   content: string;
 
   author: UserCreateOneInput;
@@ -856,6 +1063,8 @@ export interface UserCreateManyWithoutPartiesInput {
 }
 
 export interface UserCreateWithoutPartiesInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -866,9 +1075,11 @@ export interface UserCreateWithoutPartiesInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   friends?: Maybe<UserCreateManyInput>;
 
@@ -884,6 +1095,8 @@ export interface UserCreateManyWithoutChatsInput {
 }
 
 export interface UserCreateWithoutChatsInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -894,9 +1107,11 @@ export interface UserCreateWithoutChatsInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   parties?: Maybe<PartyCreateManyWithoutMembersInput>;
 
@@ -906,6 +1121,8 @@ export interface UserCreateWithoutChatsInput {
 }
 
 export interface MessageCreateInput {
+  id?: Maybe<string>;
+
   content: string;
 
   author: UserCreateOneInput;
@@ -920,6 +1137,8 @@ export interface ChatCreateOneWithoutMessagesInput {
 }
 
 export interface ChatCreateWithoutMessagesInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   members?: Maybe<UserCreateManyWithoutChatsInput>;
@@ -950,7 +1169,13 @@ export interface PartyUpdateDataInput {
 
   isPublic?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+
   author?: Maybe<UserUpdateOneRequiredInput>;
+
+  location?: Maybe<LocationUpdateOneRequiredInput>;
 
   games?: Maybe<GameUpdateManyInput>;
 
@@ -978,9 +1203,11 @@ export interface UserUpdateDataInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
@@ -1024,9 +1251,39 @@ export interface PartyUpdateWithoutMembersDataInput {
 
   isPublic?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+
   author?: Maybe<UserUpdateOneRequiredInput>;
 
+  location?: Maybe<LocationUpdateOneRequiredInput>;
+
   games?: Maybe<GameUpdateManyInput>;
+}
+
+export interface LocationUpdateOneRequiredInput {
+  create?: Maybe<LocationCreateInput>;
+
+  connect?: Maybe<LocationWhereUniqueInput>;
+
+  update?: Maybe<LocationUpdateDataInput>;
+
+  upsert?: Maybe<LocationUpsertNestedInput>;
+}
+
+export interface LocationUpdateDataInput {
+  placeName?: Maybe<string>;
+
+  latitude?: Maybe<number>;
+
+  longitude?: Maybe<number>;
+}
+
+export interface LocationUpsertNestedInput {
+  update: LocationUpdateDataInput;
+
+  create: LocationCreateInput;
 }
 
 export interface GameUpdateManyInput {
@@ -1351,6 +1608,38 @@ export interface PartyScalarWhereInput {
   isPublic?: Maybe<boolean>;
   /** All values that are not equal to given value. */
   isPublic_not?: Maybe<boolean>;
+
+  startDate?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  startDate_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  startDate_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  startDate_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  startDate_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  startDate_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  startDate_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  startDate_gte?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  endDate_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  endDate_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  endDate_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  endDate_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  endDate_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  endDate_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  endDate_gte?: Maybe<DateTime>;
 }
 
 export interface PartyUpdateManyDataInput {
@@ -1359,6 +1648,10 @@ export interface PartyUpdateManyDataInput {
   description?: Maybe<string>;
 
   isPublic?: Maybe<boolean>;
+
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
 }
 
 export interface PartyUpsertWithWhereUniqueWithoutMembersInput {
@@ -1585,13 +1878,13 @@ export interface UserScalarWhereInput {
   /** All values that are not equal to given value. */
   deleted_not?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
   /** All values that are not equal to given value. */
-  socialmedia_not?: Maybe<SocialMediaType>;
+  provider_not?: Maybe<SocialMediaType>;
   /** All values that are contained in given list. */
-  socialmedia_in?: Maybe<SocialMediaType[]>;
+  provider_in?: Maybe<SocialMediaType[]>;
   /** All values that are not contained in given list. */
-  socialmedia_not_in?: Maybe<SocialMediaType[]>;
+  provider_not_in?: Maybe<SocialMediaType[]>;
 
   avatar?: Maybe<string>;
   /** All values that are not equal to given value. */
@@ -1620,6 +1913,34 @@ export interface UserScalarWhereInput {
   avatar_ends_with?: Maybe<string>;
   /** All values not ending with the given string. */
   avatar_not_ends_with?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  thirdPartyId_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  thirdPartyId_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  thirdPartyId_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  thirdPartyId_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  thirdPartyId_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  thirdPartyId_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  thirdPartyId_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  thirdPartyId_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  thirdPartyId_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  thirdPartyId_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  thirdPartyId_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  thirdPartyId_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  thirdPartyId_not_ends_with?: Maybe<string>;
 }
 
 export interface UserUpdateManyDataInput {
@@ -1633,9 +1954,11 @@ export interface UserUpdateManyDataInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 }
 
 export interface UserUpsertWithWhereUniqueNestedInput {
@@ -1943,9 +2266,11 @@ export interface UserUpdateWithoutPartiesDataInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   friends?: Maybe<UserUpdateManyInput>;
 
@@ -2005,9 +2330,11 @@ export interface UserUpdateWithoutChatsDataInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
@@ -2054,6 +2381,14 @@ export interface ChatUpsertWithoutMessagesInput {
   create: ChatCreateWithoutMessagesInput;
 }
 
+export interface LocationUpdateInput {
+  placeName?: Maybe<string>;
+
+  latitude?: Maybe<number>;
+
+  longitude?: Maybe<number>;
+}
+
 export interface PartyUpdateInput {
   title?: Maybe<string>;
 
@@ -2061,7 +2396,13 @@ export interface PartyUpdateInput {
 
   isPublic?: Maybe<boolean>;
 
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
+
   author?: Maybe<UserUpdateOneRequiredInput>;
+
+  location?: Maybe<LocationUpdateOneRequiredInput>;
 
   games?: Maybe<GameUpdateManyInput>;
 
@@ -2079,9 +2420,11 @@ export interface UserUpdateInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
 
@@ -2104,12 +2447,24 @@ export interface MessageUpdateManyMutationInput {
   content?: Maybe<string>;
 }
 
+export interface LocationUpdateManyMutationInput {
+  placeName?: Maybe<string>;
+
+  latitude?: Maybe<number>;
+
+  longitude?: Maybe<number>;
+}
+
 export interface PartyUpdateManyMutationInput {
   title?: Maybe<string>;
 
   description?: Maybe<string>;
 
   isPublic?: Maybe<boolean>;
+
+  startDate?: Maybe<DateTime>;
+
+  endDate?: Maybe<DateTime>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -2123,9 +2478,11 @@ export interface UserUpdateManyMutationInput {
 
   deleted?: Maybe<boolean>;
 
-  socialmedia?: Maybe<SocialMediaType>;
+  provider?: Maybe<SocialMediaType>;
 
   avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
 }
 
 export interface GameUpdateManyMutationInput {
@@ -2172,6 +2529,25 @@ export interface MessageSubscriptionWhereInput {
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<MessageWhereInput>;
+}
+
+export interface LocationSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<LocationSubscriptionWhereInput[]>;
+  /** Logical OR on all given filters. */
+  OR?: Maybe<LocationSubscriptionWhereInput[]>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<LocationSubscriptionWhereInput[]>;
+  /** The subscription event gets dispatched when it's listed in mutation_in */
+  mutation_in?: Maybe<MutationType[]>;
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains?: Maybe<string>;
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_every?: Maybe<string[]>;
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<LocationWhereInput>;
 }
 
 export interface PartySubscriptionWhereInput {
@@ -2233,8 +2609,8 @@ export interface GameSubscriptionWhereInput {
 
 export enum SocialMediaType {
   Facebook = 'FACEBOOK',
-  Twitter = 'TWITTER',
-  Google = 'GOOGLE'
+  Spotify = 'SPOTIFY',
+  Twitter = 'TWITTER'
 }
 
 export enum GameType {
@@ -2264,7 +2640,11 @@ export enum PartyOrderByInput {
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
   IsPublicAsc = 'isPublic_ASC',
-  IsPublicDesc = 'isPublic_DESC'
+  IsPublicDesc = 'isPublic_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC'
 }
 
 export enum UserOrderByInput {
@@ -2284,10 +2664,12 @@ export enum UserOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
   DeletedAsc = 'deleted_ASC',
   DeletedDesc = 'deleted_DESC',
-  SocialmediaAsc = 'socialmedia_ASC',
-  SocialmediaDesc = 'socialmedia_DESC',
+  ProviderAsc = 'provider_ASC',
+  ProviderDesc = 'provider_DESC',
   AvatarAsc = 'avatar_ASC',
-  AvatarDesc = 'avatar_DESC'
+  AvatarDesc = 'avatar_DESC',
+  ThirdPartyIdAsc = 'thirdPartyId_ASC',
+  ThirdPartyIdDesc = 'thirdPartyId_DESC'
 }
 
 export enum GameOrderByInput {
@@ -2314,6 +2696,21 @@ export enum MessageOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export enum LocationOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PlaceNameAsc = 'placeName_ASC',
+  PlaceNameDesc = 'placeName_DESC',
+  LatitudeAsc = 'latitude_ASC',
+  LatitudeDesc = 'latitude_DESC',
+  LongitudeAsc = 'longitude_ASC',
+  LongitudeDesc = 'longitude_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC'
 }
 
 export enum MutationType {
@@ -2385,6 +2782,8 @@ export type MeQueryMe = {
   firstName: string;
 
   lastName: string;
+
+  avatar: Maybe<string>;
 };
 
 export type PaginateUsersQueryVariables = {
@@ -2523,6 +2922,7 @@ export const MeQueryDocument = gql`
       email
       firstName
       lastName
+      avatar
     }
   }
 `;

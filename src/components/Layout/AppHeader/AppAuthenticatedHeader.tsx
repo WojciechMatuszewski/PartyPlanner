@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { MeQueryComponent } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
 import css from '@emotion/css';
-import UserDefaultAvatar from '@components/UserDefaultAvatar';
 import { WithRouterProps, withRouter } from 'next/router';
 import { handleLogout } from '@components/Authentication/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import UserAvatar from '@components/UserDefaultAvatar';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -110,10 +110,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
               <Menu.Item key="/user-profile">
                 <Link href="/user-profile">
                   <a>
-                    <UserDefaultAvatar
-                      firstName={data && data.me ? data.me.firstName : ''}
-                      lastName={data && data.me ? data.me.lastName : ''}
-                    />
+                    <UserAvatar userData={data && data.me ? data.me : {}} />
                   </a>
                 </Link>
               </Menu.Item>
@@ -193,10 +190,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                 <Menu.Item key="/user-profile">
                   <Link href="/user-profile">
                     <a>
-                      <UserDefaultAvatar
-                        firstName={data && data.me ? data.me.firstName : ''}
-                        lastName={data && data.me ? data.me.lastName : ''}
-                      />
+                      <UserAvatar userData={data && data.me ? data.me : {}} />
                     </a>
                   </Link>
                 </Menu.Item>

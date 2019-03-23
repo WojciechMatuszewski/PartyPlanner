@@ -6,7 +6,7 @@ import FormikInputField from '../../shared/formikInputField';
 import styled from '@emotion/styled';
 import { LoginMutation, LoginVariables } from '@generated/graphql';
 import { MutationFn, MutationResult } from 'react-apollo';
-import { withRouter, WithRouterProps } from 'next/router';
+
 import GraphqlError from '@components/GraphqlError';
 import { handleLogin } from './AuthService';
 interface FormValues {
@@ -35,19 +35,17 @@ const LoginControlsWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const LoginForm: React.FC<
-  {
-    mutate: MutationFn<LoginMutation, LoginVariables>;
-    mutationResult: MutationResult<LoginMutation>;
-  } & WithRouterProps
-> = ({ mutate, mutationResult: { loading, error }, router }) => {
+const LoginForm: React.FC<{
+  mutate: MutationFn<LoginMutation, LoginVariables>;
+  mutationResult: MutationResult<LoginMutation>;
+}> = ({ mutate, mutationResult: { loading, error } }) => {
   return (
     <Formik
       onSubmit={async formValues => {
         try {
           const response = await mutate({ variables: formValues });
-          if (!error && response && response.data && router) {
-            handleLogin(response.data.login.token, router);
+          if (!error && response && response.data) {
+            handleLogin(response.data.login.token);
           }
         } catch (e) {
           // error state handled by GraphqlError component
@@ -98,4 +96,4 @@ const LoginForm: React.FC<
   );
 };
 
-export default withRouter(LoginForm);
+export default LoginForm;
