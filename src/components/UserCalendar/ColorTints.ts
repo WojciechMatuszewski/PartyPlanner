@@ -1,42 +1,61 @@
+import hexRgb from 'hex-rgb';
+
 export interface ColorTint {
-  name: string;
   dotColor: string;
   weekBorderColor: string;
   weekTileColor: string;
   spanningMoreThanOneDayColor: string;
 }
 
-export const calendarTints: ColorTint[] = [
-  {
-    name: 'blue',
-    dotColor: '#096dd9',
-    weekBorderColor: '#096dd9',
-    weekTileColor: 'rgba(9,109,217, 0.7)',
-    spanningMoreThanOneDayColor: 'rgba(9,109,217, 0.2)'
-  },
-  {
-    name: 'gold',
-    dotColor: '#009688',
-    weekBorderColor: '#009688',
-    weekTileColor: 'rgba(0,150,136, 0.7)',
-    spanningMoreThanOneDayColor: 'rgba(0,150,136, 0.2)'
-  },
-  {
-    name: 'green',
-    dotColor: '#5b8c00',
-    weekBorderColor: '#5b8c00',
-    weekTileColor: 'rgba(91,140,0, 0.7)',
-    spanningMoreThanOneDayColor: 'rgba(91,140,0, 0.2)'
-  }
-  // {
-  //   name: 'magenta',
-  //   dotColor: '#EB2F96',
-  //   weekBorderColor: '#EB2F96',
-  //   weekTileColor: 'rgb(235,47,150,0.7)',
-  //   spanningMoreThanOneDayColor: 'rgba(235,47,150,0.2)'
-  // }
+export interface CalendarTints {
+  [key: string]: ColorTint;
+}
+
+export const toRgba = (hex: string, alpha: number) => {
+  const rgb = hexRgb(hex, { format: 'array' })
+    .slice(0, -1)
+    .join(',');
+  return `rgba(${rgb},${alpha})`;
+};
+
+export const calendarTintsHexArray = [
+  '#f44336',
+  '#e91e63',
+  '#9c27b0',
+  '#673ab7',
+  '#3f51b5',
+  '#2196f3',
+  '#03a9f4',
+  '#00bcd4',
+  '#009688',
+  '#4caf50',
+  '#8bc34a',
+  '#cddc39',
+  '#ffeb3b',
+  '#ffc107',
+  '#ff9800',
+  '#ff5722',
+  '#795548',
+  '#607d8b'
 ];
 
+export const calendarTints: CalendarTints = calendarTintsHexArray.reduce(
+  (acc: CalendarTints, currentHexTint) => {
+    acc[currentHexTint] = {
+      dotColor: currentHexTint,
+      weekBorderColor: toRgba(currentHexTint, 1),
+      weekTileColor: toRgba(currentHexTint, 0.7),
+      spanningMoreThanOneDayColor: toRgba(currentHexTint, 0.2)
+    };
+    return acc;
+  },
+  {}
+);
+
 export function getCalendarColorTint() {
-  return calendarTints[Math.floor(Math.random() * calendarTints.length) + 0];
+  const hex =
+    calendarTintsHexArray[
+      Math.floor(Math.random() * calendarTintsHexArray.length) + 0
+    ];
+  return calendarTints[hex];
 }

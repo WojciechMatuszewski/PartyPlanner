@@ -25,3 +25,11 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_PARTY_MUTATION = gql`
+  mutation CreateParty($data: PartyCreateInput!) {
+    createParty(data: $data) {
+      id
+    }
+  }
+`;

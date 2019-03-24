@@ -1,11 +1,22 @@
 import React from 'react';
-import { Form, Row, Col, DatePicker, Tabs, Button, Icon } from 'antd';
+import {
+  Form,
+  Row,
+  Col,
+  DatePicker,
+  Tabs,
+  Button,
+  Icon,
+  Switch,
+  Typography,
+  Spin
+} from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import useMedia from '@hooks/useMedia';
 import CreatePartyLocation from './CreateParty/CreatePartyLocation';
-import { Formik, FormikErrors, FormikTouched, FastField } from 'formik';
+import { Formik, FastField } from 'formik';
 import moment from 'moment';
 import { RangePickerValue } from 'antd/lib/date-picker/interface';
 import FormikInputField from '@shared/formikInputField';
@@ -13,6 +24,14 @@ import { UserLocation } from '@hooks/useUserLocation';
 import UserCalendar from '@components/UserCalendar/UserCalendar';
 import css from '@emotion/css';
 import InviteFriend from './CreateParty/InviteFriend/InviteFriend';
+import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
+import CreatePartyColorTintSelect from './CreateParty/CreatePartyColorTintSelect';
+import { curry } from 'ramda';
+import {
+  getFormItemError,
+  getFormItemValidateStatus
+} from '@shared/formikFieldUtils';
+import { CreatePartyComponent, useMeQuery } from '@generated/graphql';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
@@ -31,6 +50,19 @@ const InnerWrapper = styled.div`
   }
 `;
 
+const ShouldBePublicStyles = css`
+  .ant-typography {
+    margin-right: 24px;
+  }
+  .ant-form-item-children {
+    width: 100%;
+    ${FlexBoxVerticallyCenteredStyles}
+  }
+  h4 {
+    display: inline-block;
+  }
+`;
+
 const initialValues: CreatePartyForm = {
   title: '',
   description: '',
@@ -42,8 +74,9 @@ const initialValues: CreatePartyForm = {
     },
     placeName: ''
   },
-
-  invitedFriends: []
+  invitedFriends: [],
+  isPublic: false,
+  colorTint: '#4caf50'
 };
 
 export type PartyLocation = UserLocation;
@@ -54,6 +87,8 @@ export interface CreatePartyForm {
   date: RangePickerValue;
   location: PartyLocation;
   invitedFriends: string[];
+  colorTint: string;
+  isPublic: boolean;
 }
 
 const validationSchema = yup.object().shape<CreatePartyForm>({
@@ -85,137 +120,177 @@ const validationSchema = yup.object().shape<CreatePartyForm>({
       })
     })
     .required(),
-  invitedFriends: yup.array().of(yup.string())
+  invitedFriends: yup.array().of(yup.string()),
+  isPublic: yup.boolean(),
+  colorTint: yup.string()
 });
 
 const CreateParty: React.FC = () => {
   const isBreakingTheGrid = useMedia('(max-width:992px)');
 
-  function getValidateStatus(
-    errors: FormikErrors<CreatePartyForm>,
-    touched: FormikTouched<CreatePartyForm>,
-    fieldName: keyof FormikErrors<CreatePartyForm>
-  ) {
-    return errors[fieldName] && touched[fieldName]
-      ? 'error'
-      : touched[fieldName] && !errors[fieldName]
-      ? 'success'
-      : undefined;
-  }
+  const { data: meData, loading } = useMeQuery({ fetchPolicy: 'cache-first' });
 
-  function getFieldErrors(
-    errors: FormikErrors<CreatePartyForm>,
-    touched: FormikTouched<CreatePartyForm>,
-    fieldName: keyof FormikErrors<CreatePartyForm>
-  ) {
-    return getValidateStatus(errors, touched, fieldName) === 'error'
-      ? errors[fieldName]
-      : '';
+  if (loading || !meData || !meData.me) {
+    return <Spin />;
   }
 
   return (
     <CreatePartyFormWrapper>
-      <InnerWrapper>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={() => null}
-        >
-          {({ handleSubmit, setFieldValue, errors, touched }) => (
-            <Form layout="horizontal" onSubmit={handleSubmit}>
-              <Row gutter={32}>
-                <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                  <FastField
-                    component={FormikInputField}
-                    size="large"
-                    name="title"
-                    placeholder="Name your party"
-                    prefix={
-                      <Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />
-                    }
-                  />
-                  <Form.Item
-                    hasFeedback={true}
-                    validateStatus={getValidateStatus(
-                      errors as any,
-                      touched as any,
-                      'date'
-                    )}
-                    help={getFieldErrors(errors as any, touched as any, 'date')}
-                  >
-                    <DatePicker.RangePicker
-                      onChange={dates => setFieldValue('date', dates)}
-                      name="date"
-                      showTime={{ format: 'hh:mm', use12Hours: false }}
-                      format="YYYY-MM-DD HH:mm"
-                      style={{ width: '100%' }}
-                    />
-                  </Form.Item>
-                </Col>
-
-                {!isBreakingTheGrid && (
-                  <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                    <Button type="primary" size="large" htmlType="submit">
-                      Save
-                    </Button>
-                  </Col>
-                )}
-              </Row>
-
-              <Row gutter={32}>
-                <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                  <Form.Item>
-                    <Tabs defaultActiveKey="1" onChange={() => {}}>
-                      <Tabs.TabPane tab="Information's" key="1">
-                        <CreatePartyLocation />
-                        <FastField
-                          component={FormikInputField}
-                          name="description"
-                          type="textArea"
-                          placeholder="Description"
-                          autosize={{ minRows: 4 }}
-                        />
-                      </Tabs.TabPane>
-                      <Tabs.TabPane
-                        tab="Find Time"
-                        key="2"
-                        css={css`
-                          .rbc-calendar {
-                            max-height: 100%;
+      <CreatePartyComponent>
+        {mutate => (
+          <InnerWrapper>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={async formValues => {
+                try {
+                  await mutate({
+                    variables: {
+                      data: {
+                        colorTint: formValues.colorTint,
+                        isPublic: formValues.isPublic,
+                        title: formValues.title,
+                        description: formValues.description,
+                        members: {
+                          connect: formValues.invitedFriends.map(id => ({ id }))
+                        },
+                        author: {
+                          connect: { id: meData!.me!.id }
+                        },
+                        location: {
+                          create: {
+                            placeName: formValues.location.placeName,
+                            ...formValues.location.coords
                           }
-                        `}
+                        }
+                      }
+                    }
+                  });
+                  // console.log(data);
+                } catch (e) {
+                  return null;
+                }
+              }}
+            >
+              {({ handleSubmit, setFieldValue, errors, touched }) => (
+                <Form layout="horizontal" onSubmit={handleSubmit}>
+                  <Row gutter={32}>
+                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                      <FastField
+                        size="large"
+                        component={FormikInputField}
+                        name="title"
+                        placeholder="Name your party"
+                        prefix={
+                          <Icon
+                            type="form"
+                            style={{ color: 'rgba(0,0,0,.25)' }}
+                          />
+                        }
+                      />
+                      <Form.Item
+                        hasFeedback={true}
+                        validateStatus={getFormItemValidateStatus(
+                          errors as any,
+                          touched as any,
+                          'date'
+                        )}
+                        help={getFormItemError(
+                          errors as any,
+                          touched as any,
+                          'date'
+                        )}
                       >
-                        <UserCalendar
-                          controlled={true}
-                          controlledView="day"
-                          selectable={false}
+                        <DatePicker.RangePicker
+                          onChange={dates => setFieldValue('date', dates)}
+                          name="date"
+                          showTime={{ format: 'hh:mm', use12Hours: false }}
+                          format="YYYY-MM-DD HH:mm"
+                          style={{ width: '100%' }}
                         />
-                      </Tabs.TabPane>
-                    </Tabs>
-                  </Form.Item>
-                </Col>
+                      </Form.Item>
+                      <Form.Item>
+                        <div css={[ShouldBePublicStyles]}>
+                          <Typography.Title level={4}>
+                            Should party be public
+                          </Typography.Title>
+                          <Switch
+                            onChange={curry(setFieldValue)('isPublic')}
+                            checkedChildren={<Icon type="check" />}
+                            unCheckedChildren={<Icon type="close" />}
+                            defaultChecked={false}
+                          />
+                        </div>
+                        <CreatePartyColorTintSelect
+                          initialColorTint={initialValues.colorTint}
+                        />
+                      </Form.Item>
+                    </Col>
+                    {!isBreakingTheGrid && (
+                      <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                        <Button type="primary" size="large" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    )}
+                  </Row>
 
-                <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                  <Form.Item>
-                    <Tabs defaultActiveKey="1" onChange={() => {}}>
-                      <Tabs.TabPane tab="Invite friends" key="1">
-                        <InviteFriend />
-                      </Tabs.TabPane>
-                    </Tabs>
-                  </Form.Item>
-                </Col>
-              </Row>
-              {isBreakingTheGrid && (
-                <FormItem>
-                  <Button type="primary" block={true} htmlType="submit">
-                    Save
-                  </Button>
-                </FormItem>
+                  <Row gutter={32}>
+                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                      <Form.Item>
+                        <Tabs defaultActiveKey="1" onChange={() => {}}>
+                          <Tabs.TabPane tab="Information's" key="1">
+                            <CreatePartyLocation />
+                            <FastField
+                              component={FormikInputField}
+                              name="description"
+                              type="textArea"
+                              placeholder="Description"
+                              autosize={{ minRows: 4 }}
+                            />
+                          </Tabs.TabPane>
+                          <Tabs.TabPane
+                            tab="Find Time"
+                            key="2"
+                            css={css`
+                              .rbc-calendar {
+                                max-height: 100%;
+                              }
+                            `}
+                          >
+                            <UserCalendar
+                              controlled={true}
+                              controlledView="day"
+                              selectable={false}
+                            />
+                          </Tabs.TabPane>
+                        </Tabs>
+                      </Form.Item>
+                    </Col>
+
+                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                      <Form.Item>
+                        <Tabs defaultActiveKey="1" onChange={() => {}}>
+                          <Tabs.TabPane tab="Invite friends" key="1">
+                            <InviteFriend />
+                          </Tabs.TabPane>
+                        </Tabs>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  {isBreakingTheGrid && (
+                    <FormItem>
+                      <Button type="primary" block={true} htmlType="submit">
+                        Save
+                      </Button>
+                    </FormItem>
+                  )}
+                </Form>
               )}
-            </Form>
-          )}
-        </Formik>
-      </InnerWrapper>
+            </Formik>
+          </InnerWrapper>
+        )}
+      </CreatePartyComponent>
     </CreatePartyFormWrapper>
   );
 };
