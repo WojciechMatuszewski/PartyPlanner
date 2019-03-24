@@ -10,7 +10,7 @@ import {
   PaginateUsersQueryDocument
 } from '@generated/graphql';
 import { FormikContext } from 'formik';
-import { CreatePartyForm } from '@components/Party/CreateParty';
+import { CreatePartyForm } from '@components/Party/CreateParty/CreateParty';
 import { useApolloClient } from 'react-apollo-hooks';
 import useMedia from '@hooks/useMedia';
 import {

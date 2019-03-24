@@ -7,7 +7,7 @@ import { UserLocation } from '@hooks/useUserLocation';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { connect, FormikContext } from 'formik';
-import { CreatePartyForm } from '../CreateParty';
+import { CreatePartyForm } from './CreateParty';
 import { LocalizeMeButtonState } from './CreatePartyLocation';
 
 const SpinnerWrapper = styled.div`

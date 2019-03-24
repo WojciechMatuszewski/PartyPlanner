@@ -4,7 +4,7 @@ import { CirclePicker, ColorResult } from 'react-color';
 
 import css from '@emotion/css';
 import { connect, FormikContext } from 'formik';
-import { CreatePartyForm } from '../CreateParty';
+import { CreatePartyForm } from './CreateParty';
 
 const TitleStyles = css`
   transition: 0.3s ease color;

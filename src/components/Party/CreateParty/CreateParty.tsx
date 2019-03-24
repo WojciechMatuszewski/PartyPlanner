@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Form,
-  Row,
-  Col,
   DatePicker,
   Tabs,
   Button,
@@ -11,11 +9,10 @@ import {
   Typography,
   Spin
 } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import useMedia from '@hooks/useMedia';
-import CreatePartyLocation from './CreateParty/CreatePartyLocation';
+import CreatePartyLocation from './CreatePartyLocation';
 import { Formik, FastField } from 'formik';
 import moment from 'moment';
 import { RangePickerValue } from 'antd/lib/date-picker/interface';
@@ -23,9 +20,9 @@ import FormikInputField from '@shared/formikInputField';
 import { UserLocation } from '@hooks/useUserLocation';
 import UserCalendar from '@components/UserCalendar/UserCalendar';
 import css from '@emotion/css';
-import InviteFriend from './CreateParty/InviteFriend/InviteFriend';
+import InviteFriend from './InviteFriend/InviteFriend';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
-import CreatePartyColorTintSelect from './CreateParty/CreatePartyColorTintSelect';
+import CreatePartyColorTintSelect from './CreatePartyColorTintSelect';
 import { curry } from 'ramda';
 import {
   getFormItemError,
@@ -91,6 +88,22 @@ export interface CreatePartyForm {
   isPublic: boolean;
 }
 
+const RowWrapper = styled.div`
+  flex: 1;
+  padding: 12px;
+`;
+
+const BreakableRowStyles = css`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RowsWrapper = styled.div`
+  display: flex;
+  flex-direction: ${(props: { isBreakingTheGrid: boolean }) =>
+    props.isBreakingTheGrid ? 'column' : 'row'};
+`;
+
 const validationSchema = yup.object().shape<CreatePartyForm>({
   title: yup
     .string()
@@ -137,32 +150,42 @@ const CreateParty: React.FC = () => {
   return (
     <CreatePartyFormWrapper>
       <CreatePartyComponent>
-        {mutate => (
+        {(mutate, { loading }) => (
           <InnerWrapper>
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={async formValues => {
                 try {
+                  const {
+                    invitedFriends,
+                    location,
+                    date,
+                    ...restOfFormFields
+                  } = formValues;
                   await mutate({
                     variables: {
                       data: {
-                        colorTint: formValues.colorTint,
-                        isPublic: formValues.isPublic,
-                        title: formValues.title,
-                        description: formValues.description,
                         members: {
-                          connect: formValues.invitedFriends.map(id => ({ id }))
-                        },
-                        author: {
-                          connect: { id: meData!.me!.id }
+                          connect: [
+                            ...invitedFriends.map(id => ({ id })),
+                            { id: meData!.me!.id }
+                          ]
                         },
                         location: {
                           create: {
-                            placeName: formValues.location.placeName,
-                            ...formValues.location.coords
+                            placeName: location.placeName,
+                            ...location.coords
                           }
-                        }
+                        },
+                        author: {
+                          connect: {
+                            id: meData!.me!.id
+                          }
+                        },
+                        startDate: date[0],
+                        endDate: date[1],
+                        ...restOfFormFields
                       }
                     }
                   });
@@ -174,8 +197,8 @@ const CreateParty: React.FC = () => {
             >
               {({ handleSubmit, setFieldValue, errors, touched }) => (
                 <Form layout="horizontal" onSubmit={handleSubmit}>
-                  <Row gutter={32}>
-                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
+                  <RowsWrapper isBreakingTheGrid={isBreakingTheGrid}>
+                    <RowWrapper>
                       <FastField
                         size="large"
                         component={FormikInputField}
@@ -225,18 +248,6 @@ const CreateParty: React.FC = () => {
                           initialColorTint={initialValues.colorTint}
                         />
                       </Form.Item>
-                    </Col>
-                    {!isBreakingTheGrid && (
-                      <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                        <Button type="primary" size="large" htmlType="submit">
-                          Save
-                        </Button>
-                      </Col>
-                    )}
-                  </Row>
-
-                  <Row gutter={32}>
-                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
                       <Form.Item>
                         <Tabs defaultActiveKey="1" onChange={() => {}}>
                           <Tabs.TabPane tab="Information's" key="1">
@@ -266,25 +277,25 @@ const CreateParty: React.FC = () => {
                           </Tabs.TabPane>
                         </Tabs>
                       </Form.Item>
-                    </Col>
+                    </RowWrapper>
 
-                    <Col lg={{ span: 12 }} sm={{ span: 24 }}>
-                      <Form.Item>
-                        <Tabs defaultActiveKey="1" onChange={() => {}}>
-                          <Tabs.TabPane tab="Invite friends" key="1">
-                            <InviteFriend />
-                          </Tabs.TabPane>
-                        </Tabs>
+                    <RowWrapper css={[BreakableRowStyles]}>
+                      <Form.Item style={{ order: isBreakingTheGrid ? 1 : 0 }}>
+                        <Button
+                          loading={loading}
+                          size="large"
+                          type="primary"
+                          block={true}
+                          htmlType="submit"
+                        >
+                          Save
+                        </Button>
                       </Form.Item>
-                    </Col>
-                  </Row>
-                  {isBreakingTheGrid && (
-                    <FormItem>
-                      <Button type="primary" block={true} htmlType="submit">
-                        Save
-                      </Button>
-                    </FormItem>
-                  )}
+                      <Form.Item>
+                        <InviteFriend />
+                      </Form.Item>
+                    </RowWrapper>
+                  </RowsWrapper>
                 </Form>
               )}
             </Formik>
