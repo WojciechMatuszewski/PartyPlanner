@@ -46,6 +46,7 @@ const SearchForLocation: React.FC<
 }) => {
   const CancelToken = axios.CancelToken;
   const axiosCanceler = React.useRef<Canceler>(() => null);
+
   async function handleLocationSearch(searchQuery: string) {
     axiosCanceler.current();
     return await axiosMapBoxInstance.get(
@@ -145,4 +146,4 @@ const SearchForLocation: React.FC<
   );
 };
 
-export default connect<Props, CreatePartyForm>(SearchForLocation);
+export default React.memo(connect<Props, CreatePartyForm>(SearchForLocation));

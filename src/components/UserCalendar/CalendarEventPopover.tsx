@@ -5,6 +5,8 @@ import { AvatarList } from 'ant-design-pro';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
 import { CalendarContext } from './UserCalendar';
+import { PartiesQueryParties } from '@generated/graphql';
+import moment from 'moment';
 
 const CalendarEventPopoverWrapper = styled.div`
   width: ${(props: { isInModal: boolean }) =>
@@ -28,6 +30,9 @@ const CalendarEventPopoverWrapper = styled.div`
       align-self: flex-start;
       width: 25px;
       height: 30px;
+    }
+    span {
+      flex: 1;
     }
     .antd-pro-avatar-list-avatarList {
       ul {
@@ -60,9 +65,10 @@ const CalendarEventPopoverToolbar = styled.div`
   }
 `;
 
-const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
-  isInModal
-}) => {
+const CalendarEventPopoverContent: React.FC<{
+  isInModal: boolean;
+  party: PartiesQueryParties;
+}> = ({ isInModal, party }) => {
   return (
     <CalendarEventPopoverWrapper isInModal={isInModal}>
       <CalendarEventPopoverToolbar>
@@ -71,22 +77,27 @@ const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
         <Icon type="message" />
         {!isInModal && <Icon type="close" />}
       </CalendarEventPopoverToolbar>
-      <h2>Some nice meetup</h2>
+      <h2>{party.title}</h2>
       <div className="item-wrapper">
         <Icon type="clock-circle" theme="filled" className="item-icon" />
-        <span className="item-description">Oct. 23 from 1:00pm to 1:15pm</span>
+        <span className="item-description">
+          {moment(party.start).format('DD MMM HH:mm')} to{' '}
+          {moment(party.end).format('DD MMM HH:mm')}
+        </span>
       </div>
       <div className="item-wrapper">
         <Icon type="home" className="item-icon" />
-        <span>Wojskowa 3d/11, Poznań</span>
+        <span>{party.location.placeName}</span>
       </div>
       <div className="item-wrapper">
         <Icon type="user" className="item-icon" />
-        <span>Wojciech Matuszewski</span>
+        <span>
+          {party.author.firstName} {party.author.lastName}
+        </span>
       </div>
       <div className="item-wrapper">
         <Icon type="usergroup-add" className="item-icon" />
-        <span>8 invitee's</span>
+        <span>{party!.members!.length} invitee's</span>
       </div>
       <div className="item-wrapper">
         <div className="item-icon" />
@@ -95,30 +106,16 @@ const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
           maxLength={5}
           excessItemsStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
         >
-          <AvatarList.Item
-            tips="Jake"
-            src="https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png"
-          />
-          <AvatarList.Item
-            tips="Andy"
-            src="https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png"
-          />
-          <AvatarList.Item
-            tips="Niko"
-            src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png"
-          />
-          <AvatarList.Item
-            tips="Niko"
-            src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png"
-          />
-          <AvatarList.Item
-            tips="Niko"
-            src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png"
-          />
-          <AvatarList.Item
-            tips="Niko"
-            src="https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png"
-          />
+          {party!.members!.map((partyMember, index) => (
+            <AvatarList.Item
+              key={index}
+              tips={partyMember.firstName}
+              src={
+                partyMember.avatar ||
+                'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png'
+              }
+            />
+          ))}
         </AvatarList>
       </div>
       <div className="item-wrapper">
@@ -132,7 +129,8 @@ const CalendarEventPopoverContent: React.FC<{ isInModal: boolean }> = ({
 const CalendarEventPopover: React.FC<{
   children: React.ReactNode;
   onVisibilityChange?: (visible: boolean) => void;
-}> = ({ children, onVisibilityChange }) => {
+  party: PartiesQueryParties;
+}> = ({ children, onVisibilityChange, party }) => {
   const isOnMobile = useMedia('(max-width:800px)');
   const calendarContext = React.useContext(CalendarContext);
 
@@ -143,26 +141,22 @@ const CalendarEventPopover: React.FC<{
       centered: true,
       okText: 'Close',
       maskClosable: true,
-      content: <CalendarEventPopoverContent isInModal={true} />
+      content: <CalendarEventPopoverContent isInModal={true} party={party} />
     });
   }
 
-  return calendarContext.controlled ? (
+  return calendarContext.controlled || isOnMobile ? (
     <ModalClickContainer onClick={handleMobileClick}>
       {children}
     </ModalClickContainer>
-  ) : !isOnMobile ? (
+  ) : (
     <Popover
-      content={<CalendarEventPopoverContent isInModal={false} />}
+      content={<CalendarEventPopoverContent isInModal={false} party={party} />}
       trigger="click"
       onVisibleChange={onVisibilityChange}
     >
       {children}
     </Popover>
-  ) : (
-    <ModalClickContainer onClick={handleMobileClick}>
-      {children}
-    </ModalClickContainer>
   );
 };
 

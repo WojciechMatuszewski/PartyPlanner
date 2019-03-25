@@ -1,70 +1,71 @@
 export type Maybe<T> = T | null;
 
 export interface ChatWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<ChatWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<ChatWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<ChatWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   party?: Maybe<PartyWhereInput>;
@@ -83,191 +84,192 @@ export interface ChatWhereInput {
 }
 
 export interface PartyWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<PartyWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<PartyWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<PartyWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   title?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   title_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   title_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   title_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   title_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   title_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   title_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   title_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   title_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   title_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   title_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   title_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   title_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   title_not_ends_with?: Maybe<string>;
 
   description?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   description_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   description_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   description_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   description_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   description_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   description_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   description_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   description_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   description_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   description_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   description_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   description_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   description_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   colorTint?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   colorTint_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   colorTint_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   colorTint_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   colorTint_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   colorTint_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   colorTint_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   colorTint_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   colorTint_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   colorTint_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   colorTint_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   colorTint_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   colorTint_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   colorTint_not_ends_with?: Maybe<string>;
 
   isPublic?: Maybe<boolean>;
-
+  /** All values that are not equal to given value. */
   isPublic_not?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  start_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  start_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  start_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  start_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  start_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  start_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  start_gte?: Maybe<DateTime>;
 
-  startDate_not?: Maybe<DateTime>;
-
-  startDate_in?: Maybe<DateTime[]>;
-
-  startDate_not_in?: Maybe<DateTime[]>;
-
-  startDate_lt?: Maybe<DateTime>;
-
-  startDate_lte?: Maybe<DateTime>;
-
-  startDate_gt?: Maybe<DateTime>;
-
-  startDate_gte?: Maybe<DateTime>;
-
-  endDate?: Maybe<DateTime>;
-
-  endDate_not?: Maybe<DateTime>;
-
-  endDate_in?: Maybe<DateTime[]>;
-
-  endDate_not_in?: Maybe<DateTime[]>;
-
-  endDate_lt?: Maybe<DateTime>;
-
-  endDate_lte?: Maybe<DateTime>;
-
-  endDate_gt?: Maybe<DateTime>;
-
-  endDate_gte?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  end_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  end_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  end_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  end_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  end_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  end_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  end_gte?: Maybe<DateTime>;
 
   author?: Maybe<UserWhereInput>;
 
@@ -287,250 +289,251 @@ export interface PartyWhereInput {
 }
 
 export interface UserWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<UserWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<UserWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<UserWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   email?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   email_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   email_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   email_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   email_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   email_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   email_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   email_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   email_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   email_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   email_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   email_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   email_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   email_not_ends_with?: Maybe<string>;
 
   firstName?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   firstName_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   firstName_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   firstName_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   firstName_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   firstName_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   firstName_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   firstName_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   firstName_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   firstName_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   firstName_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   firstName_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   firstName_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   firstName_not_ends_with?: Maybe<string>;
 
   lastName?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   lastName_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   lastName_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   lastName_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   lastName_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   lastName_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   lastName_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   lastName_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   lastName_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   lastName_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   lastName_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   lastName_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   lastName_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   lastName_not_ends_with?: Maybe<string>;
 
   password?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   password_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   password_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   password_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   password_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   password_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   password_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   password_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   password_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   password_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   password_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   password_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   password_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   password_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
-
+  /** All values that are not equal to given value. */
   deleted_not?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
-
+  /** All values that are not equal to given value. */
   provider_not?: Maybe<SocialMediaType>;
-
+  /** All values that are contained in given list. */
   provider_in?: Maybe<SocialMediaType[]>;
-
+  /** All values that are not contained in given list. */
   provider_not_in?: Maybe<SocialMediaType[]>;
 
   avatar?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   avatar_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   avatar_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   avatar_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   avatar_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   avatar_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   avatar_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   avatar_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   avatar_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   avatar_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   avatar_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   avatar_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   avatar_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   avatar_not_ends_with?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   thirdPartyId_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   thirdPartyId_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   thirdPartyId_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   thirdPartyId_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   thirdPartyId_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   thirdPartyId_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   thirdPartyId_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   thirdPartyId_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   thirdPartyId_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   thirdPartyId_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   thirdPartyId_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   thirdPartyId_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   thirdPartyId_not_ends_with?: Maybe<string>;
 
   parties_every?: Maybe<PartyWhereInput>;
@@ -559,326 +562,329 @@ export interface UserWhereInput {
 }
 
 export interface LocationWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<LocationWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<LocationWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<LocationWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   placeName?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   placeName_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   placeName_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   placeName_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   placeName_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   placeName_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   placeName_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   placeName_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   placeName_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   placeName_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   placeName_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   placeName_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   placeName_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   placeName_not_ends_with?: Maybe<string>;
 
   latitude?: Maybe<number>;
-
+  /** All values that are not equal to given value. */
   latitude_not?: Maybe<number>;
-
+  /** All values that are contained in given list. */
   latitude_in?: Maybe<number[]>;
-
+  /** All values that are not contained in given list. */
   latitude_not_in?: Maybe<number[]>;
-
+  /** All values less than the given value. */
   latitude_lt?: Maybe<number>;
-
+  /** All values less than or equal the given value. */
   latitude_lte?: Maybe<number>;
-
+  /** All values greater than the given value. */
   latitude_gt?: Maybe<number>;
-
+  /** All values greater than or equal the given value. */
   latitude_gte?: Maybe<number>;
 
   longitude?: Maybe<number>;
-
+  /** All values that are not equal to given value. */
   longitude_not?: Maybe<number>;
-
+  /** All values that are contained in given list. */
   longitude_in?: Maybe<number[]>;
-
+  /** All values that are not contained in given list. */
   longitude_not_in?: Maybe<number[]>;
-
+  /** All values less than the given value. */
   longitude_lt?: Maybe<number>;
-
+  /** All values less than or equal the given value. */
   longitude_lte?: Maybe<number>;
-
+  /** All values greater than the given value. */
   longitude_gt?: Maybe<number>;
-
+  /** All values greater than or equal the given value. */
   longitude_gte?: Maybe<number>;
 }
 
 export interface GameWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<GameWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<GameWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<GameWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   title?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   title_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   title_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   title_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   title_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   title_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   title_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   title_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   title_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   title_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   title_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   title_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   title_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   title_not_ends_with?: Maybe<string>;
 
   cover?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   cover_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   cover_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   cover_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   cover_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   cover_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   cover_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   cover_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   cover_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   cover_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   cover_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   cover_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   cover_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   cover_not_ends_with?: Maybe<string>;
 
   type?: Maybe<GameType>;
-
+  /** All values that are not equal to given value. */
   type_not?: Maybe<GameType>;
-
+  /** All values that are contained in given list. */
   type_in?: Maybe<GameType[]>;
-
+  /** All values that are not contained in given list. */
   type_not_in?: Maybe<GameType[]>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 }
 
 export interface MessageWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<MessageWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<MessageWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<MessageWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   content?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   content_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   content_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   content_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   content_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   content_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   content_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   content_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   content_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   content_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   content_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   content_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   content_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   content_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   author?: Maybe<UserWhereInput>;
@@ -941,9 +947,9 @@ export interface PartyCreateInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 
   author: UserCreateOneInput;
 
@@ -1005,9 +1011,9 @@ export interface PartyCreateWithoutMembersInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 
   author: UserCreateOneInput;
 
@@ -1197,9 +1203,9 @@ export interface PartyUpdateDataInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
 
@@ -1281,9 +1287,9 @@ export interface PartyUpdateWithoutMembersDataInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
 
@@ -1357,134 +1363,135 @@ export interface GameUpdateManyWithWhereNestedInput {
 }
 
 export interface GameScalarWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<GameScalarWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<GameScalarWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<GameScalarWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   title?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   title_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   title_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   title_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   title_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   title_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   title_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   title_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   title_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   title_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   title_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   title_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   title_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   title_not_ends_with?: Maybe<string>;
 
   cover?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   cover_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   cover_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   cover_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   cover_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   cover_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   cover_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   cover_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   cover_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   cover_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   cover_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   cover_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   cover_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   cover_not_ends_with?: Maybe<string>;
 
   type?: Maybe<GameType>;
-
+  /** All values that are not equal to given value. */
   type_not?: Maybe<GameType>;
-
+  /** All values that are contained in given list. */
   type_in?: Maybe<GameType[]>;
-
+  /** All values that are not contained in given list. */
   type_not_in?: Maybe<GameType[]>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 }
 
@@ -1511,191 +1518,192 @@ export interface PartyUpdateManyWithWhereNestedInput {
 }
 
 export interface PartyScalarWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<PartyScalarWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<PartyScalarWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<PartyScalarWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   title?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   title_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   title_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   title_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   title_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   title_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   title_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   title_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   title_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   title_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   title_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   title_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   title_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   title_not_ends_with?: Maybe<string>;
 
   description?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   description_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   description_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   description_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   description_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   description_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   description_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   description_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   description_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   description_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   description_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   description_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   description_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   description_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   colorTint?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   colorTint_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   colorTint_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   colorTint_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   colorTint_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   colorTint_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   colorTint_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   colorTint_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   colorTint_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   colorTint_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   colorTint_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   colorTint_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   colorTint_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   colorTint_not_ends_with?: Maybe<string>;
 
   isPublic?: Maybe<boolean>;
-
+  /** All values that are not equal to given value. */
   isPublic_not?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  start_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  start_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  start_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  start_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  start_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  start_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  start_gte?: Maybe<DateTime>;
 
-  startDate_not?: Maybe<DateTime>;
-
-  startDate_in?: Maybe<DateTime[]>;
-
-  startDate_not_in?: Maybe<DateTime[]>;
-
-  startDate_lt?: Maybe<DateTime>;
-
-  startDate_lte?: Maybe<DateTime>;
-
-  startDate_gt?: Maybe<DateTime>;
-
-  startDate_gte?: Maybe<DateTime>;
-
-  endDate?: Maybe<DateTime>;
-
-  endDate_not?: Maybe<DateTime>;
-
-  endDate_in?: Maybe<DateTime[]>;
-
-  endDate_not_in?: Maybe<DateTime[]>;
-
-  endDate_lt?: Maybe<DateTime>;
-
-  endDate_lte?: Maybe<DateTime>;
-
-  endDate_gt?: Maybe<DateTime>;
-
-  endDate_gte?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
+  /** All values that are not equal to given value. */
+  end_not?: Maybe<DateTime>;
+  /** All values that are contained in given list. */
+  end_in?: Maybe<DateTime[]>;
+  /** All values that are not contained in given list. */
+  end_not_in?: Maybe<DateTime[]>;
+  /** All values less than the given value. */
+  end_lt?: Maybe<DateTime>;
+  /** All values less than or equal the given value. */
+  end_lte?: Maybe<DateTime>;
+  /** All values greater than the given value. */
+  end_gt?: Maybe<DateTime>;
+  /** All values greater than or equal the given value. */
+  end_gte?: Maybe<DateTime>;
 }
 
 export interface PartyUpdateManyDataInput {
@@ -1707,9 +1715,9 @@ export interface PartyUpdateManyDataInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 }
 
 export interface PartyUpsertWithWhereUniqueWithoutMembersInput {
@@ -1753,250 +1761,251 @@ export interface UserUpdateManyWithWhereNestedInput {
 }
 
 export interface UserScalarWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<UserScalarWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<UserScalarWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<UserScalarWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   email?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   email_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   email_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   email_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   email_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   email_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   email_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   email_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   email_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   email_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   email_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   email_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   email_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   email_not_ends_with?: Maybe<string>;
 
   firstName?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   firstName_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   firstName_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   firstName_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   firstName_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   firstName_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   firstName_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   firstName_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   firstName_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   firstName_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   firstName_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   firstName_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   firstName_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   firstName_not_ends_with?: Maybe<string>;
 
   lastName?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   lastName_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   lastName_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   lastName_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   lastName_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   lastName_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   lastName_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   lastName_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   lastName_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   lastName_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   lastName_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   lastName_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   lastName_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   lastName_not_ends_with?: Maybe<string>;
 
   password?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   password_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   password_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   password_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   password_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   password_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   password_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   password_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   password_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   password_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   password_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   password_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   password_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   password_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
-
+  /** All values that are not equal to given value. */
   deleted_not?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
-
+  /** All values that are not equal to given value. */
   provider_not?: Maybe<SocialMediaType>;
-
+  /** All values that are contained in given list. */
   provider_in?: Maybe<SocialMediaType[]>;
-
+  /** All values that are not contained in given list. */
   provider_not_in?: Maybe<SocialMediaType[]>;
 
   avatar?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   avatar_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   avatar_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   avatar_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   avatar_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   avatar_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   avatar_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   avatar_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   avatar_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   avatar_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   avatar_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   avatar_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   avatar_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   avatar_not_ends_with?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   thirdPartyId_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   thirdPartyId_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   thirdPartyId_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   thirdPartyId_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   thirdPartyId_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   thirdPartyId_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   thirdPartyId_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   thirdPartyId_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   thirdPartyId_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   thirdPartyId_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   thirdPartyId_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   thirdPartyId_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   thirdPartyId_not_ends_with?: Maybe<string>;
 }
 
@@ -2095,98 +2104,99 @@ export interface MessageUpdateManyWithWhereNestedInput {
 }
 
 export interface MessageScalarWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<MessageScalarWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<MessageScalarWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<MessageScalarWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   content?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   content_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   content_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   content_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   content_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   content_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   content_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   content_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   content_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   content_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   content_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   content_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   content_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   content_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 }
 
@@ -2203,70 +2213,71 @@ export interface MessageUpsertWithWhereUniqueWithoutChatInput {
 }
 
 export interface ChatScalarWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<ChatScalarWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<ChatScalarWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<ChatScalarWhereInput[]>;
 
   id?: Maybe<string>;
-
+  /** All values that are not equal to given value. */
   id_not?: Maybe<string>;
-
+  /** All values that are contained in given list. */
   id_in?: Maybe<string[]>;
-
+  /** All values that are not contained in given list. */
   id_not_in?: Maybe<string[]>;
-
+  /** All values less than the given value. */
   id_lt?: Maybe<string>;
-
+  /** All values less than or equal the given value. */
   id_lte?: Maybe<string>;
-
+  /** All values greater than the given value. */
   id_gt?: Maybe<string>;
-
+  /** All values greater than or equal the given value. */
   id_gte?: Maybe<string>;
-
+  /** All values containing the given string. */
   id_contains?: Maybe<string>;
-
+  /** All values not containing the given string. */
   id_not_contains?: Maybe<string>;
-
+  /** All values starting with the given string. */
   id_starts_with?: Maybe<string>;
-
+  /** All values not starting with the given string. */
   id_not_starts_with?: Maybe<string>;
-
+  /** All values ending with the given string. */
   id_ends_with?: Maybe<string>;
-
+  /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   createdAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   createdAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   createdAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   createdAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   createdAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   createdAt_gte?: Maybe<DateTime>;
 
   updatedAt?: Maybe<DateTime>;
-
+  /** All values that are not equal to given value. */
   updatedAt_not?: Maybe<DateTime>;
-
+  /** All values that are contained in given list. */
   updatedAt_in?: Maybe<DateTime[]>;
-
+  /** All values that are not contained in given list. */
   updatedAt_not_in?: Maybe<DateTime[]>;
-
+  /** All values less than the given value. */
   updatedAt_lt?: Maybe<DateTime>;
-
+  /** All values less than or equal the given value. */
   updatedAt_lte?: Maybe<DateTime>;
-
+  /** All values greater than the given value. */
   updatedAt_gt?: Maybe<DateTime>;
-
+  /** All values greater than or equal the given value. */
   updatedAt_gte?: Maybe<DateTime>;
 }
 
@@ -2453,9 +2464,9 @@ export interface PartyUpdateInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
 
@@ -2521,9 +2532,9 @@ export interface PartyUpdateManyMutationInput {
 
   isPublic?: Maybe<boolean>;
 
-  startDate?: Maybe<DateTime>;
+  start?: Maybe<DateTime>;
 
-  endDate?: Maybe<DateTime>;
+  end?: Maybe<DateTime>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -2553,108 +2564,114 @@ export interface GameUpdateManyMutationInput {
 }
 
 export interface ChatSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<ChatSubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<ChatSubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<ChatSubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<ChatWhereInput>;
 }
 
 export interface MessageSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<MessageSubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<MessageSubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<MessageSubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<MessageWhereInput>;
 }
 
 export interface LocationSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<LocationSubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<LocationSubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<LocationSubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<LocationWhereInput>;
 }
 
 export interface PartySubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<PartySubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<PartySubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<PartySubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<PartyWhereInput>;
 }
 
 export interface UserSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<UserSubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<UserSubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<UserSubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<UserWhereInput>;
 }
 
 export interface GameSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
   AND?: Maybe<GameSubscriptionWhereInput[]>;
-
+  /** Logical OR on all given filters. */
   OR?: Maybe<GameSubscriptionWhereInput[]>;
-
+  /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<GameSubscriptionWhereInput[]>;
-
+  /** The subscription event gets dispatched when it's listed in mutation_in */
   mutation_in?: Maybe<MutationType[]>;
-
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
   updatedFields_contains?: Maybe<string>;
-
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
   updatedFields_contains_every?: Maybe<string[]>;
-
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<GameWhereInput>;
@@ -2696,10 +2713,10 @@ export enum PartyOrderByInput {
   ColorTintDesc = 'colorTint_DESC',
   IsPublicAsc = 'isPublic_ASC',
   IsPublicDesc = 'isPublic_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC'
+  StartAsc = 'start_ASC',
+  StartDesc = 'start_DESC',
+  EndAsc = 'end_ASC',
+  EndDesc = 'end_DESC'
 }
 
 export enum UserOrderByInput {
@@ -2776,6 +2793,7 @@ export enum MutationType {
 
 export type DateTime = any;
 
+/** The `Long` scalar type represents non-fractional signed whole numeric values. Long can represent values between -(2^63) and 2^63 - 1. */
 export type Long = any;
 
 // ====================================================
@@ -2828,11 +2846,7 @@ export type CreatePartyMutation = {
   createParty: CreatePartyCreateParty;
 };
 
-export type CreatePartyCreateParty = {
-  __typename?: 'Party';
-
-  id: string;
-};
+export type CreatePartyCreateParty = PartyFragmentFragment;
 
 export type MeQueryVariables = {};
 
@@ -2906,10 +2920,101 @@ export type PaginateUsersQueryPageInfo = {
   endCursor: Maybe<string>;
 };
 
+export type PartiesQueryVariables = {
+  where?: Maybe<PartyWhereInput>;
+  orderBy?: Maybe<PartyOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PartiesQueryQuery = {
+  __typename?: 'Query';
+
+  parties: (Maybe<PartiesQueryParties>)[];
+};
+
+export type PartiesQueryParties = PartyFragmentFragment;
+
+export type PartyFragmentFragment = {
+  __typename?: 'Party';
+
+  id: string;
+
+  title: string;
+
+  description: string;
+
+  location: PartyFragmentLocation;
+
+  author: PartyFragmentAuthor;
+
+  members: Maybe<PartyFragmentMembers[]>;
+
+  colorTint: string;
+
+  start: DateTime;
+
+  end: DateTime;
+};
+
+export type PartyFragmentLocation = {
+  __typename?: 'Location';
+
+  placeName: string;
+};
+
+export type PartyFragmentAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+};
+
+export type PartyFragmentMembers = {
+  __typename?: 'User';
+
+  avatar: Maybe<string>;
+
+  firstName: string;
+
+  lastName: string;
+};
+
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
 import * as ReactApolloHooks from 'react-apollo-hooks';
+
+// ====================================================
+// Fragments
+// ====================================================
+
+export const PartyFragmentFragmentDoc = gql`
+  fragment PARTY_FRAGMENT on Party {
+    id
+    title
+    description
+    location {
+      placeName
+    }
+    author {
+      firstName
+      lastName
+    }
+    members {
+      avatar
+      firstName
+      lastName
+    }
+    colorTint
+    start
+    end
+  }
+`;
 
 // ====================================================
 // Components
@@ -2988,9 +3093,11 @@ export function useLogin(
 export const CreatePartyDocument = gql`
   mutation CreateParty($data: PartyCreateInput!) {
     createParty(data: $data) {
-      id
+      ...PARTY_FRAGMENT
     }
   }
+
+  ${PartyFragmentFragmentDoc}
 `;
 export class CreatePartyComponent extends React.Component<
   Partial<ReactApollo.MutationProps<CreatePartyMutation, CreatePartyVariables>>
@@ -3101,4 +3208,49 @@ export function usePaginateUsersQuery(
     PaginateUsersQueryQuery,
     PaginateUsersQueryVariables
   >(PaginateUsersQueryDocument, baseOptions);
+}
+export const PartiesQueryDocument = gql`
+  query PartiesQuery(
+    $where: PartyWhereInput
+    $orderBy: PartyOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    parties(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      ...PARTY_FRAGMENT
+    }
+  }
+
+  ${PartyFragmentFragmentDoc}
+`;
+export class PartiesQueryComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<PartiesQueryQuery, PartiesQueryVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<PartiesQueryQuery, PartiesQueryVariables>
+        query={PartiesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePartiesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<PartiesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<PartiesQueryQuery, PartiesQueryVariables>(
+    PartiesQueryDocument,
+    baseOptions
+  );
 }

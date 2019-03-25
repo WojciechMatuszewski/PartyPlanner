@@ -52,10 +52,6 @@ export const calendarTints: CalendarTints = calendarTintsHexArray.reduce(
   {}
 );
 
-export function getCalendarColorTint() {
-  const hex =
-    calendarTintsHexArray[
-      Math.floor(Math.random() * calendarTintsHexArray.length) + 0
-    ];
-  return calendarTints[hex];
+export function getCalendarColorTint(hexColor: string): ColorTint {
+  return calendarTints[hexColor];
 }

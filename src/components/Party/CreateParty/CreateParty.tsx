@@ -183,8 +183,8 @@ const CreateParty: React.FC = () => {
                             id: meData!.me!.id
                           }
                         },
-                        startDate: date[0],
-                        endDate: date[1],
+                        start: date[0],
+                        end: date[1],
                         ...restOfFormFields
                       }
                     }
@@ -273,6 +273,7 @@ const CreateParty: React.FC = () => {
                               controlled={true}
                               controlledView="day"
                               selectable={false}
+                              userId={meData!.me!.id}
                             />
                           </Tabs.TabPane>
                         </Tabs>

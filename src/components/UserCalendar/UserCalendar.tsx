@@ -5,9 +5,12 @@ import moment from 'moment';
 import BigCalendar, { View } from 'react-big-calendar';
 import CalendarToolbar from './CalendarToolbar';
 import CalendarEventWrapper from './CalendarEventWrapper';
-import { CalendarEvents } from './Events';
 import useMedia from '@hooks/useMedia';
 import CalendarCreateEventModal from './CalendarCreateEventModal';
+import styled from '@emotion/styled';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { usePartiesQuery } from '@generated/graphql';
+import { Spin } from 'antd';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -42,6 +45,17 @@ interface ControlCalendarProps {
     | undefined;
 }
 
+const LoaderWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 15;
+  ${FlexBoxFullCenteredStyles}
+`;
+
 interface CalendarContext extends ControlCalendarProps {
   onMonthEventClicked: VoidFunction;
 }
@@ -53,23 +67,18 @@ export const CalendarContext = React.createContext<CalendarContext>({
   controlledView: undefined
 });
 
-const UserCalendar: React.FC<ControlCalendarProps> = props => {
+interface Props extends ControlCalendarProps {
+  userId: string;
+}
+
+const UserCalendar: React.FC<Props> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
   const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
   const canShowCreateModal = React.useRef<boolean>(true);
-
+  const prevSelectedDate = React.useRef<Date>(new Date());
   const [calendarView, setCalendarView] = React.useState<View>(
-    props.controlled
-      ? (props.controlledView as any)
-      : isOnMobile
-      ? 'day'
-      : 'month'
+    props.controlled ? (props.controlled as any) : isOnMobile ? 'day' : 'month'
   );
-
-  function onMonthEventClickHandler() {
-    canShowCreateModal.current = false;
-  }
-
   const [contextState] = React.useState<CalendarContext>({
     onMonthEventClicked: onMonthEventClickHandler,
     controlled: props.controlled,
@@ -90,8 +99,69 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
     setScrollXOffset(offsetToSet);
   }, [calendarView]);
 
+  const {
+    refetch,
+    data: partiesData,
+    loading: partiesLoading
+  } = usePartiesQuery({
+    variables: getUsePartiesVariables(moment(new Date()))
+  });
+
+  function getUsePartiesVariables(parsedDateToFetchFor: moment.Moment) {
+    return {
+      where: {
+        ...getPartiesFetchDate(parsedDateToFetchFor),
+        members_some: {
+          id: props.userId
+        }
+      }
+    };
+  }
+
+  function getPartiesFetchDate(parsedDateToFetchFor: moment.Moment) {
+    return {
+      start_gte: parsedDateToFetchFor.startOf('month').format(),
+      end_lte: parsedDateToFetchFor.endOf('month').format()
+    };
+  }
+
+  function handleDataRefetch(parsedDateToFetchFor: moment.Moment) {
+    refetch(getUsePartiesVariables(parsedDateToFetchFor));
+  }
+
+  function handleDateChange(date: Date) {
+    const parsedPrevDate = moment(prevSelectedDate.current);
+    const parsedCurrentDate = moment(date);
+    if (
+      parsedCurrentDate.isAfter(parsedPrevDate, 'month') ||
+      parsedCurrentDate.isBefore(parsedPrevDate, 'month')
+    ) {
+      handleDataRefetch(parsedCurrentDate);
+    }
+
+    prevSelectedDate.current = date;
+  }
+
+  function onMonthEventClickHandler() {
+    canShowCreateModal.current = false;
+  }
+
+  const parsedParties =
+    partiesData && partiesData.parties
+      ? partiesData.parties.map(party => ({
+          ...party,
+          start: new Date(party!.start),
+          end: new Date(party!.end)
+        }))
+      : [];
+
   return (
     <CalendarContext.Provider value={contextState}>
+      {partiesLoading && (
+        <LoaderWrapper>
+          <Spin size="large" />
+        </LoaderWrapper>
+      )}
       <BigCalendar
         css={css`
           ${BigCalendarStyles};
@@ -103,8 +173,9 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
         `}
         selectable={!props.controlled ? !isOnMobile : props.selectable}
         localizer={localizer}
-        events={CalendarEvents}
-        defaultDate={new Date(2015, 3, 12)}
+        onNavigate={handleDateChange}
+        events={parsedParties}
+        defaultDate={new Date()}
         onView={setCalendarView}
         view={calendarView}
         step={15}
@@ -119,7 +190,6 @@ const UserCalendar: React.FC<ControlCalendarProps> = props => {
         }}
         components={{
           toolbar: CalendarToolbar,
-          // i cannot be bothered to fix someones types ;/
           eventWrapper: (eventWrapperProps: any) => (
             <CalendarEventWrapper
               {...eventWrapperProps}
@@ -136,6 +206,6 @@ UserCalendar.defaultProps = {
   controlled: false,
   controlledView: 'week',
   selectable: false
-};
+} as Props;
 
 export default React.memo(UserCalendar);

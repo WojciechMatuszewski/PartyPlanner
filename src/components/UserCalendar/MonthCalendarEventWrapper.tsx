@@ -3,15 +3,15 @@ import moment from 'moment';
 import classNames from 'classnames';
 import CalendarEventPopover from './CalendarEventPopover';
 import styled from '@emotion/styled';
-import { ColorTint } from './ColorTints';
+import { ColorTint, getCalendarColorTint } from './ColorTints';
 import { Badge } from 'antd';
 import { CorrectedEventWrapperProps } from './CalendarEventWrapper';
-import { CalendarEvent } from './Events';
 import {
   FlexBoxVerticallyCenteredStyles,
   NotWrappingTextStyles
 } from '@shared/styles';
 import { CalendarContext } from './UserCalendar';
+import { PartiesQueryParties } from '@generated/graphql';
 
 const MonthCalendarWrapper = styled.div`
   ${FlexBoxVerticallyCenteredStyles};
@@ -60,7 +60,7 @@ const MonthCalendarInnerWrapper = styled.div`
 `;
 
 const MonthCalendarEventWrapper: React.FC<
-  CorrectedEventWrapperProps<CalendarEvent>
+  CorrectedEventWrapperProps<PartiesQueryParties>
 > = props => {
   function getCorrectClasses() {
     if (props.continuesPrior) {
@@ -123,12 +123,13 @@ const MonthCalendarEventWrapper: React.FC<
   const calendarContext = React.useContext(CalendarContext);
 
   return (
-    <CalendarEventPopover onVisibilityChange={toggleClicked}>
+    <CalendarEventPopover
+      onVisibilityChange={toggleClicked}
+      party={props.event}
+    >
       <MonthCalendarWrapper
-        onClick={() => {
-          calendarContext.onMonthEventClicked();
-        }}
-        colorTint={props.event.colorTint}
+        onClick={calendarContext.onMonthEventClicked}
+        colorTint={getCalendarColorTint(props.event.colorTint)}
         longerThanOneDay={isLongerThanOneDay}
         className={wrapperClasses}
         onMouseEnter={handleMouseEnter}

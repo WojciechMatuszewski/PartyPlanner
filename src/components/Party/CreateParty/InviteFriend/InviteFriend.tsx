@@ -62,6 +62,7 @@ const InviteFriend: React.FC<{
     inviteFriendReducer,
     initialInviteFriendState
   );
+
   const {
     SetLoadingState,
     SetFetchQuery,
@@ -231,7 +232,6 @@ const InviteFriend: React.FC<{
         shouldUseGrid={shouldUseGrid}
         filterValue={inputValue}
       />
-
       {state.loadingState.loadingMore && (
         <SpinnerContainer>
           <Spin />
@@ -241,4 +241,4 @@ const InviteFriend: React.FC<{
   );
 };
 
-export default connect<{}, CreatePartyForm>(InviteFriend);
+export default React.memo(connect<{}, CreatePartyForm>(InviteFriend));
