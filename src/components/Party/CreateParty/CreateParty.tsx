@@ -7,7 +7,8 @@ import {
   Icon,
   Switch,
   Typography,
-  Spin
+  Spin,
+  Modal
 } from 'antd';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
@@ -28,7 +29,15 @@ import {
   getFormItemError,
   getFormItemValidateStatus
 } from '@shared/formikFieldUtils';
-import { CreatePartyComponent, useMeQuery } from '@generated/graphql';
+import {
+  CreatePartyComponent,
+  useMeQuery,
+  CreatePartyMutation,
+  PartiesQueryQuery
+} from '@generated/graphql';
+import { MutationUpdaterFn } from 'apollo-boost';
+import { PARTIES_QUERY } from '@graphql/queries';
+import redirect from '@apolloSetup/redirect';
 
 const CreatePartyFormWrapper = styled.div`
   width: 100%;
@@ -141,6 +150,47 @@ const validationSchema = yup.object().shape<CreatePartyForm>({
 const CreateParty: React.FC = () => {
   const isBreakingTheGrid = useMedia('(max-width:992px)');
 
+  const createPartyMutationUpdater: MutationUpdaterFn<CreatePartyMutation> = (
+    proxy,
+    { data: { createParty } }
+  ) => {
+    // TODO: abstract this logic
+    const queryVariables = {
+      where: {
+        start_gte: moment(new Date())
+          .startOf('month')
+          .subtract(7, 'days')
+          .format(),
+        end_lte: moment(new Date())
+          .endOf('month')
+          .add(7, 'days')
+          .format(),
+        members_some: {
+          id: meData!.me!.id
+        }
+      }
+    };
+
+    try {
+      const data = proxy.readQuery<PartiesQueryQuery>({
+        query: PARTIES_QUERY,
+        variables: queryVariables
+      });
+
+      if (!data) return null;
+
+      proxy.writeQuery({
+        query: PARTIES_QUERY,
+        variables: queryVariables,
+        data: {
+          parties: [...data.parties, createParty]
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  };
+
   const { data: meData, loading } = useMeQuery({ fetchPolicy: 'cache-first' });
 
   if (loading || !meData || !meData.me) {
@@ -164,6 +214,7 @@ const CreateParty: React.FC = () => {
                     ...restOfFormFields
                   } = formValues;
                   await mutate({
+                    update: createPartyMutationUpdater,
                     variables: {
                       data: {
                         members: {
@@ -189,8 +240,27 @@ const CreateParty: React.FC = () => {
                       }
                     }
                   });
-                  // console.log(data);
+                  // TODO: better success/error handling
+                  Modal.success({
+                    title: 'Party created',
+                    onOk: () => redirect({} as any, '/calendar'),
+                    okText: 'Go back to calendar',
+                    content: (
+                      <Typography.Text>
+                        Party was successfully created!
+                      </Typography.Text>
+                    )
+                  });
                 } catch (e) {
+                  Modal.error({
+                    title: 'Something went wrong',
+                    content: (
+                      <Typography.Text>
+                        Something went wrong and we were not able to create the
+                        party
+                      </Typography.Text>
+                    )
+                  });
                   return null;
                 }
               }}

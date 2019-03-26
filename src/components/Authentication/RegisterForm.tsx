@@ -66,7 +66,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
           onSubmit={async formValues => {
             try {
               const response = await mutate({ variables: formValues });
-              if (!error && response && response.data) {
+              if (response && response.data) {
                 handleLogin(response.data.signup.token);
               }
             } catch (e) {

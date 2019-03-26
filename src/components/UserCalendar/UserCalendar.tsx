@@ -76,8 +76,13 @@ const UserCalendar: React.FC<Props> = props => {
   const [scrollXOffset, setScrollXOffset] = React.useState<number>(0);
   const canShowCreateModal = React.useRef<boolean>(true);
   const prevSelectedDate = React.useRef<Date>(new Date());
+
   const [calendarView, setCalendarView] = React.useState<View>(
-    props.controlled ? (props.controlled as any) : isOnMobile ? 'day' : 'month'
+    props.controlled
+      ? (props.controlledView as any)
+      : isOnMobile
+      ? 'day'
+      : 'month'
   );
   const [contextState] = React.useState<CalendarContext>({
     onMonthEventClicked: onMonthEventClickHandler,
@@ -100,17 +105,24 @@ const UserCalendar: React.FC<Props> = props => {
   }, [calendarView]);
 
   const {
-    refetch,
+    fetchMore,
     data: partiesData,
     loading: partiesLoading
   } = usePartiesQuery({
-    variables: getUsePartiesVariables(moment(new Date()))
+    variables: getUsePartiesVariables(new Date())
   });
 
-  function getUsePartiesVariables(parsedDateToFetchFor: moment.Moment) {
+  function getUsePartiesVariables(dateToGetVariablesFor: Date) {
     return {
       where: {
-        ...getPartiesFetchDate(parsedDateToFetchFor),
+        start_gte: moment(dateToGetVariablesFor)
+          .startOf('month')
+          .subtract(7, 'days')
+          .format(),
+        end_lte: moment(dateToGetVariablesFor)
+          .endOf('month')
+          .add(7, 'days')
+          .format(),
         members_some: {
           id: props.userId
         }
@@ -118,25 +130,37 @@ const UserCalendar: React.FC<Props> = props => {
     };
   }
 
-  function getPartiesFetchDate(parsedDateToFetchFor: moment.Moment) {
-    return {
-      start_gte: parsedDateToFetchFor.startOf('month').format(),
-      end_lte: parsedDateToFetchFor.endOf('month').format()
-    };
-  }
+  function handleDataRefetch(dateToFetchFor: Date) {
+    fetchMore({
+      variables: getUsePartiesVariables(dateToFetchFor),
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return previousResult;
+        }
 
-  function handleDataRefetch(parsedDateToFetchFor: moment.Moment) {
-    refetch(getUsePartiesVariables(parsedDateToFetchFor));
+        const idsFromPrev = previousResult.parties.map(res => res!.id);
+        const filteredFetchMore = fetchMoreResult.parties.filter(
+          fetchMoreRes => !idsFromPrev.includes(fetchMoreRes!.id)
+        );
+
+        // TODO: find a better solution here
+
+        return {
+          parties: [...previousResult.parties, ...filteredFetchMore]
+        };
+      }
+    });
   }
 
   function handleDateChange(date: Date) {
     const parsedPrevDate = moment(prevSelectedDate.current);
     const parsedCurrentDate = moment(date);
+
     if (
       parsedCurrentDate.isAfter(parsedPrevDate, 'month') ||
       parsedCurrentDate.isBefore(parsedPrevDate, 'month')
     ) {
-      handleDataRefetch(parsedCurrentDate);
+      handleDataRefetch(date);
     }
 
     prevSelectedDate.current = date;

@@ -26,7 +26,8 @@
       "@generated/*": ["./generated/*"],
       "@apolloSetup/*": ["./apolloSetup/*"],
       "@axios/*": ["axios/*"],
-      "@customIcons/*": ["custom-icons/*"]
+      "@customIcons/*": ["custom-icons/*"],
+      "@graphql/*": ["./graphql/*"]
     }
   }
 }
