@@ -10,7 +10,6 @@ import {
   PaginateUsersQueryDocument
 } from '@generated/graphql';
 import { FormikContext } from 'formik';
-import { CreatePartyForm } from '@components/Party/CreateParty';
 import { useApolloClient } from 'react-apollo-hooks';
 import useMedia from '@hooks/useMedia';
 import {
@@ -24,6 +23,7 @@ import InviteFriendLoadMoreButton from './InviteFriendLoadMoreButton';
 import { connect } from 'formik';
 import InviteFriendList from './InviteFriendList';
 import InviteFriendListItem from './InviteFriendListItem';
+import { CreatePartyFormValues } from '../CreatePartyForm';
 
 const SpinnerContainer = styled.div`
   ${FlexBoxFullCenteredStyles};
@@ -52,7 +52,7 @@ function getQueryConstructor(userId: string) {
 }
 
 const InviteFriend: React.FC<{
-  formik: FormikContext<CreatePartyForm>;
+  formik: FormikContext<CreatePartyFormValues>;
 }> = props => {
   const apolloClient = useApolloClient();
   const shouldUseGrid = useMedia('(min-width:992px)');
@@ -62,6 +62,7 @@ const InviteFriend: React.FC<{
     inviteFriendReducer,
     initialInviteFriendState
   );
+
   const {
     SetLoadingState,
     SetFetchQuery,
@@ -231,7 +232,6 @@ const InviteFriend: React.FC<{
         shouldUseGrid={shouldUseGrid}
         filterValue={inputValue}
       />
-
       {state.loadingState.loadingMore && (
         <SpinnerContainer>
           <Spin />
@@ -241,4 +241,4 @@ const InviteFriend: React.FC<{
   );
 };
 
-export default connect<{}, CreatePartyForm>(InviteFriend);
+export default React.memo(connect<{}, CreatePartyFormValues>(InviteFriend));

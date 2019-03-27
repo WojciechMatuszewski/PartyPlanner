@@ -1,6 +1,6 @@
 import { PaginateUsersQueryEdges, Maybe } from '@generated/graphql';
 import { ListProps, ListGridType } from 'antd/lib/list';
-import { List } from 'antd';
+import { List, Empty, Typography } from 'antd';
 import css from '@emotion/css';
 import React from 'react';
 import { useFuzzySearch } from '@hooks/useFuzzySearch';
@@ -24,6 +24,12 @@ interface BaseProps {
   canShowLoadMore: boolean;
 }
 
+const ListStyles = css`
+  .ant-list-item-meta-title {
+    margin-bottom: 0 !important;
+  }
+`;
+
 type Props = BaseProps & Omit<ListProps, 'dataSource'>;
 
 const InviteFriendList: React.FC<Props> = props => {
@@ -37,13 +43,19 @@ const InviteFriendList: React.FC<Props> = props => {
     }
   );
 
+  const isFilterValueEmpty =
+    props.filterValue == undefined || props.filterValue.trim().length <= 0;
+
+  const ListEmptyText = isFilterValueEmpty ? (
+    <ListEmptyNoData />
+  ) : (
+    <ListEmptyFilter filterValue={props.filterValue} />
+  );
+
   return (
     <List
-      css={css`
-        .ant-list-item-meta-title {
-          margin-bottom: 0 !important;
-        }
-      `}
+      locale={{ emptyText: ListEmptyText as any }}
+      css={[ListStyles]}
       loading={props.loading}
       loadMore={
         props.canShowLoadMore && filteredListItems.length > 0
@@ -56,5 +68,27 @@ const InviteFriendList: React.FC<Props> = props => {
     />
   );
 };
+
+const ListEmptyNoData: React.FC = () => (
+  <Empty
+    image="../static/person.png"
+    description="Your friends list is empty"
+  />
+);
+
+const ListEmptyFilter: React.FC<{ filterValue: string | undefined }> = ({
+  filterValue
+}) => (
+  <Empty
+    description={
+      <span>
+        Could not find anyone on your friends list who's first name or last name
+        contains
+        <br />
+        <Typography.Text type="warning">{filterValue}</Typography.Text>
+      </span>
+    }
+  />
+);
 
 export default InviteFriendList;

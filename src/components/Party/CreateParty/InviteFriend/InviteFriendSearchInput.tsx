@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Icon } from 'antd';
 import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 
 interface Props {
@@ -44,6 +44,7 @@ const InviteFriendSearchInput: React.FC<Props> = props => {
       validateStatus={props.inputLoading ? 'validating' : undefined}
     >
       <Input.Search
+        prefix={<Icon type="user-add" style={{ color: 'rgba(0,0,0,.25)' }} />}
         data-testid="InviteFriendSearchInput"
         disabled={props.inputDisabled}
         onChange={handleOnChange}

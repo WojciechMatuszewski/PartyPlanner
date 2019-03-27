@@ -1,3 +1,4 @@
+import { PARTY_FRAGMENT } from './fragments';
 import { gql } from 'apollo-boost';
 
 export const SIGNUP_MUTATION = gql`
@@ -24,4 +25,13 @@ export const LOGIN_MUTATION = gql`
       token
     }
   }
+`;
+
+export const CREATE_PARTY_MUTATION = gql`
+  mutation CreateParty($data: PartyCreateInput!) {
+    createParty(data: $data) {
+      ...PARTY_FRAGMENT
+    }
+  }
+  ${PARTY_FRAGMENT}
 `;

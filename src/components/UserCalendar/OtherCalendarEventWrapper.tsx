@@ -1,10 +1,11 @@
 import React from 'react';
-import { ColorTint } from './ColorTints';
+import { ColorTint, getCalendarColorTint } from './ColorTints';
 import styled from '@emotion/styled';
 import { animated, useSpring } from 'react-spring';
 import CalendarEventPopover from './CalendarEventPopover';
 import { CorrectedEventWrapperProps } from './CalendarEventWrapper';
-import { CalendarEvent } from './Events';
+import { PartiesQueryParties } from '@generated/graphql';
+import { Typography } from 'antd';
 
 interface EventTileWrapperProps {
   isDay: boolean;
@@ -45,9 +46,10 @@ const EventTileWrapperInner = styled.div`
 `;
 
 const OtherCalendarEventWrapper: React.FC<
-  CorrectedEventWrapperProps<CalendarEvent> & {
+  CorrectedEventWrapperProps<PartiesQueryParties> & {
     parsedStyles: React.CSSProperties;
     isDay: boolean;
+    event: PartiesQueryParties;
   }
 > = props => {
   const animationProps = useSpring({ opacity: 1, from: { opacity: 0 } });
@@ -59,15 +61,23 @@ const OtherCalendarEventWrapper: React.FC<
 
   return (
     <EventTileWrapper
-      colorTint={props.event.colorTint}
+      colorTint={getCalendarColorTint(props.event.colorTint)}
       isDay={props.isDay}
       className={`rbc-event ${clicked ? 'clicked' : ''}`}
       style={{ ...props.parsedStyles, ...animationProps }}
     >
-      <CalendarEventPopover onVisibilityChange={toggleClicked}>
+      <CalendarEventPopover
+        onVisibilityChange={toggleClicked}
+        party={props.event}
+      >
         <EventTileWrapperInner className="calendarPopupContainer">
-          <span className="title">works</span>
-          <p>Title</p>
+          <span className="title">{props.event.title}</span>
+          <Typography.Paragraph
+            ellipsis={{ rows: 10, expandable: false }}
+            style={{ color: 'rgba(255,255,255, 0.8)' }}
+          >
+            {props.event.description}
+          </Typography.Paragraph>
         </EventTileWrapperInner>
       </CalendarEventPopover>
     </EventTileWrapper>

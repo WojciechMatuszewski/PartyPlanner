@@ -45,6 +45,7 @@ const MobileToolbarView: React.FC<ToolbarProps> = props => {
         value={moment(props.date)}
         defaultValue={moment(props.date)}
         css={[DatePickerStyles]}
+        allowClear={false}
       />
       <div style={{ display: 'flex' }}>
         <Button shape="circle" onClick={() => props.onNavigate('PREV')}>
@@ -76,6 +77,7 @@ const DesktopToolbarView: React.FC<ToolbarProps> = props => {
         <DatePicker
           onChange={momentDate => props.onNavigate('DATE', momentDate.toDate())}
           value={moment(props.date)}
+          allowClear={false}
           defaultValue={moment(props.date)}
           css={[DatePickerStyles]}
         />
@@ -114,9 +116,7 @@ const CalendarToolbar: React.FC<ToolbarProps> = props => {
   const isOnMobile = useMedia('(max-width: 800px)');
   const calendarContext = React.useContext(CalendarContext);
 
-  return calendarContext.controlled ? (
-    <MobileToolbarView {...props} />
-  ) : isOnMobile ? (
+  return calendarContext.controlled || isOnMobile ? (
     <MobileToolbarView {...props} />
   ) : (
     <DesktopToolbarView {...props} />

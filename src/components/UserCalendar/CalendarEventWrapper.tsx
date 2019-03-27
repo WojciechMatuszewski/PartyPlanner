@@ -2,7 +2,8 @@ import React from 'react';
 import { EventWrapperProps, Event } from 'react-big-calendar';
 import MonthCalendarEventWrapper from './MonthCalendarEventWrapper';
 import OtherCalendarEventWrapper from './OtherCalendarEventWrapper';
-import { CalendarEvent } from './Events';
+
+import { PartiesQueryParties } from '@generated/graphql';
 
 export interface CorrectedEventWrapperProps<T extends Event = Event>
   extends EventWrapperProps<T> {
@@ -11,7 +12,7 @@ export interface CorrectedEventWrapperProps<T extends Event = Event>
 }
 
 class CalendarEventWrapper extends React.Component<
-  CorrectedEventWrapperProps<CalendarEvent> & {
+  CorrectedEventWrapperProps<PartiesQueryParties> & {
     calendarView: string;
   }
 > {
