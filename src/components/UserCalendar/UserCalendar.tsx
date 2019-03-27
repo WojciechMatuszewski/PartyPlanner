@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { usePartiesQuery } from '@generated/graphql';
 import { Spin } from 'antd';
+import { getPartiesDateVariables } from '@shared/graphqlUtils';
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -58,13 +59,15 @@ const LoaderWrapper = styled.div`
 
 interface CalendarContext extends ControlCalendarProps {
   onMonthEventClicked: VoidFunction;
+  userId: string;
 }
 
 export const CalendarContext = React.createContext<CalendarContext>({
   onMonthEventClicked: () => {},
   controlled: false,
   selectable: false,
-  controlledView: undefined
+  controlledView: undefined,
+  userId: ''
 });
 
 interface Props extends ControlCalendarProps {
@@ -88,7 +91,8 @@ const UserCalendar: React.FC<Props> = props => {
     onMonthEventClicked: onMonthEventClickHandler,
     controlled: props.controlled,
     controlledView: props.controlledView,
-    selectable: props.selectable
+    selectable: props.selectable,
+    userId: props.userId
   });
 
   React.useEffect(() => {
@@ -109,30 +113,12 @@ const UserCalendar: React.FC<Props> = props => {
     data: partiesData,
     loading: partiesLoading
   } = usePartiesQuery({
-    variables: getUsePartiesVariables(new Date())
+    variables: getPartiesDateVariables(new Date(), props.userId)
   });
-
-  function getUsePartiesVariables(dateToGetVariablesFor: Date) {
-    return {
-      where: {
-        start_gte: moment(dateToGetVariablesFor)
-          .startOf('month')
-          .subtract(7, 'days')
-          .format(),
-        end_lte: moment(dateToGetVariablesFor)
-          .endOf('month')
-          .add(7, 'days')
-          .format(),
-        members_some: {
-          id: props.userId
-        }
-      }
-    };
-  }
 
   function handleDataRefetch(dateToFetchFor: Date) {
     fetchMore({
-      variables: getUsePartiesVariables(dateToFetchFor),
+      variables: getPartiesDateVariables(dateToFetchFor, props.userId),
       updateQuery: (previousResult, { fetchMoreResult }) => {
         if (!fetchMoreResult) {
           return previousResult;

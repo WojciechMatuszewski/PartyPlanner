@@ -42,12 +42,14 @@ describe('InviteFriendSearchInput', () => {
         />
       );
       const input = getByTestId('InviteFriendSearchInput');
-      act(() => fireEvent.change(input, { target: { value: 'inputValue' } }));
+      act(
+        () => void fireEvent.change(input, { target: { value: 'inputValue' } })
+      );
       expect(onChangeHandler).toHaveBeenCalled();
       expect(onChangeHandler).toHaveBeenCalledWith('inputValue');
       act(() => advance(300));
       await wait(expect(typeaheadCallback).toHaveBeenCalled());
-      act(() => fireEvent.change(input, { target: { value: '' } }));
+      act(() => void fireEvent.change(input, { target: { value: '' } }));
       await wait(() => expect(fetchQueryUpdater).toHaveBeenCalled());
     })
   );
@@ -67,11 +69,13 @@ describe('InviteFriendSearchInput', () => {
         />
       );
       const input = getByTestId('InviteFriendSearchInput');
-      act(() => fireEvent.change(input, { target: { value: 'inputValue' } }));
+      act(
+        () => void fireEvent.change(input, { target: { value: 'inputValue' } })
+      );
       expect(onChangeHandler).toHaveBeenCalled();
       await wait(() => expect(typeaheadCallback).not.toHaveBeenCalled());
       act(() => advance(200));
-      act(() => fireEvent.change(input, { target: { value: '' } }));
+      act(() => void fireEvent.change(input, { target: { value: '' } }));
       await wait(() => expect(typeaheadCallback).not.toHaveBeenCalled());
       await wait(() => expect(fetchQueryUpdater).not.toHaveBeenCalled());
     })

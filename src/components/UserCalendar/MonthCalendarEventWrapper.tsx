@@ -95,6 +95,8 @@ const MonthCalendarEventWrapper: React.FC<
     clicked: clicked
   });
 
+  // handles the case when you click on tile and that tile spans on multiple rows
+  // it makes it so that that tile on another row is also highlighted
   function toggleClicked() {
     if (spanningIds) {
       const elem = document.getElementById(spanningIds.lookup);

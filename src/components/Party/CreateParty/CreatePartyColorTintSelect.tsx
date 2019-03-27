@@ -4,7 +4,7 @@ import { CirclePicker, ColorResult } from 'react-color';
 
 import css from '@emotion/css';
 import { connect, FormikContext } from 'formik';
-import { CreatePartyForm } from './CreateParty';
+import { CreatePartyFormValues } from './CreatePartyForm';
 
 const TitleStyles = css`
   transition: 0.3s ease color;
@@ -23,7 +23,7 @@ interface Props {
 
 const CreatePartyColorTintSelect: React.FC<
   {
-    formik: FormikContext<CreatePartyForm>;
+    formik: FormikContext<CreatePartyFormValues>;
   } & Props
 > = ({ formik: { setFieldValue }, initialColorTint }) => {
   const [currentColor, setCurrentColor] = React.useState<string>(
@@ -60,4 +60,6 @@ const CreatePartyColorTintSelect: React.FC<
   );
 };
 
-export default connect<Props, CreatePartyForm>(CreatePartyColorTintSelect);
+export default connect<Props, CreatePartyFormValues>(
+  CreatePartyColorTintSelect
+);

@@ -11,11 +11,13 @@ export const PARTY_FRAGMENT = gql`
     author {
       firstName
       lastName
+      id
     }
     members {
       avatar
       firstName
       lastName
+      id
     }
     colorTint
     start

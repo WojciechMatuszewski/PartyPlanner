@@ -13,7 +13,7 @@ const UserAvatar: React.FC<{ userData: UserDataObj } & AvatarProps> = ({
   ...rest
 }) => {
   return avatar ? (
-    <Avatar src={avatar} />
+    <Avatar src={avatar} {...rest} />
   ) : (
     <Avatar style={{ background: '#1890ff', color: 'white' }} {...rest}>
       {firstName ? firstName[0] : ''}
