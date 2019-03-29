@@ -5,17 +5,24 @@ import { Typography, Divider, Icon } from 'antd';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
 import { PartyFragmentFragment } from '@generated/graphql';
-import moment from 'moment';
+import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
 const PartiesCardWrapper = styled(
   posed.div({
-    hoverable: true
+    hoverable: true,
+    enter: {
+      y: 0,
+      opacity: 1,
+      delay: ({ delayIndex }: { delayIndex: number }) => 50 * delayIndex
+    },
+    exit: { y: 50, opacity: 0 }
   })
 )`
   &:hover {
     cursor: pointer;
   }
   height: 300px;
+  max-height: 300px;
   background: white;
   border-radius: 3px;
   @media screen and (max-width: 680px) {
@@ -55,7 +62,7 @@ const PartiesCardInfoInnerWrapper = styled(
     init: { height: 70 },
     hover: {
       height: ({ shouldReactToHover }: { shouldReactToHover: boolean }) =>
-        shouldReactToHover ? 'auto' : 70,
+        shouldReactToHover ? 'auto' : undefined,
       staggerChildren: 150
     },
     mobileVisible: {
@@ -67,6 +74,7 @@ const PartiesCardInfoInnerWrapper = styled(
   position: relative;
   overflow: hidden;
   height: 70px;
+  max-width: 100%;
   padding: 12px;
 `;
 
@@ -127,23 +135,38 @@ const PartiesCardMoreInfoItemWrapper = posed.div({
   }
 });
 
+const PartyCardLocationWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+  .anticon {
+    margin-top: 3px;
+  }
+  margin-bottom: 14px;
+`;
+
 interface Props {
   party: PartyFragmentFragment;
+  delayIndex: number;
 }
-const PartiesListPartyCard: React.FC<Props> = ({ party }) => {
+const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
   const shouldUseHover = useMedia('(min-width:992px)');
-
   const [mobileVisible, setMobileVisible] = React.useState<boolean>(false);
 
+  const dateString = React.useMemo(
+    () => getCorrectTextFromPartyDates(party.start, party.end),
+    []
+  );
+
   // handles mobile interaction (indicator click)
-  function handleIndicatorClick() {
+  const handleIndicatorClick = React.useCallback(() => {
     if (!shouldUseHover) {
-      setMobileVisible(prevVisible => !prevVisible);
+      setMobileVisible(!mobileVisible);
     }
-  }
+  }, [mobileVisible, shouldUseHover]);
 
   return (
-    <PartiesCardWrapper>
+    <PartiesCardWrapper initialPose="exit" pose="enter" delayIndex={delayIndex}>
       <PartiesCardImageWrapper>
         <img src="../static/having-fun.svg" />
       </PartiesCardImageWrapper>
@@ -162,37 +185,34 @@ const PartiesListPartyCard: React.FC<Props> = ({ party }) => {
         >
           <Typography.Title level={4}>{party.title}</Typography.Title>
           <Typography.Text>
-            {' '}
-            {moment(party.start).format('DD MMM HH:mm')} to{' '}
-            {moment(party.end).format('DD MMM HH:mm')}
+            <Icon type="clock-circle" style={{ marginRight: 8 }} />
+            {dateString}
           </Typography.Text>
           <PartiesCardMoreInfoItemWrapper>
             <Divider
-              style={{ width: '60%', marginTop: 18, marginBottom: 18 }}
+              style={{ marginTop: 18, marginBottom: 14 }}
               type="horizontal"
               dashed={true}
             />
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper className="description">
-            <Typography.Paragraph ellipsis={{ rows: 3, expandable: false }}>
-              {party.description}
+            <Typography.Paragraph
+              type="secondary"
+              ellipsis={{ rows: 3, expandable: false }}
+            >
+              {party.description.trim().length > 0
+                ? party.description
+                : 'No description given'}
             </Typography.Paragraph>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>
-            <div
-              style={{
-                display: 'flex',
-                fontSize: 16,
-                marginBottom: 12,
-                alignItems: 'center'
-              }}
-            >
+            <PartyCardLocationWrapper>
               <Icon type="home" style={{ marginRight: 8 }} />
               {party.location.placeName}
-            </div>
+            </PartyCardLocationWrapper>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>
-            <a>See more</a>
+            <a>Go to party dashboard</a>
           </PartiesCardMoreInfoItemWrapper>
         </PartiesCardInfoInnerWrapper>
       </PartiesCardInfoWrapper>

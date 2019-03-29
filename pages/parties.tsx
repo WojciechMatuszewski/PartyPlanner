@@ -1,38 +1,12 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import { Input, Divider, BackTop, Spin } from 'antd';
-import PartiesListCardGrid from '@components/Party/PartiesList/PartiesListCardGrid';
-import { usePartiesQuery, PartyFragmentFragment } from '@generated/graphql';
+import { BackTop } from 'antd';
+import { usePartiesQuery } from '@generated/graphql';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
+import PartiesListPane from '@components/Party/PartiesList/PartiesListPane';
 
-const PartiesPageWrapper = styled.section`
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 30px 0;
-  @media screen and (max-width: 810px) {
-    width: 100%;
-  }
-`;
+import PartiesListLoading from '@components/Party/PartiesList/PartiesListLoading';
 
-const PartiesPageGridWrapper = styled.div`
-  width: 1100px;
-  @media screen and (max-width: 1120px) {
-    width: 100%;
-    padding: 0 12px;
-  }
-  @media screen and (max-width: 679px) {
-    padding: 0;
-  }
-`;
-
-const PartiesPageInputWrapper = styled.div`
-  width: 800px;
-  @media screen and (max-width: 810px) {
-    width: 100%;
-    padding: 12px;
-  }
-  margin: 0 auto;
-`;
+import PartiesListEmpty from '@components/Party/PartiesList/PartiesListEmpty';
 
 interface Props {
   userId: string;
@@ -48,21 +22,23 @@ const PartiesPage: React.FC<Props> = ({ userId }) => {
     }
   });
 
-  if (loading || !data || !data.parties) return <Spin />;
+  // if (loading || !data || !data.parties) return <Spin />;
 
   return (
-    <PartiesPageWrapper>
-      <PartiesPageInputWrapper>
-        <Input.Search placeholder="Search through your parties" size="large" />
-        <Divider />
-      </PartiesPageInputWrapper>
-      <PartiesPageGridWrapper>
-        <PartiesListCardGrid
-          parties={data.parties as PartyFragmentFragment[]}
-        />
-      </PartiesPageGridWrapper>
+    <div style={{ width: '100%' }}>
+      <PartiesListPane />
+      <PartiesListLoading isLoadingInitially={true} loading={loading} />
+      {!loading && data && data.parties ? (
+        <PartiesListEmpty />
+      ) : // <React.Fragment>
+      //   <PartiesListFilterChips />
+      //   <PartiesListCardGrid
+      //     parties={data.parties as PartyFragmentFragment[]}
+      //   />
+      // </React.Fragment>
+      null}
       <BackTop />
-    </PartiesPageWrapper>
+    </div>
   );
 };
 

@@ -92,7 +92,11 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
           <UserDashboardTitle />
           <UserDashboardGrid>
             <PoseGroup>
-              <UserDashboardTile key={1} index={1}>
+              <UserDashboardTile
+                key={1}
+                index={1}
+                onClick={() => router && router.push('/parties')}
+              >
                 <UserDashboardTile.Title iconType="experiment" text="Parties" />
                 <UserDashboardTile.Text text="Here you can browse parties you are organizing or taking part of" />
               </UserDashboardTile>
