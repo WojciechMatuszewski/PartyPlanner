@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Tag } from 'antd';
+import { PartiesListFilters } from './PartiesListReducer';
 
 const FilterChipsWrapper = styled.div`
-  max-width: 1100px;
+  max-width: 1440px;
   margin: 0 auto;
   @media screen and (max-width: 1120px) {
     width: 100%;
@@ -18,18 +19,17 @@ const FilterChipsWrapper = styled.div`
 
 const FilterTagsWrapper = styled.div`
   width: 100%;
-  .ant-tag {
-    margin-top: 12px;
-  }
 `;
-
-const PartiesListFilterChips: React.FC = () => {
+interface Props {
+  filters: PartiesListFilters;
+}
+const PartiesListFilterChips: React.FC<Props> = ({ filters }) => {
   return (
     <FilterChipsWrapper>
       <FilterTagsWrapper>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Tag color="#1890ff" closable={true} key={index}>
-            Some filter
+        {Object.entries(filters).map(([, filter], index) => (
+          <Tag color="#1890ff" key={index}>
+            {filter.displayText}
           </Tag>
         ))}
       </FilterTagsWrapper>

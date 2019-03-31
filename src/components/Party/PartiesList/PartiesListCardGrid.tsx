@@ -9,7 +9,7 @@ import css from '@emotion/css';
 
 const GridWrapper = styled.section`
   display: grid;
-  max-width: 1100px;
+  max-width: 1440px;
   grid-gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   margin: 0 auto;

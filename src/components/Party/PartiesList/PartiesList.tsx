@@ -131,11 +131,14 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
           paginationInfoUpdater={paginationInfoUpdater}
           onFetchHandler={() => handleDataFetch()}
         />
-        <PartiesListFilterDrawer drawerVisible={state.drawerVisible} />
+        <PartiesListFilterDrawer
+          drawerVisible={state.drawerVisible}
+          filters={state.filters}
+        />
         {/* <PartiesListLoading isLoadingInitially={true} loading={loading} /> */}
         {!state.initiallyLoading ? (
           <React.Fragment>
-            <PartiesListFilterChips />
+            <PartiesListFilterChips filters={state.filters} />
             <PartiesListCardGrid
               parties={state.parties}
               filterInputValue={state.filterInputValue}

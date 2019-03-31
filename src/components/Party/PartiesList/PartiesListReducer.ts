@@ -57,7 +57,8 @@ enum filterActionTypes {
   setInputFilterValue = 'SET_INPUT_FILTER_VALUE',
   addFilter = 'ADD_FILTER',
   removeFilter = 'REMOVE_FILTER',
-  removeAllFilters = 'REMOVE_ALL_FILTERS'
+  removeAllFilters = 'REMOVE_ALL_FILTERS',
+  editFilter = 'EDIT_FILTER'
 }
 
 export const PartiesListFilterActions = {
@@ -67,16 +68,24 @@ export const PartiesListFilterActions = {
   addFilter: createStandardAction(filterActionTypes.addFilter)<
     PartiesListFilter
   >(),
-  removeFilter: createStandardAction(filterActionTypes.removeFilter)
+  removeFilter: createStandardAction(filterActionTypes.removeFilter)<string>(),
+  removeAllFilters: createAction(filterActionTypes.removeAllFilters),
+  editFilter: createStandardAction(filterActionTypes.editFilter)<{
+    filterName: string;
+    newValue: any;
+  }>()
 };
 type FilterActions = ActionType<typeof PartiesListFilterActions>;
 // filtering stuff ends
 
 export interface PartiesListFilter {
-  type: 'OrderBy' | 'where';
+  filterName: string;
+  variablesType: 'orderBy' | 'where';
   value: any;
-  id: string;
+  displayText: string;
 }
+
+export type PartiesListFilters = Record<string, PartiesListFilter>;
 
 export interface PartiesListState {
   initiallyLoading: boolean;
@@ -86,7 +95,7 @@ export interface PartiesListState {
   paginationInfo: PaginatePartiesQueryPageInfo;
   queryVariables: PaginatePartiesQueryVariables;
   filterInputValue: string;
-  filters: PartiesListFilter[];
+  filters: PartiesListFilters;
 }
 
 export const initialPartiesListState: PartiesListState = {
@@ -100,7 +109,7 @@ export const initialPartiesListState: PartiesListState = {
   },
   queryVariables: {},
   filterInputValue: '',
-  filters: []
+  filters: {}
 };
 
 export function PartiesListReducer(
@@ -164,8 +173,24 @@ export function PartiesListReducer(
     case filterActionTypes.addFilter:
       return {
         ...state,
-        filters: [...state.filters, action.payload]
+        filters: {
+          ...state.filters,
+          [action.payload.filterName]: action.payload
+        }
       };
+    case filterActionTypes.removeFilter:
+      // eslint-disable-next-line
+      const { [action.payload]: _, ...restOfFilters } = state.filters;
+      return {
+        ...state,
+        filters: restOfFilters
+      };
+    case filterActionTypes.removeAllFilters:
+      return {
+        ...state,
+        filters: {}
+      };
+    // FILTERING ACTIONS END
     default:
       return state;
   }
