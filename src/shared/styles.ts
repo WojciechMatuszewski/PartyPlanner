@@ -6,6 +6,8 @@ export const NotWrappingTextStyles = css`
   overflow: hidden;
 `;
 
+export const AntdSecondaryHeadingColor = 'rgba(0,0,0,0.65)';
+
 export const FlexBoxFullCenteredStyles = css`
   display: flex;
   align-items: center;

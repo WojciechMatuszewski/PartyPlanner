@@ -1,12 +1,14 @@
 import React from 'react';
 import { BackTop } from 'antd';
-import { usePartiesQuery } from '@generated/graphql';
+import { usePartiesQuery, PartyFragmentFragment } from '@generated/graphql';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
 import PartiesListPane from '@components/Party/PartiesList/PartiesListPane';
 
 import PartiesListLoading from '@components/Party/PartiesList/PartiesListLoading';
 
-import PartiesListEmpty from '@components/Party/PartiesList/PartiesListEmpty';
+import PartiesListFilterChips from '@components/Party/PartiesList/PartiesListFilterChips';
+import PartiesListCardGrid from '@components/Party/PartiesList/PartiesListCardGrid';
+import PartiesListFilterDrawer from '@components/Party/PartiesList/PartiesListFilterDrawer';
 
 interface Props {
   userId: string;
@@ -27,15 +29,17 @@ const PartiesPage: React.FC<Props> = ({ userId }) => {
   return (
     <div style={{ width: '100%' }}>
       <PartiesListPane />
+      <PartiesListFilterDrawer />
       <PartiesListLoading isLoadingInitially={true} loading={loading} />
       {!loading && data && data.parties ? (
-        <PartiesListEmpty />
+        <React.Fragment>
+          <PartiesListFilterChips />
+          <PartiesListCardGrid
+            parties={data.parties as PartyFragmentFragment[]}
+          />
+        </React.Fragment>
       ) : // <React.Fragment>
-      //   <PartiesListFilterChips />
-      //   <PartiesListCardGrid
-      //     parties={data.parties as PartyFragmentFragment[]}
-      //   />
-      // </React.Fragment>
+
       null}
       <BackTop />
     </div>

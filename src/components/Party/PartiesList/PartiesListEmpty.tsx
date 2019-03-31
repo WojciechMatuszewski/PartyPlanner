@@ -1,5 +1,5 @@
 import React from 'react';
-import { Empty } from 'antd';
+import { Typography } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
@@ -9,13 +9,28 @@ const EmptyWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
 `;
 
+const EmptyInnerWrapper = styled.div`
+  padding: 24px;
+  img {
+    max-width: 100%;
+    max-height: 400px;
+  }
+  text-align: center;
+
+  @media screen and (max-width: 680px) {
+    padding: 12px;
+  }
+`;
+
 const PartiesListEmpty: React.FC = () => {
   return (
     <EmptyWrapper>
-      <Empty
-        description="You currently are not invited nor hosting any parties"
-        image={'../static/empty.svg'}
-      />
+      <EmptyInnerWrapper>
+        <img src="../static/no-data.svg" />
+        <Typography.Paragraph style={{ fontSize: 18 }} type="secondary">
+          You currently do not have any parties
+        </Typography.Paragraph>
+      </EmptyInnerWrapper>
     </EmptyWrapper>
   );
 };

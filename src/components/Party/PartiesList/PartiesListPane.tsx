@@ -1,5 +1,5 @@
 import React from 'react';
-import { Anchor, Typography, Input, Button, Drawer } from 'antd';
+import { Anchor, Typography, Input, Button } from 'antd';
 import styled from '@emotion/styled';
 import css from '@emotion/css';
 import redirect from '@apolloSetup/redirect';
@@ -59,16 +59,7 @@ const PaneTitleStyles = css`
 `;
 
 const PartiesListPane: React.FC = () => {
-  const [drawerVisible, setDrawerVisible] = React.useState<boolean>(false);
   const shouldButtonsHaveText = useMedia('(min-width:669px)');
-
-  function handleDrawerClose() {
-    setDrawerVisible(false);
-  }
-
-  function handleDrawerOpen() {
-    setDrawerVisible(true);
-  }
 
   return (
     <React.Fragment>
@@ -86,19 +77,12 @@ const PartiesListPane: React.FC = () => {
             >
               {shouldButtonsHaveText ? 'Create new party' : null}
             </Button>
-            <Button icon="filter" onClick={handleDrawerOpen}>
+            <Button icon="filter" onClick={() => null}>
               {shouldButtonsHaveText ? 'Filters' : null}
             </Button>
           </ButtonsWrapper>
         </AnchorInnerWrapper>
       </Anchor>
-      <Drawer
-        visible={drawerVisible}
-        closable={true}
-        onClose={handleDrawerClose}
-        maskClosable={true}
-        title="Filtering Criteria"
-      />
     </React.Fragment>
   );
 };
