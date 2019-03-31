@@ -17,6 +17,7 @@ export const withApolloAuth = ({
     WrappedComponent.displayName || WrappedComponent.name || 'Component';
   return class WithAuth extends React.Component<WrappedComponentProps> {
     public static displayName = `withAuth${displayName}`;
+
     public static async getInitialProps(
       ctx: NextContext & {
         apolloClient: ApolloClient<any>;

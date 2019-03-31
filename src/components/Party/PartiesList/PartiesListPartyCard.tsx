@@ -4,7 +4,7 @@ import posed from 'react-pose';
 import { Typography, Divider, Icon } from 'antd';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
-import { PartyFragmentFragment } from '@generated/graphql';
+import { PaginatePartiesQueryEdges } from '@generated/graphql';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
 const PartiesCardWrapper = styled(
@@ -146,7 +146,7 @@ const PartyCardLocationWrapper = styled.div`
 `;
 
 interface Props {
-  party: PartyFragmentFragment;
+  party: PaginatePartiesQueryEdges;
   delayIndex: number;
 }
 const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
@@ -154,7 +154,7 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
   const [mobileVisible, setMobileVisible] = React.useState<boolean>(false);
 
   const dateString = React.useMemo(
-    () => getCorrectTextFromPartyDates(party.start, party.end),
+    () => getCorrectTextFromPartyDates(party.node.start, party.node.end),
     []
   );
 
@@ -183,7 +183,7 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
           shouldReactToHover={shouldUseHover}
           pose={mobileVisible ? 'mobileVisible' : 'init'}
         >
-          <Typography.Title level={4}>{party.title}</Typography.Title>
+          <Typography.Title level={4}>{party.node.title}</Typography.Title>
           <Typography.Text>
             <Icon type="clock-circle" style={{ marginRight: 8 }} />
             {dateString}
@@ -200,15 +200,15 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
               type="secondary"
               ellipsis={{ rows: 3, expandable: false }}
             >
-              {party.description.trim().length > 0
-                ? party.description
+              {party.node.description.trim().length > 0
+                ? party.node.description
                 : 'No description given'}
             </Typography.Paragraph>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>
             <PartyCardLocationWrapper>
               <Icon type="home" style={{ marginRight: 8 }} />
-              {party.location.placeName}
+              {party.node.location.placeName}
             </PartyCardLocationWrapper>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>

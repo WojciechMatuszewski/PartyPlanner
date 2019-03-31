@@ -4,7 +4,15 @@ import styled from '@emotion/styled';
 import css from '@emotion/css';
 import redirect from '@apolloSetup/redirect';
 import useMedia from '@hooks/useMedia';
+import { PartiesListContext } from './PartiesList';
+import {
+  PartiesListDrawerActions,
+  PartiesListFilterActions
+} from './PartiesListReducer';
+import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
+import { callAll } from '@shared/functionUtils';
 
+import { compose } from 'react-apollo';
 const AnchorStyles = css`
   .ant-anchor {
     padding-left: 0;
@@ -58,8 +66,47 @@ const PaneTitleStyles = css`
   margin-right: 24px;
 `;
 
-const PartiesListPane: React.FC = () => {
+interface Props {
+  onFetchHandler: () => Promise<any>;
+  paginationInfoUpdater: () => Promise<any>;
+}
+const PartiesListPane: React.FC<Props> = props => {
   const shouldButtonsHaveText = useMedia('(min-width:669px)');
+  const { dispatch } = React.useContext(PartiesListContext);
+  const [typeaheadCallbackCalled, setTypeaheadCallbackCalled] = React.useState<
+    boolean
+  >();
+
+  const {
+    inputProps: { onChange: RxjsTypeaheadOnChange, value }
+  } = useRxjsTypeahead(
+    async () => {
+      await props.onFetchHandler();
+      setTypeaheadCallbackCalled(true);
+    },
+    async () => [],
+    (e: React.ChangeEvent<HTMLInputElement>) => e.currentTarget.value
+  );
+
+  function handleDrawerOpen() {
+    dispatch(PartiesListDrawerActions.setDrawerVisible());
+  }
+
+  React.useEffect(() => {
+    async function handleQueryRefetch() {
+      await props.paginationInfoUpdater();
+      setTypeaheadCallbackCalled(false);
+    }
+    if (value.trim().length === 0 && typeaheadCallbackCalled) {
+      handleQueryRefetch();
+    }
+  }, [value, typeaheadCallbackCalled]);
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    compose(
+      dispatch,
+      PartiesListFilterActions.setInputFilterValue
+    )(e.currentTarget.value);
 
   return (
     <React.Fragment>
@@ -68,7 +115,11 @@ const PartiesListPane: React.FC = () => {
           <Typography.Title css={[PaneTitleStyles]} level={3}>
             Your Parties
           </Typography.Title>
-          <Input.Search placeholder="Type here..." />
+          <Input.Search
+            placeholder="Type here..."
+            value={value}
+            onChange={callAll(RxjsTypeaheadOnChange, handleOnChange)}
+          />
           <ButtonsWrapper>
             <Button
               icon="plus"
@@ -77,7 +128,7 @@ const PartiesListPane: React.FC = () => {
             >
               {shouldButtonsHaveText ? 'Create new party' : null}
             </Button>
-            <Button icon="filter" onClick={() => null}>
+            <Button icon="filter" onClick={handleDrawerOpen}>
               {shouldButtonsHaveText ? 'Filters' : null}
             </Button>
           </ButtonsWrapper>

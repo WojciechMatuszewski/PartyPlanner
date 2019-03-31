@@ -60,9 +60,9 @@ const SearchForLocation: React.FC<
     );
   }
 
-  function axiosResponseTransformer(
+  async function axiosResponseTransformer(
     response: AxiosResponse<MapBoxAxiosResponse>
-  ): UserSearchedLocation[] {
+  ): Promise<UserSearchedLocation[]> {
     return response.data.features.map(feature => ({
       placeName: feature.place_name,
       id: feature.id,

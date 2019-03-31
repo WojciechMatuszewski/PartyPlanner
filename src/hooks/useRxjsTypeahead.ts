@@ -1,12 +1,13 @@
 import React, { Reducer } from 'react';
-import { Subject, Observable, from } from 'rxjs';
+import { Subject, Observable, from, identity } from 'rxjs';
 import {
   tap,
   map,
   distinctUntilChanged,
   debounceTime,
   filter,
-  switchMap
+  switchMap,
+  flatMap
 } from 'rxjs/operators';
 
 interface UseTypeaheadInputProps {
@@ -19,24 +20,30 @@ interface UseTypeaheadHelperProps<T> {
   setResults: (results: T[]) => void;
 }
 
+interface UseTypeaheadErrorState {
+  hasError: boolean;
+  rawError: any;
+}
+
 interface UseTypeaheadState<T extends any[]> {
   loading: boolean;
+  error: UseTypeaheadErrorState;
   results: T;
 }
 
 const initialUseTypeaheadState: UseTypeaheadState<any> = {
   loading: false,
-  results: []
+  results: [],
+  error: {
+    hasError: false,
+    rawError: null
+  }
 };
-
-const initializer = () => ({
-  loading: false,
-  results: []
-});
 
 enum UseTypeaheadActionsEnum {
   setLoading = 'SET_LOADING',
-  setResults = 'SET_RESULTS'
+  setResults = 'SET_RESULTS',
+  setError = 'SET_ERROR'
 }
 
 interface UseTypeaheadAction {
@@ -47,6 +54,11 @@ interface UseTypeaheadAction {
 interface SetLoadingAction extends UseTypeaheadAction {
   readonly type: UseTypeaheadActionsEnum.setLoading;
   payload: boolean;
+}
+
+interface SetErrorAction extends UseTypeaheadAction {
+  readonly type: UseTypeaheadActionsEnum.setError;
+  payload: UseTypeaheadErrorState;
 }
 
 interface SetResultsAction extends UseTypeaheadAction {
@@ -64,14 +76,21 @@ const SetResults = <T extends any[]>(payload: T): SetResultsAction => ({
   payload
 });
 
-type TypeaheadReducer<T extends any[]> = Reducer<
-  UseTypeaheadState<T>,
-  SetLoadingAction | SetResultsAction
->;
+const SetError = (payload: UseTypeaheadErrorState): SetErrorAction => ({
+  type: UseTypeaheadActionsEnum.setError,
+  payload
+});
+
+export type OnChangeTransformFunction = (
+  e: React.ChangeEvent<HTMLInputElement>
+) => string;
+type InputOnChangeCbValue<TFT> = TFT extends OnChangeTransformFunction
+  ? React.ChangeEvent<HTMLInputElement>
+  : string;
 
 function reducer(
   state = initialUseTypeaheadState,
-  action: SetLoadingAction | SetResultsAction
+  action: SetLoadingAction | SetResultsAction | SetErrorAction
 ) {
   switch (action.type) {
     case UseTypeaheadActionsEnum.setLoading:
@@ -84,53 +103,82 @@ function reducer(
         results: action.payload,
         loading: false
       };
+    case UseTypeaheadActionsEnum.setError:
+      return {
+        ...state,
+        error: action.payload
+      };
+    default:
+      return state;
   }
 }
 
 // tried typing this function with T extends any[] but weird things would happen
 export function useRxjsTypeahead<ResultType = any>(
   fetchFunction: (value: string) => Promise<any>,
-  transformFunction: (response: any) => ResultType[]
+  fetchResultTransformFunction: (fetchResponse: any) => Promise<ResultType[]>,
+  onChangeTransformFunction?: OnChangeTransformFunction
 ) {
-  const [state, dispatch] = React.useReducer<
-    TypeaheadReducer<ResultType[]>,
-    any
-  >(reducer, null, initializer);
+  type UseTypeaheadReducer = Reducer<
+    UseTypeaheadState<ResultType[]>,
+    SetLoadingAction | SetResultsAction | SetErrorAction
+  >;
+
+  const [state, dispatch] = React.useReducer<UseTypeaheadReducer>(
+    reducer as UseTypeaheadReducer,
+    initialUseTypeaheadState
+  );
   const [inputValue, setInputValue] = React.useState('');
+
+  // support for useCallback
   const fetchFunctionRef = React.useRef<(value: string) => Promise<any>>(
     fetchFunction
   );
 
   const typeaheadSubject = React.useRef<Subject<string>>(new Subject());
 
-  function effectFunction() {
+  function typeaheadEffectFunction() {
     const typeaheadSubscription = typeaheadSubject.current
-      .pipe(
-        typeaheadOperator,
-        map(transformFunction)
-      )
+      .pipe(typeaheadOperator)
       .subscribe((results: ResultType[]) => {
         dispatch(SetResults<ResultType[]>(results));
       });
+
     return () => typeaheadSubscription.unsubscribe();
   }
 
   const typeaheadOperator = (
     source: Observable<string>
-  ): Observable<ResponseType[]> =>
+  ): Observable<ResultType[]> =>
     source.pipe(
+      tap(
+        () =>
+          state.error.hasError &&
+          dispatch(SetError({ hasError: false, rawError: null }))
+      ),
+      filter(str => !!str),
       debounceTime(300),
       distinctUntilChanged(),
-      filter(str => !!str),
       map((str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').trim()),
       filter(str => !!str),
-      tap(() => dispatch(SetLoading(true))),
-      switchMap(value => from(fetchFunctionRef.current(value)))
+      tap(() => {
+        dispatch(SetLoading(true));
+      }),
+      switchMap(value =>
+        from(fetchFunctionRef.current(value)).pipe(
+          flatMap(fetchResultTransformFunction)
+        )
+      )
     );
 
-  function onChange(value: string) {
-    typeaheadSubject.current.next(value);
-    setInputValue(value);
+  function onChange(
+    val: InputOnChangeCbValue<typeof onChangeTransformFunction>
+  ) {
+    const parsedValue =
+      typeof val === 'string' ? identity(val) : onChangeTransformFunction!(val);
+
+    typeaheadSubject.current.next(parsedValue);
+    setInputValue(parsedValue);
   }
 
   const getInputProps = (): UseTypeaheadInputProps => ({
@@ -143,10 +191,11 @@ export function useRxjsTypeahead<ResultType = any>(
     setResults: results => dispatch(SetResults(results))
   });
 
+  React.useEffect(typeaheadEffectFunction, []);
   React.useEffect(() => {
     fetchFunctionRef.current = fetchFunction;
   }, [fetchFunction]);
-  React.useEffect(effectFunction, []);
+
   return {
     inputProps: getInputProps(),
     helperProps: getHelperProps(),

@@ -6,15 +6,20 @@ import {
   Input,
   DatePicker,
   Collapse,
-  Button
+  Button,
+  Radio
 } from 'antd';
 
 import css from '@emotion/css';
 import { AntdSecondaryHeadingColor } from '@shared/styles';
 import posed, { PoseGroup } from 'react-pose';
 import styled from '@emotion/styled';
-import { isBrowser } from '@apolloSetup/initApollo';
+
 import useMedia from '@hooks/useMedia';
+import { PartiesListContext } from './PartiesList';
+import { PartiesListDrawerActions } from './PartiesListReducer';
+import RadioGroup from 'antd/lib/radio/group';
+import { RadioChangeEvent } from 'antd/lib/radio';
 
 const DrawerFilterCategoryTitleStyles = css`
   margin-bottom: 0 !important;
@@ -51,21 +56,36 @@ const DrawerStyles = css`
     }
   }
 `;
-
-const PartiesListFilterDrawer: React.FC = () => {
+interface Props {
+  drawerVisible: boolean;
+}
+const PartiesListFilterDrawer: React.FC<Props> = ({ drawerVisible }) => {
   const shouldStretchWidth = useMedia('(max-width:450px)');
+
+  const [filterButtonsState] = React.useState<string>('clear');
+
+  const { dispatch } = React.useContext(PartiesListContext);
+
+  function handleRadioChange({ target: { value } }: RadioChangeEvent) {
+    // dispatch(PartiesListFilterActions.setOrderByFilterValue(value));
+    return value;
+  }
+
+  function handleDrawerClose() {
+    dispatch(PartiesListDrawerActions.setDrawerHidden());
+  }
 
   return (
     <Drawer
       width={shouldStretchWidth ? '90%' : 400}
       css={[DrawerStyles]}
-      visible={false}
+      visible={drawerVisible}
       closable={true}
-      //   onClose={handleDrawerClose}
+      onClose={handleDrawerClose}
       maskClosable={true}
       title="Filtering Criteria"
     >
-      <Collapse bordered={false}>
+      <Collapse bordered={false} defaultActiveKey={[]}>
         <Collapse.Panel
           header={
             <Typography.Title css={[DrawerFilterCategoryTitleStyles]} level={4}>
@@ -93,18 +113,23 @@ const PartiesListFilterDrawer: React.FC = () => {
               Sort
             </Typography.Title>
           }
-          key="3"
+          key="orderByFilterValue"
         >
-          <Checkbox>Start date ascending</Checkbox>
-          <br />
-          <Checkbox>End date ascending</Checkbox>
-          <br />
-          <Checkbox>Created date ascending</Checkbox>
-          <br />
-          <Checkbox>Created date descending</Checkbox>
+          <RadioGroup defaultValue={undefined} onChange={handleRadioChange}>
+            <Radio value="start_ASC">Start date ascending</Radio>
+            <br />
+            <br />
+            <Radio value="start_DESC">End date ascending</Radio>
+            <br />
+            <br />
+            <Radio value={'createdAt_ASC'}>Created date ascending</Radio>
+            <br />
+            <br />
+            <Radio value={'createdAt_DESC'}>Created date descending</Radio>
+          </RadioGroup>
         </Collapse.Panel>
       </Collapse>
-      <FiltersActionButtons />
+      <FiltersActionButtons state={filterButtonsState} />
     </Drawer>
   );
 };
@@ -139,33 +164,26 @@ const AnimatedFiltersActionButton = styled(PosedFilterActionButton)`
   ${FilterActionButtonStyles};
 `;
 
-const FiltersActionButtons: React.FC = () => {
-  const [visible, setVisible] = React.useState<boolean>();
-
-  React.useEffect(() => {
-    if (!isBrowser()) return;
-    setInterval(() => {
-      setVisible(Math.random() > 0.5);
-    }, 2000);
-  }, []);
-
+const FiltersActionButtons: React.FC<{ state: string }> = ({ state }) => {
   return (
     <PoseGroup>
-      {visible ? (
+      {state === 'apply' ? (
         <AnimatedFiltersActionButton key={1}>
           <Button block={true} type="primary">
             Apply filters
           </Button>
         </AnimatedFiltersActionButton>
-      ) : (
+      ) : state === 'clear' ? (
         <AnimatedFiltersActionButton key={2}>
           <Button block={true} type="danger">
             Clear filters
           </Button>
         </AnimatedFiltersActionButton>
+      ) : (
+        <div />
       )}
     </PoseGroup>
   );
 };
 
-export default PartiesListFilterDrawer;
+export default React.memo(PartiesListFilterDrawer);

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Typography, Tag } from 'antd';
+import { Tag } from 'antd';
 
 const FilterChipsWrapper = styled.div`
   max-width: 1100px;
@@ -26,7 +26,6 @@ const FilterTagsWrapper = styled.div`
 const PartiesListFilterChips: React.FC = () => {
   return (
     <FilterChipsWrapper>
-      <Typography.Title level={4}>You have 17 parties</Typography.Title>
       <FilterTagsWrapper>
         {Array.from({ length: 5 }).map((_, index) => (
           <Tag color="#1890ff" closable={true} key={index}>

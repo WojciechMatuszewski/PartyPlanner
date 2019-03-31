@@ -20,7 +20,7 @@ const InviteFriendSearchInput: React.FC<Props> = props => {
       props.typeaheadCallback();
       setTypeaheadCallbackCalled(true);
     },
-    () => []
+    async () => []
   );
 
   React.useEffect(() => {

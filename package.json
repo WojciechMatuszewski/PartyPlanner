@@ -104,6 +104,7 @@
     "react-pose": "^4.0.8",
     "react-spring": "^8.0.15",
     "rxjs": "^6.4.0",
+    "typesafe-actions": "^3.2.1",
     "yup": "^0.26.10"
   },
   "husky": {

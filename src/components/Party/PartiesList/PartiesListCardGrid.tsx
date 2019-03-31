@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import PartiesListPartyCard from './PartiesListPartyCard';
-import { PartyFragmentFragment } from '@generated/graphql';
-import { PoseGroup } from 'react-pose';
+import { PaginatePartiesQueryEdges } from '@generated/graphql';
+
+import { useFuzzySearch } from '@hooks/useFuzzySearch';
+import { Empty, Typography } from 'antd';
+import css from '@emotion/css';
 
 const GridWrapper = styled.section`
   display: grid;
@@ -22,23 +25,62 @@ const GridWrapper = styled.section`
   }
 `;
 
+const EmptyStyles = css`
+  .ant-empty-description {
+    max-width: 300px;
+    margin: 0 auto !important;
+    word-break: break-all;
+  }
+`;
+
 interface Props {
-  parties: PartyFragmentFragment[];
+  parties: PaginatePartiesQueryEdges[];
+  filterInputValue: string;
+  children: (hasResultsAfterFiltering: boolean) => React.ReactNode;
 }
 
-const PartiesListCardGrid: React.FC<Props> = ({ parties }) => {
+const PartiesListCardGrid: React.FC<Props> = ({
+  parties,
+  filterInputValue,
+  children
+}) => {
+  const filteredParties = useFuzzySearch<PaginatePartiesQueryEdges>(
+    filterInputValue,
+    parties,
+    {
+      keys: ['node.title'] as any,
+      shouldSort: true,
+      tokenize: true
+    }
+  );
+
   return (
-    <GridWrapper>
-      <PoseGroup flipMove={true}>
-        {parties.map((party, index) => (
+    <React.Fragment>
+      <GridWrapper>
+        {filteredParties.map((party, index) => (
           <PartiesListPartyCard
             party={party}
-            key={party.id}
+            key={party.node.id}
             delayIndex={index}
           />
         ))}
-      </PoseGroup>
-    </GridWrapper>
+      </GridWrapper>
+      {filteredParties.length === 0 && (
+        <Empty
+          css={[EmptyStyles]}
+          description={
+            <React.Fragment>
+              Could not find party with title containing
+              <br />
+              <Typography.Text type="warning">
+                {filterInputValue}
+              </Typography.Text>
+            </React.Fragment>
+          }
+        />
+      )}
+      {children(filteredParties.length > 0)}
+    </React.Fragment>
   );
 };
 

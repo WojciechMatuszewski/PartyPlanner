@@ -3032,6 +3032,46 @@ export type PartiesQueryQuery = {
 
 export type PartiesQueryParties = PartyFragmentFragment;
 
+export type PaginatePartiesQueryVariables = {
+  where?: Maybe<PartyWhereInput>;
+  orderBy?: Maybe<PartyOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PaginatePartiesQueryQuery = {
+  __typename?: 'Query';
+
+  partiesConnection: PaginatePartiesQueryPartiesConnection;
+};
+
+export type PaginatePartiesQueryPartiesConnection = {
+  __typename?: 'PartyConnection';
+
+  pageInfo: PaginatePartiesQueryPageInfo;
+
+  edges: (Maybe<PaginatePartiesQueryEdges>)[];
+};
+
+export type PaginatePartiesQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PaginatePartiesQueryEdges = {
+  __typename?: 'PartyEdge';
+
+  node: PaginatePartiesQueryNode;
+};
+
+export type PaginatePartiesQueryNode = PartyFragmentFragment;
+
 export type PartyFragmentFragment = {
   __typename?: 'Party';
 
@@ -3353,4 +3393,65 @@ export function usePartiesQuery(
     PartiesQueryDocument,
     baseOptions
   );
+}
+export const PaginatePartiesQueryDocument = gql`
+  query PaginatePartiesQuery(
+    $where: PartyWhereInput
+    $orderBy: PartyOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partiesConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ...PARTY_FRAGMENT
+        }
+      }
+    }
+  }
+
+  ${PartyFragmentFragmentDoc}
+`;
+export class PaginatePartiesQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      PaginatePartiesQueryQuery,
+      PaginatePartiesQueryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        PaginatePartiesQueryQuery,
+        PaginatePartiesQueryVariables
+      >
+        query={PaginatePartiesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginatePartiesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<PaginatePartiesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    PaginatePartiesQueryQuery,
+    PaginatePartiesQueryVariables
+  >(PaginatePartiesQueryDocument, baseOptions);
 }
