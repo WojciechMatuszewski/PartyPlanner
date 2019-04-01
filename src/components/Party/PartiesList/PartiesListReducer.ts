@@ -26,10 +26,12 @@ type DrawerActions = ActionType<typeof PartiesListDrawerActions>;
 // data fetching stuff
 enum dataFetchingActionTypes {
   setLoadingMore = 'SET_LOADING_MORE',
+  appendResults = 'APPEND_RESULTS',
   setResults = 'SET_RESULTS',
   setPaginationInfo = 'SET_PAGINATION_INFO',
   setLoadingInitially = 'SET_LOADING_INITIALLY',
-  setQueryVariables = 'SET_QUERY_VARIABLES'
+  setQueryVariables = 'SET_QUERY_VARIABLES',
+  setLoadingFilters = 'SET_LOADING_FILTERS'
 }
 
 export const PartiesListFetchActions = {
@@ -37,6 +39,9 @@ export const PartiesListFetchActions = {
     boolean
   >(),
   setResults: createStandardAction(dataFetchingActionTypes.setResults)<
+    PaginatePartiesQueryEdges[]
+  >(),
+  appendResults: createStandardAction(dataFetchingActionTypes.appendResults)<
     PaginatePartiesQueryEdges[]
   >(),
   setPaginationInfo: createStandardAction(
@@ -47,7 +52,10 @@ export const PartiesListFetchActions = {
   )<boolean>(),
   setQueryVariables: createStandardAction(
     dataFetchingActionTypes.setQueryVariables
-  )<PaginatePartiesQueryVariables>()
+  )<PaginatePartiesQueryVariables>(),
+  setLoadingFilters: createStandardAction(
+    dataFetchingActionTypes.setLoadingFilters
+  )<boolean>()
 };
 type DataFetchingActions = ActionType<typeof PartiesListFetchActions>;
 // data fetching stuff ends
@@ -83,6 +91,7 @@ export interface PartiesListFilter {
   variablesType: 'orderBy' | 'where';
   value: any;
   displayText: string;
+  id: string;
 }
 
 export type PartiesListFilters = Record<string, PartiesListFilter>;
@@ -96,6 +105,7 @@ export interface PartiesListState {
   queryVariables: PaginatePartiesQueryVariables;
   filterInputValue: string;
   filters: PartiesListFilters;
+  loadingFilters: boolean;
 }
 
 export const initialPartiesListState: PartiesListState = {
@@ -109,7 +119,8 @@ export const initialPartiesListState: PartiesListState = {
   },
   queryVariables: {},
   filterInputValue: '',
-  filters: {}
+  filters: {},
+  loadingFilters: false
 };
 
 export function PartiesListReducer(
@@ -141,16 +152,25 @@ export function PartiesListReducer(
         ...state,
         initiallyLoading: action.payload
       };
+    case dataFetchingActionTypes.setLoadingFilters:
+      return {
+        ...state,
+        loadingFilters: action.payload
+      };
     case dataFetchingActionTypes.setLoadingMore:
       return {
         ...state,
         loadingMore: action.payload
       };
-    case dataFetchingActionTypes.setResults:
-      // console.log('setResults', action.payload);
+    case dataFetchingActionTypes.appendResults:
       return {
         ...state,
         parties: [...state.parties, ...action.payload]
+      };
+    case dataFetchingActionTypes.setResults:
+      return {
+        ...state,
+        parties: action.payload
       };
     case dataFetchingActionTypes.setPaginationInfo:
       return {

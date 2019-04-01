@@ -6,16 +6,33 @@ import { PaginatePartiesQueryEdges } from '@generated/graphql';
 import { useFuzzySearch } from '@hooks/useFuzzySearch';
 import { Empty, Typography } from 'antd';
 import css from '@emotion/css';
+import posed from 'react-pose';
+
+const GridLoadMoreWrapper = styled(
+  posed.div({
+    enter: {
+      opacity: 1,
+      y: 0
+    },
+    exit: {
+      opacity: 0,
+      y: 40
+    }
+  })
+)`
+  width: 100%;
+  display: block;
+`;
 
 const GridWrapper = styled.section`
   display: grid;
   max-width: 1440px;
   grid-gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-  margin: 0 auto;
+
+  padding: 0 12px;
   @media screen and (max-width: 1120px) {
     width: 100%;
-    padding: 0 12px;
   }
   @media screen and (max-width: 679px) {
     padding: 0;
@@ -55,7 +72,7 @@ const PartiesListCardGrid: React.FC<Props> = ({
   );
 
   return (
-    <React.Fragment>
+    <GridLoadMoreWrapper initialPose="exit" pose="enter">
       <GridWrapper>
         {filteredParties.map((party, index) => (
           <PartiesListPartyCard
@@ -80,7 +97,7 @@ const PartiesListCardGrid: React.FC<Props> = ({
         />
       )}
       {children(filteredParties.length > 0)}
-    </React.Fragment>
+    </GridLoadMoreWrapper>
   );
 };
 

@@ -11,6 +11,10 @@ const LoaderWrapper = styled(
     },
     exit: {
       opacity: 0
+
+      // transition: {
+      //   duration: 0
+      // }
     }
   })
 )`
@@ -19,10 +23,12 @@ const LoaderWrapper = styled(
   height: 100%;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
+  z-index: 10;
+  top: 66px;
   z-index: 3;
   background: ${({ isLoadingInitially }: { isLoadingInitially: boolean }) =>
-    isLoadingInitially ? 'transparent' : 'rgba(255,255,255,0.4)'};
+    isLoadingInitially ? 'transparent' : 'rgba(255,255,255,0.7)'};
   span {
     margin-top: 12px;
   }
@@ -42,9 +48,9 @@ const PartiesListLoading: React.FC<Props> = ({
       {loading && (
         <LoaderWrapper isLoadingInitially={isLoadingInitially} key={1}>
           <Spin size="large" />
-          <Typography.Text type="secondary">
-            Loading your parties
-          </Typography.Text>
+          {isLoadingInitially && (
+            <Typography.Text>Loading your parties</Typography.Text>
+          )}
         </LoaderWrapper>
       )}
     </PoseGroup>

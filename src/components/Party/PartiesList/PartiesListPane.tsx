@@ -32,12 +32,10 @@ const AnchorInnerWrapper = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-
   box-sizing: border-box;
-
+  padding: 12px;
   @media screen and (max-width: 1120px) {
     width: 100%;
-    padding: 12px;
   }
   @media screen and (max-width: 800px) {
     h3 {

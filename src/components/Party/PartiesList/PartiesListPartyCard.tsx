@@ -9,13 +9,7 @@ import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
 const PartiesCardWrapper = styled(
   posed.div({
-    hoverable: true,
-    enter: {
-      y: 0,
-      opacity: 1,
-      delay: ({ delayIndex }: { delayIndex: number }) => 50 * delayIndex
-    },
-    exit: { y: 50, opacity: 0 }
+    hoverable: true
   })
 )`
   &:hover {
@@ -59,7 +53,7 @@ const PartiesCardImageBackground = styled.div`
 
 const PartiesCardInfoInnerWrapper = styled(
   posed.div({
-    init: { height: 70 },
+    init: { height: 93 },
     hover: {
       height: ({ shouldReactToHover }: { shouldReactToHover: boolean }) =>
         shouldReactToHover ? 'auto' : undefined,
@@ -73,7 +67,7 @@ const PartiesCardInfoInnerWrapper = styled(
 )`
   position: relative;
   overflow: hidden;
-  height: 70px;
+  height: 93px;
   max-width: 100%;
   padding: 12px;
 `;
@@ -94,6 +88,7 @@ const PartiesCardInfoWrapper = styled.div`
   }
   h4 {
     margin: 0;
+    /* color: #595959; */
   }
 `;
 
@@ -184,6 +179,10 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
           pose={mobileVisible ? 'mobileVisible' : 'init'}
         >
           <Typography.Title level={4}>{party.node.title}</Typography.Title>
+          <Typography.Paragraph style={{ margin: 0 }}>
+            <Icon type="user" style={{ marginRight: 8 }} />
+            {party.node.author.firstName} {party.node.author.lastName}
+          </Typography.Paragraph>
           <Typography.Text>
             <Icon type="clock-circle" style={{ marginRight: 8 }} />
             {dateString}
