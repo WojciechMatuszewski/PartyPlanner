@@ -23,7 +23,6 @@ import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilter
 import PartiesListLoading from './PartiesListLoading';
 
 const PAGE_SIZE = 3;
-const MAX_PAGE_SIZE_FILTERS_CHANGED = 20;
 
 function queryConstructorFactory(userId: string) {
   return function(
@@ -38,18 +37,22 @@ function queryConstructorFactory(userId: string) {
           id: userId
         },
         id_not_in: currentResults.map(edge => edge.node.id),
-        title: searchValue.trim().length === 0 ? undefined : searchValue,
+        title_contains:
+          searchValue.trim().length === 0 ? undefined : searchValue,
+        OR: [{ isPublic: false }],
         ...Object.entries(filters).reduce(
-          (acc: Record<string, any>, [key, value]) => {
-            if (key === 'where') {
-              acc[value.filterName] = value;
+          (acc: Record<string, any>, [, filterObject]) => {
+            if (filterObject.variablesType === 'where') {
+              acc[filterObject.variablesName] = filterObject.variablesValue;
             }
             return acc;
           },
           {}
         )
       },
-      orderBy: filters['orderBy'] ? filters['orderBy'].value : undefined,
+      orderBy: filters['orderBy']
+        ? filters['orderBy'].variablesValue
+        : undefined,
       first
     };
   };
@@ -127,15 +130,10 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
 
   const handleFiltersChanged = React.useCallback(async () => {
     try {
-      // dispatch(PartiesListFilterActions.setInputFilterValue(''));
       dispatch(PartiesListFetchActions.setLoadingFilters(true));
-      const numOfPartiesToFetch =
-        state.parties.length < MAX_PAGE_SIZE_FILTERS_CHANGED
-          ? state.parties.length
-          : MAX_PAGE_SIZE_FILTERS_CHANGED;
       const { data } = await apolloClient.query({
         query: PaginatePartiesQueryDocument,
-        variables: queryConstructor([], '', state.filters, numOfPartiesToFetch)
+        variables: queryConstructor([], state.filterInputValue, state.filters)
       });
       dispatch(PartiesListFetchActions.setLoadingFilters(false));
       dispatch(
@@ -150,7 +148,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     } catch (e) {
       return null;
     }
-  }, [state.filters, state.parties]);
+  }, [state.filters]);
 
   const paginationInfoUpdater = React.useCallback(async () => {
     const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
@@ -166,8 +164,9 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     <PartiesListContext.Provider value={contextState}>
       <div style={{ width: '100%' }}>
         <PartiesListPane
+          inputValue={state.filterInputValue}
           paginationInfoUpdater={paginationInfoUpdater}
-          onFetchHandler={() => handleDataFetch()}
+          onFetchHandler={handleDataFetch}
         />
         <PartiesListFilterDrawer
           onFiltersChanged={handleFiltersChanged}
@@ -182,7 +181,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
           <React.Fragment>
             <PartiesListFilterChips
               filters={state.filters}
-              onFiltersChanged={handleFiltersChanged}
+              shouldNotifyOnRemoved={!state.drawerVisible}
+              onFilterRemoved={handleFiltersChanged}
             />
             <PartiesListCardGrid
               parties={state.parties}

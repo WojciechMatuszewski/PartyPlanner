@@ -67,6 +67,7 @@ const PaneTitleStyles = css`
 interface Props {
   onFetchHandler: () => Promise<any>;
   paginationInfoUpdater: () => Promise<any>;
+  inputValue: string;
 }
 const PartiesListPane: React.FC<Props> = props => {
   const shouldButtonsHaveText = useMedia('(min-width:669px)');
@@ -76,7 +77,7 @@ const PartiesListPane: React.FC<Props> = props => {
   >();
 
   const {
-    inputProps: { onChange: RxjsTypeaheadOnChange, value }
+    inputProps: { onChange: RxjsTypeaheadOnChange }
   } = useRxjsTypeahead(
     async () => {
       await props.onFetchHandler();
@@ -95,10 +96,10 @@ const PartiesListPane: React.FC<Props> = props => {
       await props.paginationInfoUpdater();
       setTypeaheadCallbackCalled(false);
     }
-    if (value.trim().length === 0 && typeaheadCallbackCalled) {
+    if (props.inputValue.trim().length === 0 && typeaheadCallbackCalled) {
       handleQueryRefetch();
     }
-  }, [value, typeaheadCallbackCalled]);
+  }, [props.inputValue, typeaheadCallbackCalled]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     compose(
@@ -115,7 +116,7 @@ const PartiesListPane: React.FC<Props> = props => {
           </Typography.Title>
           <Input.Search
             placeholder="Type here..."
-            value={value}
+            value={props.inputValue}
             onChange={callAll(RxjsTypeaheadOnChange, handleOnChange)}
           />
           <ButtonsWrapper>

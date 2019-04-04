@@ -26,16 +26,22 @@ const FilterTagsWrapper = styled.div`
 `;
 interface Props {
   filters: PartiesListFilters;
-  onFiltersChanged: VoidFunction;
+  shouldNotifyOnRemoved: boolean;
+  onFilterRemoved: VoidFunction;
 }
 const PartiesListFilterChips: React.FC<Props> = ({
   filters,
-  onFiltersChanged
+  onFilterRemoved,
+  shouldNotifyOnRemoved
 }) => {
   const { dispatch } = React.useContext(PartiesListContext);
+
+  React.useEffect(() => {
+    if (shouldNotifyOnRemoved) onFilterRemoved();
+  }, [filters, shouldNotifyOnRemoved]);
+
   function handleTagClose(filter: PartiesListFilter) {
-    dispatch(PartiesListFilterActions.removeFilter(filter.filterName));
-    onFiltersChanged();
+    dispatch(PartiesListFilterActions.removeFilter(filter.variablesName));
   }
 
   return (
@@ -45,6 +51,7 @@ const PartiesListFilterChips: React.FC<Props> = ({
           <Tag
             color="geekblue"
             closable={true}
+            visible={true}
             key={filter.id}
             onClose={() => handleTagClose(filter)}
           >

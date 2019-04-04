@@ -3092,6 +3092,8 @@ export type PartyFragmentFragment = {
   start: DateTime;
 
   end: DateTime;
+
+  isPublic: Maybe<boolean>;
 };
 
 export type PartyFragmentLocation = {
@@ -3153,6 +3155,7 @@ export const PartyFragmentFragmentDoc = gql`
     colorTint
     start
     end
+    isPublic
   }
 `;
 

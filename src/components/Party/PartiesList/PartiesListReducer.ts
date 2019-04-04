@@ -87,11 +87,11 @@ type FilterActions = ActionType<typeof PartiesListFilterActions>;
 // filtering stuff ends
 
 export interface PartiesListFilter {
-  filterName: string;
-  variablesType: 'orderBy' | 'where';
-  value: any;
-  displayText: string;
   id: string;
+  variablesType: 'orderBy' | 'where';
+  variablesName: string;
+  variablesValue: any;
+  displayText: string;
 }
 
 export type PartiesListFilters = Record<string, PartiesListFilter>;
@@ -195,12 +195,13 @@ export function PartiesListReducer(
         ...state,
         filters: {
           ...state.filters,
-          [action.payload.filterName]: action.payload
+          [action.payload.variablesName]: action.payload
         }
       };
     case filterActionTypes.removeFilter:
       // eslint-disable-next-line
       const { [action.payload]: _, ...restOfFilters } = state.filters;
+
       return {
         ...state,
         filters: restOfFilters

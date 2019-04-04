@@ -9,7 +9,7 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-import { isEqual } from 'lodash';
+import { isEqual, omit } from 'lodash';
 import { PartiesListContext } from '../PartiesList';
 
 const DrawerStyles = css`
@@ -63,20 +63,44 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
     [props.drawerVisible, props.filters]
   );
 
-  const filtersEqualToLastOpen = React.useCallback(
-    () => isEqual(props.filters, lastFiltersRef.current),
-    [props.filters]
-  );
+  const filtersEqualToLastOpen = React.useCallback(() => {
+    // different amount of keys objects are sure different
+    if (
+      Object.keys(props.filters).length !==
+      Object.keys(lastFiltersRef.current).length
+    )
+      return false;
+
+    // check on key by key basis,
+    // there are not much keys to check so we can afford doing it this way :)
+    Object.entries(props.filters).forEach(([key]) => {
+      if (!lastFiltersRef.current[key]) return false;
+      const areKeysTheSame = isEqual(
+        omit(lastFiltersRef.current[key], 'id'),
+        omit(props.filters[key], 'id')
+      );
+      if (areKeysTheSame) {
+        return false;
+      }
+    });
+    return true;
+  }, [props.filters]);
+
+  // user can delete filters without having the drawer open
+  React.useEffect(() => {
+    if (!props.drawerVisible) {
+      lastFiltersRef.current = props.filters;
+    }
+  }, [props.drawerVisible, props.filters]);
 
   // check if there are any filters applied when opening
   React.useEffect(() => {
     if (hasFiltersOnVisible()) {
-      setFiltersButtonsState('clear');
+      return setFiltersButtonsState('clear');
     }
     if (!props.drawerVisible) {
       lastFiltersRef.current = props.filters;
     }
-    // return () => void (lastFiltersRef.current = props.filters);
   }, [props.drawerVisible]);
 
   // check if filters changed from the last 'drawerVisible == true' state
@@ -84,14 +108,11 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
     if (Object.keys(props.filters).length === 0) {
       return setFiltersButtonsState('hidden');
     }
-    if (Object.keys(props.filters) < Object.keys(lastFiltersRef.current)) {
-      return void (lastFiltersRef.current = props.filters);
-    }
     if (filtersEqualToLastOpen()) {
       return setFiltersButtonsState('clear');
     }
     setFiltersButtonsState('apply');
-  }, [props.filters]);
+  }, [props.filters, props.drawerVisible]);
 
   return (
     <Drawer

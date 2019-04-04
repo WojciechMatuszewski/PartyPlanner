@@ -54,10 +54,12 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
         <Typography.Title level={4}>Type</Typography.Title>
         <Checkbox
           onChange={handleShowPublicCheckboxChange}
-          checked={Boolean(props.filters['public'])}
+          checked={Boolean(props.filters['OR'])}
         >
-          Show public parties
+          Also show public parties
         </Checkbox>
+        <br />
+        <Checkbox>Only show public parties</Checkbox>
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Sort</Typography.Title>
@@ -65,14 +67,18 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
           defaultValue={undefined}
           value={
             props.filters['orderBy']
-              ? [props.filters['orderBy'].value]
+              ? [props.filters['orderBy'].variablesValue]
               : undefined
           }
-          onChange={handleCheckboxGroupChange}
+          onChange={handleSortCheckboxGroupChange}
         >
-          <Checkbox value="createdAt_DESC">By Creation Date</Checkbox>
+          <Checkbox value="createdAt_DESC" name="Sort parties by creation date">
+            By Creation Date
+          </Checkbox>
           <br />
-          <Checkbox value="start_DESC">By Start Date</Checkbox>
+          <Checkbox value="start_DESC" name="Sort parties by start date">
+            By Start Date
+          </Checkbox>
         </Checkbox.Group>
       </FilterPaneCategory>
       <FilterPaneCategory>
@@ -91,34 +97,38 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
   );
 
   // **** //
-  function handleCheckboxGroupChange(values: CheckboxValueType[]) {
+  function handleSortCheckboxGroupChange(values: CheckboxValueType[]) {
     if (values.length === 0) {
       return dispatch(PartiesListFilterActions.removeFilter('orderBy'));
     }
-    const valueToSave = values.length === 2 ? values[1] : values[0];
+    const checkboxValue = values.slice(-1)[0];
     dispatch(
       PartiesListFilterActions.addFilter({
-        filterName: 'orderBy',
-        value: valueToSave,
+        variablesName: 'orderBy',
         variablesType: 'orderBy',
-        displayText: `Ordered by ${valueToSave}`,
+        variablesValue: checkboxValue,
+        displayText:
+          checkboxValue === 'createdAt_DESC'
+            ? 'Sort by creation date'
+            : 'Sort by start date',
         id: uuid()
       })
     );
   }
+
   function handleShowPublicCheckboxChange(e: CheckboxChangeEvent) {
     if (e.target.checked) {
       dispatch(
         PartiesListFilterActions.addFilter({
-          filterName: 'public',
-          value: true,
+          variablesName: 'OR',
+          variablesValue: [{ isPublic: true }, { isPublic: false }],
           variablesType: 'where',
           displayText: 'Also show public parties',
           id: uuid()
         })
       );
     } else {
-      dispatch(PartiesListFilterActions.removeFilter('public'));
+      dispatch(PartiesListFilterActions.removeFilter('OR'));
     }
   }
 };

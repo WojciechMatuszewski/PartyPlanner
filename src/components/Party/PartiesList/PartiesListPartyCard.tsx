@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
-import { Typography, Divider, Icon } from 'antd';
+import { Typography, Divider, Icon, Tag } from 'antd';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
@@ -178,7 +178,20 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
           shouldReactToHover={shouldUseHover}
           pose={mobileVisible ? 'mobileVisible' : 'init'}
         >
-          <Typography.Title level={4}>{party.node.title}</Typography.Title>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <Typography.Title level={4}>{party.node.title}</Typography.Title>
+            {party.node.isPublic && (
+              <Tag style={{ marginLeft: 12 }} color="green">
+                Public
+              </Tag>
+            )}
+          </div>
+
           <Typography.Paragraph style={{ margin: 0 }}>
             <Icon type="user" style={{ marginRight: 8 }} />
             {party.node.author.firstName} {party.node.author.lastName}
