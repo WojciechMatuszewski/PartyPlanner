@@ -3,8 +3,7 @@ import styled from '@emotion/styled';
 import { Tag } from 'antd';
 import {
   PartiesListFilters,
-  PartiesListFilterActions,
-  PartiesListFilter
+  PartiesListFilterActions
 } from './PartiesListReducer';
 import { PartiesListContext } from './PartiesList';
 
@@ -36,24 +35,31 @@ const PartiesListFilterChips: React.FC<Props> = ({
 }) => {
   const { dispatch } = React.useContext(PartiesListContext);
 
+  const isFirstRun = React.useRef<boolean>(true);
+
   React.useEffect(() => {
+    // prevent onFiltersRemoved being called on first render
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
     if (shouldNotifyOnRemoved) onFilterRemoved();
   }, [filters, shouldNotifyOnRemoved]);
 
-  function handleTagClose(filter: PartiesListFilter) {
-    dispatch(PartiesListFilterActions.removeFilter(filter.variablesName));
+  function handleTagClose(filterKeyName: string) {
+    dispatch(PartiesListFilterActions.removeFilter(filterKeyName));
   }
 
   return (
     <FilterChipsWrapper>
       <FilterTagsWrapper>
-        {Object.entries(filters).map(([, filter]) => (
+        {Object.entries(filters).map(([key, filter]) => (
           <Tag
             color="geekblue"
             closable={true}
             visible={true}
             key={filter.id}
-            onClose={() => handleTagClose(filter)}
+            onClose={() => handleTagClose(key)}
           >
             {filter.displayText}
           </Tag>
@@ -63,4 +69,4 @@ const PartiesListFilterChips: React.FC<Props> = ({
   );
 };
 
-export default PartiesListFilterChips;
+export default React.memo(PartiesListFilterChips);

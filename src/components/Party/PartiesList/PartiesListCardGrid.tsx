@@ -67,7 +67,9 @@ const PartiesListCardGrid: React.FC<Props> = ({
     {
       keys: ['node.title'] as any,
       shouldSort: true,
-      tokenize: true
+      tokenize: true,
+      distance: 0,
+      threshold: 0.0
     }
   );
 

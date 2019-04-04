@@ -73,10 +73,12 @@ export const PartiesListFilterActions = {
   setInputFilterValue: createStandardAction(
     filterActionTypes.setInputFilterValue
   )<string>(),
-  addFilter: createStandardAction(filterActionTypes.addFilter)<
-    PartiesListFilter
-  >(),
+  addFilter: createStandardAction(filterActionTypes.addFilter)<{
+    keyName: string;
+    filter: PartiesListFilter;
+  }>(),
   removeFilter: createStandardAction(filterActionTypes.removeFilter)<string>(),
+
   removeAllFilters: createAction(filterActionTypes.removeAllFilters),
   editFilter: createStandardAction(filterActionTypes.editFilter)<{
     filterName: string;
@@ -86,11 +88,16 @@ export const PartiesListFilterActions = {
 type FilterActions = ActionType<typeof PartiesListFilterActions>;
 // filtering stuff ends
 
-export interface PartiesListFilter {
+export interface PartiesListFilter<
+  T = 'orderBy' | 'where',
+  // https://github.com/Microsoft/TypeScript/issues/6230
+  // sadly til this pull request is not finished i will probably not be able to type this correctly
+  K = T extends 'where' ? any : boolean
+> {
   id: string;
-  variablesType: 'orderBy' | 'where';
-  variablesName: string;
-  variablesValue: any;
+  variablesType: T;
+  variablesName: K;
+  variablesValue: K;
   displayText: string;
 }
 
@@ -195,7 +202,7 @@ export function PartiesListReducer(
         ...state,
         filters: {
           ...state.filters,
-          [action.payload.variablesName]: action.payload
+          [action.payload.keyName]: action.payload.filter
         }
       };
     case filterActionTypes.removeFilter:

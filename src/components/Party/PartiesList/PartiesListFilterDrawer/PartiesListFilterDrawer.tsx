@@ -9,7 +9,7 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-import { isEqual, omit } from 'lodash';
+import { isEqual } from 'lodash';
 import { PartiesListContext } from '../PartiesList';
 
 const DrawerStyles = css`
@@ -73,17 +73,22 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
 
     // check on key by key basis,
     // there are not much keys to check so we can afford doing it this way :)
-    Object.entries(props.filters).forEach(([key]) => {
-      if (!lastFiltersRef.current[key]) return false;
-      const areKeysTheSame = isEqual(
-        omit(lastFiltersRef.current[key], 'id'),
-        omit(props.filters[key], 'id')
-      );
-      if (areKeysTheSame) {
-        return false;
-      }
-    });
-    return true;
+    const areEqualOnKeyToKeyBasis = Object.entries(props.filters).reduce(
+      (acc: boolean, [key, filterObj]) => {
+        const areKeysTheSame = isEqual(
+          lastFiltersRef.current[key].variablesValue,
+          filterObj.variablesValue
+        );
+        if (!areKeysTheSame) {
+          acc = false;
+          return acc;
+        }
+        return acc;
+      },
+      true
+    );
+
+    return areEqualOnKeyToKeyBasis;
   }, [props.filters]);
 
   // user can delete filters without having the drawer open

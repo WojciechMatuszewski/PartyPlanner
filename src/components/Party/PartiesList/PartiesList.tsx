@@ -3,7 +3,8 @@ import {
   PaginatePartiesQueryEdges,
   PaginatePartiesQueryDocument,
   PaginatePartiesQueryQuery,
-  PaginatePartiesQueryVariables
+  PaginatePartiesQueryVariables,
+  PartyWhereInput
 } from '@generated/graphql';
 import PartiesListPane from './PartiesListPane';
 
@@ -24,6 +25,34 @@ import PartiesListLoading from './PartiesListLoading';
 
 const PAGE_SIZE = 3;
 
+function mapFiltersToWhereVariables(filters: PartiesListFilters) {
+  const newFilters = { ...filters };
+  if (!Object.keys(newFilters).includes('isPublic')) {
+    newFilters['isPublic'] = {
+      variablesName: 'OR',
+      variablesType: 'where',
+      variablesValue: [{ isPublic: false }],
+      id: Math.random().toString()
+    } as any;
+  }
+  return Object.entries(newFilters).reduce(
+    (acc: PartyWhereInput, [, filterObject]) => {
+      if (filterObject.variablesType === 'where') {
+        acc[filterObject.variablesName as keyof PartyWhereInput] = acc[
+          filterObject.variablesName as keyof PartyWhereInput
+        ]
+          ? [
+              ...acc[filterObject.variablesName as keyof PartyWhereInput],
+              filterObject.variablesValue
+            ]
+          : filterObject.variablesValue;
+      }
+      return acc;
+    },
+    {}
+  );
+}
+
 function queryConstructorFactory(userId: string) {
   return function(
     currentResults: PaginatePartiesQueryEdges[],
@@ -39,16 +68,7 @@ function queryConstructorFactory(userId: string) {
         id_not_in: currentResults.map(edge => edge.node.id),
         title_contains:
           searchValue.trim().length === 0 ? undefined : searchValue,
-        OR: [{ isPublic: false }],
-        ...Object.entries(filters).reduce(
-          (acc: Record<string, any>, [, filterObject]) => {
-            if (filterObject.variablesType === 'where') {
-              acc[filterObject.variablesName] = filterObject.variablesValue;
-            }
-            return acc;
-          },
-          {}
-        )
+        ...mapFiltersToWhereVariables(filters)
       },
       orderBy: filters['orderBy']
         ? filters['orderBy'].variablesValue
@@ -131,7 +151,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   const handleFiltersChanged = React.useCallback(async () => {
     try {
       dispatch(PartiesListFetchActions.setLoadingFilters(true));
-      const { data } = await apolloClient.query({
+      const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
         query: PaginatePartiesQueryDocument,
         variables: queryConstructor([], state.filterInputValue, state.filters)
       });

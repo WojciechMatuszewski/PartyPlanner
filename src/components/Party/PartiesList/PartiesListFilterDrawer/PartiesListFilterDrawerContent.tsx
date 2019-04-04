@@ -7,8 +7,8 @@ import {
 } from '../PartiesListReducer';
 import { PartiesListContext } from '../PartiesList';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import * as uuid from 'uuid/v4';
+import { PartyWhereInput } from '@generated/graphql';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;
@@ -47,19 +47,26 @@ interface Props {
 }
 const PartiesListFilterDrawerContent: React.FC<Props> = props => {
   const { dispatch } = React.useContext(PartiesListContext);
+  const getPartyTypeCheckboxGroupValue = React.useCallback(() => {
+    return isAlsoShowPublicChecked(props.filters)
+      ? ['also_public']
+      : isOnlyShowPublicChecked(props.filters)
+      ? ['only_public']
+      : undefined;
+  }, [props.filters]);
 
   return (
     <FiltersPaneWrapper>
       <FilterPaneCategory>
         <Typography.Title level={4}>Type</Typography.Title>
-        <Checkbox
-          onChange={handleShowPublicCheckboxChange}
-          checked={Boolean(props.filters['OR'])}
+        <Checkbox.Group
+          value={getPartyTypeCheckboxGroupValue()}
+          onChange={handlePartyTypeCheckboxChange}
         >
-          Also show public parties
-        </Checkbox>
-        <br />
-        <Checkbox>Only show public parties</Checkbox>
+          <Checkbox value="also_public">Also show public parties</Checkbox>
+          <br />
+          <Checkbox value="only_public">Only show public parties</Checkbox>
+        </Checkbox.Group>
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Sort</Typography.Title>
@@ -72,13 +79,9 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
           }
           onChange={handleSortCheckboxGroupChange}
         >
-          <Checkbox value="createdAt_DESC" name="Sort parties by creation date">
-            By Creation Date
-          </Checkbox>
+          <Checkbox value="createdAt_DESC">By Creation Date</Checkbox>
           <br />
-          <Checkbox value="start_DESC" name="Sort parties by start date">
-            By Start Date
-          </Checkbox>
+          <Checkbox value="start_DESC">By Start Date</Checkbox>
         </Checkbox.Group>
       </FilterPaneCategory>
       <FilterPaneCategory>
@@ -104,32 +107,62 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
     const checkboxValue = values.slice(-1)[0];
     dispatch(
       PartiesListFilterActions.addFilter({
-        variablesName: 'orderBy',
-        variablesType: 'orderBy',
-        variablesValue: checkboxValue,
-        displayText:
-          checkboxValue === 'createdAt_DESC'
-            ? 'Sort by creation date'
-            : 'Sort by start date',
-        id: uuid()
+        keyName: 'orderBy',
+        filter: {
+          variablesName: 'orderBy',
+          variablesType: 'orderBy',
+          variablesValue: checkboxValue,
+          displayText:
+            checkboxValue === 'createdAt_DESC'
+              ? 'Sort by creation date'
+              : 'Sort by start date',
+          id: uuid()
+        }
       })
     );
   }
 
-  function handleShowPublicCheckboxChange(e: CheckboxChangeEvent) {
-    if (e.target.checked) {
-      dispatch(
-        PartiesListFilterActions.addFilter({
+  function handlePartyTypeCheckboxChange(values: CheckboxValueType[]) {
+    if (values.length === 0)
+      return dispatch(PartiesListFilterActions.removeFilter('isPublic'));
+
+    const checkboxValue = values.slice(-1)[0];
+    dispatch(
+      PartiesListFilterActions.addFilter({
+        keyName: 'isPublic',
+        filter: {
           variablesName: 'OR',
-          variablesValue: [{ isPublic: true }, { isPublic: false }],
           variablesType: 'where',
-          displayText: 'Also show public parties',
+          variablesValue:
+            checkboxValue === 'also_public'
+              ? [{ isPublic: false }, { isPublic: true }]
+              : [{ isPublic: true }],
+          displayText:
+            checkboxValue === 'also_public'
+              ? 'Also show public parties'
+              : 'Show only public parties',
           id: uuid()
-        })
-      );
-    } else {
-      dispatch(PartiesListFilterActions.removeFilter('OR'));
-    }
+        }
+      })
+    );
+  }
+
+  function isAlsoShowPublicChecked(filters: PartiesListFilters) {
+    if (!filters.isPublic) return false;
+    return (
+      filters.isPublic.variablesValue.filter(
+        (value: PartyWhereInput) =>
+          value.isPublic === true || value.isPublic === false
+      ).length === 2
+    );
+  }
+  function isOnlyShowPublicChecked(filters: PartiesListFilters) {
+    if (!filters.isPublic) return false;
+    return (
+      filters.isPublic.variablesValue.filter(
+        (value: PartyWhereInput) => value.isPublic === true
+      ).length === 1
+    );
   }
 };
 
