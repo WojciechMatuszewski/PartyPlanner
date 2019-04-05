@@ -47,6 +47,7 @@ interface Props {
 }
 const PartiesListFilterDrawerContent: React.FC<Props> = props => {
   const { dispatch } = React.useContext(PartiesListContext);
+
   const getPartyTypeCheckboxGroupValue = React.useCallback(() => {
     return isAlsoShowPublicChecked(props.filters)
       ? ['also_public']
@@ -55,12 +56,17 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
       : undefined;
   }, [props.filters]);
 
+  const partyTypeCheckboxValue = React.useMemo(
+    () => getPartyTypeCheckboxGroupValue(),
+    [props.filters]
+  );
+
   return (
     <FiltersPaneWrapper>
       <FilterPaneCategory>
         <Typography.Title level={4}>Type</Typography.Title>
         <Checkbox.Group
-          value={getPartyTypeCheckboxGroupValue()}
+          value={partyTypeCheckboxValue}
           onChange={handlePartyTypeCheckboxChange}
         >
           <Checkbox value="also_public">Also show public parties</Checkbox>

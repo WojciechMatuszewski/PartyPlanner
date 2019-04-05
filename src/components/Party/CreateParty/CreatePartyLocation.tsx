@@ -2,7 +2,7 @@ import React from 'react';
 import LocalizeMeButton from './LocalizeMeButton';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import SearchForLocation from './SearchForLocation';
+import SearchForLocation from './CreatePartySearchForLocation';
 import { UserLocation } from '@hooks/useUserLocation';
 
 const PartyLocationWrapper = styled.div`
