@@ -5,10 +5,12 @@ import {
   PartiesListFilters,
   PartiesListFilterActions
 } from '../PartiesListReducer';
-import { PartiesListContext } from '../PartiesList';
+import PartiesList, { PartiesListContext } from '../PartiesList';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import * as uuid from 'uuid/v4';
 import { PartyWhereInput } from '@generated/graphql';
+import moment from 'moment';
+import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;
@@ -61,6 +63,8 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
     [props.filters]
   );
 
+  console.log(props.filters);
+
   return (
     <FiltersPaneWrapper>
       <FilterPaneCategory>
@@ -96,7 +100,16 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Happens at</Typography.Title>
-        <DatePicker />
+        <DatePicker
+          defaultValue={undefined}
+          value={
+            props.filters['start']
+              ? moment(props.filters['start'].variablesValue[0].start_gte)
+              : undefined
+          }
+          allowClear={true}
+          onChange={handleHappensAtChange}
+        />
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>At given location</Typography.Title>
@@ -168,6 +181,31 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
       filters.isPublic.variablesValue.filter(
         (value: PartyWhereInput) => value.isPublic === true
       ).length === 1
+    );
+  }
+
+  function handleHappensAtChange(selectedDate: moment.Moment) {
+    if (selectedDate == null) {
+      return dispatch(PartiesListFilterActions.removeFilter('start'));
+    }
+    dispatch(
+      PartiesListFilterActions.addFilter({
+        keyName: 'start',
+        filter: {
+          variablesName: 'AND',
+          variablesType: 'where',
+          variablesValue: [
+            {
+              start_gte: selectedDate.startOf('day').format()
+            },
+            { start_lte: selectedDate.endOf('day').format() }
+          ],
+          id: uuid(),
+          displayText: `Show parties that are happening at ${selectedDate.format(
+            'MMMM DD (dddd) YYYY'
+          )}`
+        }
+      })
     );
   }
 };

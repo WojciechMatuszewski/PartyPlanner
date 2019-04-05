@@ -31,7 +31,7 @@ function mapFiltersToWhereVariables(filters: PartiesListFilters) {
     newFilters['isPublic'] = {
       variablesName: 'OR',
       variablesType: 'where',
-      variablesValue: [{ isPublic: false }],
+      variablesValue: { isPublic: false },
       id: Math.random().toString()
     } as any;
   }
@@ -60,6 +60,7 @@ function queryConstructorFactory(userId: string) {
     filters: PartiesListFilters = {},
     first: number = PAGE_SIZE
   ): PaginatePartiesQueryVariables {
+    console.log(mapFiltersToWhereVariables(filters));
     return {
       where: {
         members_some: {
