@@ -99,9 +99,20 @@ const CreatePartyLocation: React.FC = () => {
   return (
     <PartyLocationWrapper>
       <SearchForLocation state={state} />
-      <LocalizeMeButton state={state} dispatch={dispatch} />
+      <LocalizeMeButton
+        loading={state.loading}
+        setLoading={handleButtonSetLoading}
+        onLocationResolved={handleButtonLocationResolved}
+      />
     </PartyLocationWrapper>
   );
+
+  function handleButtonSetLoading(loadingState: boolean) {
+    dispatch(setLocalizeMeButtonLoading(loadingState));
+  }
+  function handleButtonLocationResolved(location: UserLocation) {
+    dispatch(setLocalizeMeButtonLocation(location));
+  }
 };
 
 export default React.memo(CreatePartyLocation);
