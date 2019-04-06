@@ -60,7 +60,17 @@ function queryConstructorFactory(userId: string) {
     filters: PartiesListFilters = {},
     first: number = PAGE_SIZE
   ): PaginatePartiesQueryVariables {
-    console.log(mapFiltersToWhereVariables(filters));
+    console.log({
+      where: {
+        members_some: {
+          id: userId
+        },
+        id_not_in: currentResults.map(edge => edge.node.id),
+        title_contains:
+          searchValue.trim().length === 0 ? undefined : searchValue,
+        ...mapFiltersToWhereVariables(filters)
+      }
+    });
     return {
       where: {
         members_some: {

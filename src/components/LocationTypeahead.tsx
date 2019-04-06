@@ -62,8 +62,6 @@ const LocationTypeahead = (props: Props) => {
   } = useRxjsTypeahead(handleLocationSearch, axiosResponseTransformer);
 
   React.useEffect(() => {
-    if (props.value.trim().length <= 0) return;
-
     setInputValue(props.value);
   }, [props.value]);
 

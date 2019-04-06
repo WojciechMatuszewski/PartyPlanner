@@ -73,10 +73,9 @@ export const PartiesListFilterActions = {
   setInputFilterValue: createStandardAction(
     filterActionTypes.setInputFilterValue
   )<string>(),
-  addFilter: createStandardAction(filterActionTypes.addFilter)<{
-    keyName: string;
-    filter: PartiesListFilter;
-  }>(),
+  addFilter: createStandardAction(filterActionTypes.addFilter)<
+    PartiesListFilterPayload
+  >(),
   removeFilter: createStandardAction(filterActionTypes.removeFilter)<string>(),
 
   removeAllFilters: createAction(filterActionTypes.removeAllFilters),
@@ -99,6 +98,11 @@ export interface PartiesListFilter<
   variablesName: K;
   variablesValue: K;
   displayText: string;
+}
+
+export interface PartiesListFilterPayload {
+  keyName: string;
+  filter: PartiesListFilter;
 }
 
 export type PartiesListFilters = Record<string, PartiesListFilter>;

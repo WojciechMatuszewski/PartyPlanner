@@ -1,16 +1,20 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Checkbox, Input, DatePicker, Typography } from 'antd';
+import { Input, Typography } from 'antd';
 import {
   PartiesListFilters,
-  PartiesListFilterActions
+  PartiesListFilterActions,
+  PartiesListFilterPayload
 } from '../PartiesListReducer';
-import PartiesList, { PartiesListContext } from '../PartiesList';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import * as uuid from 'uuid/v4';
+import { PartiesListContext } from '../PartiesList';
 import { PartyWhereInput } from '@generated/graphql';
 import moment from 'moment';
-import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
+
+import PartiesListFilterDrawerPartyType from './PartiesListFilterDrawerPartyType';
+import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt';
+import PartiesListFilterDrawerSort from './PartiesListFilterDrawerSort';
+import LocationTypeahead from '@components/LocationTypeahead';
+import uuid from 'uuid/v4';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;
@@ -42,6 +46,9 @@ const FilterPaneCategory = styled.div`
   .ant-calendar-picker {
     width: 100%;
   }
+  .ant-select {
+    width: 100%;
+  }
 `;
 
 interface Props {
@@ -63,36 +70,27 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
     [props.filters]
   );
 
-  console.log(props.filters);
-
   return (
     <FiltersPaneWrapper>
       <FilterPaneCategory>
         <Typography.Title level={4}>Type</Typography.Title>
-        <Checkbox.Group
-          value={partyTypeCheckboxValue}
-          onChange={handlePartyTypeCheckboxChange}
-        >
-          <Checkbox value="also_public">Also show public parties</Checkbox>
-          <br />
-          <Checkbox value="only_public">Only show public parties</Checkbox>
-        </Checkbox.Group>
+        <PartiesListFilterDrawerPartyType
+          onChange={handleOnFilterChange}
+          onRemoveFilter={handleOnRemoveFilter}
+          filterValue={partyTypeCheckboxValue}
+        />
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Sort</Typography.Title>
-        <Checkbox.Group
-          defaultValue={undefined}
-          value={
+        <PartiesListFilterDrawerSort
+          onChange={handleOnFilterChange}
+          onRemoveFilter={handleOnRemoveFilter}
+          filterValue={
             props.filters['orderBy']
               ? [props.filters['orderBy'].variablesValue]
               : undefined
           }
-          onChange={handleSortCheckboxGroupChange}
-        >
-          <Checkbox value="createdAt_DESC">By Creation Date</Checkbox>
-          <br />
-          <Checkbox value="start_DESC">By Start Date</Checkbox>
-        </Checkbox.Group>
+        />
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Created by</Typography.Title>
@@ -100,71 +98,32 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>Happens at</Typography.Title>
-        <DatePicker
-          defaultValue={undefined}
-          value={
+        <PartiesListFilterDrawerHappensAt
+          filterValue={
             props.filters['start']
               ? moment(props.filters['start'].variablesValue[0].start_gte)
               : undefined
           }
-          allowClear={true}
-          onChange={handleHappensAtChange}
+          onDateChange={handleOnFilterChange}
+          onRemoveFilter={handleOnRemoveFilter}
         />
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>At given location</Typography.Title>
-        <Input.Search placeholder="Search by location name..." />
+        <LocationTypeahead
+          disabled={false}
+          onSelect={handleLocationFilterOnSelect}
+          onChange={handleLocationFilterOnChange}
+          value={
+            props.filters['location']
+              ? props.filters.location.variablesValue.placeName_contains
+              : undefined
+          }
+          placeholder="Search fro a location"
+        />
       </FilterPaneCategory>
     </FiltersPaneWrapper>
   );
-
-  // **** //
-  function handleSortCheckboxGroupChange(values: CheckboxValueType[]) {
-    if (values.length === 0) {
-      return dispatch(PartiesListFilterActions.removeFilter('orderBy'));
-    }
-    const checkboxValue = values.slice(-1)[0];
-    dispatch(
-      PartiesListFilterActions.addFilter({
-        keyName: 'orderBy',
-        filter: {
-          variablesName: 'orderBy',
-          variablesType: 'orderBy',
-          variablesValue: checkboxValue,
-          displayText:
-            checkboxValue === 'createdAt_DESC'
-              ? 'Sort by creation date'
-              : 'Sort by start date',
-          id: uuid()
-        }
-      })
-    );
-  }
-
-  function handlePartyTypeCheckboxChange(values: CheckboxValueType[]) {
-    if (values.length === 0)
-      return dispatch(PartiesListFilterActions.removeFilter('isPublic'));
-
-    const checkboxValue = values.slice(-1)[0];
-    dispatch(
-      PartiesListFilterActions.addFilter({
-        keyName: 'isPublic',
-        filter: {
-          variablesName: 'OR',
-          variablesType: 'where',
-          variablesValue:
-            checkboxValue === 'also_public'
-              ? [{ isPublic: false }, { isPublic: true }]
-              : [{ isPublic: true }],
-          displayText:
-            checkboxValue === 'also_public'
-              ? 'Also show public parties'
-              : 'Show only public parties',
-          id: uuid()
-        }
-      })
-    );
-  }
 
   function isAlsoShowPublicChecked(filters: PartiesListFilters) {
     if (!filters.isPublic) return false;
@@ -184,29 +143,35 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
     );
   }
 
-  function handleHappensAtChange(selectedDate: moment.Moment) {
-    if (selectedDate == null) {
-      return dispatch(PartiesListFilterActions.removeFilter('start'));
-    }
+  function handleLocationFilterOnChange(currentValue: string | undefined) {
+    if (!currentValue)
+      return dispatch(PartiesListFilterActions.removeFilter('location'));
+  }
+  function handleLocationFilterOnSelect(selectedLocationName: string) {
+    console.log(selectedLocationName);
+
     dispatch(
       PartiesListFilterActions.addFilter({
-        keyName: 'start',
+        keyName: 'location',
         filter: {
-          variablesName: 'AND',
+          variablesName: 'location',
           variablesType: 'where',
-          variablesValue: [
-            {
-              start_gte: selectedDate.startOf('day').format()
-            },
-            { start_lte: selectedDate.endOf('day').format() }
-          ],
+          variablesValue: {
+            placeName_contains: selectedLocationName.split(',')[0]
+          },
           id: uuid(),
-          displayText: `Show parties that are happening at ${selectedDate.format(
-            'MMMM DD (dddd) YYYY'
-          )}`
+          displayText: `Parties that are happening at ${selectedLocationName}`
         }
       })
     );
+  }
+
+  function handleOnFilterChange(filterPayload: PartiesListFilterPayload) {
+    dispatch(PartiesListFilterActions.addFilter(filterPayload));
+  }
+
+  function handleOnRemoveFilter(filterKey: string) {
+    dispatch(PartiesListFilterActions.removeFilter(filterKey));
   }
 };
 
