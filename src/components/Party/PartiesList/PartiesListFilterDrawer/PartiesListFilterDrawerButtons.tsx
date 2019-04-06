@@ -40,8 +40,8 @@ const FilterActionButtonStyles = css`
 const AnimatedFiltersActionButton = styled(PosedFilterActionButton)`
   ${FilterActionButtonStyles};
 `;
-interface FiltersActionButtonsProps {
-  state: string;
+export interface FiltersActionButtonsProps {
+  state: 'apply' | 'clear' | 'hidden';
   onClear: VoidFunction;
   onApply: VoidFunction;
 }
@@ -52,13 +52,23 @@ const PartiesListFilterDrawerButtons: React.FC<
     <PoseGroup>
       {props.state === 'apply' ? (
         <AnimatedFiltersActionButton key={1}>
-          <Button onClick={props.onApply} block={true} type="primary">
+          <Button
+            data-testid="apply-filters-button"
+            onClick={props.onApply}
+            block={true}
+            type="primary"
+          >
             Apply filters
           </Button>
         </AnimatedFiltersActionButton>
       ) : props.state === 'clear' ? (
         <AnimatedFiltersActionButton key={2}>
-          <Button onClick={props.onClear} block={true} type="danger">
+          <Button
+            data-testid="clear-filters-button"
+            onClick={props.onClear}
+            block={true}
+            type="danger"
+          >
             Clear filters
           </Button>
         </AnimatedFiltersActionButton>

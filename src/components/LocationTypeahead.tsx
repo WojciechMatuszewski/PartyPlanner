@@ -72,6 +72,7 @@ const LocationTypeahead = (props: Props) => {
 
   return (
     <Select
+      data-testid="ant-select"
       disabled={props.disabled}
       allowClear={true}
       showSearch={true}
@@ -100,6 +101,7 @@ const LocationTypeahead = (props: Props) => {
     </Select>
   );
   async function handleLocationSearch(searchQuery: string) {
+    console.log('works');
     axiosCanceler.current();
     return await axiosMapBoxInstance.get(
       `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL&limit=10`,
