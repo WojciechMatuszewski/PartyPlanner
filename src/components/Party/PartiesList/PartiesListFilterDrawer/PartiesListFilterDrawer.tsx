@@ -53,9 +53,9 @@ interface Props {
 const PartiesListFilterDrawer: React.FC<Props> = props => {
   const lastFiltersRef = React.useRef<PartiesListFilters>(props.filters);
   const shouldStretchWidth = useMedia('(max-width:450px)');
-  const [filtersButtonsState, setFiltersButtonsState] = React.useState<string>(
-    'hidden'
-  );
+  const [filtersButtonsState, setFiltersButtonsState] = React.useState<
+    'clear' | 'apply' | 'hidden'
+  >('hidden');
   const { dispatch } = React.useContext(PartiesListContext);
 
   const hasFiltersOnVisible = React.useCallback(
@@ -149,7 +149,6 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   function handleOnFiltersApply() {
     dispatch(PartiesListDrawerActions.setDrawerHidden());
     props.onFiltersChanged();
-    // refetch here
   }
 
   function handleOnFiltersClear() {
