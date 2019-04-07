@@ -147,6 +147,7 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   // **** //
   function handleDrawerClose() {
     dispatch(PartiesListDrawerActions.setDrawerHidden());
+    console.log(filtersEqualToLastOpen());
     if (!filtersEqualToLastOpen()) {
       props.onFiltersChanged();
     }

@@ -42,14 +42,6 @@ const GridWrapper = styled.section`
   }
 `;
 
-const EmptyStyles = css`
-  .ant-empty-description {
-    max-width: 300px;
-    margin: 0 auto !important;
-    word-break: break-all;
-  }
-`;
-
 interface Props {
   parties: PaginatePartiesQueryEdges[];
   filterInputValue: string;
@@ -84,20 +76,6 @@ const PartiesListCardGrid: React.FC<Props> = ({
           />
         ))}
       </GridWrapper>
-      {filteredParties.length === 0 && (
-        <Empty
-          css={[EmptyStyles]}
-          description={
-            <React.Fragment>
-              Could not find party with title containing
-              <br />
-              <Typography.Text type="warning">
-                {filterInputValue}
-              </Typography.Text>
-            </React.Fragment>
-          }
-        />
-      )}
       {children(filteredParties.length > 0)}
     </GridLoadMoreWrapper>
   );

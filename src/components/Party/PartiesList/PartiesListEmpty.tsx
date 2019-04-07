@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
@@ -30,6 +30,7 @@ const PartiesListEmpty: React.FC = () => {
         <Typography.Paragraph style={{ fontSize: 18 }} type="secondary">
           You currently do not have any parties
         </Typography.Paragraph>
+        <Button type="primary">Create a party</Button>
       </EmptyInnerWrapper>
     </EmptyWrapper>
   );

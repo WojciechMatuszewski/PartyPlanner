@@ -15,13 +15,16 @@ import {
   initialPartiesListState,
   PartiesListState,
   PartiesListFetchActions,
-  PartiesListFilters
+  PartiesListFilters,
+  PartiesListFilterActions
 } from './PartiesListReducer';
 import { useApolloClient } from 'react-apollo-hooks';
 
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
 import PartiesListLoading from './PartiesListLoading';
+import PartiesListNoResults from './PartiesListNoResults';
+import PartiesListEmpty from './PartiesListEmpty';
 
 const PAGE_SIZE = 3;
 
@@ -109,6 +112,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     initialPartiesListState
   );
 
+  const [shouldShowEmpty, setShouldShowEmpty] = React.useState<boolean>(false);
+
   const [contextState] = React.useState<{
     state: PartiesListState;
     dispatch: React.Dispatch<any>;
@@ -123,6 +128,10 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   React.useEffect(() => {
     handleDataFetch(true);
   }, []);
+
+  const hasFiltersApplied = React.useCallback(() => {
+    return Object.keys(state.filters).length > 0;
+  }, [state.filters]);
 
   const handleDataFetch = React.useCallback(
     async (isInitial: boolean = false) => {
@@ -142,6 +151,9 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
           dispatch(PartiesListFetchActions.setLoadingMore(false));
         } else {
           dispatch(PartiesListFetchActions.setLoadingInitially(false));
+        }
+        if (data.partiesConnection.edges.length <= 0 && isInitial) {
+          setShouldShowEmpty(true);
         }
         dispatch(
           PartiesListFetchActions.appendResults(data.partiesConnection
@@ -194,22 +206,23 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   return (
     <PartiesListContext.Provider value={contextState}>
       <div style={{ width: '100%' }}>
-        <PartiesListPane
-          inputValue={state.filterInputValue}
-          paginationInfoUpdater={paginationInfoUpdater}
-          onFetchHandler={handleDataFetch}
-        />
-        <PartiesListFilterDrawer
-          onFiltersChanged={handleFiltersChanged}
-          drawerVisible={state.drawerVisible}
-          filters={state.filters}
-        />
         <PartiesListLoading
           isLoadingInitially={state.initiallyLoading}
           loading={state.initiallyLoading || state.loadingFilters}
         />
-        {!state.initiallyLoading ? (
+        {!state.initiallyLoading && shouldShowEmpty && <PartiesListEmpty />}
+        {!state.initiallyLoading && !shouldShowEmpty ? (
           <React.Fragment>
+            <PartiesListPane
+              inputValue={state.filterInputValue}
+              paginationInfoUpdater={paginationInfoUpdater}
+              onFetchHandler={handleDataFetch}
+            />
+            <PartiesListFilterDrawer
+              onFiltersChanged={handleFiltersChanged}
+              drawerVisible={state.drawerVisible}
+              filters={state.filters}
+            />
             <PartiesListFilterChips
               filters={state.filters}
               shouldNotifyOnRemoved={!state.drawerVisible}
@@ -220,12 +233,24 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
               filterInputValue={state.filterInputValue}
             >
               {hasResultsAfterFiltering => (
-                <PartiesListLoadMore
-                  hasResults={hasResultsAfterFiltering}
-                  isLoadingMore={state.loadingMore}
-                  canLoadMore={state.paginationInfo.hasNextPage}
-                  onLoadMoreButtonClick={() => handleDataFetch()}
-                />
+                <React.Fragment>
+                  <PartiesListLoadMore
+                    hasResults={hasResultsAfterFiltering}
+                    isLoadingMore={state.loadingMore}
+                    canLoadMore={state.paginationInfo.hasNextPage}
+                    onLoadMoreButtonClick={() => handleDataFetch()}
+                  />
+                  <PartiesListNoResults
+                    hasFiltersApplied={hasFiltersApplied()}
+                    showBeVisible={
+                      !hasResultsAfterFiltering &&
+                      !state.loadingMore &&
+                      !state.loadingFilters
+                    }
+                    onClearAllFilters={handleNoResultsResetFilters}
+                    queryString={state.filterInputValue}
+                  />
+                </React.Fragment>
               )}
             </PartiesListCardGrid>
           </React.Fragment>
@@ -233,6 +258,11 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
       </div>
     </PartiesListContext.Provider>
   );
+
+  function handleNoResultsResetFilters() {
+    dispatch(PartiesListFilterActions.removeAllFilters());
+    dispatch(PartiesListFilterActions.setInputFilterValue(''));
+  }
 };
 
 export default PartiesList;
