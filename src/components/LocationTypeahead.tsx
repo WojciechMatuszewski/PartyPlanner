@@ -35,12 +35,14 @@ interface OptionalProps {
   onChange: (value: string) => void;
   results: UserSearchedLocation[];
   value: string;
+  queryTypes: string;
 }
 
 const optionalProps: OptionalProps = {
   value: '',
   results: [],
-  onChange: () => null
+  onChange: () => null,
+  queryTypes: 'address'
 };
 
 type Props = {
@@ -102,9 +104,12 @@ const LocationTypeahead = (props: Props) => {
       ))}
     </Select>
   );
+
   async function handleLocationSearch(searchQuery: string) {
     return await cancelableGet(
-      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL&limit=10`
+      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=${
+        props.queryTypes
+      }&country=PL&limit=10`
     );
   }
 

@@ -15,6 +15,7 @@ import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt
 import PartiesListFilterDrawerSort from './PartiesListFilterDrawerSort';
 import LocationTypeahead from '@components/LocationTypeahead';
 import uuid from 'uuid/v4';
+import PartiesListFilterDrawerLocation from './PartiesListFilterDrawerLocation';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;
@@ -104,22 +105,20 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
               ? moment(props.filters['start'].variablesValue[0].start_gte)
               : undefined
           }
-          onDateChange={handleOnFilterChange}
+          onChange={handleOnFilterChange}
           onRemoveFilter={handleOnRemoveFilter}
         />
       </FilterPaneCategory>
       <FilterPaneCategory>
         <Typography.Title level={4}>At given location</Typography.Title>
-        <LocationTypeahead
-          disabled={false}
-          onSelect={handleLocationFilterOnSelect}
-          onChange={handleLocationFilterOnChange}
-          value={
+        <PartiesListFilterDrawerLocation
+          filterValue={
             props.filters['location']
               ? props.filters.location.variablesValue.placeName_contains
               : undefined
           }
-          placeholder="Search fro a location"
+          onChange={handleOnFilterChange}
+          onRemoveFilter={handleOnRemoveFilter}
         />
       </FilterPaneCategory>
     </FiltersPaneWrapper>
@@ -140,29 +139,6 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
       filters.isPublic.variablesValue.filter(
         (value: PartyWhereInput) => value.isPublic === true
       ).length === 1
-    );
-  }
-
-  function handleLocationFilterOnChange(currentValue: string | undefined) {
-    if (!currentValue)
-      return dispatch(PartiesListFilterActions.removeFilter('location'));
-  }
-  function handleLocationFilterOnSelect(selectedLocationName: string) {
-    console.log(selectedLocationName);
-
-    dispatch(
-      PartiesListFilterActions.addFilter({
-        keyName: 'location',
-        filter: {
-          variablesName: 'location',
-          variablesType: 'where',
-          variablesValue: {
-            placeName_contains: selectedLocationName.split(',')[0]
-          },
-          id: uuid(),
-          displayText: `Parties that are happening at ${selectedLocationName}`
-        }
-      })
     );
   }
 

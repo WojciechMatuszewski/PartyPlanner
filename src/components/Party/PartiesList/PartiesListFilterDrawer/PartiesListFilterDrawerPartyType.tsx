@@ -4,12 +4,10 @@ import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import uuid from 'uuid/v4';
 import { compose } from 'ramda';
 import { PartiesListFilterPayload } from '../PartiesListReducer';
+import { PartiesListFilterDrawerFilterProps } from './PartiesListFilterDrawer';
 
-interface Props {
-  filterValue: string[] | undefined;
-  onChange: (filterDispatchPayload: PartiesListFilterPayload) => void;
-  onRemoveFilter: (filterKeyName: string) => void;
-}
+interface Props
+  extends PartiesListFilterDrawerFilterProps<string[] | undefined> {}
 
 const PartiesListFilterDrawerPartyType: React.FC<Props> = props => {
   return (

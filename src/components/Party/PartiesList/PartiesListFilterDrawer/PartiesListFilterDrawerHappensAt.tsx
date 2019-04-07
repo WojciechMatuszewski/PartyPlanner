@@ -4,12 +4,10 @@ import uuid from 'uuid/v4';
 import { PartiesListFilterPayload } from '../PartiesListReducer';
 import { DatePicker } from 'antd';
 import { compose } from 'react-apollo';
+import { PartiesListFilterDrawerFilterProps } from './PartiesListFilterDrawer';
 
-interface Props {
-  onDateChange: (filterDispatchPayload: PartiesListFilterPayload) => void;
-  filterValue: moment.Moment | undefined;
-  onRemoveFilter: (filterKeyName: string) => void;
-}
+interface Props
+  extends PartiesListFilterDrawerFilterProps<moment.Moment | undefined> {}
 const PartiesListFilterDrawerHappensAt: React.FC<Props> = props => {
   return (
     <DatePicker
@@ -45,7 +43,7 @@ const PartiesListFilterDrawerHappensAt: React.FC<Props> = props => {
   function handleOnChange(selectedDate: moment.Moment | undefined): void {
     if (!selectedDate) props.onRemoveFilter('start');
     return compose(
-      props.onDateChange,
+      props.onChange,
       createFilterObjectFromDate
     )(selectedDate);
   }

@@ -2,7 +2,8 @@ import React from 'react';
 import {
   PartiesListFilters,
   PartiesListDrawerActions,
-  PartiesListFilterActions
+  PartiesListFilterActions,
+  PartiesListFilterPayload
 } from '../PartiesListReducer';
 import useMedia from '@hooks/useMedia';
 import css from '@emotion/css';
@@ -44,6 +45,11 @@ const DrawerStyles = css`
   }
 `;
 
+export interface PartiesListFilterDrawerFilterProps<FilterValue = any> {
+  onChange: (filterDispatchPayload: PartiesListFilterPayload) => void;
+  onRemoveFilter: (filterKeyName: string) => void;
+  filterValue: FilterValue;
+}
 interface Props {
   filters: PartiesListFilters;
   drawerVisible: boolean;
