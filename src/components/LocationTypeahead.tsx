@@ -7,6 +7,7 @@ import { Select, Spin, Empty } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { callAll } from '@shared/functionUtils';
+import useCancelableAxiosGet from '@hooks/useCancelableAxiosGet';
 
 const SpinnerWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
@@ -52,8 +53,9 @@ type Props = {
 } & typeof optionalProps;
 // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30695#issuecomment-440933780
 const LocationTypeahead = (props: Props) => {
-  const CancelToken = axios.CancelToken;
-  const axiosCanceler = React.useRef<Canceler>(() => null);
+  const { cancelableGet } = useCancelableAxiosGet(axiosMapBoxInstance, {
+    autoCancel: true
+  });
 
   const {
     state,
@@ -101,15 +103,8 @@ const LocationTypeahead = (props: Props) => {
     </Select>
   );
   async function handleLocationSearch(searchQuery: string) {
-    console.log('works');
-    axiosCanceler.current();
-    return await axiosMapBoxInstance.get(
-      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL&limit=10`,
-      {
-        cancelToken: new CancelToken(
-          (canceler: Canceler) => (axiosCanceler.current = canceler)
-        )
-      }
+    return await cancelableGet(
+      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=address&country=PL&limit=10`
     );
   }
 
