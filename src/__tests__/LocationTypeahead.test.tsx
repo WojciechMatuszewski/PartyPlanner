@@ -7,6 +7,7 @@ import LocationTypeahead, {
 import * as axiosMapBoxInstanceDep from '@axios/axiosMapBoxInstance';
 import { fakeSchedulers } from 'rxjs-marbles/jest';
 jest.mock('@axios/axiosMapBoxInstance');
+import React from 'react';
 
 const fakeLocation: UserSearchedLocation = {
   placeName: 'fakePlace',

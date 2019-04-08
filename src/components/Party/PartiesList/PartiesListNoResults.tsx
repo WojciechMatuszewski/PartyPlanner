@@ -36,9 +36,8 @@ const ResetFilterButtonStyles = css`
 const PartiesListNoResults: React.FC<Props> = props => {
   return props.showBeVisible ? (
     <EmptyContainer>
-      <Empty
-        css={[EmptyStyles]}
-        children={[
+      <Empty css={[EmptyStyles]}>
+        {[
           isQueryStringApplied() ? (
             <NoResultsSearchQueryApplied
               queryString={props.queryString}
@@ -59,7 +58,7 @@ const PartiesListNoResults: React.FC<Props> = props => {
             </Button>
           ) : null
         ]}
-      />
+      </Empty>
     </EmptyContainer>
   ) : null;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import axios, { Canceler, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import axiosMapBoxInstance from '@axios/axiosMapBoxInstance';
 import { UserLocation } from '@hooks/useUserLocation';
 import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';

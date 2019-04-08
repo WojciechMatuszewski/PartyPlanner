@@ -10,7 +10,7 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-import { isEqual } from 'lodash';
+
 import { PartiesListContext } from '../PartiesList';
 import { areObjectsEqual } from '@shared/functionUtils';
 

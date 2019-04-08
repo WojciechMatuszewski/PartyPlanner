@@ -1,13 +1,6 @@
 import React from 'react';
 import { Button, notification } from 'antd';
 import useUserLocation, { UserLocation } from '@hooks/useUserLocation';
-import {
-  LocalizeMeButtonState,
-  SetLoadingAction,
-  SetLocationAction,
-  setLocalizeMeButtonLoading,
-  setLocalizeMeButtonLocation
-} from './CreatePartyLocation';
 
 interface Props {
   loading: boolean;

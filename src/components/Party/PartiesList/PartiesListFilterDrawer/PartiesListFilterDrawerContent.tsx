@@ -9,12 +9,9 @@ import {
 import { PartiesListContext } from '../PartiesList';
 import { PartyWhereInput } from '@generated/graphql';
 import moment from 'moment';
-
 import PartiesListFilterDrawerPartyType from './PartiesListFilterDrawerPartyType';
 import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt';
 import PartiesListFilterDrawerSort from './PartiesListFilterDrawerSort';
-import LocationTypeahead from '@components/LocationTypeahead';
-import uuid from 'uuid/v4';
 import PartiesListFilterDrawerLocation from './PartiesListFilterDrawerLocation';
 
 const FiltersPaneWrapper = styled.div`
