@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Icon, Drawer } from 'antd';
 import useMedia from '@hooks/useMedia';
 import { ApolloConsumer } from 'react-apollo';
-import SignoutIcon from '@customIcons/sign-out-alt.svg';
+import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
 import { MeQueryComponent } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
@@ -195,7 +195,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                   </Link>
                 </Menu.Item>
                 <Menu.Item onClick={() => handleLogout(client)}>
-                  <Icon component={SignoutIcon} css={[CustomIconStyles]} />
+                  <Icon component={SignOutIcon} css={[CustomIconStyles]} />
                 </Menu.Item>
                 <Menu.Item onClick={() => setDrawerVisible(true)}>
                   <Icon type="bars" />

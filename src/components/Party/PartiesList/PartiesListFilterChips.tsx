@@ -6,11 +6,14 @@ import {
   PartiesListFilterActions
 } from './PartiesListReducer';
 import { PartiesListContext } from './PartiesList';
+import css from '@emotion/css';
+import { NotWrappingTextStyles } from '@shared/styles';
 
 const FilterChipsWrapper = styled.div`
   max-width: 1440px;
   margin: 0 auto;
   padding: 12px;
+
   @media screen and (max-width: 1120px) {
     width: 100%;
   }
@@ -22,39 +25,27 @@ const FilterChipsWrapper = styled.div`
 
 const FilterTagsWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 `;
+const TagStyles = css`
+  margin-top: 8px;
+  ${NotWrappingTextStyles}
+  text-overflow:ellipsis;
+`;
+
 interface Props {
   filters: PartiesListFilters;
-  shouldNotifyOnRemoved: boolean;
-  onFilterRemoved: VoidFunction;
 }
-const PartiesListFilterChips: React.FC<Props> = ({
-  filters,
-  onFilterRemoved,
-  shouldNotifyOnRemoved
-}) => {
+const PartiesListFilterChips: React.FC<Props> = ({ filters }) => {
   const { dispatch } = React.useContext(PartiesListContext);
-
-  const isFirstRun = React.useRef<boolean>(true);
-
-  React.useEffect(() => {
-    // prevent onFiltersRemoved being called on first render
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-    if (shouldNotifyOnRemoved) onFilterRemoved();
-  }, [filters, shouldNotifyOnRemoved]);
-
-  function handleTagClose(filterKeyName: string) {
-    dispatch(PartiesListFilterActions.removeFilter(filterKeyName));
-  }
 
   return (
     <FilterChipsWrapper>
       <FilterTagsWrapper>
         {Object.entries(filters).map(([key, filter]) => (
           <Tag
+            css={[TagStyles]}
             color="geekblue"
             closable={true}
             visible={true}
@@ -67,6 +58,10 @@ const PartiesListFilterChips: React.FC<Props> = ({
       </FilterTagsWrapper>
     </FilterChipsWrapper>
   );
+
+  function handleTagClose(filterKeyName: string) {
+    dispatch(PartiesListFilterActions.removeFilter(filterKeyName));
+  }
 };
 
 export default React.memo(PartiesListFilterChips);

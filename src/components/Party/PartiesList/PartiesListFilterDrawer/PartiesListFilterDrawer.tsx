@@ -12,6 +12,7 @@ import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
 import { isEqual } from 'lodash';
 import { PartiesListContext } from '../PartiesList';
+import { areObjectsEqual } from '@shared/functionUtils';
 
 const DrawerStyles = css`
   .ant-drawer-body {
@@ -70,31 +71,7 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   );
 
   const filtersEqualToLastOpen = React.useCallback(() => {
-    // different amount of keys objects are sure different
-    if (
-      Object.keys(props.filters).length !==
-      Object.keys(lastFiltersRef.current).length
-    )
-      return false;
-
-    // check on key by key basis,
-    // there are not much keys to check so we can afford doing it this way :)
-    const areEqualOnKeyToKeyBasis = Object.entries(props.filters).reduce(
-      (acc: boolean, [key, filterObj]) => {
-        const areKeysTheSame = isEqual(
-          lastFiltersRef.current[key].variablesValue,
-          filterObj.variablesValue
-        );
-        if (!areKeysTheSame) {
-          acc = false;
-          return acc;
-        }
-        return acc;
-      },
-      true
-    );
-
-    return areEqualOnKeyToKeyBasis;
+    return areObjectsEqual(props.filters, lastFiltersRef.current);
   }, [props.filters]);
 
   // user can delete filters without having the drawer open
@@ -147,7 +124,6 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   // **** //
   function handleDrawerClose() {
     dispatch(PartiesListDrawerActions.setDrawerHidden());
-    console.log(filtersEqualToLastOpen());
     if (!filtersEqualToLastOpen()) {
       props.onFiltersChanged();
     }

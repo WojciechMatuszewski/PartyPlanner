@@ -12,20 +12,19 @@ interface Props {
 
 const LoadMoreWrapper = styled.div`
   width: 100%;
-  padding: 24px 0;
+  padding-bottom: 24px;
   ${FlexBoxFullCenteredStyles};
 `;
 
 const PartiesListLoadMore: React.FC<Props> = props => {
-  return (
+  return props.canLoadMore || props.isLoadingMore ? (
     <LoadMoreWrapper>
-      {props.canLoadMore && !props.isLoadingMore && props.hasResults ? (
-        <Button onClick={props.onLoadMoreButtonClick}>Load More</Button>
-      ) : props.isLoadingMore ? (
-        <Spin />
-      ) : null}
+      {props.canLoadMore && !props.isLoadingMore && props.hasResults && (
+        <Button onClick={() => props.onLoadMoreButtonClick()}>Load More</Button>
+      )}
+      {props.isLoadingMore && <Spin />}
     </LoadMoreWrapper>
-  );
+  ) : null;
 };
 
 export default PartiesListLoadMore;

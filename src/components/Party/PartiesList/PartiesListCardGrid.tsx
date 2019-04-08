@@ -4,11 +4,10 @@ import PartiesListPartyCard from './PartiesListPartyCard';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
 
 import { useFuzzySearch } from '@hooks/useFuzzySearch';
-import { Empty, Typography } from 'antd';
-import css from '@emotion/css';
+
 import posed from 'react-pose';
 
-const GridLoadMoreWrapper = styled(
+const PosedGridOuterWrapper = styled(
   posed.div({
     enter: {
       opacity: 1,
@@ -22,6 +21,7 @@ const GridLoadMoreWrapper = styled(
 )`
   width: 100%;
   display: block;
+  padding-bottom: 24px;
 `;
 
 const GridWrapper = styled.section`
@@ -66,18 +66,20 @@ const PartiesListCardGrid: React.FC<Props> = ({
   );
 
   return (
-    <GridLoadMoreWrapper initialPose="exit" pose="enter">
-      <GridWrapper>
-        {filteredParties.map((party, index) => (
-          <PartiesListPartyCard
-            party={party}
-            key={party.node.id}
-            delayIndex={index}
-          />
-        ))}
-      </GridWrapper>
+    <React.Fragment>
+      <PosedGridOuterWrapper initialPose="exit" pose="enter">
+        <GridWrapper>
+          {filteredParties.map((party, index) => (
+            <PartiesListPartyCard
+              party={party}
+              key={party.node.id}
+              delayIndex={index}
+            />
+          ))}
+        </GridWrapper>
+      </PosedGridOuterWrapper>
       {children(filteredParties.length > 0)}
-    </GridLoadMoreWrapper>
+    </React.Fragment>
   );
 };
 

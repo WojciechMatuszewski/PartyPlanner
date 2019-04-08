@@ -7,7 +7,6 @@ import {
   PartyWhereInput
 } from '@generated/graphql';
 import PartiesListPane from './PartiesListPane';
-
 import PartiesListFilterChips from './PartiesListFilterChips';
 import PartiesListCardGrid from './PartiesListCardGrid';
 import {
@@ -19,7 +18,6 @@ import {
   PartiesListFilterActions
 } from './PartiesListReducer';
 import { useApolloClient } from 'react-apollo-hooks';
-
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
 import PartiesListLoading from './PartiesListLoading';
@@ -63,17 +61,6 @@ function queryConstructorFactory(userId: string) {
     filters: PartiesListFilters = {},
     first: number = PAGE_SIZE
   ): PaginatePartiesQueryVariables {
-    console.log({
-      where: {
-        members_some: {
-          id: userId
-        },
-        id_not_in: currentResults.map(edge => edge.node.id),
-        title_contains:
-          searchValue.trim().length === 0 ? undefined : searchValue,
-        ...mapFiltersToWhereVariables(filters)
-      }
-    });
     return {
       where: {
         members_some: {
@@ -106,14 +93,11 @@ interface Props {
 
 const PartiesList: React.FC<Props> = ({ userId }) => {
   const apolloClient = useApolloClient();
-
   const [state, dispatch] = React.useReducer(
     PartiesListReducer,
     initialPartiesListState
   );
-
   const [shouldShowEmpty, setShouldShowEmpty] = React.useState<boolean>(false);
-
   const [contextState] = React.useState<{
     state: PartiesListState;
     dispatch: React.Dispatch<any>;
@@ -121,6 +105,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     state,
     dispatch
   });
+  const isFirstRender = React.useRef<boolean>(false);
   const queryConstructor = React.useCallback(queryConstructorFactory(userId), [
     userId
   ]);
@@ -128,6 +113,19 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   React.useEffect(() => {
     handleDataFetch(true);
   }, []);
+
+  const IsDrawerOpen = React.useCallback(() => {
+    return state.drawerVisible;
+  }, [state.drawerVisible]);
+
+  React.useEffect(() => {
+    if (!IsDrawerOpen() && !isFirstRender.current) {
+      handleFiltersChanged();
+    }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+  }, [state.filters]);
 
   const hasFiltersApplied = React.useCallback(() => {
     return Object.keys(state.filters).length > 0;
@@ -223,11 +221,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
               drawerVisible={state.drawerVisible}
               filters={state.filters}
             />
-            <PartiesListFilterChips
-              filters={state.filters}
-              shouldNotifyOnRemoved={!state.drawerVisible}
-              onFilterRemoved={handleFiltersChanged}
-            />
+
+            <PartiesListFilterChips filters={state.filters} />
             <PartiesListCardGrid
               parties={state.parties}
               filterInputValue={state.filterInputValue}
@@ -238,7 +233,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
                     hasResults={hasResultsAfterFiltering}
                     isLoadingMore={state.loadingMore}
                     canLoadMore={state.paginationInfo.hasNextPage}
-                    onLoadMoreButtonClick={() => handleDataFetch()}
+                    onLoadMoreButtonClick={handleDataFetch}
                   />
                   <PartiesListNoResults
                     hasFiltersApplied={hasFiltersApplied()}
