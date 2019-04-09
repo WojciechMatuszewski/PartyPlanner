@@ -23,7 +23,7 @@ import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilter
 import PartiesListLoading from './PartiesListLoading';
 import PartiesListNoResults from './PartiesListNoResults';
 import PartiesListEmpty from './PartiesListEmpty';
-import { curry } from 'ramda';
+import PartiesListError from './PartiesListError';
 
 const PAGE_SIZE = 3;
 
@@ -112,7 +112,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   ]);
 
   React.useEffect(() => {
-    handleInitialDataFetch();
+    handleDataFetch(true);
   }, []);
 
   const isDrawerOpen = React.useCallback(() => {
@@ -125,7 +125,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     return Object.keys(state.filters).length > 0;
   }, [state.filters]);
 
-  const handleDataFetch = React.useCallback(() => {
+  const fetchData = React.useCallback(() => {
     return apolloClient.query<PaginatePartiesQueryQuery>({
       query: PaginatePartiesQueryDocument,
       variables: queryConstructor(
@@ -159,18 +159,24 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
         )
       );
     } catch (e) {
-      return null;
+      handleError();
     }
   }, [state.filters]);
 
   const paginationInfoUpdater = React.useCallback(async () => {
-    const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-      query: PaginatePartiesQueryDocument,
-      variables: queryConstructor(state.parties, state.filterInputValue)
-    });
-    dispatch(
-      PartiesListFetchActions.setPaginationInfo(data.partiesConnection.pageInfo)
-    );
+    try {
+      const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
+        query: PaginatePartiesQueryDocument,
+        variables: queryConstructor(state.parties, state.filterInputValue)
+      });
+      dispatch(
+        PartiesListFetchActions.setPaginationInfo(
+          data.partiesConnection.pageInfo
+        )
+      );
+    } catch (e) {
+      handleError();
+    }
   }, [state.queryVariables, state.parties, state.filterInputValue]);
 
   return (
@@ -181,9 +187,10 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
           loading={state.initiallyLoading || state.loadingFilters}
         />
         {!state.initiallyLoading && shouldShowEmpty && <PartiesListEmpty />}
-        {!state.initiallyLoading && !shouldShowEmpty ? (
+        {!state.initiallyLoading && !shouldShowEmpty && !state.hasError ? (
           <React.Fragment>
             <PartiesListPane
+              onError={handleError}
               inputValue={state.filterInputValue}
               paginationInfoUpdater={paginationInfoUpdater}
               onDataFetch={handleTypeaheadDataFetch}
@@ -206,7 +213,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
                     hasResults={hasResultsAfterFiltering}
                     isLoadingMore={state.loadingMore}
                     canLoadMore={state.paginationInfo.hasNextPage}
-                    onLoadMoreButtonClick={handleFetchMore}
+                    onLoadMoreButtonClick={handleOnLoadMoreButton}
                   />
                   <PartiesListNoResults
                     hasFiltersApplied={hasFiltersApplied()}
@@ -222,6 +229,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
               )}
             </PartiesListCardGrid>
           </React.Fragment>
+        ) : state.hasError ? (
+          <PartiesListError />
         ) : null}
       </div>
     </PartiesListContext.Provider>
@@ -261,23 +270,21 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
 
   function handleTypeaheadDataFetch() {
     handlePreDataFetch(false);
-    return handleDataFetch();
+    return fetchData();
   }
 
-  async function handleFetchMore() {
-    handlePreDataFetch(false);
+  async function handleDataFetch(isFromInitialFetch: boolean = false) {
+    handlePreDataFetch(isFromInitialFetch);
     try {
-      const { data } = await handleDataFetch();
-      handleDataFetched(false, data);
+      const { data } = await fetchData();
+      handleDataFetched(isFromInitialFetch, data);
     } catch (e) {
-      console.log('error while fetching more!');
+      handleError();
     }
   }
 
-  async function handleInitialDataFetch() {
-    handlePreDataFetch(true);
-    const { data } = await handleDataFetch();
-    handleDataFetched(true, data);
+  function handleOnLoadMoreButton() {
+    return handleDataFetch(false);
   }
 
   function handleFilterChipRemoved() {
@@ -287,6 +294,13 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
+  }
+
+  function handleError() {
+    dispatch(PartiesListFetchActions.setLoadingInitially(false));
+    dispatch(PartiesListFetchActions.setLoadingMore(false));
+    dispatch(PartiesListFetchActions.setLoadingFilters(false));
+    dispatch(PartiesListFetchActions.setError(true));
   }
 };
 

@@ -31,13 +31,15 @@ enum dataFetchingActionTypes {
   setPaginationInfo = 'SET_PAGINATION_INFO',
   setLoadingInitially = 'SET_LOADING_INITIALLY',
   setQueryVariables = 'SET_QUERY_VARIABLES',
-  setLoadingFilters = 'SET_LOADING_FILTERS'
+  setLoadingFilters = 'SET_LOADING_FILTERS',
+  setError = 'SET_ERROR'
 }
 
 export const PartiesListFetchActions = {
   setLoadingMore: createStandardAction(dataFetchingActionTypes.setLoadingMore)<
     boolean
   >(),
+  setError: createStandardAction(dataFetchingActionTypes.setError)<boolean>(),
   setResults: createStandardAction(dataFetchingActionTypes.setResults)<
     PaginatePartiesQueryEdges[]
   >(),
@@ -117,6 +119,7 @@ export interface PartiesListState {
   filterInputValue: string;
   filters: PartiesListFilters;
   loadingFilters: boolean;
+  hasError: boolean;
 }
 
 export const initialPartiesListState: PartiesListState = {
@@ -131,7 +134,8 @@ export const initialPartiesListState: PartiesListState = {
   queryVariables: {},
   filterInputValue: '',
   filters: {},
-  loadingFilters: false
+  loadingFilters: false,
+  hasError: false
 };
 
 export function PartiesListReducer(
@@ -192,6 +196,11 @@ export function PartiesListReducer(
       return {
         ...state,
         queryVariables: action.payload
+      };
+    case dataFetchingActionTypes.setError:
+      return {
+        ...state,
+        hasError: action.payload
       };
     // DATA FETCHING ENDS
 

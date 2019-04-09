@@ -14,13 +14,15 @@ const LoadMoreWrapper = styled.div`
   width: 100%;
   padding-bottom: 24px;
   ${FlexBoxFullCenteredStyles};
-  min-height: ${(props: { hasResults: boolean }) =>
-    !props.hasResults ? ' calc(100vh - 156px)' : 'auto'};
+  min-height: ${(props: { shouldSpanFullHeight: boolean }) =>
+    props.shouldSpanFullHeight ? ' calc(100vh - 156px)' : 'auto'};
 `;
 
 const PartiesListLoadMore: React.FC<Props> = props => {
   return props.canLoadMore || props.isLoadingMore ? (
-    <LoadMoreWrapper hasResults={props.hasResults}>
+    <LoadMoreWrapper
+      shouldSpanFullHeight={!props.hasResults && props.isLoadingMore}
+    >
       {props.canLoadMore && !props.isLoadingMore && props.hasResults && (
         <Button onClick={props.onLoadMoreButtonClick}>Load More</Button>
       )}

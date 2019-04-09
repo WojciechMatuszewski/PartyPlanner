@@ -2,23 +2,26 @@ import React from 'react';
 import { Subject, from, Observable, of } from 'rxjs';
 import {
   switchMap,
-  flatMap,
   catchError,
   map,
   filter,
   debounceTime,
-  distinctUntilChanged,
-  tap
+  distinctUntilChanged
 } from 'rxjs/operators';
-import axios, { AxiosResponse, AxiosPromise } from 'axios';
+import { AxiosPromise } from 'axios';
 
-interface TypeaheadProps<FetchResponsePreFormat, FetchResult, EventType> {
+export interface TypeaheadProps<
+  FetchResponsePreFormat,
+  FetchResult,
+  EventType
+> {
   fetchFunction: (value: string) => Promise<any> | AxiosPromise<any>;
   responseTransformFunction: (
     fetchResponse: FetchResponsePreFormat
   ) => FetchResult;
   onResult: (result: FetchResult) => void;
   onChangeTransformFunction?: (e: EventType) => string;
+  onError: () => void;
 }
 
 type InitialStreamType<K, EventType> = K extends (e: EventType) => string
@@ -33,7 +36,8 @@ function useBetterTypeahead<
   fetchFunction,
   responseTransformFunction,
   onResult,
-  onChangeTransformFunction
+  onChangeTransformFunction,
+  onError
 }: TypeaheadProps<any, FetchResult, E>) {
   type StreamType = InitialStreamType<typeof onChangeTransformFunction, E>;
 
@@ -48,8 +52,8 @@ function useBetterTypeahead<
       switchMap(inputValue =>
         from(fetchFunctionRef.current(inputValue)).pipe(
           map(responseTransformFunction),
-          catchError(e => {
-            console.log(e);
+          catchError(() => {
+            onError();
             return of('' as any);
           })
         )
@@ -76,9 +80,6 @@ function useBetterTypeahead<
   React.useEffect(typeaheadFunction, []);
 
   // ---- //
-  // function handleSubscriptionCallback(result: FetchResult) {
-  //   onResult(result);
-  // }
 
   function handleFetchFunctionChange() {
     fetchFunctionRef.current = fetchFunction;
@@ -101,7 +102,8 @@ function useBetterTypeahead<
             : (val as string)
         ),
         typeaheadOperator,
-        fetchOperator
+        fetchOperator,
+        filter(data => typeof data !== 'string')
       )
       .subscribe(onResult);
   }

@@ -80,11 +80,11 @@ const LocationTypeahead = (props: Props) => {
       disabled={props.disabled}
       allowClear={true}
       showSearch={true}
-      onSearch={callAll(typeaheadOnChange, props.onChange)}
+      onSearch={handleOnSearch}
       value={value ? value : undefined}
-      onChange={callAll(setInputValue, props.onChange)}
+      onChange={handleOnChange}
       dropdownMatchSelectWidth={true}
-      onSelect={value => props.onSelect(value, state.results)}
+      onSelect={handleOnSelect}
       placeholder={props.placeholder}
       showArrow={true}
       notFoundContent={
@@ -111,6 +111,17 @@ const LocationTypeahead = (props: Props) => {
         props.queryTypes
       }&country=PL&limit=10`
     );
+  }
+
+  function handleOnChange(value: string | undefined) {
+    callAll(setInputValue, props.onChange)(value);
+  }
+  function handleOnSearch(value: string) {
+    callAll(typeaheadOnChange, props.onChange)(value);
+  }
+
+  function handleOnSelect(value: string) {
+    props.onSelect(value, state.results);
   }
 
   async function axiosResponseTransformer(

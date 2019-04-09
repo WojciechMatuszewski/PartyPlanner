@@ -9,9 +9,7 @@ import {
   PartiesListDrawerActions,
   PartiesListFilterActions
 } from './PartiesListReducer';
-import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 import { callAll } from '@shared/functionUtils';
-
 import { compose } from 'react-apollo';
 import { ApolloQueryResult } from 'apollo-boost';
 import { PaginatePartiesQueryQuery } from '@generated/graphql';
@@ -72,6 +70,7 @@ interface Props {
   onDataFetched: (data: PaginatePartiesQueryQuery) => void;
   paginationInfoUpdater: () => Promise<any>;
   inputValue: string;
+  onError: VoidFunction;
 }
 const PartiesListPane: React.FC<Props> = props => {
   const shouldButtonsHaveText = useMedia('(min-width:669px)');
@@ -87,7 +86,8 @@ const PartiesListPane: React.FC<Props> = props => {
     },
     onResult: props.onDataFetched,
     responseTransformFunction,
-    onChangeTransformFunction
+    onChangeTransformFunction,
+    onError: props.onError
   });
 
   React.useEffect(() => {
