@@ -21,3 +21,17 @@ export function getPartiesDateVariables(
     }
   };
 }
+
+export function getCorrectTextFromPartyDates(start: Date, end: Date) {
+  const parsedStart = moment(start);
+  const parsedEnd = moment(end);
+  if (parsedStart.isSame(parsedEnd, 'day')) {
+    return `${parsedStart.format('DD MMM')} from ${parsedStart.format(
+      'HH:mm'
+    )} to ${parsedEnd.format('HH:mm')}`;
+  } else {
+    return `${parsedStart.format('DD MMM HH:mm')} to ${parsedEnd.format(
+      'DD MMM HH:mm'
+    )}`;
+  }
+}

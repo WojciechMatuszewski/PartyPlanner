@@ -5,14 +5,12 @@ import useMedia from '@hooks/useMedia';
 import { CalendarContext } from './UserCalendar';
 import { PartiesQueryParties } from '@generated/graphql';
 import CalendarEventPopoverContent from './CalendarEventPopoverContent';
+import { callAll } from '@shared/functionUtils';
 
 const ModalClickContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
-
-const callAll = (...fns: any[]) => (arg: any) =>
-  fns.forEach(fn => fn && fn(arg));
 
 const CalendarEventPopover: React.FC<{
   children: React.ReactNode;

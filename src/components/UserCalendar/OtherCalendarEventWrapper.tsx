@@ -73,7 +73,7 @@ const OtherCalendarEventWrapper: React.FC<
         <EventTileWrapperInner className="calendarPopupContainer">
           <span className="title">{props.event.title}</span>
           <Typography.Paragraph
-            ellipsis={{ rows: 10, expandable: false }}
+            ellipsis={{ rows: 4, expandable: false }}
             style={{ color: 'rgba(255,255,255, 0.8)' }}
           >
             {props.event.description}

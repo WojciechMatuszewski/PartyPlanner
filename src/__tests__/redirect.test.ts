@@ -19,6 +19,7 @@ describe('Redirect', () => {
       }
     };
     redirect(mockedContext, TARGET);
+
     expect(mockedContext.res.writeHead).toHaveBeenCalled();
     expect(mockedContext.res.writeHead).toHaveBeenCalledWith(303, {
       Location: TARGET

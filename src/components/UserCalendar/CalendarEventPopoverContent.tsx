@@ -1,12 +1,13 @@
 import React from 'react';
 import { PartiesQueryParties, PartyFragmentMembers } from '@generated/graphql';
-import moment from 'moment';
+
 import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import { Icon, Tooltip } from 'antd';
 import { AvatarList } from 'ant-design-pro';
 import UserAvatar from '@components/UserDefaultAvatar';
 import { CalendarContext } from './UserCalendar';
+import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
 const CalendarEventPopoverWrapper = styled.div`
   width: ${(props: { isInModal: boolean }) =>
@@ -82,6 +83,11 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
     </li>
   );
 
+  const dateString = React.useMemo(
+    () => getCorrectTextFromPartyDates(props.party.start, props.party.end),
+    []
+  );
+
   return (
     <CalendarEventPopoverWrapper isInModal={props.isInModal}>
       <CalendarEventPopoverToolbar>
@@ -99,10 +105,7 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
       <h2>{props.party.title}</h2>
       <div className="item-wrapper">
         <Icon type="clock-circle" theme="filled" className="item-icon" />
-        <span className="item-description">
-          {moment(props.party.start).format('DD MMM HH:mm')} to{' '}
-          {moment(props.party.end).format('DD MMM HH:mm')}
-        </span>
+        <span className="item-description">{dateString}</span>
       </div>
       <div className="item-wrapper">
         <Icon type="home" className="item-icon" />

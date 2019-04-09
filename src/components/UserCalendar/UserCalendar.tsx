@@ -129,8 +129,6 @@ const UserCalendar: React.FC<Props> = props => {
           fetchMoreRes => !idsFromPrev.includes(fetchMoreRes!.id)
         );
 
-        // TODO: find a better solution here
-
         return {
           parties: [...previousResult.parties, ...filteredFetchMore]
         };

@@ -72,3 +72,36 @@ export const PARTIES_QUERY = gql`
   }
   ${PARTY_FRAGMENT}
 `;
+
+export const PAGINATE_PARTIES_QUERY = gql`
+  query PaginatePartiesQuery(
+    $where: PartyWhereInput
+    $orderBy: PartyOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partiesConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ...PARTY_FRAGMENT
+        }
+      }
+    }
+  }
+  ${PARTY_FRAGMENT}
+`;

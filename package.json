@@ -36,6 +36,7 @@
     "@types/react-big-calendar": "^0.20.10",
     "@types/react-color": "^2.17.0",
     "@types/react-dom": "^16.8.2",
+    "@types/uuid": "^3.4.4",
     "@types/yup": "^0.26.12",
     "@typescript-eslint/eslint-plugin": "^1.4.2",
     "@typescript-eslint/parser": "^1.4.2",
@@ -104,11 +105,12 @@
     "react-pose": "^4.0.8",
     "react-spring": "^8.0.15",
     "rxjs": "^6.4.0",
+    "typesafe-actions": "^3.2.1",
+    "uuid": "^3.3.2",
     "yup": "^0.26.10"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && npm run lint && npm run type-check",
       "pre-push": "npm test && npm run lint && npm run type-check"
     }
   }
