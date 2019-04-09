@@ -7,12 +7,16 @@ import {
 } from './PartiesListReducer';
 import { PartiesListContext } from './PartiesList';
 import css from '@emotion/css';
-import { NotWrappingTextStyles } from '@shared/styles';
+import {
+  NotWrappingTextStyles,
+  FlexBoxFullCenteredStyles
+} from '@shared/styles';
 
 const FilterChipsWrapper = styled.div`
   max-width: 1440px;
   margin: 0 auto;
   padding: 12px;
+  width: 100%;
 
   @media screen and (max-width: 1120px) {
     width: 100%;
@@ -31,7 +35,19 @@ const FilterTagsWrapper = styled.div`
 const TagStyles = css`
   margin-top: 8px;
   ${NotWrappingTextStyles}
-  text-overflow:ellipsis;
+  position:relative;
+  text-overflow: ellipsis;
+  padding-right: 24px;
+  .anticon-close {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 24px;
+
+    ${FlexBoxFullCenteredStyles};
+    top: 0;
+    margin-left: 0;
+  }
 `;
 
 interface Props {

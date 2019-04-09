@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, Button } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { withRouter, WithRouterProps } from 'next/router';
 
 const EmptyWrapper = styled.div`
   width: 100%;
@@ -22,7 +23,7 @@ const EmptyInnerWrapper = styled.div`
   }
 `;
 
-const PartiesListEmpty: React.FC = () => {
+const PartiesListEmpty: React.FC<WithRouterProps> = ({ router }) => {
   return (
     <EmptyWrapper>
       <EmptyInnerWrapper>
@@ -30,10 +31,15 @@ const PartiesListEmpty: React.FC = () => {
         <Typography.Paragraph style={{ fontSize: 18 }} type="secondary">
           You currently do not have any parties
         </Typography.Paragraph>
-        <Button type="primary">Create a party</Button>
+        <Button
+          type="primary"
+          onClick={() => router && router.push('/create-party')}
+        >
+          Create a party
+        </Button>
       </EmptyInnerWrapper>
     </EmptyWrapper>
   );
 };
 
-export default PartiesListEmpty;
+export default withRouter(PartiesListEmpty);

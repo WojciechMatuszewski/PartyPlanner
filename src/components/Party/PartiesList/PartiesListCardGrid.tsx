@@ -28,7 +28,7 @@ const GridWrapper = styled.section`
   max-width: 1440px;
   grid-gap: 12px;
   grid-template-columns: repeat(3, 1fr);
-
+  margin: 0 auto;
   padding: 0 12px;
   @media screen and (max-width: 1050px) {
     width: 100%;

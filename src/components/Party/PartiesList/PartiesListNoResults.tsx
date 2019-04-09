@@ -26,7 +26,7 @@ const EmptyStyles = css`
 const EmptyContainer = styled.div`
   ${FlexBoxFullCenteredStyles};
   width: 100%;
-  min-height: calc(100vh - 156px);
+  flex: 1;
   padding-bottom: 24px;
 `;
 const ResetFilterButtonStyles = css`

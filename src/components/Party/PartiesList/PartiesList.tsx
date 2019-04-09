@@ -24,8 +24,15 @@ import PartiesListLoading from './PartiesListLoading';
 import PartiesListNoResults from './PartiesListNoResults';
 import PartiesListEmpty from './PartiesListEmpty';
 import PartiesListError from './PartiesListError';
+import styled from '@emotion/styled';
 
 const PAGE_SIZE = 3;
+
+const PartiesListWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 
 function mapFiltersToWhereVariables(filters: PartiesListFilters) {
   const newFilters = { ...filters };
@@ -181,7 +188,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
 
   return (
     <PartiesListContext.Provider value={contextState}>
-      <div style={{ width: '100%' }}>
+      <PartiesListWrapper>
         <PartiesListLoading
           isLoadingInitially={state.initiallyLoading}
           loading={state.initiallyLoading || state.loadingFilters}
@@ -232,7 +239,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
         ) : state.hasError ? (
           <PartiesListError />
         ) : null}
-      </div>
+      </PartiesListWrapper>
     </PartiesListContext.Provider>
   );
 
