@@ -21,24 +21,22 @@ const PosedGridOuterWrapper = styled(
 )`
   width: 100%;
   display: block;
-  padding-bottom: 24px;
 `;
 
 const GridWrapper = styled.section`
   display: grid;
   max-width: 1440px;
   grid-gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
 
   padding: 0 12px;
-  @media screen and (max-width: 1120px) {
+  @media screen and (max-width: 1050px) {
     width: 100%;
+    grid-template-columns: repeat(2, 1fr);
   }
   @media screen and (max-width: 679px) {
     padding: 0;
-  }
-  @media screen and (max-width: 330px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 
@@ -67,7 +65,11 @@ const PartiesListCardGrid: React.FC<Props> = ({
 
   return (
     <React.Fragment>
-      <PosedGridOuterWrapper initialPose="exit" pose="enter">
+      <PosedGridOuterWrapper
+        style={{ paddingBottom: filteredParties.length > 0 ? 24 : 0 }}
+        initialPose="exit"
+        pose="enter"
+      >
         <GridWrapper>
           {filteredParties.map((party, index) => (
             <PartiesListPartyCard

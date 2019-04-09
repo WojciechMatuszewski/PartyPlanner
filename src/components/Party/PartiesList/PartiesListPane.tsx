@@ -13,6 +13,9 @@ import { useRxjsTypeahead } from '@hooks/useRxjsTypeahead';
 import { callAll } from '@shared/functionUtils';
 
 import { compose } from 'react-apollo';
+import { ApolloQueryResult } from 'apollo-boost';
+import { PaginatePartiesQueryQuery } from '@generated/graphql';
+import useBetterTypeahead from '@hooks/useBetterTypeahead';
 const AnchorStyles = css`
   .ant-anchor {
     padding-left: 0;
@@ -65,7 +68,8 @@ const PaneTitleStyles = css`
 `;
 
 interface Props {
-  onFetchHandler: () => Promise<any>;
+  onDataFetch: () => Promise<ApolloQueryResult<PaginatePartiesQueryQuery>>;
+  onDataFetched: (data: PaginatePartiesQueryQuery) => void;
   paginationInfoUpdater: () => Promise<any>;
   inputValue: string;
 }
@@ -76,20 +80,15 @@ const PartiesListPane: React.FC<Props> = props => {
     boolean
   >();
 
-  const {
-    inputProps: { onChange: RxjsTypeaheadOnChange }
-  } = useRxjsTypeahead(
-    async () => {
-      await props.onFetchHandler();
+  const { onChange } = useBetterTypeahead({
+    fetchFunction: () => {
       setTypeaheadCallbackCalled(true);
+      return props.onDataFetch();
     },
-    async () => [],
-    (e: React.ChangeEvent<HTMLInputElement>) => e.currentTarget.value
-  );
-
-  function handleDrawerOpen() {
-    dispatch(PartiesListDrawerActions.setDrawerVisible());
-  }
+    onResult: props.onDataFetched,
+    responseTransformFunction,
+    onChangeTransformFunction
+  });
 
   React.useEffect(() => {
     async function handleQueryRefetch() {
@@ -117,7 +116,7 @@ const PartiesListPane: React.FC<Props> = props => {
           <Input.Search
             placeholder="Type here..."
             value={props.inputValue}
-            onChange={callAll(RxjsTypeaheadOnChange, handleOnChange)}
+            onChange={callAll(onChange, handleOnChange)}
           />
           <ButtonsWrapper>
             <Button
@@ -135,6 +134,18 @@ const PartiesListPane: React.FC<Props> = props => {
       </Anchor>
     </React.Fragment>
   );
+
+  function responseTransformFunction(
+    fetchResponse: ApolloQueryResult<PaginatePartiesQueryQuery>
+  ) {
+    return fetchResponse.data;
+  }
+  function handleDrawerOpen() {
+    dispatch(PartiesListDrawerActions.setDrawerVisible());
+  }
+  function onChangeTransformFunction(e: React.ChangeEvent<HTMLInputElement>) {
+    return e.currentTarget.value;
+  }
 };
 
 export default PartiesListPane;

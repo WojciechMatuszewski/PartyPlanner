@@ -23,6 +23,7 @@ import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilter
 import PartiesListLoading from './PartiesListLoading';
 import PartiesListNoResults from './PartiesListNoResults';
 import PartiesListEmpty from './PartiesListEmpty';
+import { curry } from 'ramda';
 
 const PAGE_SIZE = 3;
 
@@ -111,63 +112,34 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   ]);
 
   React.useEffect(() => {
-    handleDataFetch(true);
+    handleInitialDataFetch();
   }, []);
 
-  const IsDrawerOpen = React.useCallback(() => {
+  const isDrawerOpen = React.useCallback(() => {
     return state.drawerVisible;
   }, [state.drawerVisible]);
 
-  React.useEffect(() => {
-    if (!IsDrawerOpen() && !isFirstRender.current) {
-      handleFiltersChanged();
-    }
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    }
-  }, [state.filters]);
+  React.useEffect(handleFilterChipRemoved, [state.filters]);
 
   const hasFiltersApplied = React.useCallback(() => {
     return Object.keys(state.filters).length > 0;
   }, [state.filters]);
 
-  const handleDataFetch = React.useCallback(
-    async (isInitial: boolean = false) => {
-      try {
-        if (!isInitial) {
-          dispatch(PartiesListFetchActions.setLoadingMore(true));
-        }
-        const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-          query: PaginatePartiesQueryDocument,
-          variables: queryConstructor(
-            state.parties,
-            state.filterInputValue,
-            state.filters
-          )
-        });
-        if (!isInitial) {
-          dispatch(PartiesListFetchActions.setLoadingMore(false));
-        } else {
-          dispatch(PartiesListFetchActions.setLoadingInitially(false));
-        }
-        if (data.partiesConnection.edges.length <= 0 && isInitial) {
-          setShouldShowEmpty(true);
-        }
-        dispatch(
-          PartiesListFetchActions.appendResults(data.partiesConnection
-            .edges as PaginatePartiesQueryEdges[])
-        );
-        dispatch(
-          PartiesListFetchActions.setPaginationInfo(
-            data.partiesConnection.pageInfo
-          )
-        );
-      } catch (e) {
-        return null;
-      }
-    },
-    [state.queryVariables, state.parties, state.filterInputValue, state.filters]
-  );
+  const handleDataFetch = React.useCallback(() => {
+    return apolloClient.query<PaginatePartiesQueryQuery>({
+      query: PaginatePartiesQueryDocument,
+      variables: queryConstructor(
+        state.parties,
+        state.filterInputValue,
+        state.filters
+      )
+    });
+  }, [
+    state.queryVariables,
+    state.parties,
+    state.filterInputValue,
+    state.filters
+  ]);
 
   const handleFiltersChanged = React.useCallback(async () => {
     try {
@@ -214,7 +186,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
             <PartiesListPane
               inputValue={state.filterInputValue}
               paginationInfoUpdater={paginationInfoUpdater}
-              onFetchHandler={handleDataFetch}
+              onDataFetch={handleTypeaheadDataFetch}
+              onDataFetched={data => handleDataFetched(false, data)}
             />
             <PartiesListFilterDrawer
               onFiltersChanged={handleFiltersChanged}
@@ -233,7 +206,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
                     hasResults={hasResultsAfterFiltering}
                     isLoadingMore={state.loadingMore}
                     canLoadMore={state.paginationInfo.hasNextPage}
-                    onLoadMoreButtonClick={handleDataFetch}
+                    onLoadMoreButtonClick={handleFetchMore}
                   />
                   <PartiesListNoResults
                     hasFiltersApplied={hasFiltersApplied()}
@@ -257,6 +230,63 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   function handleNoResultsResetFilters() {
     dispatch(PartiesListFilterActions.removeAllFilters());
     dispatch(PartiesListFilterActions.setInputFilterValue(''));
+  }
+
+  function handleDataFetched(
+    wasInitialLoad: boolean = false,
+    data: PaginatePartiesQueryQuery
+  ) {
+    if (!wasInitialLoad) {
+      dispatch(PartiesListFetchActions.setLoadingMore(false));
+    } else {
+      dispatch(PartiesListFetchActions.setLoadingInitially(false));
+    }
+    if (data.partiesConnection.edges.length <= 0 && wasInitialLoad) {
+      setShouldShowEmpty(true);
+    }
+    dispatch(
+      PartiesListFetchActions.appendResults(data.partiesConnection
+        .edges as PaginatePartiesQueryEdges[])
+    );
+    dispatch(
+      PartiesListFetchActions.setPaginationInfo(data.partiesConnection.pageInfo)
+    );
+  }
+
+  function handlePreDataFetch(isInitial: boolean) {
+    if (!isInitial) {
+      dispatch(PartiesListFetchActions.setLoadingMore(true));
+    }
+  }
+
+  function handleTypeaheadDataFetch() {
+    handlePreDataFetch(false);
+    return handleDataFetch();
+  }
+
+  async function handleFetchMore() {
+    handlePreDataFetch(false);
+    try {
+      const { data } = await handleDataFetch();
+      handleDataFetched(false, data);
+    } catch (e) {
+      console.log('error while fetching more!');
+    }
+  }
+
+  async function handleInitialDataFetch() {
+    handlePreDataFetch(true);
+    const { data } = await handleDataFetch();
+    handleDataFetched(true, data);
+  }
+
+  function handleFilterChipRemoved() {
+    if (!isDrawerOpen() && !isFirstRender.current) {
+      handleFiltersChanged();
+    }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
   }
 };
 
