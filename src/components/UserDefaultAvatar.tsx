@@ -2,13 +2,13 @@ import React from 'react';
 import { Avatar } from 'antd';
 import { AvatarProps } from 'antd/lib/avatar';
 
-interface UserDataObj {
+export interface UserAvatarData {
   firstName?: string;
   lastName?: string;
   avatar?: string | null;
 }
 
-const UserAvatar: React.FC<{ userData: UserDataObj } & AvatarProps> = ({
+const UserAvatar: React.FC<{ userData: UserAvatarData } & AvatarProps> = ({
   userData: { firstName, lastName, avatar },
   ...rest
 }) => {

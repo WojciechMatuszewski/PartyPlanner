@@ -26,16 +26,16 @@ const ChatMessages = React.forwardRef(
       ))
     );
 
-    React.useEffect(() => {
-      const interval = setInterval(() => {
-        setState(prevState => [
-          ...prevState,
-          <h1 key={prevState.length}>Works {prevState.length}</h1>
-        ]);
-        props.onNewMessage();
-      }, 100);
-      return () => clearInterval(interval);
-    });
+    // React.useEffect(() => {
+    //   const interval = setInterval(() => {
+    //     setState(prevState => [
+    //       ...prevState,
+    //       <h1 key={prevState.length}>Works {prevState.length}</h1>
+    //     ]);
+    //     props.onNewMessage();
+    //   }, 100);
+    //   return () => clearInterval(interval);
+    // });
 
     // useEffect(() => {
     //   props.scrollToBottom(0);

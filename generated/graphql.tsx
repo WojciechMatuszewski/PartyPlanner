@@ -3072,6 +3072,88 @@ export type PaginatePartiesQueryEdges = {
 
 export type PaginatePartiesQueryNode = PartyFragmentFragment;
 
+export type PaginateChatsQueryVariables = {
+  where?: Maybe<ChatWhereInput>;
+  orderBy?: Maybe<ChatOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PaginateChatsQueryQuery = {
+  __typename?: 'Query';
+
+  chatsConnection: PaginateChatsQueryChatsConnection;
+};
+
+export type PaginateChatsQueryChatsConnection = {
+  __typename?: 'ChatConnection';
+
+  pageInfo: PaginateChatsQueryPageInfo;
+
+  edges: (Maybe<PaginateChatsQueryEdges>)[];
+};
+
+export type PaginateChatsQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PaginateChatsQueryEdges = {
+  __typename?: 'ChatEdge';
+
+  node: PaginateChatsQueryNode;
+};
+
+export type PaginateChatsQueryNode = {
+  __typename?: 'Chat';
+
+  party: PaginateChatsQueryParty;
+
+  members: Maybe<PaginateChatsQueryMembers[]>;
+
+  messages: Maybe<PaginateChatsQueryMessages[]>;
+};
+
+export type PaginateChatsQueryParty = {
+  __typename?: 'Party';
+
+  title: string;
+};
+
+export type PaginateChatsQueryMembers = {
+  __typename?: 'User';
+
+  avatar: Maybe<string>;
+
+  firstName: string;
+
+  lastName: string;
+};
+
+export type PaginateChatsQueryMessages = {
+  __typename?: 'Message';
+
+  createdAt: DateTime;
+
+  content: string;
+
+  author: PaginateChatsQueryAuthor;
+};
+
+export type PaginateChatsQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+};
+
 export type PartyFragmentFragment = {
   __typename?: 'Party';
 
@@ -3457,4 +3539,72 @@ export function usePaginatePartiesQuery(
     PaginatePartiesQueryQuery,
     PaginatePartiesQueryVariables
   >(PaginatePartiesQueryDocument, baseOptions);
+}
+export const PaginateChatsQueryDocument = gql`
+  query PaginateChatsQuery(
+    $where: ChatWhereInput
+    $orderBy: ChatOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    chatsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          party {
+            title
+          }
+          members(first: 3) {
+            avatar
+            firstName
+            lastName
+          }
+          messages(last: 1) {
+            createdAt
+            content
+            author {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+export class PaginateChatsQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<PaginateChatsQueryQuery, PaginateChatsQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<PaginateChatsQueryQuery, PaginateChatsQueryVariables>
+        query={PaginateChatsQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginateChatsQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<PaginateChatsQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    PaginateChatsQueryQuery,
+    PaginateChatsQueryVariables
+  >(PaginateChatsQueryDocument, baseOptions);
 }

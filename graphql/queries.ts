@@ -105,3 +105,50 @@ export const PAGINATE_PARTIES_QUERY = gql`
   }
   ${PARTY_FRAGMENT}
 `;
+
+export const PAGINATE_CHATS_QUERY = gql`
+  query PaginateChatsQuery(
+    $where: ChatWhereInput
+    $orderBy: ChatOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    chatsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          party {
+            title
+          }
+          members(first: 3) {
+            avatar
+            firstName
+            lastName
+          }
+          messages(last: 1) {
+            createdAt
+            content
+            author {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    }
+  }
+`;
