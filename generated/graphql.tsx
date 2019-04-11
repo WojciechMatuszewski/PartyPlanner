@@ -3072,6 +3072,150 @@ export type PaginatePartiesQueryEdges = {
 
 export type PaginatePartiesQueryNode = PartyFragmentFragment;
 
+export type PaginateChatsQueryVariables = {
+  where?: Maybe<ChatWhereInput>;
+  orderBy?: Maybe<ChatOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PaginateChatsQueryQuery = {
+  __typename?: 'Query';
+
+  chatsConnection: PaginateChatsQueryChatsConnection;
+};
+
+export type PaginateChatsQueryChatsConnection = {
+  __typename?: 'ChatConnection';
+
+  pageInfo: PaginateChatsQueryPageInfo;
+
+  edges: (Maybe<PaginateChatsQueryEdges>)[];
+};
+
+export type PaginateChatsQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PaginateChatsQueryEdges = {
+  __typename?: 'ChatEdge';
+
+  node: PaginateChatsQueryNode;
+};
+
+export type PaginateChatsQueryNode = {
+  __typename?: 'Chat';
+
+  id: string;
+
+  party: PaginateChatsQueryParty;
+
+  members: Maybe<PaginateChatsQueryMembers[]>;
+
+  messages: Maybe<PaginateChatsQueryMessages[]>;
+};
+
+export type PaginateChatsQueryParty = {
+  __typename?: 'Party';
+
+  title: string;
+};
+
+export type PaginateChatsQueryMembers = {
+  __typename?: 'User';
+
+  avatar: Maybe<string>;
+
+  firstName: string;
+
+  lastName: string;
+};
+
+export type PaginateChatsQueryMessages = {
+  __typename?: 'Message';
+
+  createdAt: DateTime;
+
+  content: string;
+
+  author: PaginateChatsQueryAuthor;
+};
+
+export type PaginateChatsQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+};
+
+export type PaginateMessagesQueryVariables = {
+  where?: Maybe<MessageWhereInput>;
+  orderBy?: Maybe<MessageOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PaginateMessagesQueryQuery = {
+  __typename?: 'Query';
+
+  messagesConnection: PaginateMessagesQueryMessagesConnection;
+};
+
+export type PaginateMessagesQueryMessagesConnection = {
+  __typename?: 'MessageConnection';
+
+  pageInfo: PaginateMessagesQueryPageInfo;
+
+  edges: (Maybe<PaginateMessagesQueryEdges>)[];
+};
+
+export type PaginateMessagesQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PaginateMessagesQueryEdges = {
+  __typename?: 'MessageEdge';
+
+  node: PaginateMessagesQueryNode;
+};
+
+export type PaginateMessagesQueryNode = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: PaginateMessagesQueryAuthor;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type PaginateMessagesQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+};
+
 export type PartyFragmentFragment = {
   __typename?: 'Party';
 
@@ -3457,4 +3601,141 @@ export function usePaginatePartiesQuery(
     PaginatePartiesQueryQuery,
     PaginatePartiesQueryVariables
   >(PaginatePartiesQueryDocument, baseOptions);
+}
+export const PaginateChatsQueryDocument = gql`
+  query PaginateChatsQuery(
+    $where: ChatWhereInput
+    $orderBy: ChatOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    chatsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          party {
+            title
+          }
+          members(first: 3) {
+            avatar
+            firstName
+            lastName
+          }
+          messages(last: 1) {
+            createdAt
+            content
+            author {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+export class PaginateChatsQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<PaginateChatsQueryQuery, PaginateChatsQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<PaginateChatsQueryQuery, PaginateChatsQueryVariables>
+        query={PaginateChatsQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginateChatsQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<PaginateChatsQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    PaginateChatsQueryQuery,
+    PaginateChatsQueryVariables
+  >(PaginateChatsQueryDocument, baseOptions);
+}
+export const PaginateMessagesQueryDocument = gql`
+  query PaginateMessagesQuery(
+    $where: MessageWhereInput
+    $orderBy: MessageOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    messagesConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          author {
+            firstName
+            lastName
+            avatar
+          }
+          content
+          createdAt
+        }
+      }
+    }
+  }
+`;
+export class PaginateMessagesQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      PaginateMessagesQueryQuery,
+      PaginateMessagesQueryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        PaginateMessagesQueryQuery,
+        PaginateMessagesQueryVariables
+      >
+        query={PaginateMessagesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginateMessagesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    PaginateMessagesQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    PaginateMessagesQueryQuery,
+    PaginateMessagesQueryVariables
+  >(PaginateMessagesQueryDocument, baseOptions);
 }

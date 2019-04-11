@@ -36,7 +36,7 @@ interface Props {
   textToDisplay: string;
 }
 
-const PartiesListLoading: React.FC<Props> = ({
+const GraphqlLoading: React.FC<Props> = ({
   isLoadingInitially,
   loading,
   textToDisplay
@@ -55,4 +55,4 @@ const PartiesListLoading: React.FC<Props> = ({
   );
 };
 
-export default PartiesListLoading;
+export default GraphqlLoading;
