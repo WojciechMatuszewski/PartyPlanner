@@ -3113,6 +3113,8 @@ export type PaginateChatsQueryEdges = {
 export type PaginateChatsQueryNode = {
   __typename?: 'Chat';
 
+  id: string;
+
   party: PaginateChatsQueryParty;
 
   members: Maybe<PaginateChatsQueryMembers[]>;
@@ -3565,6 +3567,7 @@ export const PaginateChatsQueryDocument = gql`
       }
       edges {
         node {
+          id
           party {
             title
           }

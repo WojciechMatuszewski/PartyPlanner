@@ -22,9 +22,12 @@ import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
 import PartiesListLoading from './PartiesListLoading';
 import PartiesListNoResults from './PartiesListNoResults';
-import PartiesListEmpty from './PartiesListEmpty';
-import PartiesListError from './PartiesListError';
 import styled from '@emotion/styled';
+import NoData from '@components/NoData';
+import { Button } from 'antd';
+import { withRouter, WithRouterProps } from 'next/router';
+import GraphqlException from '@components/GraphqlException';
+import GraphqlLoading from '@components/GraphqlLoading';
 
 const PAGE_SIZE = 3;
 
@@ -99,7 +102,7 @@ interface Props {
   userId: string;
 }
 
-const PartiesList: React.FC<Props> = ({ userId }) => {
+const PartiesList: React.FC<Props & WithRouterProps> = ({ userId, router }) => {
   const apolloClient = useApolloClient();
   const [state, dispatch] = React.useReducer(
     PartiesListReducer,
@@ -189,11 +192,24 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   return (
     <PartiesListContext.Provider value={contextState}>
       <PartiesListWrapper>
-        <PartiesListLoading
+        <GraphqlLoading
           isLoadingInitially={state.initiallyLoading}
           loading={state.initiallyLoading || state.loadingFilters}
+          textToDisplay="Loading your parties ..."
         />
-        {!state.initiallyLoading && shouldShowEmpty && <PartiesListEmpty />}
+        {!state.initiallyLoading && shouldShowEmpty && (
+          <NoData
+            message="You currently do not have any parties"
+            action={
+              <Button
+                type="primary"
+                onClick={() => router && router.push('/create-party')}
+              >
+                Create new party
+              </Button>
+            }
+          />
+        )}
         {!state.initiallyLoading && !shouldShowEmpty && !state.hasError ? (
           <React.Fragment>
             <PartiesListPane
@@ -237,7 +253,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
             </PartiesListCardGrid>
           </React.Fragment>
         ) : state.hasError ? (
-          <PartiesListError />
+          <GraphqlException />
         ) : null}
       </PartiesListWrapper>
     </PartiesListContext.Provider>
@@ -311,4 +327,4 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   }
 };
 
-export default PartiesList;
+export default withRouter(PartiesList);

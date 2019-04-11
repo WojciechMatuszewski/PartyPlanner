@@ -26,8 +26,6 @@ class ChatsListItemLastMessage extends React.Component<Props> {
         const parsedDate = moment(createdAt);
         const currentDate = moment(new Date());
         const diff = Math.abs(parsedDate.diff(currentDate, 'hours'));
-
-        console.log(createdAt, diff);
         return (
           <Typography.Text type="secondary">
             {diff < 24

@@ -1,15 +1,19 @@
 import React from 'react';
-import { Layout } from 'antd';
+import { Layout, Button } from 'antd';
 import css from '@emotion/css';
-import ChatsList from '@components/Chat/ChatsList';
+
 import ChatWindow from '@components/Chat/ChatWindow';
 import ChatUsers from '@components/Chat/ChatUsers';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
 import {
   MeQueryMe,
-  PaginateChatsQueryComponent,
-  PaginateChatsQueryEdges
+  PaginateChatsQueryEdges,
+  usePaginateChatsQuery
 } from '@generated/graphql';
+import Chats from '@components/Chat/Chats/Chats';
+import { withRouter, WithRouterProps } from 'next/router';
+import NoData from '@components/NoData';
+import GraphqlLoading from '@components/GraphqlLoading';
 
 const LayoutStyles = css`
   height: calc(100vh - 66px);
@@ -18,33 +22,59 @@ const LayoutStyles = css`
 
 const INITIAL_PAGE_SIZE = 3;
 
-const Chat: React.FC<MeQueryMe> = ({ id }) => {
+interface Props {
+  me: MeQueryMe;
+}
+
+const Chat: React.FC<Props & WithRouterProps> = ({ me, router }) => {
+  const { loading, data, error } = usePaginateChatsQuery({
+    variables: {
+      where: {
+        members_some: { id: me.id },
+        OR: [{ party: { isPublic: true } }, { party: { isPublic: false } }]
+      },
+      first: INITIAL_PAGE_SIZE
+    }
+  });
+
+  if (loading || !data)
+    return (
+      <GraphqlLoading
+        isLoadingInitially={true}
+        loading={true}
+        textToDisplay="Loading your chats"
+      />
+    );
+
+  if (!data.chatsConnection.edges.length)
+    return (
+      <NoData
+        style={{ height: 'auto' }}
+        action={
+          <Button type="primary" onClick={handleOnEmptyButtonClick}>
+            Create a party!
+          </Button>
+        }
+        message="You currently do not have any chats"
+      />
+    );
+
   return (
     <Layout css={LayoutStyles}>
-      <PaginateChatsQueryComponent
-        variables={{
-          where: {
-            members_some: { id }
-          },
-          first: INITIAL_PAGE_SIZE
-        }}
-      >
-        {({ data, loading, error }) => {
-          if (loading || !data || !data.chatsConnection) return null;
-
-          return (
-            <>
-              <ChatsList
-                chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
-              />
-              <ChatWindow />
-              <ChatUsers />
-            </>
-          );
-        }}
-      </PaginateChatsQueryComponent>
+      <Chats
+        userId={me.id}
+        initialChats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
+      />
+      <ChatWindow />
+      <ChatUsers />
     </Layout>
   );
+
+  function handleOnEmptyButtonClick() {
+    router && router.push('/create-party');
+  }
 };
 
-export default withApolloAuth({ userHasToBe: 'authenticated' })(Chat);
+export default withRouter(
+  withApolloAuth({ userHasToBe: 'authenticated' })(Chat)
+);

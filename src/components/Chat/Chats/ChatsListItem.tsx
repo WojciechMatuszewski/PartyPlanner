@@ -4,7 +4,11 @@ import ChatsListItemAvatarList from './ChatsListItemAvatarList';
 import { Typography } from 'antd';
 import ChatsListItemLastMessage from './ChatsListItemLastMessage';
 import styled from '@emotion/styled';
-import { NotWrappingTextStyles } from '@shared/styles';
+import {
+  NotWrappingTextStyles,
+  FlexBoxHorizontallyCenteredStyles
+} from '@shared/styles';
+import { WithRouterProps, withRouter } from 'next/router';
 
 interface Props {
   edge: PaginateChatsQueryEdges;
@@ -18,14 +22,22 @@ const ChatsListItemWrapper = styled.div`
     margin-bottom: 0;
   }
   &:hover {
-    background: #f5f5f5;
     cursor: pointer;
+  }
+  &:active,
+  &:hover {
+    background: #f5f5f5;
+  }
+  &.selected {
+    background: #e6f7ff;
   }
 `;
 
 const InnerWrapper = styled.div`
   max-width: calc(100% - 50px);
   padding-left: 12px;
+  ${FlexBoxHorizontallyCenteredStyles};
+  flex-direction: column;
 `;
 
 const DateTitleWrapper = styled.div`
@@ -38,9 +50,15 @@ const DateTitleWrapper = styled.div`
   }
 `;
 
-const ChatsListItem: React.FC<Props> = ({ edge: { node } }) => {
+const ChatsListItem: React.FC<Props & WithRouterProps> = ({
+  edge: { node },
+  router
+}) => {
   return (
-    <ChatsListItemWrapper>
+    <ChatsListItemWrapper
+      onClick={handleListItemClick}
+      className={isSelected() ? 'selected' : ''}
+    >
       <ChatsListItemAvatarList userAvatarsData={node.members || []} />
       <InnerWrapper>
         <ChatsListItemLastMessage lastMessage={(node.messages || [])[0]}>
@@ -55,6 +73,14 @@ const ChatsListItem: React.FC<Props> = ({ edge: { node } }) => {
       </InnerWrapper>
     </ChatsListItemWrapper>
   );
+
+  function handleListItemClick() {
+    const url = `/chat?chat=${node.id}`;
+    router && router.push(url, url, { shallow: true });
+  }
+  function isSelected() {
+    return router && router.query != null && router.query.chat === node.id;
+  }
 };
 
-export default ChatsListItem;
+export default withRouter(ChatsListItem);

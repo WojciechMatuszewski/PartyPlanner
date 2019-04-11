@@ -131,6 +131,7 @@ export const PAGINATE_CHATS_QUERY = gql`
       }
       edges {
         node {
+          id
           party {
             title
           }
