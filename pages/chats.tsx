@@ -15,7 +15,6 @@ import GraphqlLoading from '@components/GraphqlLoading';
 import ChatWindow from '@components/Chats/ChatWindow/ChatWindow';
 import GraphqlException from '@components/GraphqlException';
 
-import { debounce } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 
 const LayoutStyles = css`

@@ -60,7 +60,7 @@ const ChatWindow: React.FC = () => {
             }
           }}
         >
-          {({ loading, data, error, subscribeToMore }) => {
+          {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
             return (
               <React.Fragment>

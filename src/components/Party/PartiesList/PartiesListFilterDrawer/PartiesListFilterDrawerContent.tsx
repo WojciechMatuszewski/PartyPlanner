@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Input, Typography } from 'antd';
+import { Typography } from 'antd';
 import {
   PartiesListFilters,
   PartiesListFilterActions,
