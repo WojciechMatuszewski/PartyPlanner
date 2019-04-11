@@ -20,11 +20,11 @@ interface Props {
 
 const ChatWindowMessages = React.forwardRef(
   (props: Props, ref: React.Ref<HTMLDivElement>) => {
-    const [state, setState] = React.useState<React.ReactNode[]>(
-      Array.from({ length: 30 }, (_, index) => (
-        <h1 key={index}>Works {index}</h1>
-      ))
-    );
+    // const [state, setState] = React.useState<React.ReactNode[]>(
+    //   Array.from({ length: 30 }, (_, index) => (
+    //     <h1 key={index}>Works {index}</h1>
+    //   ))
+    // );
 
     // React.useEffect(() => {
     //   const interval = setInterval(() => {
@@ -41,7 +41,7 @@ const ChatWindowMessages = React.forwardRef(
     //   props.scrollToBottom(0);
     // }, []);
 
-    return <ChatMessagesWrapper ref={ref}>{state}</ChatMessagesWrapper>;
+    return <ChatMessagesWrapper ref={ref}>works</ChatMessagesWrapper>;
   }
 );
 
