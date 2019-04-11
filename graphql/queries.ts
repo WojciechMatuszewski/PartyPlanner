@@ -153,3 +153,42 @@ export const PAGINATE_CHATS_QUERY = gql`
     }
   }
 `;
+
+export const PAGINATE_MESSAGES_QUERY = gql`
+  query PaginateMessagesQuery(
+    $where: MessageWhereInput
+    $orderBy: MessageOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    messagesConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          author {
+            firstName
+            lastName
+            avatar
+          }
+          content
+          createdAt
+        }
+      }
+    }
+  }
+`;

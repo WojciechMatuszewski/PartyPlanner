@@ -3156,6 +3156,66 @@ export type PaginateChatsQueryAuthor = {
   lastName: string;
 };
 
+export type PaginateMessagesQueryVariables = {
+  where?: Maybe<MessageWhereInput>;
+  orderBy?: Maybe<MessageOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PaginateMessagesQueryQuery = {
+  __typename?: 'Query';
+
+  messagesConnection: PaginateMessagesQueryMessagesConnection;
+};
+
+export type PaginateMessagesQueryMessagesConnection = {
+  __typename?: 'MessageConnection';
+
+  pageInfo: PaginateMessagesQueryPageInfo;
+
+  edges: (Maybe<PaginateMessagesQueryEdges>)[];
+};
+
+export type PaginateMessagesQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PaginateMessagesQueryEdges = {
+  __typename?: 'MessageEdge';
+
+  node: PaginateMessagesQueryNode;
+};
+
+export type PaginateMessagesQueryNode = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: PaginateMessagesQueryAuthor;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type PaginateMessagesQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+};
+
 export type PartyFragmentFragment = {
   __typename?: 'Party';
 
@@ -3610,4 +3670,72 @@ export function usePaginateChatsQuery(
     PaginateChatsQueryQuery,
     PaginateChatsQueryVariables
   >(PaginateChatsQueryDocument, baseOptions);
+}
+export const PaginateMessagesQueryDocument = gql`
+  query PaginateMessagesQuery(
+    $where: MessageWhereInput
+    $orderBy: MessageOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    messagesConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          author {
+            firstName
+            lastName
+            avatar
+          }
+          content
+          createdAt
+        }
+      }
+    }
+  }
+`;
+export class PaginateMessagesQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      PaginateMessagesQueryQuery,
+      PaginateMessagesQueryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        PaginateMessagesQueryQuery,
+        PaginateMessagesQueryVariables
+      >
+        query={PaginateMessagesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginateMessagesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    PaginateMessagesQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    PaginateMessagesQueryQuery,
+    PaginateMessagesQueryVariables
+  >(PaginateMessagesQueryDocument, baseOptions);
 }

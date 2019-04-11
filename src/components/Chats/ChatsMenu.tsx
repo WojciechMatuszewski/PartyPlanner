@@ -1,16 +1,16 @@
 import React from 'react';
 import useMedia from '@hooks/useMedia';
-import ChatSideNavigation from '../ChatSideNavigation';
-import ChatsList from './ChatsList';
-import ChatsListSearch from '../ChatsListSearch';
 import { PaginateChatsQueryEdges } from '@generated/graphql';
+import ChatSideNavigation from './ChatSideNavigation';
+import ChatsListSearch from './ChatsList/ChatsListSearch';
+import ChatsList from './ChatsList/ChatsList';
 
 interface Props {
   initialChats: PaginateChatsQueryEdges[];
   userId: string;
 }
 
-const Chats: React.FC<Props> = props => {
+const ChatsMenu: React.FC<Props> = props => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
 
   return (
@@ -25,4 +25,4 @@ const Chats: React.FC<Props> = props => {
   );
 };
 
-export default Chats;
+export default ChatsMenu;

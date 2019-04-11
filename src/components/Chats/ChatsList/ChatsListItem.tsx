@@ -12,6 +12,7 @@ import { WithRouterProps, withRouter } from 'next/router';
 
 interface Props {
   edge: PaginateChatsQueryEdges;
+  selected: boolean;
 }
 
 const ChatsListItemWrapper = styled.div`
@@ -52,12 +53,13 @@ const DateTitleWrapper = styled.div`
 
 const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   edge: { node },
-  router
+  router,
+  selected
 }) => {
   return (
     <ChatsListItemWrapper
       onClick={handleListItemClick}
-      className={isSelected() ? 'selected' : ''}
+      className={selected ? 'selected' : ''}
     >
       <ChatsListItemAvatarList userAvatarsData={node.members || []} />
       <InnerWrapper>
@@ -75,11 +77,9 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   );
 
   function handleListItemClick() {
-    const url = `/chat?chat=${node.id}`;
+    if (selected) return;
+    const url = `/chats?chat=${node.id}`;
     router && router.push(url, url, { shallow: true });
-  }
-  function isSelected() {
-    return router && router.query != null && router.query.chat === node.id;
   }
 };
 

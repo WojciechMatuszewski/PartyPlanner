@@ -103,7 +103,7 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
               <UserDashboardTile
                 index={2}
                 key={2}
-                onClick={() => router && router.push('/chat')}
+                onClick={() => router && router.push('/chats')}
               >
                 <UserDashboardTile.Title iconType="message" text="Chats" />
                 <UserDashboardTile.Text text="Here you can catch up with your friends about the party you all waiting for" />

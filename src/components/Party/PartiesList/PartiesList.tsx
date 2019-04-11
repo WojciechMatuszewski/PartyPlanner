@@ -20,7 +20,6 @@ import {
 import { useApolloClient } from 'react-apollo-hooks';
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
-import PartiesListLoading from './PartiesListLoading';
 import PartiesListNoResults from './PartiesListNoResults';
 import styled from '@emotion/styled';
 import NoData from '@components/NoData';

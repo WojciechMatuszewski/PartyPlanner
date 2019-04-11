@@ -91,10 +91,6 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
         />
       </FilterPaneCategory>
       <FilterPaneCategory>
-        <Typography.Title level={4}>Created by</Typography.Title>
-        <Input.Search placeholder="Search by user name..." />
-      </FilterPaneCategory>
-      <FilterPaneCategory>
         <Typography.Title level={4}>Happens at</Typography.Title>
         <PartiesListFilterDrawerHappensAt
           filterValue={

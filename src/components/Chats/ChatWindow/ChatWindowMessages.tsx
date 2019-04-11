@@ -18,7 +18,7 @@ interface Props {
   onNewMessage: (duration?: number) => void;
 }
 
-const ChatMessages = React.forwardRef(
+const ChatWindowMessages = React.forwardRef(
   (props: Props, ref: React.Ref<HTMLDivElement>) => {
     const [state, setState] = React.useState<React.ReactNode[]>(
       Array.from({ length: 30 }, (_, index) => (
@@ -45,4 +45,4 @@ const ChatMessages = React.forwardRef(
   }
 );
 
-export default ChatMessages;
+export default ChatWindowMessages;
