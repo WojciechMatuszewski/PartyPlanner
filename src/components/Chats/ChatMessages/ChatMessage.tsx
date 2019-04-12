@@ -16,8 +16,20 @@ const MessageWrapper = styled.div`
   display: flex;
 `;
 
-const MessageInnerWrapper = styled.div`
+interface MessageInnerProps {
+  isWithinBlock: boolean;
+  shouldAddLeftPadding: boolean;
+}
+
+const MessageInnerWrapper = styled.div<MessageInnerProps>`
   width: 100%;
+  margin-top: ${props => (props.isWithinBlock ? '4px' : '12px')};
+  padding-left: ${props => (props.shouldAddLeftPadding ? '44px' : 0)};
+  .ant-typography {
+    display: block;
+    margin-left: 4px;
+    margin-bottom: 4px;
+  }
 `;
 
 const Message = styled.div`
@@ -38,22 +50,34 @@ const SendByMeStyles = css`
   }
 `;
 
-const ChatMessage: React.FC<Props> = ({ message, isFirstInBlock }) => {
+const ChatMessage: React.FC<Props> = ({
+  message,
+  isFirstInBlock,
+  isLastInBlock
+}) => {
   return (
     <MessageWrapper
       className="message"
       css={message.isSendByMe ? SendByMeStyles : ''}
     >
-      <UserAvatar
-        userData={message.author}
-        css={css`
-          margin-right: 12px;
-          align-self: flex-end;
-        `}
-      />
-      <MessageInnerWrapper>
+      {isLastInBlock && (
+        <UserAvatar
+          userData={message.author}
+          css={css`
+            margin-right: 12px;
+            align-self: flex-end;
+          `}
+        />
+      )}
+
+      <MessageInnerWrapper
+        shouldAddLeftPadding={!isLastInBlock}
+        isWithinBlock={!isFirstInBlock}
+      >
         {isFirstInBlock && (
-          <Typography.Text>{message.author.firstName}</Typography.Text>
+          <Typography.Text type="secondary">
+            {message.author.firstName}
+          </Typography.Text>
         )}
         <Message className="message-content">{message.content}</Message>
       </MessageInnerWrapper>

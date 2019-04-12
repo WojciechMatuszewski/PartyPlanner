@@ -22,7 +22,7 @@ const LayoutStyles = css`
   display: flex;
 `;
 
-const INITIAL_PAGE_SIZE = 3;
+const INITIAL_PAGE_SIZE = 100;
 
 interface Props {
   me: MeQueryMe;

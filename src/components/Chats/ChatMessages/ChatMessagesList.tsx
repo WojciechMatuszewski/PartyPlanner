@@ -12,9 +12,6 @@ const MessagesWrapper = styled.div`
   width: 100%;
   overflow-y: auto;
   padding: 12px 15px;
-  .message {
-    margin-top: 12px;
-  }
   .message:first-of-type {
     margin-top: 0;
   }
@@ -22,16 +19,32 @@ const MessagesWrapper = styled.div`
 const ChatMessagesList: React.FC<Props> = ({ messages }) => {
   return (
     <MessagesWrapper>
-      {messages.map(message => (
-        <ChatMessage
-          message={message.node}
-          key={message.node.id}
-          isFirstInBlock={false}
-          isLastInBlock={false}
-        />
-      ))}
+      {messages.map((message, index) => {
+        return (
+          <ChatMessage
+            message={message.node}
+            key={message.node.id}
+            isFirstInBlock={isFirstInBlock(messages[index - 1], message)}
+            isLastInBlock={isLastInBlock(messages[index + 1], message)}
+          />
+        );
+      })}
     </MessagesWrapper>
   );
+  function isLastInBlock(
+    nextElement: PaginateMessagesQueryEdges,
+    currentElement: PaginateMessagesQueryEdges
+  ) {
+    if (nextElement == null) return true;
+    return nextElement.node.author.id !== currentElement.node.author.id;
+  }
+  function isFirstInBlock(
+    prevElement: PaginateMessagesQueryEdges,
+    currentElement: PaginateMessagesQueryEdges
+  ) {
+    if (prevElement == null) return true;
+    return prevElement.node.author.id !== currentElement.node.author.id;
+  }
 };
 
 export default ChatMessagesList;
