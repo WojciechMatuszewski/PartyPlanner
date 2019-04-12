@@ -9,7 +9,6 @@ const ChatSider: React.FC<
     placement: string;
   } & SiderProps
 > = ({ placement, width, children, ...restOfProps }) => {
-  console.log(restOfProps);
   return (
     <Sider
       width={width ? width : 300}

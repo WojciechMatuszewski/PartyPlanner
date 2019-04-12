@@ -1,8 +1,4 @@
-import {
-  MeQueryDocument,
-  MeQueryMe,
-  MeQueryQuery
-} from './../generated/graphql';
+import { MeQueryDocument, MeQueryQuery } from './../generated/graphql';
 import {
   ApolloClient,
   InMemoryCache,

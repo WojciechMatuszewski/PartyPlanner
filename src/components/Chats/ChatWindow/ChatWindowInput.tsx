@@ -1,7 +1,6 @@
 import React from 'react';
 import { Input } from 'antd';
 import css from '@emotion/css';
-import { ChatsContext } from '@pages/chats';
 
 const InputStyles = css`
   width: 100%;
@@ -17,9 +16,9 @@ const InputStyles = css`
 `;
 
 const ChatInput: React.FC = () => {
-  const { currentlyLoggedUserId, currentlySelectedChatId } = React.useContext(
-    ChatsContext
-  );
+  // const { currentlyLoggedUserId, currentlySelectedChatId } = React.useContext(
+  //   ChatsContext
+  // );
 
   return <Input css={InputStyles} placeholder="Type a message here" />;
 };

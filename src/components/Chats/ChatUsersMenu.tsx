@@ -35,7 +35,7 @@ const ChatUsersMenu: React.FC = () => {
             }
           }}
         >
-          {({ loading, data, error }) => {
+          {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
             return (
               <ChatUsersList

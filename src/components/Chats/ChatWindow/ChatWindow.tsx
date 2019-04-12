@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import ChatInput from './ChatWindowInput';
-import useChatWindow from '../../../hooks/useChatWindow';
-import ChatWindowMessages from './ChatWindowMessages';
+
 import { ChatsContext } from '@pages/chats';
 import ChatEmptySection from '../ChatEmptySection';
 import {
@@ -20,36 +19,36 @@ const ChatWindowWrapper = styled.div`
   position: relative;
 `;
 
-const NewMessagesBelowNotifier = styled.div`
-  position: absolute;
-  bottom: 40px;
-  width: 250px;
-  margin: 0 auto;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-  border: 2px dashed #d9d9d9;
-  border-bottom: 0;
-  left: 0;
-  right: 0;
-  height: 35px;
-  text-align: center;
-  cursor: pointer;
-  line-height: 35px;
-`;
+// const NewMessagesBelowNotifier = styled.div`
+//   position: absolute;
+//   bottom: 40px;
+//   width: 250px;
+//   margin: 0 auto;
+//   border-top-left-radius: 8px;
+//   border-top-right-radius: 8px;
+//   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+//   border: 2px dashed #d9d9d9;
+//   border-bottom: 0;
+//   left: 0;
+//   right: 0;
+//   height: 35px;
+//   text-align: center;
+//   cursor: pointer;
+//   line-height: 35px;
+// `;
 
 const ChatWindow: React.FC = () => {
   const { currentlySelectedChatId } = React.useContext(ChatsContext);
 
-  const chatMessagesInnerRef = React.useRef<HTMLDivElement>(null);
-  const { scrollToBottom, isWithinBottomLockRange } = useChatWindow(
-    chatMessagesInnerRef
-  );
-  const onNewChatMessage = React.useCallback(() => {
-    if (isWithinBottomLockRange) {
-      scrollToBottom(250);
-    }
-  }, [isWithinBottomLockRange]);
+  // const chatMessagesInnerRef = React.useRef<HTMLDivElement>(null);
+  // const { scrollToBottom, isWithinBottomLockRange } = useChatWindow(
+  //   chatMessagesInnerRef
+  // );
+  // const onNewChatMessage = React.useCallback(() => {
+  //   if (isWithinBottomLockRange) {
+  //     scrollToBottom(250);
+  //   }
+  // }, [isWithinBottomLockRange]);
 
   return (
     <ChatWindowWrapper>
