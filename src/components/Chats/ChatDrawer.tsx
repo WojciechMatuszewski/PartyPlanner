@@ -30,6 +30,7 @@ const DrawerStyles = css`
   .ant-drawer-body {
     padding: 0;
   }
+  overflow-y: auto;
 `;
 
 const ChatDrawer: React.FC<
