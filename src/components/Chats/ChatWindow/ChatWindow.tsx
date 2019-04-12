@@ -51,7 +51,7 @@ const ChatWindow: React.FC = () => {
   return (
     <ChatWindowWrapper>
       {currentlySelectedChatId == null ? (
-        <ChatEmptySection />
+        <ChatEmptySection image={'../static/group-chat.svg'} />
       ) : (
         <PaginateMessagesQueryComponent
           variables={{

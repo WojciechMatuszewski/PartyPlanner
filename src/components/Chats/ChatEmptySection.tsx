@@ -8,11 +8,22 @@ const ChatEmptySectionWrapper = styled.div`
   height: calc(100vh - 66px);
   ${FlexBoxFullCenteredStyles};
   flex-direction: column;
+  padding: 12px;
+  img {
+    max-width: 100%;
+    max-height: 400px;
+    margin-bottom: 12px;
+  }
 `;
 
-const ChatEmptySection: React.FC = () => {
+interface Props {
+  image?: string;
+}
+
+const ChatEmptySection: React.FC<Props> = ({ image }) => {
   return (
     <ChatEmptySectionWrapper>
+      {image && <img src={image} />}
       <Typography.Title level={4}>No chat selected</Typography.Title>
       <Typography.Text type="secondary">Pick a chat</Typography.Text>
     </ChatEmptySectionWrapper>
