@@ -5,8 +5,12 @@ import useChatWindow from '../../../hooks/useChatWindow';
 import ChatWindowMessages from './ChatWindowMessages';
 import { ChatsContext } from '@pages/chats';
 import ChatEmptySection from '../ChatEmptySection';
-import { PaginateMessagesQueryComponent } from '@generated/graphql';
+import {
+  PaginateMessagesQueryComponent,
+  PaginateMessagesQueryEdges
+} from '@generated/graphql';
 import ChatSectionLoading from '../ChatSectionLoading';
+import ChatMessagesList from '../ChatMessages/ChatMessagesList';
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -29,7 +33,6 @@ const NewMessagesBelowNotifier = styled.div`
   left: 0;
   right: 0;
   height: 35px;
-  background: white;
   text-align: center;
   cursor: pointer;
   line-height: 35px;
@@ -62,17 +65,24 @@ const ChatWindow: React.FC = () => {
         >
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
+
             return (
               <React.Fragment>
-                <ChatWindowMessages
+                <ChatMessagesList
+                  messages={
+                    data.messagesConnection
+                      .edges as PaginateMessagesQueryEdges[]
+                  }
+                />
+                {/* <ChatWindowMessages
                   onNewMessage={onNewChatMessage}
                   ref={chatMessagesInnerRef}
-                />
-                {!isWithinBottomLockRange && (
+                /> */}
+                {/* {!isWithinBottomLockRange && (
                   <NewMessagesBelowNotifier onClick={() => scrollToBottom()}>
                     <h3>New messages below</h3>
                   </NewMessagesBelowNotifier>
-                )}
+                )} */}
                 <ChatInput />
               </React.Fragment>
             );

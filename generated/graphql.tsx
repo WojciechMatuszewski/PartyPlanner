@@ -3201,6 +3201,8 @@ export type PaginateMessagesQueryNode = {
 
   author: PaginateMessagesQueryAuthor;
 
+  isSendByMe: Maybe<string>;
+
   content: string;
 
   createdAt: DateTime;
@@ -3214,6 +3216,8 @@ export type PaginateMessagesQueryAuthor = {
   lastName: string;
 
   avatar: Maybe<string>;
+
+  id: string;
 };
 
 export type PartyFragmentFragment = {
@@ -3701,7 +3705,9 @@ export const PaginateMessagesQueryDocument = gql`
             firstName
             lastName
             avatar
+            id
           }
+          isSendByMe @client
           content
           createdAt
         }

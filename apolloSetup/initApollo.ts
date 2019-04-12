@@ -1,4 +1,9 @@
 import {
+  MeQueryDocument,
+  MeQueryMe,
+  MeQueryQuery
+} from './../generated/graphql';
+import {
   ApolloClient,
   InMemoryCache,
   NormalizedCacheObject
@@ -6,6 +11,8 @@ import {
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
+import { PaginateMessagesQueryNode } from '@generated/graphql';
+import { ApolloCache } from 'apollo-cache';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -43,7 +50,23 @@ function create(initialState: any, { getToken }: Options) {
     connectToDevTools: isBrowser(),
     ssrMode: !isBrowser(), // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache().restore(initialState || {})
+    cache: new InMemoryCache().restore(initialState || {}),
+    resolvers: {
+      Message: {
+        isSendByMe: (
+          message: PaginateMessagesQueryNode,
+          _,
+          { cache }: { cache: ApolloCache<any> }
+        ) => {
+          const data = cache.readQuery<MeQueryQuery>({
+            query: MeQueryDocument
+          });
+
+          if (!data || !data.me) return false;
+          return data.me.id === message.author.id;
+        }
+      }
+    }
   });
 }
 

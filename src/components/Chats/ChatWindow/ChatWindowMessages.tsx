@@ -5,7 +5,8 @@ import { animated } from 'react-spring';
 const ChatMessagesWrapper = styled(animated.div)`
   flex: 1;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
+
   padding: 0 15px;
   h1 {
     background: transparent;

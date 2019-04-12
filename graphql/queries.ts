@@ -184,7 +184,9 @@ export const PAGINATE_MESSAGES_QUERY = gql`
             firstName
             lastName
             avatar
+            id
           }
+          isSendByMe @client
           content
           createdAt
         }
