@@ -9,7 +9,7 @@ import {
   PaginateMessagesQueryEdges
 } from '@generated/graphql';
 import ChatSectionLoading from '../ChatSectionLoading';
-import ChatMessagesList from '../ChatMessages/ChatMessagesList';
+import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -60,7 +60,6 @@ const ChatWindow: React.FC = () => {
             where: {
               chat: { id: currentlySelectedChatId }
             }
-            // first: 10
           }}
         >
           {({ loading, data }) => {
@@ -68,7 +67,7 @@ const ChatWindow: React.FC = () => {
 
             return (
               <React.Fragment>
-                <ChatMessagesList
+                <VirtualizedChatMessagesList
                   messages={
                     data.messagesConnection
                       .edges as PaginateMessagesQueryEdges[]

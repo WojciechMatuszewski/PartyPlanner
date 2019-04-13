@@ -9,6 +9,7 @@ interface Props {
   isFirstInBlock: boolean;
   isLastInBlock: boolean;
   message: PaginateMessagesQueryNode;
+  style?: React.CSSProperties;
 }
 
 const MessageWrapper = styled.div`
@@ -68,45 +69,48 @@ const SendByMeStyles = css`
 const ChatMessage: React.FC<Props> = ({
   message,
   isFirstInBlock,
-  isLastInBlock
+  isLastInBlock,
+  style
 }) => {
   return (
-    <MessageWrapper
-      className="message"
-      css={message.isSendByMe ? SendByMeStyles : ''}
-    >
-      {isLastInBlock && (
-        <UserAvatar
-          userData={message.author}
-          css={css`
-            margin-right: 12px;
-            align-self: flex-end;
-          `}
-        />
-      )}
-      <MessageInnerWrapper isWithinBlock={!isFirstInBlock}>
-        {isFirstInBlock && (
-          <Typography.Text type="secondary">
-            {message.author.firstName}
-          </Typography.Text>
+    <div style={style}>
+      <MessageWrapper css={message.isSendByMe ? SendByMeStyles : ''}>
+        {isLastInBlock && (
+          <UserAvatar
+            userData={message.author}
+            css={css`
+              margin-right: 12px;
+              align-self: flex-end;
+            `}
+          />
         )}
-        <Message
-          css={
-            isFirstInBlock && isLastInBlock
-              ? StandaloneBlockStyles
-              : isFirstInBlock
-              ? FirstInBlockStyles
-              : isLastInBlock
-              ? LastInBlockStyles
-              : {}
-          }
-          className="message-content"
-          isSendByMe={message.isSendByMe}
+        <MessageInnerWrapper
+          className="message-inner-wrapper"
+          isWithinBlock={!isFirstInBlock}
         >
-          {message.content}
-        </Message>
-      </MessageInnerWrapper>
-    </MessageWrapper>
+          {isFirstInBlock && (
+            <Typography.Text type="secondary">
+              {message.author.firstName}
+            </Typography.Text>
+          )}
+          <Message
+            css={
+              isFirstInBlock && isLastInBlock
+                ? StandaloneBlockStyles
+                : isFirstInBlock
+                ? FirstInBlockStyles
+                : isLastInBlock
+                ? LastInBlockStyles
+                : {}
+            }
+            className="message-content"
+            isSendByMe={message.isSendByMe}
+          >
+            {message.content}
+          </Message>
+        </MessageInnerWrapper>
+      </MessageWrapper>
+    </div>
   );
 };
 
