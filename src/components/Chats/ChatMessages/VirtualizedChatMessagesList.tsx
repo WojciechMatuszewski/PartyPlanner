@@ -13,7 +13,7 @@ import { anyPass, curry } from 'ramda';
 interface Props {
   messages: PaginateMessagesQueryEdges[];
 }
-type Message = PaginateMessagesQueryEdges;
+// type Message = PaginateMessagesQueryEdges;
 
 const MessagesWrapper = styled.div`
   flex: 1 1 auto;
@@ -75,22 +75,29 @@ const VirtualizedChatMessagesList: React.FC<Props> = ({ messages }) => {
     </MessagesWrapper>
   );
 
-  function messageDoesNotExists(message: Message) {
+  function messageDoesNotExists(message: PaginateMessagesQueryEdges) {
     return message == null;
   }
   function areMessagesWrittenByDifferentPerson(
-    currentMessage: Message,
-    messageToCheckAgainst: Message
+    currentMessage: PaginateMessagesQueryEdges,
+    messageToCheckAgainst: PaginateMessagesQueryEdges
   ) {
     return (
       currentMessage.node.author.id !== messageToCheckAgainst.node.author.id
     );
   }
 
-  function isInBlock(current: Message, next: Message): boolean {
+  function isInBlock(
+    current: PaginateMessagesQueryEdges,
+    next: PaginateMessagesQueryEdges
+  ): boolean {
     return anyPass([
-      messageDoesNotExists,
-      curry(areMessagesWrittenByDifferentPerson)(current)
+      // typescript ??
+      // tsc shows errors
+      // eslint does not
+      // wtf
+      messageDoesNotExists as any,
+      curry(areMessagesWrittenByDifferentPerson)(current) as any
     ])(next);
   }
 };
