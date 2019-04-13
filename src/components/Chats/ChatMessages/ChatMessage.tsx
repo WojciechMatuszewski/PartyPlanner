@@ -13,18 +13,22 @@ interface Props {
 
 const MessageWrapper = styled.div`
   max-width: 700px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-gap: 12px;
 `;
 
 interface MessageInnerProps {
   isWithinBlock: boolean;
-  shouldAddLeftPadding: boolean;
+}
+
+interface MessageProps {
+  isSendByMe: boolean;
 }
 
 const MessageInnerWrapper = styled.div<MessageInnerProps>`
-  width: 100%;
   margin-top: ${props => (props.isWithinBlock ? '4px' : '12px')};
-  padding-left: ${props => (props.shouldAddLeftPadding ? '44px' : 0)};
+  grid-column-start: 2;
   .ant-typography {
     display: block;
     margin-left: 4px;
@@ -32,21 +36,32 @@ const MessageInnerWrapper = styled.div<MessageInnerProps>`
   }
 `;
 
-const Message = styled.div`
-  background: white;
-  border-radius: 10px;
+const Message = styled.div<MessageProps>`
   padding: 12px;
   box-sizing: border-box;
+  display: inline-block;
+  background: ${props => (props.isSendByMe ? '#1890ff' : 'white')};
+  color: ${props => (props.isSendByMe ? 'white' : 'inherit')};
+  border-top-right-radius: 1.3em;
+  border-bottom-right-radius: 1.3em;
+`;
+
+const StandaloneBlockStyles = css`
+  border-radius: 1.3em;
+  border-radius: 1.3em;
+`;
+
+const LastInBlockStyles = css`
+  border-bottom-left-radius: 1.3em;
+`;
+const FirstInBlockStyles = css`
+  border-top-left-radius: 1.3em;
 `;
 
 const SendByMeStyles = css`
   margin-left: auto;
   .ant-avatar {
     display: none;
-  }
-  .message-content {
-    background: #1890ff;
-    color: white;
   }
 `;
 
@@ -69,17 +84,27 @@ const ChatMessage: React.FC<Props> = ({
           `}
         />
       )}
-
-      <MessageInnerWrapper
-        shouldAddLeftPadding={!isLastInBlock}
-        isWithinBlock={!isFirstInBlock}
-      >
+      <MessageInnerWrapper isWithinBlock={!isFirstInBlock}>
         {isFirstInBlock && (
           <Typography.Text type="secondary">
             {message.author.firstName}
           </Typography.Text>
         )}
-        <Message className="message-content">{message.content}</Message>
+        <Message
+          css={
+            isFirstInBlock && isLastInBlock
+              ? StandaloneBlockStyles
+              : isFirstInBlock
+              ? FirstInBlockStyles
+              : isLastInBlock
+              ? LastInBlockStyles
+              : {}
+          }
+          className="message-content"
+          isSendByMe={message.isSendByMe}
+        >
+          {message.content}
+        </Message>
       </MessageInnerWrapper>
     </MessageWrapper>
   );

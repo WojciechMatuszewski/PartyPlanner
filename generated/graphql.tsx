@@ -3201,7 +3201,7 @@ export type PaginateMessagesQueryNode = {
 
   author: PaginateMessagesQueryAuthor;
 
-  isSendByMe: Maybe<string>;
+  isSendByMe: boolean;
 
   content: string;
 

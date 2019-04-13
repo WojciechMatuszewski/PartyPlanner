@@ -60,6 +60,7 @@ const ChatWindow: React.FC = () => {
             where: {
               chat: { id: currentlySelectedChatId }
             }
+            // first: 10
           }}
         >
           {({ loading, data }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { PaginateMessagesQueryEdges } from '@generated/graphql';
 import ChatMessage from './ChatMessage';
 import styled from '@emotion/styled';
-
+import { cond, always, allPass, curry, anyPass } from 'ramda';
 interface Props {
   messages: PaginateMessagesQueryEdges[];
 }
@@ -16,34 +16,43 @@ const MessagesWrapper = styled.div`
     margin-top: 0;
   }
 `;
+
+type Message = PaginateMessagesQueryEdges;
+
 const ChatMessagesList: React.FC<Props> = ({ messages }) => {
   return (
     <MessagesWrapper>
       {messages.map((message, index) => {
+        console.log(message, index, messages[index + 1]);
         return (
           <ChatMessage
             message={message.node}
             key={message.node.id}
-            isFirstInBlock={isFirstInBlock(messages[index - 1], message)}
-            isLastInBlock={isLastInBlock(messages[index + 1], message)}
+            isFirstInBlock={isInBlock(message, messages[index - 1])}
+            isLastInBlock={isInBlock(message, messages[index + 1])}
           />
         );
       })}
     </MessagesWrapper>
   );
-  function isLastInBlock(
-    nextElement: PaginateMessagesQueryEdges,
-    currentElement: PaginateMessagesQueryEdges
-  ) {
-    if (nextElement == null) return true;
-    return nextElement.node.author.id !== currentElement.node.author.id;
+
+  function messageDoesNotExists(message: Message) {
+    return message == null;
   }
-  function isFirstInBlock(
-    prevElement: PaginateMessagesQueryEdges,
-    currentElement: PaginateMessagesQueryEdges
+  function areMessagesWrittenByDifferentPerson(
+    currentMessage: Message,
+    messageToCheckAgainst: Message
   ) {
-    if (prevElement == null) return true;
-    return prevElement.node.author.id !== currentElement.node.author.id;
+    return (
+      currentMessage.node.author.id !== messageToCheckAgainst.node.author.id
+    );
+  }
+
+  function isInBlock(current: Message, next: Message): boolean {
+    return anyPass([
+      messageDoesNotExists,
+      curry(areMessagesWrittenByDifferentPerson)(current)
+    ])(next);
   }
 };
 
