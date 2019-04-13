@@ -19,10 +19,9 @@ const MessagesWrapper = styled.div`
   flex: 1 1 auto;
   width: 100%;
   overflow-y: auto;
-
-  /* .message-inner-wrapper:first-child {
-    background: red !important;
-  } */
+  .message-wrapper:last-of-type {
+    /* background: red; */
+  }
 `;
 
 const VirtualizedChatMessagesList: React.FC<Props> = ({ messages }) => {
@@ -37,7 +36,6 @@ const VirtualizedChatMessagesList: React.FC<Props> = ({ messages }) => {
         {({ width, height }) => {
           return (
             <List
-              onScroll={() => console.log('scroll')}
               overscanRowCount={3}
               width={width}
               rowCount={messages.length}

@@ -1,6 +1,5 @@
 import { Styler } from 'stylefire';
 import React, { useEffect } from 'react';
-
 import { styler, tween } from 'popmotion';
 import { smooth } from '@popmotion/popcorn';
 

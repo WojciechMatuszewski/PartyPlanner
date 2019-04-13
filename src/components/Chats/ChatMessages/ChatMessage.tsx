@@ -17,6 +17,8 @@ const MessageWrapper = styled.div`
   display: grid;
   grid-template-columns: 32px 1fr;
   grid-gap: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
 `;
 
 interface MessageInnerProps {
@@ -30,6 +32,7 @@ interface MessageProps {
 const MessageInnerWrapper = styled.div<MessageInnerProps>`
   margin-top: ${props => (props.isWithinBlock ? '4px' : '12px')};
   grid-column-start: 2;
+
   .ant-typography {
     display: block;
     margin-left: 4px;
@@ -74,7 +77,10 @@ const ChatMessage: React.FC<Props> = ({
 }) => {
   return (
     <div style={style}>
-      <MessageWrapper css={message.isSendByMe ? SendByMeStyles : ''}>
+      <MessageWrapper
+        className="message-wrapper"
+        css={message.isSendByMe ? SendByMeStyles : ''}
+      >
         {isLastInBlock && (
           <UserAvatar
             userData={message.author}
