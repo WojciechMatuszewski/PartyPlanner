@@ -2,9 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { PaginateMessagesQueryNode } from '@generated/graphql';
 import UserAvatar from '@components/UserDefaultAvatar';
-import { Typography, Icon } from 'antd';
+import { Typography } from 'antd';
 import css from '@emotion/css';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
+
 import OptimisticStatusDot from './OptimisticStatusDot';
 
 interface Props {

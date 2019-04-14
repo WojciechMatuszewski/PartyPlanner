@@ -12,7 +12,6 @@ import { ChatsContext } from '@pages/chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { useApolloClient } from 'react-apollo-hooks';
 
 const InputStyles = css`
   width: 100%;
@@ -47,8 +46,6 @@ const ChatInput: React.FC<Props> = ({
   const sendMessage = useCreateMessage({
     update: handleOptimisticUpdate
   });
-
-  const apolloClient = useApolloClient();
 
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext

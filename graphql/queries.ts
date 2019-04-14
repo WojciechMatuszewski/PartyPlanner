@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import { PARTY_FRAGMENT, MESSAGE_FRAGMENT } from './fragments';
+import { PARTY_FRAGMENT } from './fragments';
 
 export const ME_QUERY = gql`
   query MeQuery {

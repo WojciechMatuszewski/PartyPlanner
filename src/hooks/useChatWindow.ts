@@ -19,7 +19,6 @@ function useChatWindow(
   >(false);
 
   useEffect(() => {
-    console.log(elementRef);
     if (!elementRef.current) return;
     stylerRef.current = styler(elementRef.current);
   }, [elementRef]);

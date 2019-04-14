@@ -1,4 +1,4 @@
-import { PARTY_FRAGMENT, MESSAGE_FRAGMENT } from './fragments';
+import { PARTY_FRAGMENT } from './fragments';
 import { gql } from 'apollo-boost';
 
 export const SIGNUP_MUTATION = gql`
