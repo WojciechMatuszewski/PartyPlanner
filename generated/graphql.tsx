@@ -2942,6 +2942,42 @@ export type CreatePartyMutation = {
 
 export type CreatePartyCreateParty = PartyFragmentFragment;
 
+export type CreateMessageVariables = {
+  data: MessageCreateInput;
+};
+
+export type CreateMessageMutation = {
+  __typename?: 'Mutation';
+
+  createMessage: CreateMessageCreateMessage;
+};
+
+export type CreateMessageCreateMessage = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: CreateMessageAuthor;
+
+  isSendByMe: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type CreateMessageAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -3272,6 +3308,32 @@ export type PartyFragmentMembers = {
   id: string;
 };
 
+export type MessageFragmentFragment = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: MessageFragmentAuthor;
+
+  isSendByMe: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type MessageFragmentAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
@@ -3304,6 +3366,21 @@ export const PartyFragmentFragmentDoc = gql`
     start
     end
     isPublic
+  }
+`;
+
+export const MessageFragmentFragmentDoc = gql`
+  fragment MESSAGE_FRAGMENT on Message {
+    id
+    author {
+      firstName
+      lastName
+      avatar
+      id
+    }
+    isSendByMe @client
+    content
+    createdAt
   }
 `;
 
@@ -3412,6 +3489,47 @@ export function useCreateParty(
     CreatePartyMutation,
     CreatePartyVariables
   >(CreatePartyDocument, baseOptions);
+}
+export const CreateMessageDocument = gql`
+  mutation CreateMessage($data: MessageCreateInput!) {
+    createMessage(data: $data) {
+      id
+      author {
+        firstName
+        lastName
+        avatar
+        id
+      }
+      isSendByMe @client
+      content
+      createdAt
+    }
+  }
+`;
+export class CreateMessageComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<CreateMessageMutation, CreateMessageVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateMessageMutation, CreateMessageVariables>
+        mutation={CreateMessageDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useCreateMessage(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreateMessageMutation,
+    CreateMessageVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreateMessageMutation,
+    CreateMessageVariables
+  >(CreateMessageDocument, baseOptions);
 }
 export const MeQueryDocument = gql`
   query MeQuery {

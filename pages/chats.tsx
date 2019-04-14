@@ -31,13 +31,13 @@ interface Props {
 interface ChatContextProps {
   currentlySelectedChatId: string | null;
   selectedChatIdStream$: BehaviorSubject<string | null>;
-  currentlyLoggedUserId: string;
+  currentlyLoggedUserData: MeQueryMe;
 }
 
 export const ChatsContext = React.createContext<ChatContextProps>({
   currentlySelectedChatId: null,
   selectedChatIdStream$: new BehaviorSubject(null as string | null),
-  currentlyLoggedUserId: ''
+  currentlyLoggedUserData: {} as any
 });
 
 const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
@@ -50,7 +50,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
   const [state, setState] = React.useState<ChatContextProps>({
     currentlySelectedChatId: getCurrentChatFromUrl(),
     selectedChatIdStream$: routeChangeStreamRef.current,
-    currentlyLoggedUserId: me.id
+    currentlyLoggedUserData: me
   });
 
   React.useEffect(() => {

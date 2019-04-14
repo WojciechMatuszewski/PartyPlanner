@@ -48,6 +48,7 @@ const Message = styled.div<MessageProps>`
   color: ${props => (props.isSendByMe ? 'white' : 'inherit')};
   border-top-right-radius: 1.3em;
   border-bottom-right-radius: 1.3em;
+  word-break: break-all;
 `;
 
 const StandaloneBlockStyles = css`
@@ -67,6 +68,9 @@ const SendByMeStyles = css`
   .ant-avatar {
     display: none;
   }
+  justify-content: space-between;
+  grid-template-columns: 1fr auto;
+  padding-left: 0;
 `;
 
 const ChatMessage: React.FC<Props> = ({
@@ -113,6 +117,7 @@ const ChatMessage: React.FC<Props> = ({
             isSendByMe={message.isSendByMe}
           >
             {message.content}
+            {message.isSendByMe ? 'BY ME' : 'NOT BY ME'}
           </Message>
         </MessageInnerWrapper>
       </MessageWrapper>

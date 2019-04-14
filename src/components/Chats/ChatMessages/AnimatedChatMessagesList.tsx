@@ -26,7 +26,7 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
   //   const firstScrollFired = React.useRef<boolean>(false);
   const virtualizedListRef: React.RefObject<List> = React.useRef(null);
   const currentScrollTopRef = React.useRef<number>(0);
-  const hasScrolledInitially = React.useRef<boolean>(false);
+  // const hasScrolledInitially = React.useRef<boolean>(false);
 
   React.useEffect(() => {
     virtualizedListRef.current && virtualizedListRef.current.scrollToRow(19);
@@ -78,6 +78,7 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
 
   function scrollToBottom(duration: number = 0) {
     if (!virtualizedListRef.current) return;
+
     const goal = virtualizedListRef.current.getOffsetForRow({
       index: props.messages.length
     });
@@ -86,8 +87,8 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
 
     tween({
       from: currentScrollTopRef.current,
-      to: goal,
-      duration: 0
+      to: goal + 12,
+      duration
     }).start({
       update: (value: number) =>
         setState(prevState => ({ ...prevState, scrollTop: value })),

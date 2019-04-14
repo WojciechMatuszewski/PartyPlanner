@@ -12,7 +12,7 @@ import ChatUsersList from './ChatUsers/ChatUsersList';
 const ChatUsersMenu: React.FC = () => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
 
-  const { currentlyLoggedUserId, currentlySelectedChatId } = React.useContext(
+  const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
   );
 
@@ -31,7 +31,7 @@ const ChatUsersMenu: React.FC = () => {
           variables={{
             where: {
               chats_some: { id: currentlySelectedChatId },
-              id_not: currentlyLoggedUserId
+              id_not: currentlyLoggedUserData.id
             }
           }}
         >

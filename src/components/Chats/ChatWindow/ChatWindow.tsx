@@ -6,12 +6,12 @@ import { ChatsContext } from '@pages/chats';
 import ChatEmptySection from '../ChatEmptySection';
 import {
   PaginateMessagesQueryComponent,
-  PaginateMessagesQueryEdges
+  PaginateMessagesQueryEdges,
+  MessageOrderByInput,
+  PaginateMessagesQueryVariables
 } from '@generated/graphql';
 import ChatSectionLoading from '../ChatSectionLoading';
-
 import AnimatedChatMessagesList from '../ChatMessages/AnimatedChatMessagesList';
-import NewMessagesBelowNotifier from '../ChatMessages/NewMessagesBelowNotifier';
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -23,40 +23,21 @@ const ChatWindowWrapper = styled.div`
 
 const ChatWindow: React.FC = () => {
   const { currentlySelectedChatId } = React.useContext(ChatsContext);
-  // const chatMessagesInnerRef = React.useRef<HTMLDivElement>(null);
 
-  // const { scrollToBottom, isWithinBottomLockRange } = useChatWindow(
-  //   chatMessagesInnerRef
-  // );
+  const [queryVariables, setQueryVariables] = React.useState<
+    PaginateMessagesQueryVariables
+  >(createQueryVariables(currentlySelectedChatId));
 
-  // console.log(chatMessagesInnerRef);
-
-  // React.useEffect(() => {
-  //   scrollToBottom(0);
-  // }, []);
-  // const onNewChatMessage = React.useCallback(() => {
-  //   if (isWithinBottomLockRange) {
-  //     scrollToBottom(250);
-  //   }
-  // }, [isWithinBottomLockRange]);
-
-  // setTimeout(() => {
-  //   scrollToBottom(0);
-  // }, 1000);
+  React.useEffect(() => {
+    setQueryVariables(createQueryVariables(currentlySelectedChatId));
+  }, [currentlySelectedChatId]);
 
   return (
     <ChatWindowWrapper>
       {currentlySelectedChatId == null ? (
         <ChatEmptySection image={'../static/group-chat.svg'} />
       ) : (
-        <PaginateMessagesQueryComponent
-          variables={{
-            where: {
-              chat: { id: currentlySelectedChatId }
-            },
-            first: 20
-          }}
-        >
+        <PaginateMessagesQueryComponent variables={queryVariables}>
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
             return (
@@ -66,15 +47,13 @@ const ChatWindow: React.FC = () => {
                 }
               >
                 {({ scrollToBottom, isWithinBottomLockZone }) => {
-                  // console.log(isWithinBottomLockZone);
                   return (
-                    <React.Fragment>
-                      <NewMessagesBelowNotifier
-                        visible={true}
-                        unreadCount={0}
-                      />
-                      <ChatInput />
-                    </React.Fragment>
+                    <ChatInput
+                      onNewMessage={() =>
+                        isWithinBottomLockZone && scrollToBottom(100)
+                      }
+                      currentQueryVariables={queryVariables}
+                    />
                   );
                 }}
               </AnimatedChatMessagesList>
@@ -84,6 +63,17 @@ const ChatWindow: React.FC = () => {
       )}
     </ChatWindowWrapper>
   );
+
+  function createQueryVariables(currentChatId: string | null) {
+    if (currentlySelectedChatId == null) return {};
+    return {
+      where: {
+        chat: { id: currentChatId }
+      },
+      orderBy: 'createdAt_ASC' as MessageOrderByInput,
+      last: 20
+    };
+  }
 };
 
 export default ChatWindow;
