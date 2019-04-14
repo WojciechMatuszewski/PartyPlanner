@@ -2961,6 +2961,12 @@ export type CreateMessageCreateMessage = {
 
   isSendByMe: boolean;
 
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
   content: string;
 
   createdAt: DateTime;
@@ -3239,6 +3245,12 @@ export type PaginateMessagesQueryNode = {
 
   isSendByMe: boolean;
 
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
   content: string;
 
   createdAt: DateTime;
@@ -3501,6 +3513,9 @@ export const CreateMessageDocument = gql`
         id
       }
       isSendByMe @client
+      optimisticallyAdded @client
+      optimisticallyCreated @client
+      hasOptimisticError @client
       content
       createdAt
     }
@@ -3826,6 +3841,9 @@ export const PaginateMessagesQueryDocument = gql`
             id
           }
           isSendByMe @client
+          optimisticallyAdded @client
+          optimisticallyCreated @client
+          hasOptimisticError @client
           content
           createdAt
         }

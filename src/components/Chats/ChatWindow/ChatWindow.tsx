@@ -39,7 +39,8 @@ const ChatWindow: React.FC = () => {
       ) : (
         <PaginateMessagesQueryComponent variables={queryVariables}>
           {({ loading, data }) => {
-            if (loading || !data) return <ChatSectionLoading />;
+            if (loading || !data || !data.messagesConnection)
+              return <ChatSectionLoading />;
             return (
               <AnimatedChatMessagesList
                 messages={
@@ -50,7 +51,7 @@ const ChatWindow: React.FC = () => {
                   return (
                     <ChatInput
                       onNewMessage={() =>
-                        isWithinBottomLockZone && scrollToBottom(100)
+                        isWithinBottomLockZone && scrollToBottom(50)
                       }
                       currentQueryVariables={queryVariables}
                     />

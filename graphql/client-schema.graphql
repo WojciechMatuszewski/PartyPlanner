@@ -1,3 +1,6 @@
 type Message {
   isSendByMe: Boolean!
+  optimisticallyAdded: Boolean!
+  optimisticallyCreated: Boolean!
+  hasOptimisticError: Boolean!
 }

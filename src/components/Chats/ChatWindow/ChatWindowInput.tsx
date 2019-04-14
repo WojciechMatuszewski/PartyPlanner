@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form } from 'antd';
+import { Input, Form, message } from 'antd';
 import css from '@emotion/css';
 import {
   useCreateMessage,
@@ -12,6 +12,7 @@ import { ChatsContext } from '@pages/chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import { useApolloClient } from 'react-apollo-hooks';
 
 const InputStyles = css`
   width: 100%;
@@ -27,11 +28,11 @@ const InputStyles = css`
 `;
 
 interface ChatWindowInputForm {
-  message: string | undefined;
+  userMessage: string | undefined;
 }
 
 const ValidationSchema = yup.object().shape<ChatWindowInputForm>({
-  message: yup.string().required()
+  userMessage: yup.string().required()
 });
 
 interface Props {
@@ -47,20 +48,27 @@ const ChatInput: React.FC<Props> = ({
     update: handleOptimisticUpdate
   });
 
+  const apolloClient = useApolloClient();
+
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
   );
 
   return (
     <Formik
-      initialValues={{ message: '' }}
+      initialValues={{ userMessage: '' }}
       validationSchema={ValidationSchema}
-      onSubmit={({ message }, { resetForm }) => {
-        sendMessage({
-          variables: getMutationVariables(message),
-          optimisticResponse: getOptimisticResponse(message)
-        });
+      onSubmit={async ({ userMessage }, { resetForm }) => {
+        const optimisticResponse = getOptimisticResponse(userMessage);
         resetForm();
+        try {
+          await sendMessage({
+            variables: getMutationVariables(userMessage),
+            optimisticResponse
+          });
+        } catch (e) {
+          message.error('could not send the message');
+        }
       }}
     >
       {({ handleSubmit, handleChange, handleBlur, values }) => (
@@ -70,8 +78,8 @@ const ChatInput: React.FC<Props> = ({
             autoComplete="off"
             onChange={handleChange}
             onBlur={handleBlur}
-            name="message"
-            value={values.message}
+            name="userMessage"
+            value={values.userMessage}
             css={InputStyles}
             placeholder="Type a message here"
           />
@@ -84,7 +92,7 @@ const ChatInput: React.FC<Props> = ({
     return {
       __typename: 'Mutation',
       createMessage: {
-        id: (Math.random() * 1000).toString(),
+        id: -Math.random() * 10000,
         author: {
           id: currentlyLoggedUserData.id,
           firstName: currentlyLoggedUserData.firstName,
@@ -95,7 +103,10 @@ const ChatInput: React.FC<Props> = ({
         content: messageContent,
         createdAt: String(new Date()),
         isSendByMe: true,
-        __typename: 'Message'
+        __typename: 'Message',
+        optimisticallyAdded: true,
+        optimisticallyCreated: false,
+        hasOptimisticError: false
       }
     };
   }
@@ -129,6 +140,12 @@ const ChatInput: React.FC<Props> = ({
 
     if (!data) return;
 
+    if (typeof createMessage.id == 'string') {
+      createMessage.optimisticallyAdded = true;
+      createMessage.optimisticallyCreated = true;
+      createMessage.hasOptimisticError = false;
+    }
+
     data.messagesConnection.edges.push({
       node: createMessage,
       __typename: 'MessageEdge'
@@ -143,6 +160,36 @@ const ChatInput: React.FC<Props> = ({
       onNewMessage();
     });
   }
+
+  // function handleInputError({ createMessage }: any) {
+  //   const currentMessages = apolloClient.readQuery<PaginateMessagesQueryQuery>({
+  //     query: PaginateMessagesQueryDocument,
+  //     variables: currentQueryVariables
+  //   });
+
+  //   createMessage.hasOptimisticError = true;
+
+  //   if (!currentMessages) return;
+  //   currentMessages.messagesConnection.edges.push({
+  //     node: createMessage,
+  //     __typename: 'MessageEdge'
+  //   });
+
+  //   apolloClient.writeQuery({
+  //     query: PaginateMessagesQueryDocument,
+  //     variables: currentQueryVariables,
+  //     data: currentMessages
+  //   });
+  //   requestAnimationFrame(() => {
+  //     onNewMessage();
+  //   });
+  //   console.log(currentMessages);
+
+  //   // apolloClient.writeQuery({
+  //   //   query: PaginateMessagesQueryDocument,
+
+  //   // })
+  // }
 };
 
 export default ChatInput;

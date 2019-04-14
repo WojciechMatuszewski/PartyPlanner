@@ -47,6 +47,9 @@ export const CREATE_MESSAGE_MUTATION = gql`
         id
       }
       isSendByMe @client
+      optimisticallyAdded @client
+      optimisticallyCreated @client
+      hasOptimisticError @client
       content
       createdAt
     }

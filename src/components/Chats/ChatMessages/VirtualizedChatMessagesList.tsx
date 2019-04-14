@@ -104,6 +104,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
       return (
         <CellMeasurer cache={cache} parent={parent} key={key} rowIndex={index}>
           <ChatMessage
+            index={index}
             key={key}
             style={style}
             isFirstInBlock={isInBlock(messages[index], messages[index - 1])}

@@ -5,6 +5,7 @@ import redirect from './redirect';
 import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
 import { parseCookies } from './withApollo';
 import { handleLogout } from '@components/Authentication/AuthService';
+import { isBrowser } from './initApollo';
 
 export const withApolloAuth = ({
   userHasToBe
@@ -48,9 +49,16 @@ export const withApolloAuth = ({
         const response = await ctx.apolloClient.query<MeQueryQuery>({
           query: MeQueryDocument
         });
+
         if (userHasToBe === 'notAuthenticated') {
           redirect(ctx, '/dashboard');
         }
+
+        if (response.data.me == null) {
+          await handleLogout(ctx.apolloClient, ctx.req);
+          // redirect(ctx, '/login');
+        }
+
         return {
           me: response.data.me
         };

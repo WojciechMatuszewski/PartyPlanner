@@ -60,7 +60,10 @@ function create(initialState: any, { getToken }: Options) {
 
           if (!data || !data.me) return false;
           return data.me.id === message.author.id;
-        }
+        },
+        optimisticallyAdded: () => false,
+        optimisticallyCreated: () => false,
+        hasOptimisticError: () => false
       }
     }
   });
