@@ -94,8 +94,8 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
       next: PaginateMessagesQueryEdges
     ): boolean {
       return anyPass([
-        messageDoesNotExists,
-        curry(areMessagesWrittenByDifferentPerson)(current)
+        messageDoesNotExists as any,
+        curry(areMessagesWrittenByDifferentPerson)(current) as any
       ])(next);
     }
 
