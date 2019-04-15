@@ -3268,6 +3268,54 @@ export type PaginateMessagesQueryAuthor = {
   id: string;
 };
 
+export type ChatMessagesSubscriptionVariables = {
+  where?: Maybe<MessageSubscriptionWhereInput>;
+};
+
+export type ChatMessagesSubscriptionSubscription = {
+  __typename?: 'Subscription';
+
+  message: Maybe<ChatMessagesSubscriptionMessage>;
+};
+
+export type ChatMessagesSubscriptionMessage = {
+  __typename?: 'MessageSubscriptionPayload';
+
+  node: Maybe<ChatMessagesSubscriptionNode>;
+};
+
+export type ChatMessagesSubscriptionNode = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: ChatMessagesSubscriptionAuthor;
+
+  isSendByMe: boolean;
+
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type ChatMessagesSubscriptionAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
 export type PartyFragmentFragment = {
   __typename?: 'Party';
 
@@ -3880,4 +3928,56 @@ export function usePaginateMessagesQuery(
     PaginateMessagesQueryQuery,
     PaginateMessagesQueryVariables
   >(PaginateMessagesQueryDocument, baseOptions);
+}
+export const ChatMessagesSubscriptionDocument = gql`
+  subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {
+    message(where: $where) {
+      node {
+        id
+        author {
+          firstName
+          lastName
+          avatar
+          id
+        }
+        isSendByMe @client
+        optimisticallyAdded @client
+        optimisticallyCreated @client
+        hasOptimisticError @client
+        content
+        createdAt
+      }
+    }
+  }
+`;
+export class ChatMessagesSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      ChatMessagesSubscriptionSubscription,
+      ChatMessagesSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        ChatMessagesSubscriptionSubscription,
+        ChatMessagesSubscriptionVariables
+      >
+        subscription={ChatMessagesSubscriptionDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useChatMessagesSubscription(
+  baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
+    ChatMessagesSubscriptionSubscription,
+    ChatMessagesSubscriptionVariables
+  >
+) {
+  return ReactApolloHooks.useSubscription<
+    ChatMessagesSubscriptionSubscription,
+    ChatMessagesSubscriptionVariables
+  >(ChatMessagesSubscriptionDocument, baseOptions);
 }

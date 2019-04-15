@@ -69,7 +69,11 @@ const ChatInput: React.FC<Props> = ({
       }}
     >
       {({ handleSubmit, handleChange, handleBlur, values }) => (
-        <Form onSubmit={handleSubmit} autoComplete={'off'}>
+        <Form
+          style={{ zIndex: 20 }}
+          onSubmit={handleSubmit}
+          autoComplete={'off'}
+        >
           <Input
             type="text"
             autoComplete="off"

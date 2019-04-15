@@ -33,7 +33,7 @@ const MessagesWrapper = styled.div`
 const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
   ({ messages, ...props }: Props, ref) => {
     const { currentlySelectedChatId } = React.useContext(ChatsContext);
-
+    const hasCalledOnRowsRendered = React.useRef<boolean>(false);
     const [cache, setCache] = React.useState<CellMeasurerCache>(
       new CellMeasurerCache({
         fixedWidth: true,
@@ -48,6 +48,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
           fixedHeight: false
         })
       );
+      hasCalledOnRowsRendered.current = false;
     }, [currentlySelectedChatId]);
 
     return (
@@ -56,10 +57,11 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
           {({ width, height }) => {
             return (
               <List
+                onScroll={props.onScroll}
+                scrollTop={props.scrollTop}
                 estimatedRowSize={100}
-                overscanRowCount={10}
+                overscanRowCount={30}
                 width={width}
-                {...props}
                 rowCount={messages.length}
                 height={height}
                 ref={ref}
@@ -67,6 +69,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
                 rowHeight={cache.rowHeight}
                 data={messages}
                 rowRenderer={rowRenderer}
+                onRowsRendered={handleOnRowsRendered}
               />
             );
           }}
@@ -91,12 +94,8 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
       next: PaginateMessagesQueryEdges
     ): boolean {
       return anyPass([
-        // typescript ??
-        // tsc shows errors
-        // eslint does not
-        // wtf
-        messageDoesNotExists as any,
-        curry(areMessagesWrittenByDifferentPerson)(current) as any
+        messageDoesNotExists,
+        curry(areMessagesWrittenByDifferentPerson)(current)
       ])(next);
     }
 
@@ -114,14 +113,14 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
         </CellMeasurer>
       );
     }
+
+    function handleOnRowsRendered() {
+      if (!hasCalledOnRowsRendered.current) {
+        props.onRowsRendered();
+        hasCalledOnRowsRendered.current = true;
+      }
+    }
   }
 );
 
-export default VirtualizedChatMessagesList;
-
-// export default React.memo(
-//   VirtualizedChatMessagesList,
-//   (prevProps, nextProps) => {
-//     return prevProps.messages.length !== nextProps.messages.length;
-//   }
-// );
+export default React.memo(VirtualizedChatMessagesList);

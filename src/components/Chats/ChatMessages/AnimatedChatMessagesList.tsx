@@ -8,17 +8,19 @@ import { ChatsContext } from '@pages/chats';
 interface Props {
   messages: PaginateMessagesQueryEdges[];
   children: (renderProps: RenderProps) => React.ReactNode;
+  bottomLockZoneHeight: number;
 }
 
 interface RenderProps {
   isWithinBottomLockZone: boolean;
   scrollToBottom: (duration: number) => void;
+  hasInitiallyScrolled: boolean;
 }
 
 interface State {
-  isAnimating: boolean;
   isWithinBottomLockZone: boolean;
   scrollTop: number | undefined;
+  hasInitiallyScrolled: boolean;
 }
 
 const AnimatedChatMessagesList: React.FC<Props> = props => {
@@ -26,17 +28,15 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
   //   const firstScrollFired = React.useRef<boolean>(false);
   const virtualizedListRef: React.RefObject<List> = React.useRef(null);
   const currentScrollTopRef = React.useRef<number>(0);
-  // const hasScrolledInitially = React.useRef<boolean>(false);
 
   React.useEffect(() => {
-    virtualizedListRef.current && virtualizedListRef.current.scrollToRow(19);
-    // scrollToBottom();
+    setState(prevState => ({ ...prevState, hasInitiallyScrolled: false }));
   }, [currentlySelectedChatId]);
 
   const [state, setState] = React.useState<State>({
-    isAnimating: false,
     isWithinBottomLockZone: false,
-    scrollTop: undefined
+    scrollTop: undefined,
+    hasInitiallyScrolled: false
   });
 
   const shouldUpdateLockZoneState = React.useCallback(
@@ -71,7 +71,8 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
       />
       {props.children({
         isWithinBottomLockZone: state.isWithinBottomLockZone,
-        scrollToBottom
+        scrollToBottom,
+        hasInitiallyScrolled: state.hasInitiallyScrolled
       })}
     </React.Fragment>
   );
@@ -102,11 +103,10 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
   }
 
   function onRowsRendered() {
-    // if (!virtualizedListRef.current) return;
-    // if (!hasScrolledInitially.current) {
-    //   hasScrolledInitially.current = true;
-    //   scrollToBottom();
-    // }
+    if (!state.hasInitiallyScrolled) {
+      scrollToBottom();
+      setState(prevState => ({ ...prevState, hasInitiallyScrolled: true }));
+    }
   }
 
   function isWithinBottomLockZone({
@@ -114,7 +114,9 @@ const AnimatedChatMessagesList: React.FC<Props> = props => {
     scrollHeight,
     clientHeight
   }: OnScrollParams) {
-    return scrollHeight - (scrollTop + clientHeight) <= 250;
+    return (
+      scrollHeight - (scrollTop + clientHeight) <= props.bottomLockZoneHeight
+    );
   }
 };
 

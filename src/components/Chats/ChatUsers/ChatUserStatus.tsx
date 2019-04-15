@@ -6,6 +6,7 @@ const UserStatusWrapper = styled.div`
   height: 100%;
   ${FlexBoxFullCenteredStyles}
   margin-left:auto;
+  padding-right: 8px;
 `;
 
 const OnlineDot = styled.div`

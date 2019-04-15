@@ -7,7 +7,7 @@ import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import ChatUserStatus from './ChatUserStatus';
 
 const ChatUserWrapper = styled.li`
-  padding: 4px 8px;
+  padding: 4px 0;
   margin-bottom: 0;
   ${FlexBoxVerticallyCenteredStyles}
   @media screen and (min-width:992px) {
@@ -19,9 +19,11 @@ const ChatUserWrapper = styled.li`
 `;
 
 const ChatUserAvatarNameWrapper = styled.div`
+  padding-left: 12px;
+  max-width: 165px;
   ${FlexBoxVerticallyCenteredStyles}
   .ant-typography {
-    padding: 0 12px;
+    padding-left: 12px;
     max-width: 145px;
   }
 `;

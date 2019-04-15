@@ -1,19 +1,24 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
+import { Icon } from 'antd';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 interface Props {
   visible: boolean;
   unreadCount: number;
+  onClick: () => void;
 }
 
 const Notifier = styled(
   posed.div({
     visible: {
+      opacity: 1,
       y: 0
     },
     hidden: {
-      y: 100
+      opacity: 0,
+      y: 20
     }
   })
 )`
@@ -30,11 +35,30 @@ const Notifier = styled(
   text-align: center;
   cursor: pointer;
   line-height: 35px;
-  background: rgb(45, 183, 245);
+  background: #595959;
+`;
+
+const NotifierInnerWrapper = styled.div`
+  padding: 8px;
+  color: white;
+  ${FlexBoxFullCenteredStyles};
+  height: 100%;
+  .anticon {
+    margin-right: 8px;
+  }
 `;
 
 const NewMessagesBelowNotifier: React.FC<Props> = props => {
-  return <Notifier pose={props.visible ? 'visible' : 'hidden'} />;
+  return (
+    <Notifier
+      onClick={props.onClick}
+      pose={props.visible ? 'visible' : 'hidden'}
+    >
+      <NotifierInnerWrapper>
+        <Icon type="down-circle" /> 1 New messages below
+      </NotifierInnerWrapper>
+    </Notifier>
+  );
 };
 
 export default NewMessagesBelowNotifier;
