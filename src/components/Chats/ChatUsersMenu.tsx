@@ -21,6 +21,9 @@ const ChatUsersMenu: React.FC = () => {
       placement="right"
       type={shouldDisplayDrawer ? 'drawer' : 'sider'}
       triggerIcon="user"
+      drawerProps={{
+        title: 'Users'
+      }}
       siderProps={{
         style: { opacity: currentlySelectedChatId === null ? 0.4 : 1 },
         width: 205

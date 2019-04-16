@@ -6,7 +6,8 @@ import {
   useMeQuery,
   CreatePartyMutation,
   PartiesQueryQuery,
-  CreatePartyVariables
+  CreatePartyVariables,
+  PaginateChatsQueryDocument
 } from '@generated/graphql';
 import { MutationUpdaterFn } from 'apollo-boost';
 import { PARTIES_QUERY } from '@graphql/queries';
@@ -94,7 +95,8 @@ const CreateParty: React.FC = () => {
     try {
       await mutate({
         update: createPartyMutationUpdater,
-        variables: getCreatePartyMutationVariables(formValues)
+        variables: getCreatePartyMutationVariables(formValues),
+        refetchQueries: [PaginateChatsQueryDocument]
       });
       onCreatePartySuccess();
     } catch (e) {

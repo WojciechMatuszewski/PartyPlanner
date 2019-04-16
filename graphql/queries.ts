@@ -174,8 +174,8 @@ export const PAGINATE_MESSAGES_QUERY = gql`
       last: $last
     ) {
       pageInfo {
-        hasNextPage
-        endCursor
+        startCursor
+        hasPreviousPage
       }
       edges {
         node {

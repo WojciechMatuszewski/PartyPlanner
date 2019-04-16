@@ -12,12 +12,15 @@ import ChatMessage from './ChatMessage';
 import styled from '@emotion/styled';
 import { anyPass, curry } from 'ramda';
 import { ChatsContext } from '@pages/chats';
+import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
 
 interface Props {
   messages: PaginateMessagesQueryEdges[];
   onScroll: (params: ScrollParams) => void;
   scrollTop: number | undefined;
   onRowsRendered: () => void;
+  loadingMore: boolean;
+  cache: CellMeasurerCache;
 }
 
 const MessagesWrapper = styled.div`
@@ -34,20 +37,8 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
   ({ messages, ...props }: Props, ref) => {
     const { currentlySelectedChatId } = React.useContext(ChatsContext);
     const hasCalledOnRowsRendered = React.useRef<boolean>(false);
-    const [cache, setCache] = React.useState<CellMeasurerCache>(
-      new CellMeasurerCache({
-        fixedWidth: true,
-        fixedHeight: false
-      })
-    );
 
     React.useEffect(() => {
-      setCache(
-        new CellMeasurerCache({
-          fixedWidth: true,
-          fixedHeight: false
-        })
-      );
       hasCalledOnRowsRendered.current = false;
     }, [currentlySelectedChatId]);
 
@@ -62,14 +53,14 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
                 estimatedRowSize={100}
                 overscanRowCount={30}
                 width={width}
-                rowCount={messages.length}
+                // loader for infinite scoller
+                rowCount={messages.length + 1}
                 height={height}
                 ref={ref}
-                deferredMeasurementCache={cache}
-                rowHeight={cache.rowHeight}
-                data={messages}
+                deferredMeasurementCache={props.cache}
+                rowHeight={props.cache.rowHeight}
                 rowRenderer={rowRenderer}
-                onRowsRendered={handleOnRowsRendered}
+                onRowsRendered={props.onRowsRendered}
               />
             );
           }}
@@ -100,25 +91,42 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
     }
 
     function rowRenderer({ index, key, style, parent }: ListRowProps) {
+      if (index === 0) {
+        return (
+          <CellMeasurer
+            cache={props.cache}
+            parent={parent}
+            key={key}
+            rowIndex={index}
+          >
+            <FetchMoreLoader
+              style={style}
+              loading={props.loadingMore}
+              onLoadingChange={() => {
+                // console.log(messages);
+              }}
+            />
+          </CellMeasurer>
+        );
+      }
+
       return (
-        <CellMeasurer cache={cache} parent={parent} key={key} rowIndex={index}>
+        <CellMeasurer
+          cache={props.cache}
+          parent={parent}
+          key={key}
+          rowIndex={index}
+        >
           <ChatMessage
             index={index}
             key={key}
             style={style}
-            isFirstInBlock={isInBlock(messages[index], messages[index - 1])}
-            isLastInBlock={isInBlock(messages[index], messages[index + 1])}
-            message={messages[index].node}
+            isFirstInBlock={isInBlock(messages[index - 1], messages[index - 2])}
+            isLastInBlock={isInBlock(messages[index - 1], messages[index])}
+            message={messages[index - 1].node}
           />
         </CellMeasurer>
       );
-    }
-
-    function handleOnRowsRendered() {
-      if (!hasCalledOnRowsRendered.current) {
-        props.onRowsRendered();
-        hasCalledOnRowsRendered.current = true;
-      }
     }
   }
 );

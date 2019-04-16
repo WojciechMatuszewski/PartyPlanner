@@ -3225,9 +3225,9 @@ export type PaginateMessagesQueryMessagesConnection = {
 export type PaginateMessagesQueryPageInfo = {
   __typename?: 'PageInfo';
 
-  hasNextPage: boolean;
+  startCursor: Maybe<string>;
 
-  endCursor: Maybe<string>;
+  hasPreviousPage: boolean;
 };
 
 export type PaginateMessagesQueryEdges = {
@@ -3876,8 +3876,8 @@ export const PaginateMessagesQueryDocument = gql`
       last: $last
     ) {
       pageInfo {
-        hasNextPage
-        endCursor
+        startCursor
+        hasPreviousPage
       }
       edges {
         node {

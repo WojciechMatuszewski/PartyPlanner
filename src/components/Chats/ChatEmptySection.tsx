@@ -17,17 +17,25 @@ const ChatEmptySectionWrapper = styled.div`
 `;
 
 interface Props {
-  image?: string;
+  image: string;
+  title: string;
+  description: string;
 }
 
-const ChatEmptySection: React.FC<Props> = ({ image }) => {
+const ChatEmptySection = (props: Props) => {
   return (
     <ChatEmptySectionWrapper>
-      {image && <img src={image} />}
-      <Typography.Title level={4}>No chat selected</Typography.Title>
-      <Typography.Text type="secondary">Pick a chat</Typography.Text>
+      {props.image && props.image.length > 0 && <img src={props.image} />}
+      <Typography.Title level={4}>{props.title}</Typography.Title>
+      <Typography.Text type="secondary">{props.description}</Typography.Text>
     </ChatEmptySectionWrapper>
   );
+};
+
+ChatEmptySection.defaultProps = {
+  title: 'No chat selected',
+  description: 'Pick a chat :)',
+  image: ''
 };
 
 export default ChatEmptySection;

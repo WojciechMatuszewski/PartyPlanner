@@ -55,7 +55,7 @@ const NewMessagesBelowNotifier: React.FC<Props> = props => {
       pose={props.visible ? 'visible' : 'hidden'}
     >
       <NotifierInnerWrapper>
-        <Icon type="down-circle" /> 1 New messages below
+        <Icon type="down-circle" /> {props.unreadCount} New messages below
       </NotifierInnerWrapper>
     </Notifier>
   );

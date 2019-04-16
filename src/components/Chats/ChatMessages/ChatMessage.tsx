@@ -89,6 +89,8 @@ const OtherUserMessage: React.FC<Props> = props => {
   return (
     <div style={props.style}>
       <OtherChatMessageWrapper isFirstInBlock={props.isFirstInBlock}>
+        {props.index}
+        <br />
         <OtherMessageInnerWrapper>
           {props.isLastInBlock && (
             <UserAvatar

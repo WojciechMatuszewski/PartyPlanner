@@ -141,7 +141,9 @@ const ChatInput: React.FC<Props> = ({
 
     if (!data) return;
 
-    if (typeof createMessage.id == 'string') {
+    const isFromServer = typeof createMessage.id == 'string';
+
+    if (isFromServer) {
       createMessage.optimisticallyAdded = true;
       createMessage.optimisticallyCreated = true;
       createMessage.hasOptimisticError = false;
@@ -157,9 +159,10 @@ const ChatInput: React.FC<Props> = ({
       variables: currentQueryVariables,
       data
     });
-    requestAnimationFrame(() => {
-      onNewMessage();
-    });
+
+    if (isFromServer) return;
+
+    onNewMessage();
   }
 
   // function handleInputError({ createMessage }: any) {
