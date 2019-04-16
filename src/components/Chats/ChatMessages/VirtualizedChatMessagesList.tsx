@@ -99,13 +99,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
             key={key}
             rowIndex={index}
           >
-            <FetchMoreLoader
-              style={style}
-              loading={props.loadingMore}
-              onLoadingChange={() => {
-                // console.log(messages);
-              }}
-            />
+            <FetchMoreLoader style={style} loading={props.loadingMore} />
           </CellMeasurer>
         );
       }

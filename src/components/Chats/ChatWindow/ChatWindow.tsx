@@ -18,6 +18,8 @@ import { List, CellMeasurerCache } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
 
+const LOADER_OFFSET = 49;
+
 const ChatWindowWrapper = styled.div`
   flex: 1;
   display: flex;
@@ -27,12 +29,12 @@ const ChatWindowWrapper = styled.div`
 `;
 
 interface PrependState {
-  shouldClear: boolean;
+  shouldScroll: boolean;
   itemsPrepended: number;
 }
 
 const initialPrependState: PrependState = {
-  shouldClear: false,
+  shouldScroll: false,
   itemsPrepended: 0
 };
 
@@ -73,6 +75,7 @@ const ChatWindow: React.FC = () => {
 
   const handleFetchMore = React.useCallback(async () => {
     if (!canFetchMore(data, loadingMore)) return;
+    let lengthOfNewItems = 0;
     setLoadingMore(true);
     await fetchMore({
       variables: {
@@ -85,7 +88,10 @@ const ChatWindow: React.FC = () => {
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         setLoadingMore(false);
+
         if (!fetchMoreResult) return prev;
+        lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
+
         return {
           ...prev,
           messagesConnection: {
@@ -102,8 +108,9 @@ const ChatWindow: React.FC = () => {
 
     if (!data || !data.messagesConnection) return;
     // TODO: better scrolling here
-    virtualizedListRef.current.scrollToRow(100);
-    cellCache.clearAll();
+
+    handleApolloAfterFetchMore(lengthOfNewItems);
+    virtualizedListRef.current.forceUpdateGrid();
   }, [data, currentlySelectedChatId, scrolledInitially.current]);
 
   const currentListScrollGetter = React.useCallback(() => {
@@ -127,9 +134,9 @@ const ChatWindow: React.FC = () => {
     if (!isWithinBottomLockZone) {
       setUnreadCount(prevCount => prevCount + 1);
     } else {
-      // sometimes rendering cant keep up
+      // sometimes renderisng cant keep up
       requestAnimationFrame(() => {
-        handleMessageScroll();
+        handleNewMessage();
       });
     }
   }, [isWithinBottomLockZone]);
@@ -154,18 +161,14 @@ const ChatWindow: React.FC = () => {
         !subscriptionData.data.message
       )
         return;
-
       const cachedMessages = client.readQuery({
         query: PaginateMessagesQueryDocument,
         variables: queryVariables
       });
-
       subscriptionData.data.message.__typename = 'MessageEdge' as any;
-
       cachedMessages.messagesConnection.edges.push(
         subscriptionData.data.message
       );
-
       client.writeQuery({
         query: PaginateMessagesQueryDocument,
         variables: queryVariables,
@@ -175,13 +178,7 @@ const ChatWindow: React.FC = () => {
     }
   });
 
-  React.useEffect(() => {
-    setQueryVariables(createQueryVariables(currentlySelectedChatId));
-    setUnreadCount(0);
-    scrolledInitially.current = false;
-    prependState.current = initialPrependState;
-    setCellCache(createNewCellCache());
-  }, [currentlySelectedChatId]);
+  React.useEffect(handleChatIdChange, [currentlySelectedChatId]);
 
   if (currentlySelectedChatId == null)
     return <ChatEmptySection image={'../static/group-chat.svg'} />;
@@ -198,7 +195,7 @@ const ChatWindow: React.FC = () => {
           description="Start a conversation now!"
         />
         <ChatInput
-          onNewMessage={handleMessageScroll}
+          onNewMessage={handleNewMessage}
           currentQueryVariables={queryVariables}
         />
       </ChatWindowWrapper>
@@ -216,7 +213,7 @@ const ChatWindow: React.FC = () => {
         ref={virtualizedListRef}
       />
       <ChatInput
-        onNewMessage={handleMessageScroll}
+        onNewMessage={handleNewMessage}
         currentQueryVariables={queryVariables}
       />
       <NewMessagesBelowNotifier
@@ -239,14 +236,16 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleRowsRendered() {
-    if (!scrolledInitially.current) {
-      scrollToBottom(0);
-      scrolledInitially.current = true;
-    }
+    handleInitialScrollToBottom();
+    if (prependState.current.shouldScroll) handleScrollOnPrepend();
   }
 
-  function handleMessageScroll() {
-    isWithinBottomLockZone && scrollToBottom(100);
+  function handleNewMessage() {
+    if (!isWithinBottomLockZone) return;
+    // allow next tick, prevents stale render state
+    requestAnimationFrame(() => {
+      scrollToBottom(100);
+    });
   }
 
   function handleNotifierClick() {
@@ -259,6 +258,46 @@ const ChatWindow: React.FC = () => {
       fixedWidth: true,
       fixedHeight: false
     });
+  }
+
+  function handleApolloAfterFetchMore(lengthOfNewItems: number) {
+    // new items will take place of old items, clear old heights
+    // i tried using keyMapper fn for the cache but we would basically need to do the same thing
+
+    // this is not a good solution !! but sadly i do not have any other :C
+    cellCache.clearAll();
+    // recompute heights
+    virtualizedListRef.current.recomputeRowHeights();
+
+    // allow scrolling to happen we have to scroll inside onRowsRendered, do not think that there is an other way.
+    prependState.current = {
+      shouldScroll: true,
+      itemsPrepended: lengthOfNewItems
+    };
+  }
+
+  function handleScrollOnPrepend() {
+    prependState.current.shouldScroll = false;
+    const offset = virtualizedListRef.current.getOffsetForRow({
+      alignment: 'start',
+      index: prependState.current.itemsPrepended
+    });
+    virtualizedListRef.current.scrollToPosition(offset + LOADER_OFFSET);
+  }
+
+  function handleInitialScrollToBottom() {
+    if (!scrolledInitially.current) {
+      scrollToBottom(0);
+      scrolledInitially.current = true;
+    }
+  }
+
+  function handleChatIdChange() {
+    setQueryVariables(createQueryVariables(currentlySelectedChatId));
+    setUnreadCount(0);
+    scrolledInitially.current = false;
+    prependState.current = initialPrependState;
+    setCellCache(createNewCellCache());
   }
 };
 
