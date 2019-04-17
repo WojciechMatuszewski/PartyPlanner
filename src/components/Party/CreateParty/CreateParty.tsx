@@ -1,9 +1,8 @@
 import React from 'react';
-import { Spin, Modal } from 'antd';
+import { Modal } from 'antd';
 import styled from '@emotion/styled';
 import {
   CreatePartyComponent,
-  useMeQuery,
   CreatePartyMutation,
   PartiesQueryQuery,
   CreatePartyVariables,
@@ -93,7 +92,6 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
     formValues: CreatePartyFormValues
   ) {
     try {
-      console.log(getCreatePartyMutationVariables(formValues));
       await mutate({
         update: createPartyMutationUpdater,
         variables: getCreatePartyMutationVariables(formValues),
@@ -114,7 +112,6 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
       });
       onCreatePartySuccess();
     } catch (e) {
-      console.log(e);
       onCreatePartyError();
     }
   }
