@@ -14,6 +14,8 @@ import styled from '@emotion/styled';
 import { anyPass, curry } from 'ramda';
 import { ChatsContext } from '@pages/chats';
 import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
+import moment from 'moment';
+import ChatMessageDivider from './ChatMessageDivider';
 
 interface Props {
   messages: PaginateMessagesQueryEdges[];
@@ -109,6 +111,11 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
         );
       }
 
+      const dividerDate = getDividerDate(
+        messages[index - 1],
+        messages[index - 2]
+      );
+
       return (
         <CellMeasurer
           cache={props.cache}
@@ -116,20 +123,47 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
           key={key}
           rowIndex={index}
         >
-          <ChatMessage
-            index={index}
-            key={key}
-            style={style}
-            isFirstInBlock={isInBlock(messages[index - 1], messages[index - 2])}
-            isLastInBlock={isInBlock(messages[index - 1], messages[index])}
-            message={messages[index - 1].node}
-          />
+          <div style={style}>
+            {dividerDate && <ChatMessageDivider dividerText={dividerDate} />}
+            <ChatMessage
+              index={index}
+              isFirstInBlock={
+                dividerDate
+                  ? true
+                  : isInBlock(messages[index - 1], messages[index - 2])
+              }
+              isLastInBlock={isInBlock(messages[index - 1], messages[index])}
+              message={messages[index - 1].node}
+            />
+          </div>
         </CellMeasurer>
       );
     }
 
     function handleLoaderStatusChange() {
       props.cache.clear(0, 0);
+    }
+
+    function getDividerDate(
+      current: PaginateMessagesQueryEdges,
+      prev: PaginateMessagesQueryEdges
+    ) {
+      if (!prev) return null;
+
+      const parsedCurrent = moment(current.node.createdAt);
+      const parsedPrev = moment(prev.node.createdAt);
+
+      console.log(parsedCurrent);
+      console.log(parsedPrev);
+
+      if (parsedCurrent.diff(parsedPrev, 'minutes') < 30) return null;
+
+      const diffInHours = parsedCurrent.diff(moment(new Date()), 'hours');
+
+      if (diffInHours < 24) {
+        return parsedCurrent.format('hh:mm A');
+      }
+      return parsedCurrent.format('MMM Do YY');
     }
   }
 );

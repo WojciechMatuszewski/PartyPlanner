@@ -98,10 +98,13 @@ const InviteFriend: React.FC<{
   const handleInvitePerson = React.useCallback(
     (id: string) => {
       setInvited(prevInvited => [...prevInvited, id]);
-      props.formik.setFieldValue('invitedFriends', invited);
     },
     [invited]
   );
+
+  React.useEffect(() => {
+    props.formik.setFieldValue('invitedFriends', invited);
+  }, [invited]);
 
   const handleRemovePerson = React.useCallback(
     (id: string) =>

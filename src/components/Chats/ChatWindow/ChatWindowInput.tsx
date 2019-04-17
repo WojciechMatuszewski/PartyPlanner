@@ -12,17 +12,16 @@ import { ChatsContext } from '@pages/chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import moment from 'moment';
 
 const InputStyles = css`
   width: 100%;
   height: 50px;
   border: 0;
-  /* border-top: 2px dashed #d9d9d9; */
   box-shadow: 3px -2px 7px -2px rgba(0, 0, 0, 0.15) !important;
   border-radius: 0;
   &:focus {
     outline: none;
-    /* box-shadow: none; */
   }
 `;
 
@@ -102,7 +101,7 @@ const ChatInput: React.FC<Props> = ({
           __typename: 'User'
         },
         content: messageContent,
-        createdAt: String(new Date()),
+        createdAt: moment(new Date()),
         isSendByMe: true,
         __typename: 'Message',
         optimisticallyAdded: true,
