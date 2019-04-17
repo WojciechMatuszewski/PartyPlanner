@@ -153,9 +153,6 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
       const parsedCurrent = moment(current.node.createdAt);
       const parsedPrev = moment(prev.node.createdAt);
 
-      console.log(parsedCurrent);
-      console.log(parsedPrev);
-
       if (parsedCurrent.diff(parsedPrev, 'minutes') < 30) return null;
 
       const diffInHours = parsedCurrent.diff(moment(new Date()), 'hours');
