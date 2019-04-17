@@ -242,7 +242,6 @@ const ChatWindow: React.FC = () => {
     stopIndex: number;
   }) {
     handleInitialScrollToBottom();
-    console.log(startIndex);
     if (prependState.current.shouldScroll && startIndex == 0) {
       handleScrollOnPrepend();
     }
