@@ -16,13 +16,15 @@ const ChatUsersMenu: React.FC = () => {
     ChatsContext
   );
 
+  if (currentlySelectedChatId == null) return null;
+
   return (
     <ChatSideNavigation
       placement="right"
       type={shouldDisplayDrawer ? 'drawer' : 'sider'}
       triggerIcon="user"
       drawerProps={{
-        title: 'Users'
+        title: 'Participants'
       }}
       siderProps={{
         style: { opacity: currentlySelectedChatId === null ? 0.4 : 1 },
@@ -40,6 +42,7 @@ const ChatUsersMenu: React.FC = () => {
         >
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
+
             return (
               <ChatUsersList
                 chatUsers={

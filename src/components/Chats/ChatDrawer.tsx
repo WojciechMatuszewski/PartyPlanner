@@ -40,8 +40,8 @@ const ChatDrawer: React.FC<
     <Drawer
       {...drawerProps}
       css={DrawerStyles}
-      closable={true}
       destroyOnClose={false}
+      maskClosable={true}
       handler={
         <div
           css={[

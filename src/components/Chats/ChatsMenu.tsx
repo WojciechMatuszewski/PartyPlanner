@@ -18,6 +18,10 @@ const ChatsMenu: React.FC<Props> = props => {
       type={shouldDisplayDrawer ? 'drawer' : 'sider'}
       triggerIcon="message"
       placement="left"
+      drawerProps={{
+        title: 'Your chats',
+        closable: false
+      }}
     >
       <ChatsListSearch />
       <ChatsList chats={props.initialChats} />
