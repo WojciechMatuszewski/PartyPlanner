@@ -9,6 +9,7 @@ interface Props {
 
 const ChatUsersWrapper = styled.ul`
   padding: 0;
+  margin-top: 1em;
 `;
 
 const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {

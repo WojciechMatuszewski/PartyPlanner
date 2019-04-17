@@ -15,9 +15,9 @@ interface Props {
   selected: boolean;
 }
 
-const ChatsListItemWrapper = styled.div`
+const ChatsListItemWrapper = styled.li`
   padding: 12px;
-  width: 298px;
+  /* width: 298px; */
   display: flex;
   .ant-typography {
     margin-bottom: 0;
@@ -39,6 +39,7 @@ const InnerWrapper = styled.div`
   padding-left: 12px;
   ${FlexBoxHorizontallyCenteredStyles};
   flex-direction: column;
+  flex: 1;
 `;
 
 const DateTitleWrapper = styled.div`
@@ -46,7 +47,7 @@ const DateTitleWrapper = styled.div`
   span:nth-of-type(2) {
     display: inline-block;
     white-space: nowrap;
-    padding-left: 2px;
+    padding-left: 12px;
     margin-left: auto;
   }
 `;

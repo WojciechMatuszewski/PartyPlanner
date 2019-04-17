@@ -1,12 +1,12 @@
 import React from 'react';
-import { Spin, Modal } from 'antd';
+import { Modal } from 'antd';
 import styled from '@emotion/styled';
 import {
   CreatePartyComponent,
-  useMeQuery,
   CreatePartyMutation,
   PartiesQueryQuery,
-  CreatePartyVariables
+  CreatePartyVariables,
+  PaginateChatsQueryDocument
 } from '@generated/graphql';
 import { MutationUpdaterFn } from 'apollo-boost';
 import { PARTIES_QUERY } from '@graphql/queries';
@@ -37,8 +37,10 @@ const InnerWrapper = styled.div`
     margin-top: 30px;
   }
 `;
-
-const CreateParty: React.FC = () => {
+interface Props {
+  userId: string;
+}
+const CreateParty: React.FC<Props> = ({ userId }) => {
   function onCreatePartySuccess() {
     Modal.success({
       title: 'Party created!',
@@ -61,13 +63,11 @@ const CreateParty: React.FC = () => {
     formValues: CreatePartyFormValues
   ): CreatePartyVariables {
     const { invitedFriends, location, date, ...restOfFormFields } = formValues;
+
     return {
       data: {
         members: {
-          connect: [
-            ...invitedFriends.map(id => ({ id })),
-            { id: meData!.me!.id }
-          ]
+          connect: [...invitedFriends.map(id => ({ id })), { id: userId }]
         },
         location: {
           create: {
@@ -77,7 +77,7 @@ const CreateParty: React.FC = () => {
         },
         author: {
           connect: {
-            id: meData!.me!.id
+            id: userId
           }
         },
         start: date[0],
@@ -94,7 +94,21 @@ const CreateParty: React.FC = () => {
     try {
       await mutate({
         update: createPartyMutationUpdater,
-        variables: getCreatePartyMutationVariables(formValues)
+        variables: getCreatePartyMutationVariables(formValues),
+        refetchQueries: [
+          {
+            query: PaginateChatsQueryDocument,
+            variables: {
+              where: {
+                members_some: { id: userId },
+                OR: [
+                  { party: { isPublic: true } },
+                  { party: { isPublic: false } }
+                ]
+              }
+            }
+          }
+        ]
       });
       onCreatePartySuccess();
     } catch (e) {
@@ -106,7 +120,7 @@ const CreateParty: React.FC = () => {
     proxy,
     { data: { createParty } }
   ) => {
-    const queryVariables = getPartiesDateVariables(new Date(), meData!.me!.id);
+    const queryVariables = getPartiesDateVariables(new Date(), userId);
 
     try {
       const data = proxy.readQuery<PartiesQueryQuery>({
@@ -128,12 +142,6 @@ const CreateParty: React.FC = () => {
     }
   };
 
-  const { data: meData, loading } = useMeQuery({ fetchPolicy: 'cache-first' });
-
-  if (loading || !meData || !meData.me) {
-    return <Spin />;
-  }
-
   return (
     <CreatePartyFormWrapper>
       <CreatePartyComponent>
@@ -142,7 +150,7 @@ const CreateParty: React.FC = () => {
             <CreatePartyForm
               onSubmit={curry(onCreatePartySubmit)(mutate)}
               loading={loading}
-              userId={meData!.me!.id}
+              userId={userId}
             />
           </InnerWrapper>
         )}

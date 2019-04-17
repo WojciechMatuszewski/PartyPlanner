@@ -25,3 +25,18 @@ export const PARTY_FRAGMENT = gql`
     isPublic
   }
 `;
+
+export const MESSAGE_FRAGMENT = gql`
+  fragment MESSAGE_FRAGMENT on Message {
+    id
+    author {
+      firstName
+      lastName
+      avatar
+      id
+    }
+    isSendByMe @client
+    content
+    createdAt
+  }
+`;

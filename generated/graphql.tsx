@@ -2942,6 +2942,48 @@ export type CreatePartyMutation = {
 
 export type CreatePartyCreateParty = PartyFragmentFragment;
 
+export type CreateMessageVariables = {
+  data: MessageCreateInput;
+};
+
+export type CreateMessageMutation = {
+  __typename?: 'Mutation';
+
+  createMessage: CreateMessageCreateMessage;
+};
+
+export type CreateMessageCreateMessage = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: CreateMessageAuthor;
+
+  isSendByMe: boolean;
+
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type CreateMessageAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -3183,9 +3225,9 @@ export type PaginateMessagesQueryMessagesConnection = {
 export type PaginateMessagesQueryPageInfo = {
   __typename?: 'PageInfo';
 
-  hasNextPage: boolean;
+  startCursor: Maybe<string>;
 
-  endCursor: Maybe<string>;
+  hasPreviousPage: boolean;
 };
 
 export type PaginateMessagesQueryEdges = {
@@ -3201,7 +3243,13 @@ export type PaginateMessagesQueryNode = {
 
   author: PaginateMessagesQueryAuthor;
 
-  isSendByMe: Maybe<string>;
+  isSendByMe: boolean;
+
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
 
   content: string;
 
@@ -3209,6 +3257,54 @@ export type PaginateMessagesQueryNode = {
 };
 
 export type PaginateMessagesQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
+export type ChatMessagesSubscriptionVariables = {
+  where?: Maybe<MessageSubscriptionWhereInput>;
+};
+
+export type ChatMessagesSubscriptionSubscription = {
+  __typename?: 'Subscription';
+
+  message: Maybe<ChatMessagesSubscriptionMessage>;
+};
+
+export type ChatMessagesSubscriptionMessage = {
+  __typename?: 'MessageSubscriptionPayload';
+
+  node: Maybe<ChatMessagesSubscriptionNode>;
+};
+
+export type ChatMessagesSubscriptionNode = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: ChatMessagesSubscriptionAuthor;
+
+  isSendByMe: boolean;
+
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type ChatMessagesSubscriptionAuthor = {
   __typename?: 'User';
 
   firstName: string;
@@ -3272,6 +3368,32 @@ export type PartyFragmentMembers = {
   id: string;
 };
 
+export type MessageFragmentFragment = {
+  __typename?: 'Message';
+
+  id: string;
+
+  author: MessageFragmentAuthor;
+
+  isSendByMe: boolean;
+
+  content: string;
+
+  createdAt: DateTime;
+};
+
+export type MessageFragmentAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
+};
+
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
@@ -3304,6 +3426,21 @@ export const PartyFragmentFragmentDoc = gql`
     start
     end
     isPublic
+  }
+`;
+
+export const MessageFragmentFragmentDoc = gql`
+  fragment MESSAGE_FRAGMENT on Message {
+    id
+    author {
+      firstName
+      lastName
+      avatar
+      id
+    }
+    isSendByMe @client
+    content
+    createdAt
   }
 `;
 
@@ -3412,6 +3549,50 @@ export function useCreateParty(
     CreatePartyMutation,
     CreatePartyVariables
   >(CreatePartyDocument, baseOptions);
+}
+export const CreateMessageDocument = gql`
+  mutation CreateMessage($data: MessageCreateInput!) {
+    createMessage(data: $data) {
+      id
+      author {
+        firstName
+        lastName
+        avatar
+        id
+      }
+      isSendByMe @client
+      optimisticallyAdded @client
+      optimisticallyCreated @client
+      hasOptimisticError @client
+      content
+      createdAt
+    }
+  }
+`;
+export class CreateMessageComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<CreateMessageMutation, CreateMessageVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateMessageMutation, CreateMessageVariables>
+        mutation={CreateMessageDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useCreateMessage(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreateMessageMutation,
+    CreateMessageVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreateMessageMutation,
+    CreateMessageVariables
+  >(CreateMessageDocument, baseOptions);
 }
 export const MeQueryDocument = gql`
   query MeQuery {
@@ -3695,8 +3876,8 @@ export const PaginateMessagesQueryDocument = gql`
       last: $last
     ) {
       pageInfo {
-        hasNextPage
-        endCursor
+        startCursor
+        hasPreviousPage
       }
       edges {
         node {
@@ -3708,6 +3889,9 @@ export const PaginateMessagesQueryDocument = gql`
             id
           }
           isSendByMe @client
+          optimisticallyAdded @client
+          optimisticallyCreated @client
+          hasOptimisticError @client
           content
           createdAt
         }
@@ -3744,4 +3928,56 @@ export function usePaginateMessagesQuery(
     PaginateMessagesQueryQuery,
     PaginateMessagesQueryVariables
   >(PaginateMessagesQueryDocument, baseOptions);
+}
+export const ChatMessagesSubscriptionDocument = gql`
+  subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {
+    message(where: $where) {
+      node {
+        id
+        author {
+          firstName
+          lastName
+          avatar
+          id
+        }
+        isSendByMe @client
+        optimisticallyAdded @client
+        optimisticallyCreated @client
+        hasOptimisticError @client
+        content
+        createdAt
+      }
+    }
+  }
+`;
+export class ChatMessagesSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      ChatMessagesSubscriptionSubscription,
+      ChatMessagesSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        ChatMessagesSubscriptionSubscription,
+        ChatMessagesSubscriptionVariables
+      >
+        subscription={ChatMessagesSubscriptionDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useChatMessagesSubscription(
+  baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
+    ChatMessagesSubscriptionSubscription,
+    ChatMessagesSubscriptionVariables
+  >
+) {
+  return ReactApolloHooks.useSubscription<
+    ChatMessagesSubscriptionSubscription,
+    ChatMessagesSubscriptionVariables
+  >(ChatMessagesSubscriptionDocument, baseOptions);
 }

@@ -22,8 +22,9 @@ const { Provider, Consumer } = React.createContext<Pick<Props, 'lastMessage'>>({
 class ChatsListItemLastMessage extends React.Component<Props> {
   public static MessageTimestamp = () => (
     <Consumer>
-      {({ lastMessage: { createdAt } }) => {
-        const parsedDate = moment(createdAt);
+      {({ lastMessage }) => {
+        if (!lastMessage) return null;
+        const parsedDate = moment(lastMessage.createdAt);
         const currentDate = moment(new Date());
         const diff = Math.abs(parsedDate.diff(currentDate, 'hours'));
         return (
@@ -41,16 +42,14 @@ class ChatsListItemLastMessage extends React.Component<Props> {
 
   public static MessageMain = () => (
     <Consumer>
-      {({
-        lastMessage: {
-          content,
-          author: { firstName }
-        }
-      }) => (
-        <Typography.Paragraph type="secondary" ellipsis={true}>
-          {firstName}: {content}
-        </Typography.Paragraph>
-      )}
+      {({ lastMessage }) => {
+        if (!lastMessage) return <Typography.Text>No messages</Typography.Text>;
+        return (
+          <Typography.Paragraph type="secondary" ellipsis={true}>
+            {lastMessage.author.firstName}: {lastMessage.content}
+          </Typography.Paragraph>
+        );
+      }}
     </Consumer>
   );
   public render() {

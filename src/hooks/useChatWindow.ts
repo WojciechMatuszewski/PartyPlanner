@@ -21,7 +21,7 @@ function useChatWindow(
   useEffect(() => {
     if (!elementRef.current) return;
     stylerRef.current = styler(elementRef.current);
-  }, []);
+  }, [elementRef]);
 
   const calculateRelativeScrollPositions = (element: HTMLDivElement) => ({
     relativeToBottom:

@@ -78,9 +78,9 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                   <a>Calendar</a>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="/chat">
-                <Link href="/chat">
-                  <a>Chat</a>
+              <Menu.Item key="/chats">
+                <Link href="/chats">
+                  <a>Chats</a>
                 </Link>
               </Menu.Item>
 
@@ -148,9 +148,9 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
               <a>Calendar</a>
             </Link>
           </Menu.Item>
-          <Menu.Item onClick={() => setDrawerVisible(false)} key="/chat">
-            <Link href="/chat">
-              <a>Chat</a>
+          <Menu.Item onClick={() => setDrawerVisible(false)} key="/chats">
+            <Link href="/chats">
+              <a>Chats</a>
             </Link>
           </Menu.Item>
         </Menu>

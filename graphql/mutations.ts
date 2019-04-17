@@ -35,3 +35,23 @@ export const CREATE_PARTY_MUTATION = gql`
   }
   ${PARTY_FRAGMENT}
 `;
+
+export const CREATE_MESSAGE_MUTATION = gql`
+  mutation CreateMessage($data: MessageCreateInput!) {
+    createMessage(data: $data) {
+      id
+      author {
+        firstName
+        lastName
+        avatar
+        id
+      }
+      isSendByMe @client
+      optimisticallyAdded @client
+      optimisticallyCreated @client
+      hasOptimisticError @client
+      content
+      createdAt
+    }
+  }
+`;

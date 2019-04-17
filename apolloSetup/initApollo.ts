@@ -9,6 +9,10 @@ import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 import { PaginateMessagesQueryNode } from '@generated/graphql';
 import { ApolloCache } from 'apollo-cache';
+import { WebSocketLink } from 'apollo-link-ws';
+import { ApolloLink } from 'apollo-link';
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -41,11 +45,30 @@ function create(initialState: any, { getToken }: Options) {
     };
   });
 
+  let link = ApolloLink.from([authLink, httpLink]);
+  if (isBrowser()) {
+    const wsLink = new WebSocketLink({
+      uri: 'ws://localhost:4000/graphql',
+      options: {
+        reconnect: true
+      }
+    });
+    link = split(
+      // split based on operation type
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      },
+      wsLink,
+      ApolloLink.from([authLink, httpLink])
+    );
+  }
+
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     connectToDevTools: isBrowser(),
     ssrMode: !isBrowser(), // Disables forceFetch on the server (so queries are only run once)
-    link: authLink.concat(httpLink),
+    link: link,
     cache: new InMemoryCache().restore(initialState || {}),
     resolvers: {
       Message: {
@@ -60,7 +83,10 @@ function create(initialState: any, { getToken }: Options) {
 
           if (!data || !data.me) return false;
           return data.me.id === message.author.id;
-        }
+        },
+        optimisticallyAdded: () => false,
+        optimisticallyCreated: () => false,
+        hasOptimisticError: () => false
       }
     }
   });

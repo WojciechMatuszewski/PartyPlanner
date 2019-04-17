@@ -15,7 +15,11 @@ interface Props {
 
 const ChatSideNavigation: React.FC<Props> = props => {
   return props.type === 'drawer' ? (
-    <ChatDrawer {...props.drawerProps} triggerIcon={props.triggerIcon}>
+    <ChatDrawer
+      {...props.drawerProps}
+      triggerIcon={props.triggerIcon}
+      placement={props.placement}
+    >
       {props.children}
     </ChatDrawer>
   ) : (

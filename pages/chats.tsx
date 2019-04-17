@@ -16,6 +16,7 @@ import ChatWindow from '@components/Chats/ChatWindow/ChatWindow';
 import GraphqlException from '@components/GraphqlException';
 
 import { BehaviorSubject } from 'rxjs';
+import NoData from '@components/NoData';
 
 const LayoutStyles = css`
   height: calc(100vh - 66px);
@@ -31,13 +32,13 @@ interface Props {
 interface ChatContextProps {
   currentlySelectedChatId: string | null;
   selectedChatIdStream$: BehaviorSubject<string | null>;
-  currentlyLoggedUserId: string;
+  currentlyLoggedUserData: MeQueryMe;
 }
 
 export const ChatsContext = React.createContext<ChatContextProps>({
   currentlySelectedChatId: null,
   selectedChatIdStream$: new BehaviorSubject(null as string | null),
-  currentlyLoggedUserId: ''
+  currentlyLoggedUserData: {} as any
 });
 
 const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
@@ -50,7 +51,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
   const [state, setState] = React.useState<ChatContextProps>({
     currentlySelectedChatId: getCurrentChatFromUrl(),
     selectedChatIdStream$: routeChangeStreamRef.current,
-    currentlyLoggedUserId: me.id
+    currentlyLoggedUserData: me
   });
 
   React.useEffect(() => {
@@ -88,6 +89,22 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
       <GraphqlException
         actions={
           <Button onClick={() => router && router.back()}>Go back!</Button>
+        }
+      />
+    );
+
+  if (data.chatsConnection.edges.length <= 0)
+    return (
+      <NoData
+        style={{ height: 'auto' }}
+        message="You currently do not have any chats"
+        action={
+          <Button
+            type="primary"
+            onClick={() => router && router.push('/create-party')}
+          >
+            Create a party!
+          </Button>
         }
       />
     );

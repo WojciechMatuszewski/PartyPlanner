@@ -174,8 +174,8 @@ export const PAGINATE_MESSAGES_QUERY = gql`
       last: $last
     ) {
       pageInfo {
-        hasNextPage
-        endCursor
+        startCursor
+        hasPreviousPage
       }
       edges {
         node {
@@ -187,6 +187,9 @@ export const PAGINATE_MESSAGES_QUERY = gql`
             id
           }
           isSendByMe @client
+          optimisticallyAdded @client
+          optimisticallyCreated @client
+          hasOptimisticError @client
           content
           createdAt
         }

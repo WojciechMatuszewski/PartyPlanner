@@ -12,15 +12,20 @@ import ChatUsersList from './ChatUsers/ChatUsersList';
 const ChatUsersMenu: React.FC = () => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
 
-  const { currentlyLoggedUserId, currentlySelectedChatId } = React.useContext(
+  const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
   );
+
+  if (currentlySelectedChatId == null) return null;
 
   return (
     <ChatSideNavigation
       placement="right"
       type={shouldDisplayDrawer ? 'drawer' : 'sider'}
       triggerIcon="user"
+      drawerProps={{
+        title: 'Participants'
+      }}
       siderProps={{
         style: { opacity: currentlySelectedChatId === null ? 0.4 : 1 },
         width: 205
@@ -31,12 +36,13 @@ const ChatUsersMenu: React.FC = () => {
           variables={{
             where: {
               chats_some: { id: currentlySelectedChatId },
-              id_not: currentlyLoggedUserId
+              id_not: currentlyLoggedUserData.id
             }
           }}
         >
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
+
             return (
               <ChatUsersList
                 chatUsers={

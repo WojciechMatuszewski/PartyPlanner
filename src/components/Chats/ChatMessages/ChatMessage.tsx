@@ -5,83 +5,186 @@ import UserAvatar from '@components/UserDefaultAvatar';
 import { Typography } from 'antd';
 import css from '@emotion/css';
 
+import OptimisticStatusDot from './OptimisticStatusDot';
+
 interface Props {
   isFirstInBlock: boolean;
   isLastInBlock: boolean;
   message: PaginateMessagesQueryNode;
+  style?: React.CSSProperties;
+  index: number;
 }
 
-const MessageWrapper = styled.div`
+interface MessageWrapperProps {
+  isFirstInBlock: boolean;
+}
+
+interface MessageMessageProps {
+  isFirstInBlock: boolean;
+  isLastInBlock: boolean;
+}
+
+const BaseMessageWrapperStyles = css`
   max-width: 700px;
-  display: flex;
 `;
 
-interface MessageInnerProps {
-  isWithinBlock: boolean;
-  shouldAddLeftPadding: boolean;
-}
-
-const MessageInnerWrapper = styled.div<MessageInnerProps>`
-  width: 100%;
-  margin-top: ${props => (props.isWithinBlock ? '4px' : '12px')};
-  padding-left: ${props => (props.shouldAddLeftPadding ? '44px' : 0)};
-  .ant-typography {
-    display: block;
-    margin-left: 4px;
-    margin-bottom: 4px;
-  }
+const BaseMessageInnerWrapperStyles = css`
+  display: grid;
+  margin-left: auto;
+  grid-template-rows: 1fr 1fr;
+  /* grid-template-columns: 32px 1fr; */
 `;
 
-const Message = styled.div`
-  background: white;
-  border-radius: 10px;
+const BaseMessageStyles = css`
   padding: 12px;
   box-sizing: border-box;
+  display: inline-block;
+  word-break: break-all;
 `;
 
-const SendByMeStyles = css`
-  margin-left: auto;
-  .ant-avatar {
-    display: none;
-  }
-  .message-content {
-    background: #1890ff;
-    color: white;
-  }
+const ChatMessage: React.FC<Props> = props => {
+  return props.message.isSendByMe ? (
+    <MyMessage {...props} />
+  ) : (
+    <OtherUserMessage {...props} />
+  );
+};
+
+const OtherChatMessageWrapper = styled.div<MessageWrapperProps>`
+  ${BaseMessageWrapperStyles};
+  margin-right: auto;
+  padding-right: 12px;
+  margin-top: ${props => (props.isFirstInBlock ? '12px' : '2px')};
+  padding-left: 0;
+  padding-left: 12px;
 `;
 
-const ChatMessage: React.FC<Props> = ({
-  message,
-  isFirstInBlock,
-  isLastInBlock
-}) => {
+const OtherMessageInnerWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  .user-avatar {
+    margin-right: auto;
+    align-self: flex-end;
+    grid-column-start: 1;
+    grid-column-end: 1;
+  }
+`;
+const OtherUserMessageMessage = styled.div<MessageMessageProps>`
+  ${BaseMessageStyles};
+
+  background: white;
+  border-top-right-radius: 1.3em;
+  border-bottom-right-radius: 1.3em;
+  border-top-left-radius: ${props =>
+    props.isFirstInBlock ? '1.3em' : '0.4em'};
+  border-bottom-left-radius: ${props =>
+    props.isLastInBlock ? '1.3em' : '0.4em'};
+`;
+
+const OtherMessageAuthor = styled.div`
+  margin-left: 12px;
+`;
+
+const OtherUserMessage: React.FC<Props> = props => {
   return (
-    <MessageWrapper
-      className="message"
-      css={message.isSendByMe ? SendByMeStyles : ''}
-    >
-      {isLastInBlock && (
-        <UserAvatar
-          userData={message.author}
-          css={css`
-            margin-right: 12px;
-            align-self: flex-end;
-          `}
-        />
-      )}
+    <div style={props.style}>
+      <OtherChatMessageWrapper isFirstInBlock={props.isFirstInBlock}>
+        <OtherMessageInnerWrapper>
+          {props.isLastInBlock && (
+            <UserAvatar
+              userData={props.message.author}
+              className="user-avatar"
+            />
+          )}
+          <div
+            style={{
+              gridColumnStart: 2,
+              gridColumnEnd: 3
+            }}
+          >
+            {props.isFirstInBlock && (
+              <OtherMessageAuthor>
+                <Typography.Text type="secondary">
+                  {props.message.author.firstName}
+                </Typography.Text>
+              </OtherMessageAuthor>
+            )}
+            <OtherUserMessageMessage
+              isFirstInBlock={props.isFirstInBlock}
+              isLastInBlock={props.isLastInBlock}
+            >
+              {props.message.content}
+            </OtherUserMessageMessage>
+          </div>
+        </OtherMessageInnerWrapper>
+      </OtherChatMessageWrapper>
+    </div>
+  );
+};
 
-      <MessageInnerWrapper
-        shouldAddLeftPadding={!isLastInBlock}
-        isWithinBlock={!isFirstInBlock}
-      >
-        {isFirstInBlock && (
-          <Typography.Text type="secondary">
-            {message.author.firstName}
-          </Typography.Text>
-        )}
-        <Message className="message-content">{message.content}</Message>
-      </MessageInnerWrapper>
-    </MessageWrapper>
+const MyMessageWrapper = styled.div<MessageWrapperProps>`
+  ${BaseMessageWrapperStyles};
+  margin-left: auto;
+  padding-left: 12px;
+  margin-top: ${props => (props.isFirstInBlock ? '12px' : '2px')};
+  padding-right: 0;
+`;
+const MyMessageInnerWrapper = styled.div`
+  ${BaseMessageInnerWrapperStyles};
+  grid-template-columns: 1fr 16px;
+`;
+
+const MyMessageMessage = styled.div<MessageMessageProps>`
+  ${BaseMessageStyles};
+  background: #1890ff;
+  color: white;
+  margin-left: auto;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  border-top-left-radius: 1.3em;
+  border-bottom-left-radius: 1.3em;
+  border-top-right-radius: ${props =>
+    props.isFirstInBlock ? '1.3em' : '0.4em'};
+  border-bottom-right-radius: ${props =>
+    props.isLastInBlock ? '1.3em' : '0.4em'};
+`;
+
+const MyMessageAuthor = styled.div`
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-end: 1;
+  text-align: right;
+  margin-right: 12px;
+`;
+
+const MyMessage: React.FC<Props> = props => {
+  return (
+    <div style={props.style}>
+      <MyMessageWrapper isFirstInBlock={props.isFirstInBlock}>
+        <MyMessageInnerWrapper>
+          {props.isFirstInBlock && (
+            <MyMessageAuthor>
+              <Typography.Text type="secondary">
+                {props.message.author.firstName}
+              </Typography.Text>
+            </MyMessageAuthor>
+          )}
+          <MyMessageMessage
+            isFirstInBlock={props.isFirstInBlock}
+            isLastInBlock={props.isLastInBlock}
+          >
+            {props.message.content}
+          </MyMessageMessage>
+          <OptimisticStatusDot
+            hasOptimisticError={props.message.hasOptimisticError}
+            optimisticallyAdded={props.message.optimisticallyAdded}
+            optimisticallyCreated={props.message.optimisticallyCreated}
+          />
+        </MyMessageInnerWrapper>
+      </MyMessageWrapper>
+    </div>
   );
 };
 
