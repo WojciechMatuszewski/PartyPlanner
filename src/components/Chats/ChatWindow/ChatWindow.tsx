@@ -19,6 +19,7 @@ import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessages
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
 
 const LOADER_OFFSET = 49;
+const MESSAGES_BATCH_SIZE = 30;
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -70,7 +71,7 @@ const ChatWindow: React.FC = () => {
         !loadingMore
       );
     },
-    []
+    [data, loadingMore]
   );
 
   const handleFetchMore = React.useCallback(async () => {
@@ -83,7 +84,7 @@ const ChatWindow: React.FC = () => {
           chat: { id: currentlySelectedChatId }
         },
         orderBy: 'createdAt_ASC' as MessageOrderByInput,
-        last: 30,
+        last: MESSAGES_BATCH_SIZE,
         before: data!.messagesConnection.pageInfo.startCursor
       },
       updateQuery: (prev, { fetchMoreResult }) => {
@@ -107,10 +108,7 @@ const ChatWindow: React.FC = () => {
     });
 
     if (!data || !data.messagesConnection) return;
-    // TODO: better scrolling here
-
     handleApolloAfterFetchMore(lengthOfNewItems);
-    virtualizedListRef.current.forceUpdateGrid();
   }, [data, currentlySelectedChatId, scrolledInitially.current]);
 
   const currentListScrollGetter = React.useCallback(() => {
@@ -231,13 +229,23 @@ const ChatWindow: React.FC = () => {
         chat: { id: currentChatId }
       },
       orderBy: 'createdAt_ASC' as MessageOrderByInput,
-      last: 30
+      last: MESSAGES_BATCH_SIZE
     };
   }
 
-  function handleRowsRendered() {
+  function handleRowsRendered({
+    startIndex
+  }: {
+    overscanStartIndex: number;
+    overscanStopIndex: number;
+    startIndex: number;
+    stopIndex: number;
+  }) {
     handleInitialScrollToBottom();
-    if (prependState.current.shouldScroll) handleScrollOnPrepend();
+    console.log(startIndex);
+    if (prependState.current.shouldScroll && startIndex == 0) {
+      handleScrollOnPrepend();
+    }
   }
 
   function handleNewMessage() {
@@ -261,28 +269,26 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleApolloAfterFetchMore(lengthOfNewItems: number) {
-    // new items will take place of old items, clear old heights
-    // i tried using keyMapper fn for the cache but we would basically need to do the same thing
-
-    // this is not a good solution !! but sadly i do not have any other :C
-    cellCache.clearAll();
-    // recompute heights
-    virtualizedListRef.current.recomputeRowHeights();
-
     // allow scrolling to happen we have to scroll inside onRowsRendered, do not think that there is an other way.
     prependState.current = {
       shouldScroll: true,
       itemsPrepended: lengthOfNewItems
     };
+    // new items will take place of old items, clear old heights
+    // i tried using keyMapper fn for the cache but we would basically need to do the same thing
+    // this is not a good solution !! but sadly i do not have any other :C
+    cellCache.clearAll();
+    // recompute heights
+    virtualizedListRef.current.recomputeRowHeights();
   }
 
   function handleScrollOnPrepend() {
-    prependState.current.shouldScroll = false;
     const offset = virtualizedListRef.current.getOffsetForRow({
       alignment: 'start',
       index: prependState.current.itemsPrepended
     });
     virtualizedListRef.current.scrollToPosition(offset + LOADER_OFFSET);
+    prependState.current.shouldScroll = false;
   }
 
   function handleInitialScrollToBottom() {

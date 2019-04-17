@@ -5,7 +5,8 @@ import {
   List,
   CellMeasurer,
   ScrollParams,
-  ListRowProps
+  ListRowProps,
+  ListProps
 } from 'react-virtualized';
 import { PaginateMessagesQueryEdges } from '@generated/graphql';
 import ChatMessage from './ChatMessage';
@@ -18,7 +19,7 @@ interface Props {
   messages: PaginateMessagesQueryEdges[];
   onScroll: (params: ScrollParams) => void;
   scrollTop: number | undefined;
-  onRowsRendered: () => void;
+  onRowsRendered: ListProps['onRowsRendered'];
   loadingMore: boolean;
   cache: CellMeasurerCache;
 }
@@ -99,7 +100,11 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
             key={key}
             rowIndex={index}
           >
-            <FetchMoreLoader style={style} loading={props.loadingMore} />
+            <FetchMoreLoader
+              onLoadingChange={handleLoaderStatusChange}
+              style={style}
+              loading={props.loadingMore}
+            />
           </CellMeasurer>
         );
       }
@@ -121,6 +126,10 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
           />
         </CellMeasurer>
       );
+    }
+
+    function handleLoaderStatusChange() {
+      props.cache.clear(0, 0);
     }
   }
 );
