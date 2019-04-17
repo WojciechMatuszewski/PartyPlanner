@@ -17,7 +17,6 @@ const LoaderWrapper = styled.div`
 
 const FetchMoreLoader: React.FC<FetchMoreLoaderProps> = props => {
   React.useEffect(() => {
-    // console.log(props.loading);
     props.onLoadingChange && props.onLoadingChange();
   }, [props.loading]);
 
