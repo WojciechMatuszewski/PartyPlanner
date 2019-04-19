@@ -17,6 +17,7 @@ import NewMessagesBelowNotifier from '../ChatMessages/NewMessagesBelowNotifier';
 import { List, CellMeasurerCache } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
+import { isBrowser } from '@apolloSetup/initApollo';
 
 const LOADER_OFFSET = 49;
 const MESSAGES_BATCH_SIZE = 30;
@@ -113,6 +114,8 @@ const ChatWindow: React.FC = () => {
 
   const currentListScrollGetter = React.useCallback(() => {
     if (!virtualizedListRef.current) return 0;
+    // TODO:
+    // memory leak
     return virtualizedListRef.current.getOffsetForRow({
       index:
         data && data.messagesConnection
@@ -298,6 +301,7 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleChatIdChange() {
+    if (!isBrowser()) return;
     setQueryVariables(createQueryVariables(currentlySelectedChatId));
     setUnreadCount(0);
     scrolledInitially.current = false;

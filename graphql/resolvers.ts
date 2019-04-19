@@ -1,5 +1,3 @@
-const DATE_DIFF_LIMIT = 60000;
-
 import { Resolvers } from 'apollo-boost';
 import {
   PaginateMessagesQueryNode,
@@ -10,6 +8,17 @@ import {
 import { ApolloCache } from 'apollo-cache';
 import { compose, curry, ifElse, always, lt, gt } from 'ramda';
 
+// this probably should go to .env
+export const USER_PRESENCE_CONFIG = {
+  dateDiffLimit: 60000,
+  poolInterval: 30000,
+  // we have to check the status locally as well
+  // user exits the page => no updates but without an update ui will not rerender
+  // so we have to track it locally as well so that we can update given user when he is inactive for (in this case) 61 seconds
+  localOfflineTimeoutOffset: 10000,
+  localStorageHeartbeatKeyName: 'last-heartbeat'
+};
+
 function parseUserDateToTimestamp(user: PaginateUsersQueryNode) {
   return new Date(user.lastOnline).getTime();
 }
@@ -18,13 +27,13 @@ function getCurrentDateTimestamp() {
   return new Date().getTime();
 }
 
-function diffBetweenNumbers(x: number, y: number) {
-  return x - y;
+function getDiffBetweenUserAndNow(userLastOnlineTimeStamp: number) {
+  return Math.abs(userLastOnlineTimeStamp - getCurrentDateTimestamp());
 }
 
-const dateDiffer = compose(
-  lt(DATE_DIFF_LIMIT),
-  curry(diffBetweenNumbers)(getCurrentDateTimestamp()),
+const shouldBeOffline = compose(
+  lt(USER_PRESENCE_CONFIG.dateDiffLimit),
+  getDiffBetweenUserAndNow,
   parseUserDateToTimestamp
 );
 
@@ -50,6 +59,6 @@ export const LocalResolvers: Resolvers = {
     hasUnreadMessages: () => false
   },
   User: {
-    status: ifElse(dateDiffer, always('OFFLINE'), always('ONLINE'))
+    status: ifElse(shouldBeOffline, always('OFFLINE'), always('ONLINE'))
   }
 };

@@ -11,10 +11,11 @@ const UserStatusWrapper = styled.div`
 `;
 
 const StatusDot = styled.div<Props>`
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   background: ${props =>
-    props.status === 'OFFLINE' ? '#8c8c8c' : 'rgb(66, 183, 42)'};
+    props.status == UserStatus.Offline ? '#8c8c8c' : 'rgb(66, 183, 42)'};
+  opacity: ${props => (props.status == UserStatus.Offline ? '0.4' : 1)};
   border-radius: 50%;
 `;
 

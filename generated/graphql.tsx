@@ -3271,6 +3271,23 @@ export type CreateMessageAuthor = {
   id: string;
 };
 
+export type UpdateUserVariables = {
+  data: UserUpdateInput;
+  where: UserWhereUniqueInput;
+};
+
+export type UpdateUserMutation = {
+  __typename?: 'Mutation';
+
+  updateUser: Maybe<UpdateUserUpdateUser>;
+};
+
+export type UpdateUserUpdateUser = {
+  __typename?: 'User';
+
+  id: string;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -3884,6 +3901,36 @@ export function useCreateMessage(
     CreateMessageMutation,
     CreateMessageVariables
   >(CreateMessageDocument, baseOptions);
+}
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+    updateUser(data: $data, where: $where) {
+      id
+    }
+  }
+`;
+export class UpdateUserComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<UpdateUserMutation, UpdateUserVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateUserMutation, UpdateUserVariables>
+        mutation={UpdateUserDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useUpdateUser(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    UpdateUserMutation,
+    UpdateUserVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<UpdateUserMutation, UpdateUserVariables>(
+    UpdateUserDocument,
+    baseOptions
+  );
 }
 export const MeQueryDocument = gql`
   query MeQuery {
