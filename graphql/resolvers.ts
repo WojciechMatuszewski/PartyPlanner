@@ -1,10 +1,32 @@
+const DATE_DIFF_LIMIT = 60000;
+
 import { Resolvers } from 'apollo-boost';
 import {
   PaginateMessagesQueryNode,
   MeQueryQuery,
-  MeQueryDocument
+  MeQueryDocument,
+  PaginateUsersQueryNode
 } from '@generated/graphql';
 import { ApolloCache } from 'apollo-cache';
+import { compose, curry, ifElse, always, lt, gt } from 'ramda';
+
+function parseUserDateToTimestamp(user: PaginateUsersQueryNode) {
+  return new Date(user.lastOnline).getTime();
+}
+
+function getCurrentDateTimestamp() {
+  return new Date().getTime();
+}
+
+function diffBetweenNumbers(x: number, y: number) {
+  return x - y;
+}
+
+const dateDiffer = compose(
+  lt(DATE_DIFF_LIMIT),
+  curry(diffBetweenNumbers)(getCurrentDateTimestamp()),
+  parseUserDateToTimestamp
+);
 
 export const LocalResolvers: Resolvers = {
   Message: {
@@ -26,5 +48,8 @@ export const LocalResolvers: Resolvers = {
   },
   Chat: {
     hasUnreadMessages: () => false
+  },
+  User: {
+    status: ifElse(dateDiffer, always('OFFLINE'), always('ONLINE'))
   }
 };

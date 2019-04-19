@@ -41,7 +41,7 @@ const ChatUser: React.FC<Props> = ({ chatUser }) => {
           {chatUser.firstName} {chatUser.lastName}
         </Typography.Text>
       </ChatUserAvatarNameWrapper>
-      <ChatUserStatus />
+      <ChatUserStatus status={chatUser.status} />
     </ChatUserWrapper>
   );
 };

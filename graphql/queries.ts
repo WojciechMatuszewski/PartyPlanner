@@ -38,6 +38,8 @@ export const PAGINATE_USERS_QUERY = gql`
           firstName
           lastName
           avatar
+          lastOnline
+          status @client
         }
       }
       pageInfo {

@@ -4,3 +4,12 @@ type Message {
   optimisticallyCreated: Boolean!
   hasOptimisticError: Boolean!
 }
+
+enum UserStatus {
+  OFFLINE
+  ONLINE
+}
+
+type User {
+  status: UserStatus!
+}

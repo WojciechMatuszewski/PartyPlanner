@@ -4,10 +4,13 @@ import ChatSideNavigation from './ChatSideNavigation';
 import { ChatsContext } from '@pages/chats';
 import {
   PaginateUsersQueryComponent,
-  PaginateUsersQueryEdges
+  PaginateUsersQueryEdges,
+  UserOrderByInput
 } from '@generated/graphql';
 import ChatSectionLoading from './ChatSectionLoading';
 import ChatUsersList from './ChatUsers/ChatUsersList';
+
+const POOL_INTERVAL = 30000;
 
 const ChatUsersMenu: React.FC = () => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
@@ -37,8 +40,10 @@ const ChatUsersMenu: React.FC = () => {
             where: {
               chats_some: { id: currentlySelectedChatId },
               id_not: currentlyLoggedUserData.id
-            }
+            },
+            orderBy: UserOrderByInput.LastOnlineAsc
           }}
+          pollInterval={POOL_INTERVAL}
         >
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
