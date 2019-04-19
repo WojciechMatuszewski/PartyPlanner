@@ -163,36 +163,6 @@ const ChatInput: React.FC<Props> = ({
 
     onNewMessage();
   }
-
-  // function handleInputError({ createMessage }: any) {
-  //   const currentMessages = apolloClient.readQuery<PaginateMessagesQueryQuery>({
-  //     query: PaginateMessagesQueryDocument,
-  //     variables: currentQueryVariables
-  //   });
-
-  //   createMessage.hasOptimisticError = true;
-
-  //   if (!currentMessages) return;
-  //   currentMessages.messagesConnection.edges.push({
-  //     node: createMessage,
-  //     __typename: 'MessageEdge'
-  //   });
-
-  //   apolloClient.writeQuery({
-  //     query: PaginateMessagesQueryDocument,
-  //     variables: currentQueryVariables,
-  //     data: currentMessages
-  //   });
-  //   requestAnimationFrame(() => {
-  //     onNewMessage();
-  //   });
-  //   console.log(currentMessages);
-
-  //   // apolloClient.writeQuery({
-  //   //   query: PaginateMessagesQueryDocument,
-
-  //   // })
-  // }
 };
 
 export default ChatInput;

@@ -132,7 +132,7 @@ const ChatWindow: React.FC = () => {
     if (!isWithinBottomLockZone) {
       setUnreadCount(prevCount => prevCount + 1);
     } else {
-      // sometimes renderisng cant keep up
+      // sometimes rendering cant keep up
       requestAnimationFrame(() => {
         handleNewMessage();
       });

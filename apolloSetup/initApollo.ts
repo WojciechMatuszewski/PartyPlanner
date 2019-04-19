@@ -1,3 +1,4 @@
+import { LocalResolvers } from './../graphql/resolvers';
 import {
   ApolloClient,
   InMemoryCache,
@@ -10,7 +11,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { ApolloLink } from 'apollo-link';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
-import { LocalResolvers } from '@graphql/resolvers';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 

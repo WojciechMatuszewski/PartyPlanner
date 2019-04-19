@@ -3,18 +3,25 @@ import moment from 'moment';
 import uuid from 'uuid/v4';
 import { PartiesListFilterPayload } from '../PartiesListReducer';
 import { DatePicker } from 'antd';
-import { compose } from 'react-apollo';
+import { compose, ifElse } from 'ramda';
 import { PartiesListFilterDrawerFilterProps } from './PartiesListFilterDrawer';
 
 interface Props
   extends PartiesListFilterDrawerFilterProps<moment.Moment | undefined> {}
 const PartiesListFilterDrawerHappensAt: React.FC<Props> = props => {
+  const handleOnChange = ifElse(
+    isSelectedDateDefined,
+    handleDateSelected,
+    handleSelectedDateNotDefined
+  );
+
   return (
     <DatePicker
       defaultValue={undefined}
       value={props.filterValue}
       allowClear={true}
       onChange={handleOnChange}
+      data-testid="date-picker"
     />
   );
 
@@ -40,12 +47,19 @@ const PartiesListFilterDrawerHappensAt: React.FC<Props> = props => {
     };
   }
 
-  function handleOnChange(selectedDate: moment.Moment | undefined): void {
-    if (!selectedDate) props.onRemoveFilter('start');
+  function isSelectedDateDefined(selectedDate: moment.Moment | null) {
+    return selectedDate != null;
+  }
+
+  function handleDateSelected(selectedDate: moment.Moment) {
     return compose(
       props.onChange,
       createFilterObjectFromDate
     )(selectedDate);
+  }
+
+  function handleSelectedDateNotDefined() {
+    props.onRemoveFilter('start');
   }
 };
 
