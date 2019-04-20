@@ -1,6 +1,6 @@
 import React from 'react';
 import 'react-testing-library/cleanup-after-each';
-import { PaginateUsersQueryEdges } from '@generated/graphql';
+import { PaginateUsersQueryEdges, UserStatus } from '@generated/graphql';
 import { render, fireEvent } from 'react-testing-library';
 import InviteFriendListItem from '@components/Party/CreateParty/InviteFriend/InviteFriendListItem';
 import 'jest-dom/extend-expect';
@@ -10,7 +10,9 @@ const fakeUser: PaginateUsersQueryEdges = {
     id: '1',
     avatar: null,
     firstName: 'Wojtek',
-    lastName: 'Matuszewski'
+    lastName: 'Matuszewski',
+    lastOnline: new Date(),
+    status: UserStatus.Offline
   }
 };
 
