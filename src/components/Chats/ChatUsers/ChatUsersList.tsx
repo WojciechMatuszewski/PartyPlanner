@@ -30,13 +30,13 @@ const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
   return (
     <ChatUsersWrapper>
       {chatUsers
-        .sort((a, b) => {
-          return a.node.status == UserStatus.Online
+        .sort((a, b) =>
+          a.node.status == UserStatus.Online
             ? b.node.status == UserStatus.Online
               ? 0
               : -1
-            : 1;
-        })
+            : 1
+        )
         .map(chatUser => (
           <ChatUser key={chatUser.node.id} chatUser={chatUser.node} />
         ))}
