@@ -19,6 +19,7 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { isBrowser } from '@apolloSetup/initApollo';
 import useInterval from '@hooks/useInterval';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
+import UnreadMessages from './UnreadMessages';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -96,13 +97,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                 style={{ marginLeft: 'auto' }}
                 css={[NoticeIconMenuItemStyles]}
               >
-                <NoticeIcon bell={<Icon type="user" />}>
-                  <NoticeIcon.Tab
-                    list={[]}
-                    title="Friends Requests"
-                    skeletonProps={{}}
-                  />
-                </NoticeIcon>
+                <UnreadMessages />
               </Menu.Item>
 
               <Menu.Item css={[NoticeIconMenuItemStyles]}>
@@ -178,13 +173,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                   style={{ marginLeft: 'auto' }}
                   css={[NoticeIconMenuItemStyles]}
                 >
-                  <NoticeIcon bell={<Icon type="user" />}>
-                    <NoticeIcon.Tab
-                      list={[]}
-                      title="Friends Requests"
-                      skeletonProps={{}}
-                    />
-                  </NoticeIcon>
+                  <UnreadMessages />
                 </Menu.Item>
                 <Menu.Item css={[NoticeIconMenuItemStyles]}>
                   <NoticeIcon bell={<Icon type="message" />}>

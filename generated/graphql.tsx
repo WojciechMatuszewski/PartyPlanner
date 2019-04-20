@@ -3308,6 +3308,28 @@ export type MeQueryMe = {
   lastName: string;
 
   avatar: Maybe<string>;
+
+  unreadMessages: Maybe<MeQueryUnreadMessages[]>;
+};
+
+export type MeQueryUnreadMessages = {
+  __typename?: 'Message';
+
+  content: string;
+
+  author: MeQueryAuthor;
+};
+
+export type MeQueryAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  id: string;
 };
 
 export type PaginateUsersQueryVariables = {
@@ -3544,37 +3566,7 @@ export type PaginateMessagesQueryEdges = {
   node: PaginateMessagesQueryNode;
 };
 
-export type PaginateMessagesQueryNode = {
-  __typename?: 'Message';
-
-  id: string;
-
-  author: PaginateMessagesQueryAuthor;
-
-  isSendByMe: boolean;
-
-  optimisticallyAdded: boolean;
-
-  optimisticallyCreated: boolean;
-
-  hasOptimisticError: boolean;
-
-  content: string;
-
-  createdAt: DateTime;
-};
-
-export type PaginateMessagesQueryAuthor = {
-  __typename?: 'User';
-
-  firstName: string;
-
-  lastName: string;
-
-  avatar: Maybe<string>;
-
-  id: string;
-};
+export type PaginateMessagesQueryNode = MessageFragmentFragment;
 
 export type ChatMessagesSubscriptionVariables = {
   where?: Maybe<MessageSubscriptionWhereInput>;
@@ -3685,6 +3677,12 @@ export type MessageFragmentFragment = {
 
   isSendByMe: boolean;
 
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
   content: string;
 
   createdAt: DateTime;
@@ -3747,6 +3745,9 @@ export const MessageFragmentFragmentDoc = gql`
       id
     }
     isSendByMe @client
+    optimisticallyAdded @client
+    optimisticallyCreated @client
+    hasOptimisticError @client
     content
     createdAt
   }
@@ -3940,6 +3941,15 @@ export const MeQueryDocument = gql`
       firstName
       lastName
       avatar
+      unreadMessages {
+        content
+        author {
+          firstName
+          lastName
+          avatar
+          id
+        }
+      }
     }
   }
 `;
@@ -4221,23 +4231,13 @@ export const PaginateMessagesQueryDocument = gql`
       }
       edges {
         node {
-          id
-          author {
-            firstName
-            lastName
-            avatar
-            id
-          }
-          isSendByMe @client
-          optimisticallyAdded @client
-          optimisticallyCreated @client
-          hasOptimisticError @client
-          content
-          createdAt
+          ...MESSAGE_FRAGMENT
         }
       }
     }
   }
+
+  ${MessageFragmentFragmentDoc}
 `;
 export class PaginateMessagesQueryComponent extends React.Component<
   Partial<

@@ -1,4 +1,4 @@
-type Message {
+extend type Message {
   isSendByMe: Boolean!
   optimisticallyAdded: Boolean!
   optimisticallyCreated: Boolean!
@@ -10,6 +10,6 @@ enum UserStatus {
   ONLINE
 }
 
-type User {
+extend type User {
   status: UserStatus!
 }

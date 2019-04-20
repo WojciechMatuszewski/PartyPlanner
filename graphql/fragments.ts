@@ -36,6 +36,9 @@ export const MESSAGE_FRAGMENT = gql`
       id
     }
     isSendByMe @client
+    optimisticallyAdded @client
+    optimisticallyCreated @client
+    hasOptimisticError @client
     content
     createdAt
   }

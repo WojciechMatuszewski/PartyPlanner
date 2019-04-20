@@ -47,7 +47,6 @@ export const LocalResolvers: Resolvers = {
       const data = cache.readQuery<MeQueryQuery>({
         query: MeQueryDocument
       });
-
       if (!data || !data.me) return false;
       return data.me.id === message.author.id;
     },
