@@ -10,7 +10,7 @@ const UnreadMessages: React.FC = () => {
 
   return (
     <NoticeIcon
-      onLoadMore={() => console.log('should load more;')}
+      // onLoadMore={() => console.log('should load more;')}
       count={
         data && data.me && data.me.unreadMessages
           ? data.me.unreadMessages.length
