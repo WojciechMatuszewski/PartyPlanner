@@ -6,7 +6,7 @@ import {
   PaginateUsersQueryNode
 } from '@generated/graphql';
 import { ApolloCache } from 'apollo-cache';
-import { compose, curry, ifElse, always, lt, gt } from 'ramda';
+import { compose, ifElse, always, lt } from 'ramda';
 
 // this probably should go to .env
 export const USER_PRESENCE_CONFIG = {

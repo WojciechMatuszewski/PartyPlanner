@@ -2,20 +2,6 @@ import React from 'react';
 import { PaginateUsersQueryEdges, UserStatus } from '@generated/graphql';
 import ChatUser from './ChatUser';
 import styled from '@emotion/styled';
-import { PoseGroup } from 'react-pose';
-import {
-  map as RamdaMap,
-  pluck,
-  compose,
-  prop,
-  symmetricDifference,
-  lensProp,
-  pick,
-  assocPath,
-  path
-} from 'ramda';
-
-// import symmetricDifference from 'ramda/es/symmetricDifference';
 
 interface Props {
   chatUsers: PaginateUsersQueryEdges[];

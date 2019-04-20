@@ -4,8 +4,7 @@ import ChatSideNavigation from './ChatSideNavigation';
 import { ChatsContext } from '@pages/chats';
 import {
   PaginateUsersQueryComponent,
-  PaginateUsersQueryEdges,
-  UserOrderByInput
+  PaginateUsersQueryEdges
 } from '@generated/graphql';
 import ChatSectionLoading from './ChatSectionLoading';
 import ChatUsersList from './ChatUsers/ChatUsersList';
