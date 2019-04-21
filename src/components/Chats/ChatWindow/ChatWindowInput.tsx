@@ -63,7 +63,7 @@ const ChatInput: React.FC<Props> = ({
             optimisticResponse
           });
         } catch (e) {
-          message.error('could not send the message');
+          message.error('Could not send the message');
         }
       }}
     >

@@ -9,16 +9,6 @@ export const ME_QUERY = gql`
       firstName
       lastName
       avatar
-      unreadMessages {
-        # for some reason i cannot use @client fields why tho ? :C
-        content
-        author {
-          firstName
-          lastName
-          avatar
-          id
-        }
-      }
     }
   }
 `;
@@ -192,19 +182,6 @@ export const PAGINATE_MESSAGES_QUERY = gql`
       edges {
         node {
           ...MESSAGE_FRAGMENT
-          # id
-          # author {
-          #   firstName
-          #   lastName
-          #   avatar
-          #   id
-          # }
-          # isSendByMe @client
-          # optimisticallyAdded @client
-          # optimisticallyCreated @client
-          # hasOptimisticError @client
-          # content
-          # createdAt
         }
       }
     }

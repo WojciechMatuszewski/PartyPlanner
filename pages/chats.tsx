@@ -23,7 +23,7 @@ const LayoutStyles = css`
   display: flex;
 `;
 
-const INITIAL_PAGE_SIZE = 100;
+const INITIAL_PAGE_SIZE = 1;
 
 interface Props {
   me: MeQueryMe;
@@ -112,10 +112,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
   return (
     <Layout css={[LayoutStyles]}>
       <ChatsContext.Provider value={state}>
-        <ChatsMenu
-          userId={me.id}
-          initialChats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
-        />
+        <ChatsMenu userId={me.id} initialChatsData={data} />
         <ChatWindow />
         <ChatUsersMenu />
       </ChatsContext.Provider>

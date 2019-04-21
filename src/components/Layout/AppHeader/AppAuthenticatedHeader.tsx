@@ -9,7 +9,7 @@ import {
   useMeQuery,
   useUpdateUser
 } from '@generated/graphql';
-import { NoticeIcon } from 'ant-design-pro';
+
 import css from '@emotion/css';
 import { WithRouterProps, withRouter } from 'next/router';
 import { handleLogout } from '@components/Authentication/AuthService';
@@ -19,7 +19,6 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { isBrowser } from '@apolloSetup/initApollo';
 import useInterval from '@hooks/useInterval';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
-import UnreadMessages from './UnreadMessages';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -30,12 +29,12 @@ const MobileDrawerStyles = css`
   }
 `;
 
-const NoticeIconMenuItemStyles = css`
-  padding: 0 !important;
-  .antd-pro-notice-icon-noticeButton {
-    padding: 0 20px;
-  }
-`;
+// const NoticeIconMenuItemStyles = css`
+//   padding: 0 !important;
+//   .antd-pro-notice-icon-noticeButton {
+//     padding: 0 20px;
+//   }
+// `;
 
 const AuthMobileVerySmallStyles = css`
   @media screen and (max-width: 320px) {
@@ -92,14 +91,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                   <a>Chats</a>
                 </Link>
               </Menu.Item>
-
-              <Menu.Item
-                style={{ marginLeft: 'auto' }}
-                css={[NoticeIconMenuItemStyles]}
-              >
-                <UnreadMessages />
-              </Menu.Item>
-
+              {/* 
               <Menu.Item css={[NoticeIconMenuItemStyles]}>
                 <NoticeIcon bell={<Icon type="message" />}>
                   <NoticeIcon.Tab
@@ -108,7 +100,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                     skeletonProps={{}}
                   />
                 </NoticeIcon>
-              </Menu.Item>
+              </Menu.Item> */}
 
               <Menu.Item key="/user-profile">
                 <Link href="/user-profile">
@@ -169,13 +161,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                 mode="horizontal"
                 style={{ lineHeight: '64px', display: 'flex' }}
               >
-                <Menu.Item
-                  style={{ marginLeft: 'auto' }}
-                  css={[NoticeIconMenuItemStyles]}
-                >
-                  <UnreadMessages />
-                </Menu.Item>
-                <Menu.Item css={[NoticeIconMenuItemStyles]}>
+                {/* <Menu.Item css={[NoticeIconMenuItemStyles]}>
                   <NoticeIcon bell={<Icon type="message" />}>
                     <NoticeIcon.Tab
                       list={[]}
@@ -183,7 +169,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                       skeletonProps={{}}
                     />
                   </NoticeIcon>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item key="/user-profile">
                   <Link href="/user-profile">
                     <a>

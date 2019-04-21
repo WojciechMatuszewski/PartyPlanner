@@ -17,7 +17,7 @@ import NewMessagesBelowNotifier from '../ChatMessages/NewMessagesBelowNotifier';
 import { List, CellMeasurerCache } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
-import { isBrowser } from '@apolloSetup/initApollo';
+import { message } from 'antd';
 
 const LOADER_OFFSET = 49;
 const MESSAGES_BATCH_SIZE = 30;
@@ -79,34 +79,39 @@ const ChatWindow: React.FC = () => {
     if (!canFetchMore(data, loadingMore)) return;
     let lengthOfNewItems = 0;
     setLoadingMore(true);
-    await fetchMore({
-      variables: {
-        where: {
-          chat: { id: currentlySelectedChatId }
+    try {
+      await fetchMore({
+        variables: {
+          where: {
+            chat: { id: currentlySelectedChatId }
+          },
+          orderBy: 'createdAt_ASC' as MessageOrderByInput,
+          last: MESSAGES_BATCH_SIZE,
+          before: data!.messagesConnection.pageInfo.startCursor
         },
-        orderBy: 'createdAt_ASC' as MessageOrderByInput,
-        last: MESSAGES_BATCH_SIZE,
-        before: data!.messagesConnection.pageInfo.startCursor
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        setLoadingMore(false);
+        updateQuery: (prev, { fetchMoreResult }) => {
+          setLoadingMore(false);
 
-        if (!fetchMoreResult) return prev;
-        lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
+          if (!fetchMoreResult) return prev;
+          lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
 
-        return {
-          ...prev,
-          messagesConnection: {
-            ...prev.messagesConnection,
-            edges: [
-              ...fetchMoreResult.messagesConnection.edges,
-              ...prev.messagesConnection.edges
-            ],
-            pageInfo: fetchMoreResult.messagesConnection.pageInfo
-          }
-        };
-      }
-    });
+          return {
+            ...prev,
+            messagesConnection: {
+              ...prev.messagesConnection,
+              edges: [
+                ...fetchMoreResult.messagesConnection.edges,
+                ...prev.messagesConnection.edges
+              ],
+              pageInfo: fetchMoreResult.messagesConnection.pageInfo
+            }
+          };
+        }
+      });
+    } catch (e) {
+      setLoadingMore(false);
+      message.error('Could not fetch more messages');
+    }
 
     if (!data || !data.messagesConnection) return;
     handleApolloAfterFetchMore(lengthOfNewItems);
@@ -301,7 +306,6 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleChatIdChange() {
-    if (!isBrowser()) return;
     setQueryVariables(createQueryVariables(currentlySelectedChatId));
     setUnreadCount(0);
     scrolledInitially.current = false;

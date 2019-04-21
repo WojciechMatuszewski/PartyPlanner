@@ -30,6 +30,10 @@ const DrawerStyles = css`
   .ant-drawer-body {
     padding: 0;
   }
+  .ant-drawer-wrapper-body {
+    display: flex;
+    flex-direction: column;
+  }
   overflow-y: auto;
 `;
 
