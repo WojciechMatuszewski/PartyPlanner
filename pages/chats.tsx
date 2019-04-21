@@ -3,11 +3,7 @@ import { Layout, Button } from 'antd';
 import css from '@emotion/css';
 
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import {
-  MeQueryMe,
-  PaginateChatsQueryEdges,
-  usePaginateChatsQuery
-} from '@generated/graphql';
+import { MeQueryMe, usePaginateChatsQuery } from '@generated/graphql';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
