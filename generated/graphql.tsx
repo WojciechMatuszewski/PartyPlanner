@@ -3380,6 +3380,8 @@ export type PaginateChatsQueryNode = {
   members: Maybe<PaginateChatsQueryMembers[]>;
 
   messages: Maybe<PaginateChatsQueryMessages[]>;
+
+  hasUnreadMessages: boolean;
 };
 
 export type PaginateChatsQueryParty = {
@@ -3498,6 +3500,8 @@ export type ChatMessagesSubscriptionNode = {
   content: string;
 
   createdAt: DateTime;
+
+  chat: ChatMessagesSubscriptionChat;
 };
 
 export type ChatMessagesSubscriptionAuthor = {
@@ -3508,6 +3512,12 @@ export type ChatMessagesSubscriptionAuthor = {
   lastName: string;
 
   avatar: Maybe<string>;
+
+  id: string;
+};
+
+export type ChatMessagesSubscriptionChat = {
+  __typename?: 'Chat';
 
   id: string;
 };
@@ -3596,6 +3606,30 @@ export type MessageFragmentAuthor = {
   id: string;
 };
 
+export type LastChatMessageFragment = {
+  __typename?: 'Chat';
+
+  messages: Maybe<LastChatMessageMessages[]>;
+};
+
+export type LastChatMessageMessages = {
+  __typename?: 'Message';
+
+  createdAt: DateTime;
+
+  content: string;
+
+  author: LastChatMessageAuthor;
+};
+
+export type LastChatMessageAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+};
+
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
@@ -3646,6 +3680,19 @@ export const MessageFragmentFragmentDoc = gql`
     hasOptimisticError @client
     content
     createdAt
+  }
+`;
+
+export const LastChatMessageFragmentDoc = gql`
+  fragment LAST_CHAT_MESSAGE on Chat {
+    messages(last: 1) {
+      createdAt
+      content
+      author {
+        firstName
+        lastName
+      }
+    }
   }
 `;
 
@@ -4066,6 +4113,7 @@ export const PaginateChatsQueryDocument = gql`
               lastName
             }
           }
+          hasUnreadMessages @client
         }
       }
     }
@@ -4200,6 +4248,9 @@ export const ChatMessagesSubscriptionDocument = gql`
         hasOptimisticError @client
         content
         createdAt
+        chat {
+          id
+        }
       }
     }
   }

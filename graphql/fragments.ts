@@ -43,3 +43,17 @@ export const MESSAGE_FRAGMENT = gql`
     createdAt
   }
 `;
+
+export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
+  fragment LAST_CHAT_MESSAGE_FRAGMENT on Chat {
+    messages(last: 1) {
+      createdAt
+      content
+      author {
+        firstName
+        lastName
+      }
+    }
+    hasUnreadMessages @client
+  }
+`;

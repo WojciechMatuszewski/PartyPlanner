@@ -150,6 +150,7 @@ export const PAGINATE_CHATS_QUERY = gql`
               lastName
             }
           }
+          hasUnreadMessages @client
         }
       }
     }

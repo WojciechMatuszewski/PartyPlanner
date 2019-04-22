@@ -16,6 +16,9 @@ export const CHAT_MESSAGES_SUBSCRIPTION = gql`
         hasOptimisticError @client
         content
         createdAt
+        chat {
+          id
+        }
       }
     }
   }

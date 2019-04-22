@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { gql } from 'apollo-boost';
+import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
 const InputStyles = css`
   width: 100%;
   height: 50px;
@@ -173,18 +174,7 @@ const ChatInput: React.FC<Props> = ({
   ) {
     proxy.writeFragment({
       id: `Chat:${currentlySelectedChatId}`,
-      fragment: gql`
-        fragment latestMessage on Chat {
-          messages(last: 1) {
-            createdAt
-            content
-            author {
-              firstName
-              lastName
-            }
-          }
-        }
-      `,
+      fragment: LAST_CHAT_MESSAGE_FRAGMENT,
       data: {
         messages: [
           {
@@ -194,6 +184,7 @@ const ChatInput: React.FC<Props> = ({
             __typename: 'Message'
           }
         ],
+        hasUnreadMessages: false,
         __typename: 'Chat'
       }
     });

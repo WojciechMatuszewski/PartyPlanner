@@ -5,6 +5,10 @@ extend type Message {
   hasOptimisticError: Boolean!
 }
 
+extend type Chat {
+  hasUnreadMessages: Boolean!
+}
+
 enum UserStatus {
   OFFLINE
   ONLINE

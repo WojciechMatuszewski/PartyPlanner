@@ -8,7 +8,8 @@ import {
   PaginateUsersQueryQuery,
   PaginateChatsQueryDocument,
   PaginateChatsQueryComponent,
-  usePaginateMessagesQuery
+  usePaginateMessagesQuery,
+  useChatMessagesSubscription
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
@@ -17,6 +18,7 @@ import css from '@emotion/css';
 import { ChatsContext } from '@pages/chats';
 import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
 import ChatSectionLoading from './ChatSectionLoading';
+import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
 
 interface Props {
   initialChatsData: PaginateChatsQueryQuery;
@@ -24,9 +26,50 @@ interface Props {
 }
 
 const ChatsMenu: React.FC<Props> = props => {
-  const { currentlyLoggedUserData } = React.useContext(ChatsContext);
+  const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
+    ChatsContext
+  );
   const [filterQuery, setFilterQuery] = React.useState<string>('');
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
+
+  useChatMessagesSubscription({
+    variables: {
+      where: {
+        node: {
+          author: {
+            id_not: currentlyLoggedUserData.id
+          },
+          chat: {
+            members_some: { id: currentlyLoggedUserData.id }
+          }
+        }
+      }
+    },
+    onSubscriptionData: ({ client, subscriptionData: { data } }) => {
+      if (!data || !data.message || !data.message.node) return;
+      try {
+        client.writeFragment({
+          id: `Chat:${data.message.node.chat.id}`,
+          fragment: LAST_CHAT_MESSAGE_FRAGMENT,
+          data: {
+            messages: [
+              {
+                author: data.message.node.author,
+                createdAt: data.message.node.createdAt,
+                content: data.message.node.content,
+                __typename: 'Message'
+              }
+            ],
+            hasUnreadMessages:
+              currentlySelectedChatId !== data.message.node.chat.id,
+            __typename: 'Chat'
+          }
+        });
+      } catch (e) {}
+      // check if chat exists in cache
+      // append new message, mark as unread if needed
+    }
+  });
 
   return (
     <ChatSideNavigation
