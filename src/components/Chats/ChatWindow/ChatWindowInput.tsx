@@ -6,14 +6,15 @@ import {
   PaginateMessagesQueryVariables,
   PaginateMessagesQueryDocument,
   PaginateMessagesQueryQuery,
-  CreateMessageMutation
+  CreateMessageMutation,
+  CreateMessageCreateMessage
 } from '@generated/graphql';
 import { ChatsContext } from '@pages/chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
-
+import { gql } from 'apollo-boost';
 const InputStyles = css`
   width: 100%;
   height: 50px;
@@ -153,6 +154,8 @@ const ChatInput: React.FC<Props> = ({
       __typename: 'MessageEdge'
     });
 
+    updateCurrentThreadLastMessage(proxy, createMessage);
+
     proxy.writeQuery({
       query: PaginateMessagesQueryDocument,
       variables: currentQueryVariables,
@@ -162,6 +165,38 @@ const ChatInput: React.FC<Props> = ({
     if (isFromServer) return;
 
     onNewMessage();
+  }
+
+  function updateCurrentThreadLastMessage(
+    proxy: DataProxy,
+    createdMessage: CreateMessageCreateMessage
+  ) {
+    proxy.writeFragment({
+      id: `Chat:${currentlySelectedChatId}`,
+      fragment: gql`
+        fragment latestMessage on Chat {
+          messages(last: 1) {
+            createdAt
+            content
+            author {
+              firstName
+              lastName
+            }
+          }
+        }
+      `,
+      data: {
+        messages: [
+          {
+            author: createdMessage.author,
+            content: createdMessage.content,
+            createdAt: createdMessage.createdAt,
+            __typename: 'Message'
+          }
+        ],
+        __typename: 'Chat'
+      }
+    });
   }
 };
 

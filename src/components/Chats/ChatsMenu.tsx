@@ -6,14 +6,14 @@ import {
   PaginateChatsQueryPageInfo,
   PaginateChatsQueryVariables,
   PaginateUsersQueryQuery,
-  PaginateChatsQueryDocument
+  PaginateChatsQueryDocument,
+  PaginateChatsQueryComponent,
+  usePaginateMessagesQuery
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
 import ChatsList from './ChatsList/ChatsList';
-import { message } from 'antd';
 import css from '@emotion/css';
-import { useApolloClient } from 'react-apollo-hooks';
 import { ChatsContext } from '@pages/chats';
 import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
 import ChatSectionLoading from './ChatSectionLoading';
@@ -25,8 +25,7 @@ interface Props {
 
 const ChatsMenu: React.FC<Props> = props => {
   const { currentlyLoggedUserData } = React.useContext(ChatsContext);
-  const apolloClient = useApolloClient();
-
+  const [filterQuery, setFilterQuery] = React.useState<string>('');
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
 
   return (
@@ -42,10 +41,38 @@ const ChatsMenu: React.FC<Props> = props => {
         closable: false
       }}
     >
-      <ChatsListSearch />
-      <ChatsList chats={[]} />
+      <ChatsListSearch onChange={handleOnInputChange} />
+      <PaginateChatsQueryComponent
+        variables={{
+          where: {
+            party: {
+              members_some: { id: currentlyLoggedUserData.id },
+              normalizedTitle_contains: filterQuery.toLocaleLowerCase()
+            }
+          },
+          first: 10
+        }}
+      >
+        {({ data, loading, error }) => {
+          if (loading || !data || !data.chatsConnection)
+            return <ChatSectionLoading />;
+          if (!loading && data && data.chatsConnection.edges.length === 0)
+            return <ChatsListFilteredEmpty filterQuery={filterQuery} />;
+          return (
+            <React.Fragment>
+              <ChatsList
+                chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
+              />
+            </React.Fragment>
+          );
+        }}
+      </PaginateChatsQueryComponent>
     </ChatSideNavigation>
   );
+
+  function handleOnInputChange(inputValue: string) {
+    setFilterQuery(inputValue);
+  }
 };
 
 export default ChatsMenu;

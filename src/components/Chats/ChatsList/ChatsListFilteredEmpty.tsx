@@ -7,6 +7,11 @@ const EmptyWrapper = styled.div`
   height: 100%;
   width: 100%;
   ${FlexBoxFullCenteredStyles};
+  .img {
+    display: block;
+    margin: 0 auto;
+  }
+  text-align: center;
 `;
 
 interface Props {
@@ -18,7 +23,8 @@ const ChatsListFilteredEmpty: React.FC<Props> = ({ filterQuery }) => {
       <Empty
         description={
           <React.Fragment>
-            No chats found with title containing{' '}
+            No chats found with title containing
+            <br />
             <Typography.Text type="danger">{filterQuery}</Typography.Text>
           </React.Fragment>
         }
