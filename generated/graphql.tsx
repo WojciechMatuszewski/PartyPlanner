@@ -61,6 +61,34 @@ export interface PartyWhereInput {
 
   title_not_ends_with?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
+  normalizedTitle_not?: Maybe<string>;
+
+  normalizedTitle_in?: Maybe<string[]>;
+
+  normalizedTitle_not_in?: Maybe<string[]>;
+
+  normalizedTitle_lt?: Maybe<string>;
+
+  normalizedTitle_lte?: Maybe<string>;
+
+  normalizedTitle_gt?: Maybe<string>;
+
+  normalizedTitle_gte?: Maybe<string>;
+
+  normalizedTitle_contains?: Maybe<string>;
+
+  normalizedTitle_not_contains?: Maybe<string>;
+
+  normalizedTitle_starts_with?: Maybe<string>;
+
+  normalizedTitle_not_starts_with?: Maybe<string>;
+
+  normalizedTitle_ends_with?: Maybe<string>;
+
+  normalizedTitle_not_ends_with?: Maybe<string>;
+
   description?: Maybe<string>;
 
   description_not?: Maybe<string>;
@@ -983,6 +1011,8 @@ export interface PartyCreateInput {
 
   title: string;
 
+  normalizedTitle: string;
+
   description: string;
 
   author: UserCreateOneInput;
@@ -1048,6 +1078,8 @@ export interface PartyCreateWithoutMembersInput {
   id?: Maybe<string>;
 
   title: string;
+
+  normalizedTitle: string;
 
   description: string;
 
@@ -1283,6 +1315,8 @@ export interface PartyUpdateOneRequiredInput {
 export interface PartyUpdateDataInput {
   title?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
   description?: Maybe<string>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
@@ -1368,6 +1402,8 @@ export interface PartyUpdateWithWhereUniqueWithoutMembersInput {
 
 export interface PartyUpdateWithoutMembersDataInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -1663,6 +1699,34 @@ export interface PartyScalarWhereInput {
 
   title_not_ends_with?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
+  normalizedTitle_not?: Maybe<string>;
+
+  normalizedTitle_in?: Maybe<string[]>;
+
+  normalizedTitle_not_in?: Maybe<string[]>;
+
+  normalizedTitle_lt?: Maybe<string>;
+
+  normalizedTitle_lte?: Maybe<string>;
+
+  normalizedTitle_gt?: Maybe<string>;
+
+  normalizedTitle_gte?: Maybe<string>;
+
+  normalizedTitle_contains?: Maybe<string>;
+
+  normalizedTitle_not_contains?: Maybe<string>;
+
+  normalizedTitle_starts_with?: Maybe<string>;
+
+  normalizedTitle_not_starts_with?: Maybe<string>;
+
+  normalizedTitle_ends_with?: Maybe<string>;
+
+  normalizedTitle_not_ends_with?: Maybe<string>;
+
   description?: Maybe<string>;
 
   description_not?: Maybe<string>;
@@ -1802,6 +1866,8 @@ export interface PartyUpdateManyWithWhereNestedInput {
 
 export interface PartyUpdateManyDataInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -2701,6 +2767,8 @@ export interface MessageUpdateManyMutationInput {
 export interface PartyUpdateInput {
   title?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
   description?: Maybe<string>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
@@ -2722,6 +2790,8 @@ export interface PartyUpdateInput {
 
 export interface PartyUpdateManyMutationInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -2907,6 +2977,8 @@ export enum PartyOrderByInput {
   IdDesc = 'id_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  NormalizedTitleAsc = 'normalizedTitle_ASC',
+  NormalizedTitleDesc = 'normalizedTitle_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -3383,6 +3455,14 @@ export type PaginateMessagesQueryEdges = {
 };
 
 export type PaginateMessagesQueryNode = MessageFragmentFragment;
+
+export type HasPartiesQueryVariables = {};
+
+export type HasPartiesQueryQuery = {
+  __typename?: 'Query';
+
+  hasParties: boolean;
+};
 
 export type ChatMessagesSubscriptionVariables = {
   where?: Maybe<MessageSubscriptionWhereInput>;
@@ -4075,6 +4155,33 @@ export function usePaginateMessagesQuery(
     PaginateMessagesQueryQuery,
     PaginateMessagesQueryVariables
   >(PaginateMessagesQueryDocument, baseOptions);
+}
+export const HasPartiesQueryDocument = gql`
+  query HasPartiesQuery {
+    hasParties
+  }
+`;
+export class HasPartiesQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<HasPartiesQueryQuery, HasPartiesQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<HasPartiesQueryQuery, HasPartiesQueryVariables>
+        query={HasPartiesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useHasPartiesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<HasPartiesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    HasPartiesQueryQuery,
+    HasPartiesQueryVariables
+  >(HasPartiesQueryDocument, baseOptions);
 }
 export const ChatMessagesSubscriptionDocument = gql`
   subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {

@@ -188,3 +188,9 @@ export const PAGINATE_MESSAGES_QUERY = gql`
   }
   ${MESSAGE_FRAGMENT}
 `;
+
+export const HAS_PARTIES_QUERY = gql`
+  query HasPartiesQuery {
+    hasParties
+  }
+`;

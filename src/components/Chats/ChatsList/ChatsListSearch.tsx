@@ -16,20 +16,9 @@ const SearchWrapper = styled.div`
 
 interface Props {
   inputProps?: InputProps;
-  onInputChange: (inputValue: string) => void;
-  onFetchMore: () => Promise<any>;
-  onError: () => void;
-  onFetchMoreResult: (result: any) => void;
 }
 
 const ChatsListSearch: React.FC<Props> = props => {
-  const { onChange } = useBetterTypeahead({
-    fetchFunction: props.onFetchMore,
-    onError: props.onError,
-    onResult: props.onFetchMoreResult,
-    responseTransformFunction: fetchResult => fetchResult.data
-  });
-
   return (
     <SearchWrapper>
       <Input
@@ -37,10 +26,6 @@ const ChatsListSearch: React.FC<Props> = props => {
         placeholder="Search ..."
         allowClear={true}
         prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-        onChange={compose(
-          callAll(props.onInputChange, onChange),
-          parseInputEvent
-        )}
         {...props.inputProps}
       />
     </SearchWrapper>
