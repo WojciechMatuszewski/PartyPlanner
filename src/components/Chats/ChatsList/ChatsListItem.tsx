@@ -11,7 +11,7 @@ import {
 import { WithRouterProps, withRouter } from 'next/router';
 import { useApolloClient } from 'react-apollo-hooks';
 import { gql } from 'apollo-boost';
-import { cond, compose } from 'ramda';
+import { cond } from 'ramda';
 
 interface Props {
   edge: PaginateChatsQueryEdges;
