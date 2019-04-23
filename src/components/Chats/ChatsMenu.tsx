@@ -1,20 +1,10 @@
 import React from 'react';
 import useMedia from '@hooks/useMedia';
 import {
-  PaginateChatsQueryQuery,
   PaginateChatsQueryEdges,
-  PaginateChatsQueryPageInfo,
-  PaginateChatsQueryVariables,
-  PaginateUsersQueryQuery,
-  PaginateChatsQueryDocument,
   PaginateChatsQueryComponent,
-  usePaginateMessagesQuery,
   useChatMessagesSubscription,
-  ChatMessagesSubscriptionSubscription,
-  ChatMessagesSubscriptionMessage,
-  ChatMessagesSubscriptionNode,
-  PaginateMessagesQueryDocument,
-  MessageOrderByInput
+  ChatMessagesSubscriptionNode
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
@@ -25,18 +15,12 @@ import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
 import { ApolloClient } from 'apollo-boost';
-import { SubscriptionHookResult } from 'react-apollo-hooks';
 import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
 } from './shared';
 
-interface Props {
-  initialChatsData: PaginateChatsQueryQuery;
-  userId: string;
-}
-
-const ChatsMenu: React.FC<Props> = props => {
+const ChatsMenu: React.FC = () => {
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
   );
@@ -57,12 +41,11 @@ const ChatsMenu: React.FC<Props> = props => {
       }
     },
     onSubscriptionData: ({ client, subscriptionData: { data } }) => {
-      console.log('tick!');
       if (!data || !data.message || !data.message.node) return;
       try {
         updateLastChatMessage(client, data.message.node);
       } catch (e) {
-        console.log(e);
+        // probably have to update the cache with new thread
       }
       try {
         if (hasChatSelected(data.message.node.chat.id)) return;
@@ -102,7 +85,7 @@ const ChatsMenu: React.FC<Props> = props => {
           first: 10
         }}
       >
-        {({ data, loading, error }) => {
+        {({ data, loading }) => {
           if (loading || !data || !data.chatsConnection)
             return <ChatSectionLoading />;
           if (!loading && data && data.chatsConnection.edges.length === 0)

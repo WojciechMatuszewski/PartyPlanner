@@ -2,8 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Input, Icon } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import useBetterTypeahead from '@hooks/useBetterTypeahead';
-import { callAll } from '@shared/functionUtils';
+
 import { compose } from 'ramda';
 import { debounce } from 'lodash';
 
@@ -40,7 +39,6 @@ const ChatsListSearch: React.FC<Props> = props => {
   );
 
   function parseInputEvent(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log('EVENT', e.currentTarget);
     return e.currentTarget.value;
   }
 };

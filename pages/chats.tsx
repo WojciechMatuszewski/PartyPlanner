@@ -3,11 +3,7 @@ import { Layout, Button } from 'antd';
 import css from '@emotion/css';
 
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import {
-  MeQueryMe,
-  usePaginateChatsQuery,
-  useHasPartiesQuery
-} from '@generated/graphql';
+import { MeQueryMe, useHasPartiesQuery } from '@generated/graphql';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
@@ -22,8 +18,6 @@ const LayoutStyles = css`
   height: calc(100vh - 66px);
   display: flex;
 `;
-
-const INITIAL_PAGE_SIZE = 1;
 
 interface Props {
   me: MeQueryMe;
@@ -104,7 +98,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
   return (
     <Layout css={[LayoutStyles]}>
       <ChatsContext.Provider value={state}>
-        <ChatsMenu userId={me.id} initialChatsData={[]} />
+        <ChatsMenu />
         <ChatWindow />
         <ChatUsersMenu />
       </ChatsContext.Provider>
