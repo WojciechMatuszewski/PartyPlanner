@@ -67,13 +67,15 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   selected
 }) => {
   const apolloClient = useApolloClient();
+
+  React.useEffect(() => {
+    if (selected) markAsReadThread();
+  }, [selected]);
+
   return (
     <ChatsListItemWrapper
       hasUnreadMessages={node.hasUnreadMessages}
-      onClick={compose(
-        cond([[shouldSwitchUrl, changeUrlToCorrectChat]]),
-        markAsReadThread
-      )}
+      onClick={cond([[shouldSwitchUrl, changeUrlToCorrectChat]])}
       className={selected ? 'selected' : ''}
     >
       <ChatsListItemAvatarList userAvatarsData={node.members || []} />

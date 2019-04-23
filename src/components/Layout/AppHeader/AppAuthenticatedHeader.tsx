@@ -91,18 +91,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                   <a>Chats</a>
                 </Link>
               </Menu.Item>
-              {/* 
-              <Menu.Item css={[NoticeIconMenuItemStyles]}>
-                <NoticeIcon bell={<Icon type="message" />}>
-                  <NoticeIcon.Tab
-                    list={[]}
-                    title="Friends Requests"
-                    skeletonProps={{}}
-                  />
-                </NoticeIcon>
-              </Menu.Item> */}
-
-              <Menu.Item key="/user-profile">
+              <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
                 <Link href="/user-profile">
                   <a>
                     <UserAvatar userData={data && data.me ? data.me : {}} />
@@ -161,16 +150,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                 mode="horizontal"
                 style={{ lineHeight: '64px', display: 'flex' }}
               >
-                {/* <Menu.Item css={[NoticeIconMenuItemStyles]}>
-                  <NoticeIcon bell={<Icon type="message" />}>
-                    <NoticeIcon.Tab
-                      list={[]}
-                      title="Friends Requests"
-                      skeletonProps={{}}
-                    />
-                  </NoticeIcon>
-                </Menu.Item> */}
-                <Menu.Item key="/user-profile">
+                <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
                   <Link href="/user-profile">
                     <a>
                       <UserAvatar userData={data && data.me ? data.me : {}} />

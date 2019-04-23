@@ -100,6 +100,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
             cache={props.cache}
             parent={parent}
             key={key}
+            columnIndex={0}
             rowIndex={index}
           >
             <FetchMoreLoader
@@ -121,6 +122,7 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
           cache={props.cache}
           parent={parent}
           key={key}
+          columnIndex={0}
           rowIndex={index}
         >
           <div style={style}>
@@ -165,4 +167,4 @@ const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
   }
 );
 
-export default React.memo(VirtualizedChatMessagesList);
+export default VirtualizedChatMessagesList;
