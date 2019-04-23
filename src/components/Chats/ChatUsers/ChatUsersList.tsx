@@ -30,4 +30,4 @@ const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
   );
 };
 
-export default ChatUsersList;
+export default React.memo(ChatUsersList);

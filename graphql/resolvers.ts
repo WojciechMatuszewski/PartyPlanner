@@ -55,7 +55,7 @@ export const LocalResolvers: Resolvers = {
     hasOptimisticError: () => false
   },
   Chat: {
-    hasUnreadMessages: () => true
+    hasUnreadMessages: () => false
   },
   User: {
     status: ifElse(shouldBeOffline, always('OFFLINE'), always('ONLINE'))

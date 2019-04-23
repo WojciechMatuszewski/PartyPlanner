@@ -9,7 +9,12 @@ import {
   PaginateChatsQueryDocument,
   PaginateChatsQueryComponent,
   usePaginateMessagesQuery,
-  useChatMessagesSubscription
+  useChatMessagesSubscription,
+  ChatMessagesSubscriptionSubscription,
+  ChatMessagesSubscriptionMessage,
+  ChatMessagesSubscriptionNode,
+  PaginateMessagesQueryDocument,
+  MessageOrderByInput
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
@@ -19,6 +24,12 @@ import { ChatsContext } from '@pages/chats';
 import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
+import { ApolloClient } from 'apollo-boost';
+import { SubscriptionHookResult } from 'react-apollo-hooks';
+import {
+  updateChatThreadMessages,
+  createPaginateMessagesQueryVariables
+} from './shared';
 
 interface Props {
   initialChatsData: PaginateChatsQueryQuery;
@@ -46,28 +57,23 @@ const ChatsMenu: React.FC<Props> = props => {
       }
     },
     onSubscriptionData: ({ client, subscriptionData: { data } }) => {
+      console.log('tick!');
       if (!data || !data.message || !data.message.node) return;
       try {
-        client.writeFragment({
-          id: `Chat:${data.message.node.chat.id}`,
-          fragment: LAST_CHAT_MESSAGE_FRAGMENT,
-          data: {
-            messages: [
-              {
-                author: data.message.node.author,
-                createdAt: data.message.node.createdAt,
-                content: data.message.node.content,
-                __typename: 'Message'
-              }
-            ],
-            hasUnreadMessages:
-              currentlySelectedChatId !== data.message.node.chat.id,
-            __typename: 'Chat'
-          }
-        });
-      } catch (e) {}
-      // check if chat exists in cache
-      // append new message, mark as unread if needed
+        updateLastChatMessage(client, data.message.node);
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        if (hasChatSelected(data.message.node.chat.id)) return;
+        updateChatThreadMessages(
+          client,
+          data.message.node,
+          createPaginateMessagesQueryVariables(data.message.node.chat.id)
+        );
+      } catch (e) {
+        // no point in updating, since there are not in cache, they will be fetched when user goes there
+      }
     }
   });
 
@@ -115,6 +121,32 @@ const ChatsMenu: React.FC<Props> = props => {
 
   function handleOnInputChange(inputValue: string) {
     setFilterQuery(inputValue);
+  }
+
+  function hasChatSelected(chatIdToCheckAgainst: string) {
+    return currentlySelectedChatId == chatIdToCheckAgainst;
+  }
+
+  function updateLastChatMessage(
+    client: ApolloClient<any>,
+    message: ChatMessagesSubscriptionNode
+  ) {
+    client.writeFragment({
+      id: `Chat:${message.chat.id}`,
+      fragment: LAST_CHAT_MESSAGE_FRAGMENT,
+      data: {
+        messages: [
+          {
+            author: message.author,
+            createdAt: message.createdAt,
+            content: message.content,
+            __typename: 'Message'
+          }
+        ],
+        hasUnreadMessages: !hasChatSelected(message.chat.id),
+        __typename: 'Chat'
+      }
+    });
   }
 };
 

@@ -5,11 +5,9 @@ import { ChatsContext } from '@pages/chats';
 import ChatEmptySection from '../ChatEmptySection';
 import {
   PaginateMessagesQueryEdges,
-  MessageOrderByInput,
   PaginateMessagesQueryVariables,
   usePaginateMessagesQuery,
   useChatMessagesSubscription,
-  PaginateMessagesQueryDocument,
   PaginateMessagesQueryQuery
 } from '@generated/graphql';
 import ChatSectionLoading from '../ChatSectionLoading';
@@ -18,9 +16,12 @@ import { List, CellMeasurerCache } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
 import { message } from 'antd';
+import {
+  updateChatThreadMessages,
+  createPaginateMessagesQueryVariables
+} from '../shared';
 
 const LOADER_OFFSET = 49;
-const MESSAGES_BATCH_SIZE = 30;
 
 const ChatWindowWrapper = styled.div`
   flex: 1;
@@ -49,14 +50,13 @@ const ChatWindow: React.FC = () => {
     createNewCellCache()
   );
   const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
+  const [queryVariables, setQueryVariables] = React.useState<
+    PaginateMessagesQueryVariables
+  >(createPaginateMessagesQueryVariables(currentlySelectedChatId));
 
   const virtualizedListRef = React.useRef<List>({} as any);
   const scrolledInitially = React.useRef<boolean>(false);
   const prependState = React.useRef<PrependState>(initialPrependState);
-
-  const [queryVariables, setQueryVariables] = React.useState<
-    PaginateMessagesQueryVariables
-  >(createQueryVariables(currentlySelectedChatId));
 
   const { data, loading, fetchMore } = usePaginateMessagesQuery({
     variables: queryVariables
@@ -82,19 +82,13 @@ const ChatWindow: React.FC = () => {
     try {
       await fetchMore({
         variables: {
-          where: {
-            chat: { id: currentlySelectedChatId }
-          },
-          orderBy: 'createdAt_ASC' as MessageOrderByInput,
-          last: MESSAGES_BATCH_SIZE,
+          ...queryVariables,
           before: data!.messagesConnection.pageInfo.startCursor
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           setLoadingMore(false);
-
           if (!fetchMoreResult) return prev;
           lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
-
           return {
             ...prev,
             messagesConnection: {
@@ -112,7 +106,6 @@ const ChatWindow: React.FC = () => {
       setLoadingMore(false);
       message.error('Could not fetch more messages');
     }
-
     if (!data || !data.messagesConnection) return;
     handleApolloAfterFetchMore(lengthOfNewItems);
   }, [data, currentlySelectedChatId, scrolledInitially.current]);
@@ -121,12 +114,15 @@ const ChatWindow: React.FC = () => {
     if (!virtualizedListRef.current) return 0;
     // TODO:
     // memory leak
-    return virtualizedListRef.current.getOffsetForRow({
-      index:
-        data && data.messagesConnection
-          ? data.messagesConnection.edges.length + 1
-          : 0
-    });
+    return (
+      virtualizedListRef.current.getOffsetForRow({
+        index:
+          data && data.messagesConnection
+            ? data.messagesConnection.edges.length + 1
+            : 0,
+        alignment: 'end'
+      }) + 12
+    );
   }, [virtualizedListRef.current, data]);
 
   const {
@@ -140,12 +136,18 @@ const ChatWindow: React.FC = () => {
     if (!isWithinBottomLockZone) {
       setUnreadCount(prevCount => prevCount + 1);
     } else {
-      // sometimes rendering cant keep up
-      requestAnimationFrame(() => {
-        handleNewMessage();
-      });
+      handleNewMessage();
     }
   }, [isWithinBottomLockZone]);
+
+  const handleNewMessage = React.useCallback(() => {
+    if (!data || !data.messagesConnection || !data.messagesConnection.edges)
+      return;
+    const amountToScroll = virtualizedListRef.current.getOffsetForRow({
+      index: data.messagesConnection.edges.length + 1
+    });
+    virtualizedListRef.current.scrollToPosition(amountToScroll + 12);
+  }, [data]);
 
   useChatMessagesSubscription({
     variables: {
@@ -160,26 +162,9 @@ const ChatWindow: React.FC = () => {
         }
       }
     },
-    onSubscriptionData: ({ subscriptionData, client }) => {
-      if (
-        !subscriptionData ||
-        !subscriptionData.data ||
-        !subscriptionData.data.message
-      )
-        return;
-      const cachedMessages = client.readQuery({
-        query: PaginateMessagesQueryDocument,
-        variables: queryVariables
-      });
-      subscriptionData.data.message.__typename = 'MessageEdge' as any;
-      cachedMessages.messagesConnection.edges.push(
-        subscriptionData.data.message
-      );
-      client.writeQuery({
-        query: PaginateMessagesQueryDocument,
-        variables: queryVariables,
-        data: cachedMessages
-      });
+    onSubscriptionData: ({ subscriptionData: { data }, client }) => {
+      if (!data || !data.message || !data.message.node) return;
+      updateChatThreadMessages(client, data.message.node, queryVariables);
       handleSubscriptionMessage();
     }
   });
@@ -230,17 +215,6 @@ const ChatWindow: React.FC = () => {
     </ChatWindowWrapper>
   );
 
-  function createQueryVariables(currentChatId: string | null) {
-    if (currentChatId == null) return {};
-    return {
-      where: {
-        chat: { id: currentChatId }
-      },
-      orderBy: 'createdAt_ASC' as MessageOrderByInput,
-      last: MESSAGES_BATCH_SIZE
-    };
-  }
-
   function handleRowsRendered({
     startIndex
   }: {
@@ -253,14 +227,6 @@ const ChatWindow: React.FC = () => {
     if (prependState.current.shouldScroll && startIndex == 0) {
       handleScrollOnPrepend();
     }
-  }
-
-  function handleNewMessage() {
-    if (!isWithinBottomLockZone) return;
-    // allow next tick, prevents stale render state
-    requestAnimationFrame(() => {
-      scrollToBottom(100);
-    });
   }
 
   function handleNotifierClick() {
@@ -306,7 +272,9 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleChatIdChange() {
-    setQueryVariables(createQueryVariables(currentlySelectedChatId));
+    setQueryVariables(
+      createPaginateMessagesQueryVariables(currentlySelectedChatId)
+    );
     setUnreadCount(0);
     scrolledInitially.current = false;
     prependState.current = initialPrependState;

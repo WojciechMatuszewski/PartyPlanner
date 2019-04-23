@@ -11,6 +11,7 @@ import {
 import { WithRouterProps, withRouter } from 'next/router';
 import { useApolloClient } from 'react-apollo-hooks';
 import { gql } from 'apollo-boost';
+import { cond, compose } from 'ramda';
 
 interface Props {
   edge: PaginateChatsQueryEdges;
@@ -69,7 +70,10 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   return (
     <ChatsListItemWrapper
       hasUnreadMessages={node.hasUnreadMessages}
-      onClick={handleListItemClick}
+      onClick={compose(
+        cond([[shouldSwitchUrl, changeUrlToCorrectChat]]),
+        markAsReadThread
+      )}
       className={selected ? 'selected' : ''}
     >
       <ChatsListItemAvatarList userAvatarsData={node.members || []} />
@@ -87,9 +91,11 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
     </ChatsListItemWrapper>
   );
 
-  function handleListItemClick() {
-    if (selected) return;
-    markAsReadThread();
+  function shouldSwitchUrl() {
+    return !selected;
+  }
+
+  function changeUrlToCorrectChat() {
     const url = `/chats?chat=${node.id}`;
     router && router.push(url, url, { shallow: true });
   }
