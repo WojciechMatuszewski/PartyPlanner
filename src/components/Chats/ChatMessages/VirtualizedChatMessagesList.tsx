@@ -25,7 +25,7 @@ interface Props {
   loadingMore: boolean;
   cache: CellMeasurerCache;
   forwardedListRef: React.RefObject<List>;
-  onMessagesLengthChanged: (prevLength: number, currentLength: number) => void;
+  onMessagesLengthChanged: (currentLength: number) => void;
 }
 
 const MessagesWrapper = styled.div`
@@ -69,10 +69,7 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
 
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.messages.length !== this.props.messages.length)
-      this.props.onMessagesLengthChanged(
-        prevProps.messages.length,
-        this.props.messages.length
-      );
+      this.props.onMessagesLengthChanged(this.props.messages.length);
   }
 
   private getDividerDate(

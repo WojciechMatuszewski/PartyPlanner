@@ -231,10 +231,7 @@ const ChatWindow: React.FC = () => {
     setScrollToIndex(-1);
   }
 
-  function handleVirtualizedGridMessagesLengthChanged(
-    prevLength: number,
-    currentLength: number
-  ) {
+  function handleVirtualizedGridMessagesLengthChanged(currentLength: number) {
     if (scrolledInitially.current && !isScrollingOnPrepend.current)
       scrollToParticularIndex(currentLength);
   }
