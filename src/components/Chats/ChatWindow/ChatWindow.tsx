@@ -29,6 +29,7 @@ const ChatWindowWrapper = styled.div`
   height: calc(100vh - 64px);
   flex-direction: column;
   position: relative;
+  background: white;
 `;
 
 const ChatWindow: React.FC = () => {
@@ -51,11 +52,22 @@ const ChatWindow: React.FC = () => {
   });
   const [scrollToIndex, setScrollToIndex] = React.useState(-1);
 
+  const {
+    onScroll: bottomScrollLockOnScroll,
+    isWithinBottomScrollLockZone
+  } = useBottomScrollLock(250);
+
   const scrollToBottom = React.useCallback(() => {
     if (!data || !data.messagesConnection) return;
     scrolledInitially.current = true;
     setScrollToIndex(data.messagesConnection.edges.length);
   }, [data, scrollToIndex]);
+
+  const handleSubscriptionMessage = React.useCallback(() => {
+    if (!isWithinBottomScrollLockZone) {
+      setUnreadCount(prevUnread => prevUnread + 1);
+    } else scrollToParticularIndex(getLengthOfCurrentMessages());
+  }, [isWithinBottomScrollLockZone]);
 
   const canFetchMore = React.useCallback(
     (data: PaginateMessagesQueryQuery | undefined, loadingMore: boolean) => {
@@ -129,7 +141,7 @@ const ChatWindow: React.FC = () => {
     onSubscriptionData: ({ subscriptionData: { data }, client }) => {
       if (!data || !data.message || !data.message.node) return;
       updateChatThreadMessages(client, data.message.node, queryVariables);
-      scrollToParticularIndex(getLengthOfCurrentMessages());
+      handleSubscriptionMessage();
     }
   });
 
@@ -168,7 +180,7 @@ const ChatWindow: React.FC = () => {
       <ChatInput currentQueryVariables={queryVariables} />
       <NewMessagesBelowNotifier
         unreadCount={unreadCount}
-        visible={true}
+        visible={!isWithinBottomScrollLockZone && unreadCount > 0}
         onClick={handleNotifierClick}
       />
     </ChatWindowWrapper>
@@ -215,6 +227,7 @@ const ChatWindow: React.FC = () => {
 
   function handleScroll(params: ScrollParams) {
     if (params.scrollTop === 0) handleFetchMore();
+    bottomScrollLockOnScroll(params);
     setScrollToIndex(-1);
   }
 

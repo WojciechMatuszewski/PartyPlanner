@@ -20,14 +20,11 @@ const ChatsList: React.FC<Props> = ({ chats }) => {
     <ChatsListWrapper>
       {chats
         .sort((a, b) => {
-          return a.node.hasUnreadMessages
-            ? b.node.hasUnreadMessages
-              ? new Date(a.node.messages![0].createdAt).getTime() >
-                new Date(b.node.messages![0].createdAt).getTime()
-                ? -1 // a & b have unread messages, a was posted after b
-                : 1
-              : -1 // b does not have unread messages
-            : 0; // they both do not have unread messages
+          // TODO: proper sorting
+          if (a.node.hasUnreadMessages && b.node.hasUnreadMessages) return 0;
+          if (!a.node.hasUnreadMessages && !b.node.hasUnreadMessages) return 0;
+          if (a.node.hasUnreadMessages && !b.node.hasUnreadMessages) return -1;
+          return 1;
         })
         .map(chat => (
           <ChatsListItem

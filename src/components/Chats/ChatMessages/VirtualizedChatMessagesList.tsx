@@ -15,6 +15,7 @@ import { anyPass, curry } from 'ramda';
 import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
 import moment from 'moment';
 import ChatMessageDivider from './ChatMessageDivider';
+import { Divider } from 'antd';
 
 interface Props {
   messages: PaginateMessagesQueryEdges[];
@@ -50,7 +51,6 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
                 overscanRowCount={30}
                 width={width}
                 scrollToIndex={this.props.scrollToIndex}
-                onSectionRendered={props => console.log(props)}
                 // loader for infinite scoller
                 rowCount={this.props.messages.length + 1}
                 height={height}
@@ -86,12 +86,14 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
 
     if (parsedCurrent.diff(parsedPrev, 'minutes') < 30) return null;
 
-    const diffInHours = parsedCurrent.diff(moment(new Date()), 'hours');
+    const diffInHours = Math.abs(
+      parsedCurrent.diff(moment(new Date()), 'hours')
+    );
 
-    if (diffInHours < 24) {
-      return parsedCurrent.format('hh:mm A');
+    if (diffInHours < 12) {
+      return parsedCurrent.format('HH:mm');
     }
-    return parsedCurrent.format('MMM Do YY');
+    return parsedCurrent.format('Do MMM HH:MM');
   }
 
   private messageDoesNotExists(message: PaginateMessagesQueryEdges) {
@@ -149,7 +151,12 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
         rowIndex={index}
       >
         <div style={style}>
-          {dividerDate && <ChatMessageDivider dividerText={dividerDate} />}
+          {dividerDate && (
+            <Divider style={{ marginBottom: 0 }}>
+              <ChatMessageDivider dividerText={dividerDate} />
+            </Divider>
+          )}
+
           <ChatMessage
             index={index}
             isFirstInBlock={
