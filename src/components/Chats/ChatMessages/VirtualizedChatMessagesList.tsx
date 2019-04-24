@@ -12,7 +12,6 @@ import { PaginateMessagesQueryEdges } from '@generated/graphql';
 import ChatMessage from './ChatMessage';
 import styled from '@emotion/styled';
 import { anyPass, curry } from 'ramda';
-import { ChatsContext } from '@pages/chats';
 import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
 import moment from 'moment';
 import ChatMessageDivider from './ChatMessageDivider';
@@ -20,10 +19,12 @@ import ChatMessageDivider from './ChatMessageDivider';
 interface Props {
   messages: PaginateMessagesQueryEdges[];
   onScroll: (params: ScrollParams) => void;
-  scrollTop: number | undefined;
+  scrollToIndex: number;
   onRowsRendered: ListProps['onRowsRendered'];
   loadingMore: boolean;
   cache: CellMeasurerCache;
+  forwardedListRef: React.RefObject<List>;
+  onMessagesLengthChanged: (prevLength: number, currentLength: number) => void;
 }
 
 const MessagesWrapper = styled.div`
@@ -36,135 +37,143 @@ const MessagesWrapper = styled.div`
   }
 `;
 
-const VirtualizedChatMessagesList = React.forwardRef<List, Props>(
-  ({ messages, ...props }: Props, ref) => {
-    const { currentlySelectedChatId } = React.useContext(ChatsContext);
-    const hasCalledOnRowsRendered = React.useRef<boolean>(false);
-
-    React.useEffect(() => {
-      hasCalledOnRowsRendered.current = false;
-    }, [currentlySelectedChatId]);
-
+class VirtualizedChatMessagesList extends React.Component<Props> {
+  public render() {
     return (
       <MessagesWrapper>
         <AutoSizer>
           {({ width, height }) => {
             return (
               <List
-                onScroll={props.onScroll}
-                scrollTop={props.scrollTop}
+                onScroll={this.props.onScroll}
                 estimatedRowSize={100}
                 overscanRowCount={30}
                 width={width}
+                scrollToIndex={this.props.scrollToIndex}
+                onSectionRendered={props => console.log(props)}
                 // loader for infinite scoller
-                rowCount={messages.length + 1}
+                rowCount={this.props.messages.length + 1}
                 height={height}
-                ref={ref}
-                deferredMeasurementCache={props.cache}
-                rowHeight={props.cache.rowHeight}
-                rowRenderer={rowRenderer}
-                onRowsRendered={props.onRowsRendered}
+                ref={this.props.forwardedListRef}
+                deferredMeasurementCache={this.props.cache}
+                rowHeight={this.props.cache.rowHeight}
+                rowRenderer={this.rowRenderer}
+                onRowsRendered={this.props.onRowsRendered}
               />
             );
           }}
         </AutoSizer>
       </MessagesWrapper>
     );
+  }
 
-    function messageDoesNotExists(message: PaginateMessagesQueryEdges) {
-      return message == null;
-    }
-    function areMessagesWrittenByDifferentPerson(
-      currentMessage: PaginateMessagesQueryEdges,
-      messageToCheckAgainst: PaginateMessagesQueryEdges
-    ) {
-      return (
-        currentMessage.node.author.id !== messageToCheckAgainst.node.author.id
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.messages.length !== this.props.messages.length)
+      this.props.onMessagesLengthChanged(
+        prevProps.messages.length,
+        this.props.messages.length
       );
+  }
+
+  private getDividerDate(
+    current: PaginateMessagesQueryEdges,
+    prev: PaginateMessagesQueryEdges
+  ) {
+    if (!prev) return null;
+
+    const parsedCurrent = moment(current.node.createdAt);
+    const parsedPrev = moment(prev.node.createdAt);
+
+    if (parsedCurrent.diff(parsedPrev, 'minutes') < 30) return null;
+
+    const diffInHours = parsedCurrent.diff(moment(new Date()), 'hours');
+
+    if (diffInHours < 24) {
+      return parsedCurrent.format('hh:mm A');
     }
+    return parsedCurrent.format('MMM Do YY');
+  }
 
-    function isInBlock(
-      current: PaginateMessagesQueryEdges,
-      next: PaginateMessagesQueryEdges
-    ): boolean {
-      return anyPass([
-        messageDoesNotExists as any,
-        curry(areMessagesWrittenByDifferentPerson)(current) as any
-      ])(next);
-    }
+  private messageDoesNotExists(message: PaginateMessagesQueryEdges) {
+    return message == null;
+  }
+  private areMessagesWrittenByDifferentPerson(
+    currentMessage: PaginateMessagesQueryEdges,
+    messageToCheckAgainst: PaginateMessagesQueryEdges
+  ) {
+    return (
+      currentMessage.node.author.id !== messageToCheckAgainst.node.author.id
+    );
+  }
 
-    function rowRenderer({ index, key, style, parent }: ListRowProps) {
-      if (index === 0) {
-        return (
-          <CellMeasurer
-            cache={props.cache}
-            parent={parent}
-            key={key}
-            columnIndex={0}
-            rowIndex={index}
-          >
-            <FetchMoreLoader
-              onLoadingChange={handleLoaderStatusChange}
-              style={style}
-              loading={props.loadingMore}
-            />
-          </CellMeasurer>
-        );
-      }
+  private isInBlock(
+    current: PaginateMessagesQueryEdges,
+    next: PaginateMessagesQueryEdges
+  ): boolean {
+    return anyPass([
+      this.messageDoesNotExists as any,
+      curry(this.areMessagesWrittenByDifferentPerson)(current) as any
+    ])(next);
+  }
 
-      const dividerDate = getDividerDate(
-        messages[index - 1],
-        messages[index - 2]
-      );
-
+  private rowRenderer = ({ index, key, style, parent }: ListRowProps) => {
+    if (index === 0) {
       return (
         <CellMeasurer
-          cache={props.cache}
+          cache={this.props.cache}
           parent={parent}
           key={key}
           columnIndex={0}
           rowIndex={index}
         >
-          <div style={style}>
-            {dividerDate && <ChatMessageDivider dividerText={dividerDate} />}
-            <ChatMessage
-              index={index}
-              isFirstInBlock={
-                dividerDate
-                  ? true
-                  : isInBlock(messages[index - 1], messages[index - 2])
-              }
-              isLastInBlock={isInBlock(messages[index - 1], messages[index])}
-              message={messages[index - 1].node}
-            />
-          </div>
+          <FetchMoreLoader
+            onLoadingChange={this.handleLoaderStatusChange}
+            style={style}
+            loading={this.props.loadingMore}
+          />
         </CellMeasurer>
       );
     }
 
-    function handleLoaderStatusChange() {
-      props.cache.clear(0, 0);
-    }
+    const dividerDate = this.getDividerDate(
+      this.props.messages[index - 1],
+      this.props.messages[index - 2]
+    );
 
-    function getDividerDate(
-      current: PaginateMessagesQueryEdges,
-      prev: PaginateMessagesQueryEdges
-    ) {
-      if (!prev) return null;
+    return (
+      <CellMeasurer
+        cache={this.props.cache}
+        parent={parent}
+        key={key}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        <div style={style}>
+          {dividerDate && <ChatMessageDivider dividerText={dividerDate} />}
+          <ChatMessage
+            index={index}
+            isFirstInBlock={
+              dividerDate
+                ? true
+                : this.isInBlock(
+                    this.props.messages[index - 1],
+                    this.props.messages[index - 2]
+                  )
+            }
+            isLastInBlock={this.isInBlock(
+              this.props.messages[index - 1],
+              this.props.messages[index]
+            )}
+            message={this.props.messages[index - 1].node}
+          />
+        </div>
+      </CellMeasurer>
+    );
+  };
 
-      const parsedCurrent = moment(current.node.createdAt);
-      const parsedPrev = moment(prev.node.createdAt);
-
-      if (parsedCurrent.diff(parsedPrev, 'minutes') < 30) return null;
-
-      const diffInHours = parsedCurrent.diff(moment(new Date()), 'hours');
-
-      if (diffInHours < 24) {
-        return parsedCurrent.format('hh:mm A');
-      }
-      return parsedCurrent.format('MMM Do YY');
-    }
-  }
-);
+  private handleLoaderStatusChange = () => {
+    this.props.cache.clear(0, 0);
+  };
+}
 
 export default VirtualizedChatMessagesList;

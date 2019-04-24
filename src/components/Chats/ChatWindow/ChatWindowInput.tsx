@@ -37,13 +37,9 @@ const ValidationSchema = yup.object().shape<ChatWindowInputForm>({
 
 interface Props {
   currentQueryVariables: PaginateMessagesQueryVariables;
-  onNewMessage: () => void;
 }
 
-const ChatInput: React.FC<Props> = ({
-  currentQueryVariables,
-  onNewMessage
-}) => {
+const ChatInput: React.FC<Props> = ({ currentQueryVariables }) => {
   const sendMessage = useCreateMessage({
     update: handleOptimisticUpdate
   });
@@ -162,10 +158,7 @@ const ChatInput: React.FC<Props> = ({
       variables: currentQueryVariables,
       data
     });
-
     if (isFromServer) return;
-
-    onNewMessage();
   }
 
   function updateCurrentThreadLastMessage(

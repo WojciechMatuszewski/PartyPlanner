@@ -12,7 +12,7 @@ import {
 } from '@generated/graphql';
 import ChatSectionLoading from '../ChatSectionLoading';
 import NewMessagesBelowNotifier from '../ChatMessages/NewMessagesBelowNotifier';
-import { List, CellMeasurerCache } from 'react-virtualized';
+import { List, CellMeasurerCache, ScrollParams } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
 import { message } from 'antd';
@@ -31,16 +31,6 @@ const ChatWindowWrapper = styled.div`
   position: relative;
 `;
 
-interface PrependState {
-  shouldScroll: boolean;
-  itemsPrepended: number;
-}
-
-const initialPrependState: PrependState = {
-  shouldScroll: false,
-  itemsPrepended: 0
-};
-
 const ChatWindow: React.FC = () => {
   const { currentlySelectedChatId, currentlyLoggedUserData } = React.useContext(
     ChatsContext
@@ -53,14 +43,19 @@ const ChatWindow: React.FC = () => {
   const [queryVariables, setQueryVariables] = React.useState<
     PaginateMessagesQueryVariables
   >(createPaginateMessagesQueryVariables(currentlySelectedChatId));
-
   const virtualizedListRef = React.useRef<List>({} as any);
   const scrolledInitially = React.useRef<boolean>(false);
-  const prependState = React.useRef<PrependState>(initialPrependState);
-
+  const isScrollingOnPrepend = React.useRef<boolean>(false);
   const { data, loading, fetchMore } = usePaginateMessagesQuery({
     variables: queryVariables
   });
+  const [scrollToIndex, setScrollToIndex] = React.useState(-1);
+
+  const scrollToBottom = React.useCallback(() => {
+    if (!data || !data.messagesConnection) return;
+    scrolledInitially.current = true;
+    setScrollToIndex(data.messagesConnection.edges.length);
+  }, [data, scrollToIndex]);
 
   const canFetchMore = React.useCallback(
     (data: PaginateMessagesQueryQuery | undefined, loadingMore: boolean) => {
@@ -75,8 +70,14 @@ const ChatWindow: React.FC = () => {
     [data, loadingMore]
   );
 
+  const getLengthOfCurrentMessages = React.useCallback(() => {
+    if (!data || !data.messagesConnection.edges) return 0;
+    return data.messagesConnection.edges.length;
+  }, [data]);
+
   const handleFetchMore = React.useCallback(async () => {
     if (!canFetchMore(data, loadingMore)) return;
+    isScrollingOnPrepend.current = true;
     let lengthOfNewItems = 0;
     setLoadingMore(true);
     try {
@@ -85,17 +86,17 @@ const ChatWindow: React.FC = () => {
           ...queryVariables,
           before: data!.messagesConnection.pageInfo.startCursor
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
+        updateQuery: (currentCache, { fetchMoreResult }) => {
           setLoadingMore(false);
-          if (!fetchMoreResult) return prev;
+          if (!fetchMoreResult) return currentCache;
           lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
           return {
-            ...prev,
+            ...currentCache,
             messagesConnection: {
-              ...prev.messagesConnection,
+              ...currentCache.messagesConnection,
               edges: [
                 ...fetchMoreResult.messagesConnection.edges,
-                ...prev.messagesConnection.edges
+                ...currentCache.messagesConnection.edges
               ],
               pageInfo: fetchMoreResult.messagesConnection.pageInfo
             }
@@ -107,47 +108,10 @@ const ChatWindow: React.FC = () => {
       message.error('Could not fetch more messages');
     }
     if (!data || !data.messagesConnection) return;
-    handleApolloAfterFetchMore(lengthOfNewItems);
+    refreshStaleGrid();
+    scrollToParticularIndex(lengthOfNewItems);
+    isScrollingOnPrepend.current = false;
   }, [data, currentlySelectedChatId, scrolledInitially.current]);
-
-  const currentListScrollGetter = React.useCallback(() => {
-    if (!virtualizedListRef.current) return 0;
-    // TODO:
-    // memory leak
-    return (
-      virtualizedListRef.current.getOffsetForRow({
-        index:
-          data && data.messagesConnection
-            ? data.messagesConnection.edges.length + 1
-            : 0,
-        alignment: 'end'
-      }) + 12
-    );
-  }, [virtualizedListRef.current, data]);
-
-  const {
-    scrollToBottom,
-    animatedScrollTop,
-    isWithinBottomLockZone,
-    handleScroll
-  } = useBottomScrollLock(250, currentListScrollGetter, handleFetchMore);
-
-  const handleSubscriptionMessage = React.useCallback(() => {
-    if (!isWithinBottomLockZone) {
-      setUnreadCount(prevCount => prevCount + 1);
-    } else {
-      handleNewMessage();
-    }
-  }, [isWithinBottomLockZone]);
-
-  const handleNewMessage = React.useCallback(() => {
-    if (!data || !data.messagesConnection || !data.messagesConnection.edges)
-      return;
-    const amountToScroll = virtualizedListRef.current.getOffsetForRow({
-      index: data.messagesConnection.edges.length + 1
-    });
-    virtualizedListRef.current.scrollToPosition(amountToScroll + 12);
-  }, [data]);
 
   useChatMessagesSubscription({
     variables: {
@@ -165,7 +129,7 @@ const ChatWindow: React.FC = () => {
     onSubscriptionData: ({ subscriptionData: { data }, client }) => {
       if (!data || !data.message || !data.message.node) return;
       updateChatThreadMessages(client, data.message.node, queryVariables);
-      handleSubscriptionMessage();
+      scrollToParticularIndex(getLengthOfCurrentMessages());
     }
   });
 
@@ -185,10 +149,7 @@ const ChatWindow: React.FC = () => {
           title="No messages here"
           description="Start a conversation now!"
         />
-        <ChatInput
-          onNewMessage={handleNewMessage}
-          currentQueryVariables={queryVariables}
-        />
+        <ChatInput currentQueryVariables={queryVariables} />
       </ChatWindowWrapper>
     );
 
@@ -197,41 +158,29 @@ const ChatWindow: React.FC = () => {
       <VirtualizedChatMessagesList
         cache={cellCache}
         loadingMore={loadingMore}
-        scrollTop={animatedScrollTop}
+        scrollToIndex={scrollToIndex}
+        onScroll={handleScroll}
         onRowsRendered={handleRowsRendered}
         messages={data.messagesConnection.edges as PaginateMessagesQueryEdges[]}
-        onScroll={handleScroll}
-        ref={virtualizedListRef}
+        forwardedListRef={virtualizedListRef}
+        onMessagesLengthChanged={handleVirtualizedGridMessagesLengthChanged}
       />
-      <ChatInput
-        onNewMessage={handleNewMessage}
-        currentQueryVariables={queryVariables}
-      />
+      <ChatInput currentQueryVariables={queryVariables} />
       <NewMessagesBelowNotifier
         unreadCount={unreadCount}
-        visible={!isWithinBottomLockZone && unreadCount > 0}
+        visible={true}
         onClick={handleNotifierClick}
       />
     </ChatWindowWrapper>
   );
 
-  function handleRowsRendered({
-    startIndex
-  }: {
-    overscanStartIndex: number;
-    overscanStopIndex: number;
-    startIndex: number;
-    stopIndex: number;
-  }) {
-    handleInitialScrollToBottom();
-    if (prependState.current.shouldScroll && startIndex == 0) {
-      handleScrollOnPrepend();
-    }
+  function handleRowsRendered() {
+    if (!scrolledInitially.current) scrollToBottom();
   }
 
   function handleNotifierClick() {
     setUnreadCount(0);
-    scrollToBottom(250);
+    scrollToParticularIndex(getLengthOfCurrentMessages());
   }
 
   function createNewCellCache() {
@@ -241,34 +190,17 @@ const ChatWindow: React.FC = () => {
     });
   }
 
-  function handleApolloAfterFetchMore(lengthOfNewItems: number) {
-    // allow scrolling to happen we have to scroll inside onRowsRendered, do not think that there is an other way.
-    prependState.current = {
-      shouldScroll: true,
-      itemsPrepended: lengthOfNewItems
-    };
-    // new items will take place of old items, clear old heights
-    // i tried using keyMapper fn for the cache but we would basically need to do the same thing
-    // this is not a good solution !! but sadly i do not have any other :C
+  function refreshStaleGrid() {
     cellCache.clearAll();
-    // recompute heights
     virtualizedListRef.current.recomputeRowHeights();
   }
 
-  function handleScrollOnPrepend() {
+  function scrollToParticularIndex(indexToScrollTo: number) {
     const offset = virtualizedListRef.current.getOffsetForRow({
       alignment: 'start',
-      index: prependState.current.itemsPrepended
+      index: indexToScrollTo
     });
     virtualizedListRef.current.scrollToPosition(offset + LOADER_OFFSET);
-    prependState.current.shouldScroll = false;
-  }
-
-  function handleInitialScrollToBottom() {
-    if (!scrolledInitially.current) {
-      scrollToBottom(0);
-      scrolledInitially.current = true;
-    }
   }
 
   function handleChatIdChange() {
@@ -277,8 +209,21 @@ const ChatWindow: React.FC = () => {
     );
     setUnreadCount(0);
     scrolledInitially.current = false;
-    prependState.current = initialPrependState;
     setCellCache(createNewCellCache());
+    setScrollToIndex(-1);
+  }
+
+  function handleScroll(params: ScrollParams) {
+    if (params.scrollTop === 0) handleFetchMore();
+    setScrollToIndex(-1);
+  }
+
+  function handleVirtualizedGridMessagesLengthChanged(
+    prevLength: number,
+    currentLength: number
+  ) {
+    if (scrolledInitially.current && !isScrollingOnPrepend.current)
+      scrollToParticularIndex(currentLength);
   }
 };
 
