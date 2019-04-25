@@ -5,6 +5,7 @@ import { Typography } from 'antd';
 
 interface Props {
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const ErrorWrapper = styled.div`
@@ -14,9 +15,9 @@ const ErrorWrapper = styled.div`
   flex-direction: column;
 `;
 
-export const ChatError: React.FC<Props> = ({ children }) => {
+export const ChatError: React.FC<Props> = ({ children, style }) => {
   return (
-    <ErrorWrapper>
+    <ErrorWrapper style={style}>
       <React.Fragment>
         <Typography.Paragraph type="danger">
           Some error occurred

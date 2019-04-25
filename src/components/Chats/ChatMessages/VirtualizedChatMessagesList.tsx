@@ -15,14 +15,17 @@ import { anyPass, curry } from 'ramda';
 import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
 import moment from 'moment';
 import ChatMessageDivider from './ChatMessageDivider';
-import { Divider } from 'antd';
+import { Divider, Button } from 'antd';
+import { FetchMoreState } from '../ChatWindow/ChatWindow';
+import { ChatError } from '../ChatError';
 
 interface Props {
   messages: PaginateMessagesQueryEdges[];
   onScroll: (params: ScrollParams) => void;
+  onRetryClick: () => void;
   scrollToIndex: number;
   onRowsRendered: ListProps['onRowsRendered'];
-  loadingMore: boolean;
+  fetchMoreState: FetchMoreState;
   cache: CellMeasurerCache;
   forwardedListRef: React.RefObject<List>;
   onMessagesLengthChanged: (currentLength: number) => void;
@@ -117,6 +120,9 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
 
   private rowRenderer = ({ index, key, style, parent }: ListRowProps) => {
     if (index === 0) {
+      const {
+        fetchMoreState: { loadingMore, error }
+      } = this.props;
       return (
         <CellMeasurer
           cache={this.props.cache}
@@ -125,11 +131,13 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
           columnIndex={0}
           rowIndex={index}
         >
-          <FetchMoreLoader
-            onLoadingChange={this.handleLoaderStatusChange}
-            style={style}
-            loading={this.props.loadingMore}
-          />
+          {!error ? (
+            <FetchMoreLoader style={style} loading={loadingMore} />
+          ) : (
+            <ChatError style={{ paddingTop: 24, ...style }}>
+              <Button onClick={this.props.onRetryClick}>Try again</Button>
+            </ChatError>
+          )}
         </CellMeasurer>
       );
     }
@@ -173,10 +181,6 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
         </div>
       </CellMeasurer>
     );
-  };
-
-  private handleLoaderStatusChange = () => {
-    this.props.cache.clear(0, 0);
   };
 }
 

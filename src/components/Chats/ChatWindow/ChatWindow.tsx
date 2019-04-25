@@ -15,7 +15,6 @@ import NewMessagesBelowNotifier from '../ChatMessages/NewMessagesBelowNotifier';
 import { List, CellMeasurerCache, ScrollParams } from 'react-virtualized';
 import VirtualizedChatMessagesList from '../ChatMessages/VirtualizedChatMessagesList';
 import useBottomScrollLock from '@hooks/useBottomScrollLock';
-import { message } from 'antd';
 import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
@@ -32,6 +31,11 @@ const ChatWindowWrapper = styled.div`
   background: white;
 `;
 
+export interface FetchMoreState {
+  loadingMore: boolean;
+  error: boolean;
+}
+
 const ChatWindow: React.FC = () => {
   const { currentlySelectedChatId, currentlyLoggedUserData } = React.useContext(
     ChatsContext
@@ -40,13 +44,20 @@ const ChatWindow: React.FC = () => {
   const [cellCache, setCellCache] = React.useState<CellMeasurerCache>(
     createNewCellCache()
   );
-  const [loadingMore, setLoadingMore] = React.useState<boolean>(false);
+
+  const [fetchMoreState, setFetchMoreState] = React.useState<FetchMoreState>({
+    loadingMore: false,
+    error: false
+  });
+
   const [queryVariables, setQueryVariables] = React.useState<
     PaginateMessagesQueryVariables
   >(createPaginateMessagesQueryVariables(currentlySelectedChatId));
+
   const virtualizedListRef = React.useRef<List>({} as any);
   const scrolledInitially = React.useRef<boolean>(false);
   const isScrollingOnPrepend = React.useRef<boolean>(false);
+
   const { data, loading, fetchMore } = usePaginateMessagesQuery({
     variables: queryVariables
   });
@@ -69,62 +80,55 @@ const ChatWindow: React.FC = () => {
     } else scrollToParticularIndex(getLengthOfCurrentMessages());
   }, [isWithinBottomScrollLockZone]);
 
-  const canFetchMore = React.useCallback(
-    (data: PaginateMessagesQueryQuery | undefined, loadingMore: boolean) => {
-      return (
-        data &&
-        data.messagesConnection &&
-        data.messagesConnection.pageInfo.hasPreviousPage &&
-        scrolledInitially.current &&
-        !loadingMore
-      );
-    },
-    [data, loadingMore]
-  );
-
   const getLengthOfCurrentMessages = React.useCallback(() => {
     if (!data || !data.messagesConnection.edges) return 0;
     return data.messagesConnection.edges.length;
   }, [data]);
 
-  const handleFetchMore = React.useCallback(async () => {
-    if (!canFetchMore(data, loadingMore)) return;
-    isScrollingOnPrepend.current = true;
-    let lengthOfNewItems = 0;
-    setLoadingMore(true);
-    try {
-      await fetchMore({
-        variables: {
-          ...queryVariables,
-          before: data!.messagesConnection.pageInfo.startCursor
-        },
-        updateQuery: (currentCache, { fetchMoreResult }) => {
-          setLoadingMore(false);
-          if (!fetchMoreResult) return currentCache;
-          lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
-          return {
-            ...currentCache,
-            messagesConnection: {
-              ...currentCache.messagesConnection,
-              edges: [
-                ...fetchMoreResult.messagesConnection.edges,
-                ...currentCache.messagesConnection.edges
-              ],
-              pageInfo: fetchMoreResult.messagesConnection.pageInfo
-            }
-          };
-        }
-      });
-    } catch (e) {
-      // TODO: better error handling heree
-      setLoadingMore(false);
-      message.error('Could not fetch more messages');
-    }
-    if (!data || !data.messagesConnection) return;
-    refreshStaleGrid();
-    scrollToParticularIndex(lengthOfNewItems);
-    isScrollingOnPrepend.current = false;
-  }, [data, currentlySelectedChatId, scrolledInitially.current]);
+  const getStartCursor = React.useCallback(() => {
+    return data!.messagesConnection.pageInfo.startCursor;
+  }, [data]);
+
+  const handleFetchMore = React.useCallback(
+    async (isFromRetry: boolean = false) => {
+      if (!canFetchMore(data, fetchMoreState) && !isFromRetry) return;
+      isScrollingOnPrepend.current = true;
+      let lengthOfNewItems = 0;
+      setFetchMoreState({ error: false, loadingMore: true });
+      cellCache.clear(0, 0);
+      try {
+        await fetchMore({
+          variables: {
+            ...queryVariables,
+            before: getStartCursor()
+          },
+          updateQuery: (currentCache, { fetchMoreResult }) => {
+            setFetchMoreState({ loadingMore: false, error: false });
+            if (!fetchMoreResult) return currentCache;
+            lengthOfNewItems = fetchMoreResult.messagesConnection.edges.length;
+            return {
+              ...currentCache,
+              messagesConnection: {
+                ...currentCache.messagesConnection,
+                edges: [
+                  ...fetchMoreResult.messagesConnection.edges,
+                  ...currentCache.messagesConnection.edges
+                ],
+                pageInfo: fetchMoreResult.messagesConnection.pageInfo
+              }
+            };
+          }
+        });
+        if (!data || !data.messagesConnection) return;
+        refreshStaleGrid();
+        scrollToParticularIndex(lengthOfNewItems);
+        isScrollingOnPrepend.current = false;
+      } catch (e) {
+        setFetchMoreState({ loadingMore: false, error: true });
+      }
+    },
+    [data, currentlySelectedChatId, scrolledInitially.current, fetchMoreState]
+  );
 
   useChatMessagesSubscription({
     variables: {
@@ -170,7 +174,8 @@ const ChatWindow: React.FC = () => {
     <ChatWindowWrapper>
       <VirtualizedChatMessagesList
         cache={cellCache}
-        loadingMore={loadingMore}
+        onRetryClick={() => handleFetchMore(true)}
+        fetchMoreState={fetchMoreState}
         scrollToIndex={scrollToIndex}
         onScroll={handleScroll}
         onRowsRendered={handleRowsRendered}
@@ -235,6 +240,20 @@ const ChatWindow: React.FC = () => {
   function handleVirtualizedGridMessagesLengthChanged(currentLength: number) {
     if (scrolledInitially.current && !isScrollingOnPrepend.current)
       scrollToParticularIndex(currentLength);
+  }
+
+  function canFetchMore(
+    data: PaginateMessagesQueryQuery | undefined,
+    fetchMoreState: FetchMoreState
+  ) {
+    return (
+      data &&
+      data.messagesConnection &&
+      data.messagesConnection.pageInfo.hasPreviousPage &&
+      scrolledInitially.current &&
+      !fetchMoreState.error &&
+      !fetchMoreState.loadingMore
+    );
   }
 };
 
