@@ -4,10 +4,14 @@ import ChatSideNavigation from './ChatSideNavigation';
 import { ChatsContext } from '@pages/chats';
 import {
   PaginateUsersQueryComponent,
-  PaginateUsersQueryEdges
+  PaginateUsersQueryEdges,
+  PaginateUsersQueryVariables
 } from '@generated/graphql';
 import ChatSectionLoading from './ChatSectionLoading';
 import ChatUsersList from './ChatUsers/ChatUsersList';
+import { ChatError } from './ChatError';
+import { Button } from 'antd';
+import { handleRefetch } from '@shared/graphqlUtils';
 
 const POOL_INTERVAL = 5000;
 
@@ -17,6 +21,15 @@ const ChatUsersMenu: React.FC = () => {
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
   );
+
+  const getQueryVariables = React.useCallback((): PaginateUsersQueryVariables => {
+    return {
+      where: {
+        chats_some: { id: currentlySelectedChatId },
+        id_not: currentlyLoggedUserData.id
+      }
+    };
+  }, [currentlyLoggedUserData, currentlySelectedChatId]);
 
   if (currentlySelectedChatId == null) return null;
 
@@ -35,16 +48,23 @@ const ChatUsersMenu: React.FC = () => {
     >
       {currentlySelectedChatId == null ? null : (
         <PaginateUsersQueryComponent
-          variables={{
-            where: {
-              chats_some: { id: currentlySelectedChatId },
-              id_not: currentlyLoggedUserData.id
-            }
-          }}
+          variables={getQueryVariables()}
           pollInterval={POOL_INTERVAL}
         >
-          {({ loading, data }) => {
+          {({ loading, data, error, refetch }) => {
             if (loading || !data) return <ChatSectionLoading />;
+            if (error)
+              return (
+                <ChatError>
+                  <Button
+                    onClick={async () =>
+                      await handleRefetch(refetch, getQueryVariables())
+                    }
+                  >
+                    Try again
+                  </Button>
+                </ChatError>
+              );
             return (
               <ChatUsersList
                 chatUsers={

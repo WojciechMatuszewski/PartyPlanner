@@ -17,6 +17,7 @@ import GraphqlException from '@components/GraphqlException';
 
 import { BehaviorSubject } from 'rxjs';
 import NoData from '@components/NoData';
+import { handleRefetch } from '@shared/graphqlUtils';
 
 const LayoutStyles = css`
   height: calc(100vh - 66px);
@@ -71,15 +72,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
             <GraphqlException
               style={{ height: 'calc(100vh - 66px)' }}
               actions={
-                <Button
-                  onClick={async () => {
-                    try {
-                      await refetch();
-                    } catch (e) {
-                      message.error('Could not fetch the data');
-                    }
-                  }}
-                >
+                <Button onClick={async () => await handleRefetch(refetch)}>
                   Try again
                 </Button>
               }

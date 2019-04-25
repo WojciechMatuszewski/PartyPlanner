@@ -116,6 +116,7 @@ const ChatWindow: React.FC = () => {
         }
       });
     } catch (e) {
+      // TODO: better error handling heree
       setLoadingMore(false);
       message.error('Could not fetch more messages');
     }

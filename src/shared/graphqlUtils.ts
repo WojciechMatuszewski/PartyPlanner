@@ -1,5 +1,7 @@
 import { PartiesQueryVariables } from '@generated/graphql';
 import moment from 'moment';
+import { OperationVariables } from 'react-apollo';
+import { message } from 'antd';
 
 export function getPartiesDateVariables(
   dateToGetVariablesFor: Date,
@@ -33,5 +35,16 @@ export function getCorrectTextFromPartyDates(start: Date, end: Date) {
     return `${parsedStart.format('DD MMM HH:mm')} to ${parsedEnd.format(
       'DD MMM HH:mm'
     )}`;
+  }
+}
+
+export async function handleRefetch<QueryVariables extends OperationVariables>(
+  refetchFunc: (variables?: QueryVariables) => void,
+  variables?: QueryVariables
+) {
+  try {
+    await refetchFunc(variables);
+  } catch (e) {
+    message.error('Could not fetch the data');
   }
 }
