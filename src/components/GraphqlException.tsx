@@ -3,6 +3,8 @@ import css from '@emotion/css';
 import Exception, { IExceptionProps } from 'ant-design-pro/lib/Exception';
 
 const ExceptionStyles = css`
+  width: 100%;
+  height: 100%;
   @media screen and (max-width: 575px) {
     padding-bottom: 24px;
     flex: 1;
