@@ -18,31 +18,15 @@ const ChatsList: React.FC<Props> = ({ chats }) => {
 
   return (
     <ChatsListWrapper>
-      {chats
-        .sort((a, b) => {
-          // TODO: proper sorting
-          return byHasUnread(a, b) || byLastMessageTime(a, b);
-        })
-        .map(chat => (
-          <ChatsListItem
-            selected={currentlySelectedChatId === chat.node.id}
-            key={chat.node.id}
-            edge={chat}
-          />
-        ))}
+      {chats.map(chat => (
+        <ChatsListItem
+          selected={currentlySelectedChatId === chat.node.id}
+          key={chat.node.id}
+          edge={chat}
+        />
+      ))}
     </ChatsListWrapper>
   );
-
-  function byHasUnread(a: any, b: any) {
-    return a.node.hasUnreadMessages ? (b.node.hasUnreadMessages ? 0 : -1) : 0;
-  }
-
-  function byLastMessageTime(a: any, b: any) {
-    return new Date(a.node.messages[0].createdAt).getTime() >
-      new Date(b.node.messages[0].createdAt).getTime()
-      ? -1
-      : 1;
-  }
 };
 
 export default React.memo(ChatsList);
