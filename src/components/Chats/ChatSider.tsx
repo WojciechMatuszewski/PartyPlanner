@@ -18,8 +18,8 @@ const ChatSider: React.FC<
       css={css`
         height: 100%;
         overflow-y: auto;
-        border-right: ${placement === 'left' ? '2px dashed #d9d9d9' : '0'};
-        border-left: ${placement === 'right' ? '2px dashed #d9d9d9' : '0'};
+        border-right: ${placement === 'left' ? '1px solid #e8e8e8' : '0'};
+        border-left: ${placement === 'right' ? '1px solid #e8e8e8' : '0'};
         .ant-layout-sider-children {
           display: flex;
           flex-direction: column;

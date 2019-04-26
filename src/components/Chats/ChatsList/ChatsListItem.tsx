@@ -25,11 +25,14 @@ interface StyleProps {
 const ChatsListItemWrapper = styled.li<StyleProps>`
   padding: 12px;
   display: flex;
+  .chat-title {
+    color: rgba(0, 0, 0, 0.8);
+  }
   .ant-typography {
     margin-bottom: 0;
     font-weight: ${props => (props.hasUnreadMessages ? 'bold' : 'inherit')};
     color: ${props =>
-      props.hasUnreadMessages ? 'rgba(0, 0, 0, 0.65)' : 'inherit'};
+      props.hasUnreadMessages ? 'rgba(0, 0, 0, 0.8)' : 'auto'};
   }
   &:hover {
     cursor: pointer;
@@ -82,7 +85,11 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
       <InnerWrapper>
         <ChatsListItemLastMessage lastMessage={(node.messages || [])[0]}>
           <DateTitleWrapper>
-            <Typography.Text css={[NotWrappingTextStyles]} ellipsis={true}>
+            <Typography.Text
+              css={[NotWrappingTextStyles]}
+              ellipsis={true}
+              className="chat-title"
+            >
               {node.party.title}
             </Typography.Text>
             <ChatsListItemLastMessage.MessageTimestamp />

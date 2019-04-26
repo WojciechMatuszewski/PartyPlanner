@@ -88,12 +88,14 @@ const ChatsMenu: React.FC = () => {
         title: 'Your chats',
         closable: false
       }}
+      siderProps={{ width: 340 }}
     >
       <ChatsListSearch onChange={handleOnInputChange} />
       <PaginateChatsQueryComponent variables={getQueryVariables()}>
         {({ data, loading, error, refetch }) => {
           if (loading || !data || !data.chatsConnection)
             return <ChatSectionLoading />;
+
           if (error)
             return (
               <ChatError>

@@ -20,7 +20,8 @@ const InputStyles = css`
   width: 100%;
   height: 50px;
   border: 0;
-  box-shadow: 3px -2px 7px -2px rgba(0, 0, 0, 0.15) !important;
+  /* box-shadow: 3px -2px 7px -2px rgba(0, 0, 0, 0.15) !important; */
+  border-top: 1px solid #d9d9d9;
   border-radius: 0;
   &:focus {
     outline: none;

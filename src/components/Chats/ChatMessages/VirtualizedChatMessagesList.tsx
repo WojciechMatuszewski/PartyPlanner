@@ -156,11 +156,7 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
         rowIndex={index}
       >
         <div style={style}>
-          {dividerDate && (
-            <Divider style={{ marginBottom: 0 }}>
-              <ChatMessageDivider dividerText={dividerDate} />
-            </Divider>
-          )}
+          {dividerDate && <ChatMessageDivider dividerText={dividerDate} />}
 
           <ChatMessage
             index={index}

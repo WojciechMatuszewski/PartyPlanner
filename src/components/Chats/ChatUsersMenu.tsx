@@ -52,7 +52,6 @@ const ChatUsersMenu: React.FC = () => {
           pollInterval={POOL_INTERVAL}
         >
           {({ loading, data, error, refetch }) => {
-            if (loading || !data) return <ChatSectionLoading />;
             if (error)
               return (
                 <ChatError>
@@ -65,6 +64,8 @@ const ChatUsersMenu: React.FC = () => {
                   </Button>
                 </ChatError>
               );
+            if (loading || !data) return <ChatSectionLoading />;
+
             return (
               <ChatUsersList
                 chatUsers={

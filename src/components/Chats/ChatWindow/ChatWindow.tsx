@@ -19,6 +19,9 @@ import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
 } from '../shared';
+import GraphqlException from '@components/GraphqlException';
+import { Button } from 'antd';
+import { handleRefetch } from '@shared/graphqlUtils';
 
 const LOADER_OFFSET = 49;
 
@@ -58,9 +61,11 @@ const ChatWindow: React.FC = () => {
   const scrolledInitially = React.useRef<boolean>(false);
   const isScrollingOnPrepend = React.useRef<boolean>(false);
 
-  const { data, loading, fetchMore } = usePaginateMessagesQuery({
-    variables: queryVariables
-  });
+  const { data, loading, fetchMore, error, refetch } = usePaginateMessagesQuery(
+    {
+      variables: queryVariables
+    }
+  );
   const [scrollToIndex, setScrollToIndex] = React.useState(-1);
 
   const {
@@ -154,6 +159,8 @@ const ChatWindow: React.FC = () => {
 
   if (currentlySelectedChatId == null)
     return <ChatEmptySection image={'../static/group-chat.svg'} />;
+
+  // TODO: error here, wait for hooks pull request
 
   if (loading || !data || !data.messagesConnection)
     return <ChatSectionLoading />;
