@@ -15,7 +15,7 @@ import { anyPass, curry } from 'ramda';
 import FetchMoreLoader from '@components/Chats/ChatMessages/FetchMoreLoader';
 import moment from 'moment';
 import ChatMessageDivider from './ChatMessageDivider';
-import { Divider, Button } from 'antd';
+import { Button } from 'antd';
 import { FetchMoreState } from '../ChatWindow/ChatWindow';
 import { ChatError } from '../ChatError';
 
