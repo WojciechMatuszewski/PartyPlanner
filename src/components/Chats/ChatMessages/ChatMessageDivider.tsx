@@ -11,7 +11,7 @@ const DividerStyles = css`
 `;
 const ChatMessageDivider: React.FC<Props> = ({ dividerText }) => {
   return (
-    <Typography.Paragraph css={[DividerStyles]} type="secondary" strong={true}>
+    <Typography.Paragraph css={[DividerStyles]} type="secondary">
       {dividerText}
     </Typography.Paragraph>
   );

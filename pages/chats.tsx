@@ -3,7 +3,7 @@ import { Layout, Button } from 'antd';
 import css from '@emotion/css';
 
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import { MeQueryMe, useHasPartiesQuery } from '@generated/graphql';
+import { MeQueryMe, HasPartiesQueryComponent } from '@generated/graphql';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
@@ -13,6 +13,7 @@ import GraphqlException from '@components/GraphqlException';
 
 import { BehaviorSubject } from 'rxjs';
 import NoData from '@components/NoData';
+import { handleRefetch } from '@shared/graphqlUtils';
 
 const LayoutStyles = css`
   height: calc(100vh - 66px);
@@ -59,50 +60,56 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
     routeChangeStreamRef.current.next(currentlySelectedChatId);
   }, [router!.query]);
 
-  const { loading, data, error } = useHasPartiesQuery();
-
-  if (loading || !data)
-    return (
-      <GraphqlLoading
-        isLoadingInitially={true}
-        loading={true}
-        textToDisplay="Loading your chats"
-      />
-    );
-
-  if (error)
-    return (
-      <GraphqlException
-        actions={
-          <Button onClick={() => router && router.back()}>Go back!</Button>
-        }
-      />
-    );
-
-  if (!data.hasParties)
-    return (
-      <NoData
-        style={{ height: 'auto' }}
-        message="You currently do not have any chats"
-        action={
-          <Button
-            type="primary"
-            onClick={() => router && router.push('/create-party')}
-          >
-            Create a party!
-          </Button>
-        }
-      />
-    );
-
   return (
-    <Layout css={[LayoutStyles]}>
-      <ChatsContext.Provider value={state}>
-        <ChatsMenu />
-        <ChatWindow />
-        <ChatUsersMenu />
-      </ChatsContext.Provider>
-    </Layout>
+    <HasPartiesQueryComponent notifyOnNetworkStatusChange={true}>
+      {({ data, loading, error, refetch }) => {
+        if (error)
+          return (
+            <GraphqlException
+              style={{ height: 'calc(100vh - 66px)' }}
+              actions={
+                <Button onClick={async () => await handleRefetch(refetch)}>
+                  Try again
+                </Button>
+              }
+            />
+          );
+        if (loading || !data)
+          return (
+            <GraphqlLoading
+              isLoadingInitially={true}
+              loading={true}
+              textToDisplay="Loading your chats"
+            />
+          );
+
+        if (!data.hasParties)
+          return (
+            <NoData
+              style={{ height: 'auto' }}
+              message="You currently do not have any chats"
+              action={
+                <Button
+                  type="primary"
+                  onClick={() => router && router.push('/create-party')}
+                >
+                  Create a party!
+                </Button>
+              }
+            />
+          );
+
+        return (
+          <Layout css={[LayoutStyles]}>
+            <ChatsContext.Provider value={state}>
+              <ChatsMenu />
+              <ChatWindow />
+              <ChatUsersMenu />
+            </ChatsContext.Provider>
+          </Layout>
+        );
+      }}
+    </HasPartiesQueryComponent>
   );
 
   function getCurrentChatFromUrl() {

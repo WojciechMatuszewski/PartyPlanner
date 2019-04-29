@@ -2,10 +2,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { PaginateMessagesQueryNode } from '@generated/graphql';
 import UserAvatar from '@components/UserDefaultAvatar';
-import { Typography } from 'antd';
+import { Typography, Tooltip } from 'antd';
 import css from '@emotion/css';
-
 import OptimisticStatusDot from './OptimisticStatusDot';
+import moment from 'moment';
+
+const MESSAGE_MOMENT_FORMAT = 'Do MMMM HH:mm';
 
 interface Props {
   isFirstInBlock: boolean;
@@ -32,7 +34,6 @@ const BaseMessageInnerWrapperStyles = css`
   display: grid;
   margin-left: auto;
   grid-template-rows: 1fr 1fr;
-  /* grid-template-columns: 32px 1fr; */
 `;
 
 const BaseMessageStyles = css`
@@ -71,8 +72,7 @@ const OtherMessageInnerWrapper = styled.div`
 `;
 const OtherUserMessageMessage = styled.div<MessageMessageProps>`
   ${BaseMessageStyles};
-
-  background: white;
+  background: #f1f0f0;
   border-top-right-radius: 1.3em;
   border-bottom-right-radius: 1.3em;
   border-top-left-radius: ${props =>
@@ -109,12 +109,18 @@ const OtherUserMessage: React.FC<Props> = props => {
                 </Typography.Text>
               </OtherMessageAuthor>
             )}
-            <OtherUserMessageMessage
-              isFirstInBlock={props.isFirstInBlock}
-              isLastInBlock={props.isLastInBlock}
+            <Tooltip
+              title={moment(props.message.createdAt).format(
+                MESSAGE_MOMENT_FORMAT
+              )}
             >
-              {props.message.content}
-            </OtherUserMessageMessage>
+              <OtherUserMessageMessage
+                isFirstInBlock={props.isFirstInBlock}
+                isLastInBlock={props.isLastInBlock}
+              >
+                {props.message.content}
+              </OtherUserMessageMessage>
+            </Tooltip>
           </div>
         </OtherMessageInnerWrapper>
       </OtherChatMessageWrapper>
@@ -171,12 +177,18 @@ const MyMessage: React.FC<Props> = props => {
               </Typography.Text>
             </MyMessageAuthor>
           )}
-          <MyMessageMessage
-            isFirstInBlock={props.isFirstInBlock}
-            isLastInBlock={props.isLastInBlock}
+          <Tooltip
+            title={moment(props.message.createdAt).format(
+              MESSAGE_MOMENT_FORMAT
+            )}
           >
-            {props.message.content}
-          </MyMessageMessage>
+            <MyMessageMessage
+              isFirstInBlock={props.isFirstInBlock}
+              isLastInBlock={props.isLastInBlock}
+            >
+              {props.message.content}
+            </MyMessageMessage>
+          </Tooltip>
           <OptimisticStatusDot
             hasOptimisticError={props.message.hasOptimisticError}
             optimisticallyAdded={props.message.optimisticallyAdded}

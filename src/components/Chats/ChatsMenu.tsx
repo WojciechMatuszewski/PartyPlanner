@@ -4,7 +4,8 @@ import {
   PaginateChatsQueryEdges,
   PaginateChatsQueryComponent,
   useChatMessagesSubscription,
-  ChatMessagesSubscriptionNode
+  ChatMessagesSubscriptionNode,
+  PaginateChatsQueryVariables
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
@@ -19,6 +20,9 @@ import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
 } from './shared';
+import { ChatError } from './ChatError';
+import { Button } from 'antd';
+import { handleRefetch } from '@shared/graphqlUtils';
 
 const ChatsMenu: React.FC = () => {
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
@@ -26,6 +30,18 @@ const ChatsMenu: React.FC = () => {
   );
   const [filterQuery, setFilterQuery] = React.useState<string>('');
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
+
+  const getQueryVariables = React.useCallback((): PaginateChatsQueryVariables => {
+    return {
+      where: {
+        party: {
+          members_some: { id: currentlyLoggedUserData.id },
+          normalizedTitle_contains: filterQuery.toLocaleLowerCase()
+        }
+      },
+      first: 10
+    };
+  }, [currentlyLoggedUserData, filterQuery]);
 
   useChatMessagesSubscription({
     variables: {
@@ -72,22 +88,26 @@ const ChatsMenu: React.FC = () => {
         title: 'Your chats',
         closable: false
       }}
+      siderProps={{ width: 340 }}
     >
       <ChatsListSearch onChange={handleOnInputChange} />
-      <PaginateChatsQueryComponent
-        variables={{
-          where: {
-            party: {
-              members_some: { id: currentlyLoggedUserData.id },
-              normalizedTitle_contains: filterQuery.toLocaleLowerCase()
-            }
-          },
-          first: 10
-        }}
-      >
-        {({ data, loading }) => {
+      <PaginateChatsQueryComponent variables={getQueryVariables()}>
+        {({ data, loading, error, refetch }) => {
           if (loading || !data || !data.chatsConnection)
             return <ChatSectionLoading />;
+
+          if (error)
+            return (
+              <ChatError>
+                <Button
+                  onClick={async () =>
+                    await handleRefetch(refetch, getQueryVariables())
+                  }
+                >
+                  Try again
+                </Button>
+              </ChatError>
+            );
           if (!loading && data && data.chatsConnection.edges.length === 0)
             return <ChatsListFilteredEmpty filterQuery={filterQuery} />;
           return (

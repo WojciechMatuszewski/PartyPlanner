@@ -29,6 +29,7 @@ const LeftTriggerStyles = css`
 const DrawerStyles = css`
   .ant-drawer-body {
     padding: 0;
+    height: 100%;
   }
   .ant-drawer-wrapper-body {
     display: flex;

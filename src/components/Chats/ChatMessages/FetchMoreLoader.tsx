@@ -11,7 +11,7 @@ export interface FetchMoreLoaderProps {
 
 const LoaderWrapper = styled.div`
   width: 100%;
-  padding: 12px;
+  padding-top: 24px;
   ${FlexBoxFullCenteredStyles};
 `;
 

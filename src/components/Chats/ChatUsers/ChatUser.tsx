@@ -20,6 +20,10 @@ const ChatUserWrapper = styled.li`
       cursor: pointer;
     }
   }
+  img {
+    width: 32px;
+    height: 32px;
+  }
 `;
 
 const ChatUserAvatarNameWrapper = styled.div`
