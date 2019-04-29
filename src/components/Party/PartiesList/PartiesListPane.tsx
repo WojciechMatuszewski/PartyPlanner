@@ -4,16 +4,10 @@ import styled from '@emotion/styled';
 import css from '@emotion/css';
 import redirect from '@apolloSetup/redirect';
 import useMedia from '@hooks/useMedia';
-import { PartiesListContext } from './PartiesList';
-import {
-  PartiesListDrawerActions,
-  PartiesListFilterActions
-} from './PartiesListReducer';
-import { callAll } from '@shared/functionUtils';
-import { compose } from 'react-apollo';
-import { ApolloQueryResult } from 'apollo-boost';
-import { PaginatePartiesQueryQuery } from '@generated/graphql';
-import useBetterTypeahead from '@hooks/useBetterTypeahead';
+
+import { debounce } from 'lodash';
+import { compose } from 'ramda';
+
 const AnchorStyles = css`
   .ant-anchor {
     padding-left: 0;
@@ -66,45 +60,13 @@ const PaneTitleStyles = css`
 `;
 
 interface Props {
-  onDataFetch: () => Promise<ApolloQueryResult<PaginatePartiesQueryQuery>>;
-  onDataFetched: (data: PaginatePartiesQueryQuery) => void;
-  paginationInfoUpdater: () => Promise<any>;
-  inputValue: string;
-  onError: VoidFunction;
+  onChange: (value: string) => void;
+  onDrawerOpen: () => void;
 }
 const PartiesListPane: React.FC<Props> = props => {
+  const debouncedOnChangeRef = React.useRef<any>(debounce(props.onChange, 300));
+
   const shouldButtonsHaveText = useMedia('(min-width:669px)');
-  const { dispatch } = React.useContext(PartiesListContext);
-  const [typeaheadCallbackCalled, setTypeaheadCallbackCalled] = React.useState<
-    boolean
-  >();
-
-  const { onChange } = useBetterTypeahead({
-    fetchFunction: () => {
-      setTypeaheadCallbackCalled(true);
-      return props.onDataFetch();
-    },
-    onResult: props.onDataFetched,
-    responseTransformFunction,
-    onChangeTransformFunction,
-    onError: props.onError
-  });
-
-  React.useEffect(() => {
-    async function handleQueryRefetch() {
-      await props.paginationInfoUpdater();
-      setTypeaheadCallbackCalled(false);
-    }
-    if (props.inputValue.trim().length === 0 && typeaheadCallbackCalled) {
-      handleQueryRefetch();
-    }
-  }, [props.inputValue, typeaheadCallbackCalled]);
-
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    compose(
-      dispatch,
-      PartiesListFilterActions.setInputFilterValue
-    )(e.currentTarget.value);
 
   return (
     <React.Fragment>
@@ -115,8 +77,10 @@ const PartiesListPane: React.FC<Props> = props => {
           </Typography.Title>
           <Input.Search
             placeholder="Type here..."
-            value={props.inputValue}
-            onChange={callAll(onChange, handleOnChange)}
+            onChange={compose(
+              debouncedOnChangeRef.current,
+              onChangeTransformFunction
+            )}
           />
           <ButtonsWrapper>
             <Button
@@ -126,7 +90,7 @@ const PartiesListPane: React.FC<Props> = props => {
             >
               {shouldButtonsHaveText ? 'Create new party' : null}
             </Button>
-            <Button icon="filter" onClick={handleDrawerOpen}>
+            <Button icon="filter" onClick={props.onDrawerOpen}>
               {shouldButtonsHaveText ? 'Filters' : null}
             </Button>
           </ButtonsWrapper>
@@ -135,14 +99,6 @@ const PartiesListPane: React.FC<Props> = props => {
     </React.Fragment>
   );
 
-  function responseTransformFunction(
-    fetchResponse: ApolloQueryResult<PaginatePartiesQueryQuery>
-  ) {
-    return fetchResponse.data;
-  }
-  function handleDrawerOpen() {
-    dispatch(PartiesListDrawerActions.setDrawerVisible());
-  }
   function onChangeTransformFunction(e: React.ChangeEvent<HTMLInputElement>) {
     return e.currentTarget.value;
   }

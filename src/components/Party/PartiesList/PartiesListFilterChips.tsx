@@ -5,12 +5,13 @@ import {
   PartiesListFilters,
   PartiesListFilterActions
 } from './PartiesListReducer';
-import { PartiesListContext } from './PartiesList';
+
 import css from '@emotion/css';
 import {
   NotWrappingTextStyles,
   FlexBoxFullCenteredStyles
 } from '@shared/styles';
+import { PartiesListContext } from './BetterPartiesList';
 
 const FilterChipsWrapper = styled.div`
   max-width: 1440px;

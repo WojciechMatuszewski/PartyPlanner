@@ -92,10 +92,9 @@ const ChatsMenu: React.FC = () => {
     >
       <ChatsListSearch onChange={handleOnInputChange} />
       <PaginateChatsQueryComponent variables={getQueryVariables()}>
-        {({ data, loading, error, refetch }) => {
+        {({ data, loading, error, refetch, fetchMore }) => {
           if (loading || !data || !data.chatsConnection)
             return <ChatSectionLoading />;
-
           if (error)
             return (
               <ChatError>
@@ -110,6 +109,7 @@ const ChatsMenu: React.FC = () => {
             );
           if (!loading && data && data.chatsConnection.edges.length === 0)
             return <ChatsListFilteredEmpty filterQuery={filterQuery} />;
+
           return (
             <React.Fragment>
               <ChatsList

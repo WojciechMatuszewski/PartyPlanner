@@ -6,16 +6,16 @@ import { Button, Spin } from 'antd';
 interface Props {
   isLoadingMore: boolean;
   canLoadMore: boolean;
-  onLoadMoreButtonClick: () => Promise<void>;
+  onLoadMoreButtonClick: () => void;
   hasResults: boolean;
 }
 
-const LoadMoreWrapper = styled.div`
+const LoadMoreWrapper = styled.div<{ shouldSpanFullHeight: boolean }>`
   width: 100%;
   padding-bottom: 24px;
   ${FlexBoxFullCenteredStyles};
-  min-height: ${(props: { shouldSpanFullHeight: boolean }) =>
-    props.shouldSpanFullHeight ? ' calc(100vh - 156px)' : 'auto'};
+  flex: ${(props: { shouldSpanFullHeight: boolean }) =>
+    props.shouldSpanFullHeight ? ' 1' : '0'};
 `;
 
 const PartiesListLoadMore: React.FC<Props> = props => {
