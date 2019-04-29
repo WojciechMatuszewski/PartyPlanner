@@ -82,6 +82,7 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         },
         start: date[0],
         end: date[1],
+        normalizedTitle: restOfFormFields.title.toLowerCase(),
         ...restOfFormFields
       }
     };

@@ -61,6 +61,34 @@ export interface PartyWhereInput {
 
   title_not_ends_with?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
+  normalizedTitle_not?: Maybe<string>;
+
+  normalizedTitle_in?: Maybe<string[]>;
+
+  normalizedTitle_not_in?: Maybe<string[]>;
+
+  normalizedTitle_lt?: Maybe<string>;
+
+  normalizedTitle_lte?: Maybe<string>;
+
+  normalizedTitle_gt?: Maybe<string>;
+
+  normalizedTitle_gte?: Maybe<string>;
+
+  normalizedTitle_contains?: Maybe<string>;
+
+  normalizedTitle_not_contains?: Maybe<string>;
+
+  normalizedTitle_starts_with?: Maybe<string>;
+
+  normalizedTitle_not_starts_with?: Maybe<string>;
+
+  normalizedTitle_ends_with?: Maybe<string>;
+
+  normalizedTitle_not_ends_with?: Maybe<string>;
+
   description?: Maybe<string>;
 
   description_not?: Maybe<string>;
@@ -404,6 +432,22 @@ export interface UserWhereInput {
   updatedAt_gt?: Maybe<DateTime>;
 
   updatedAt_gte?: Maybe<DateTime>;
+
+  lastOnline?: Maybe<DateTime>;
+
+  lastOnline_not?: Maybe<DateTime>;
+
+  lastOnline_in?: Maybe<DateTime[]>;
+
+  lastOnline_not_in?: Maybe<DateTime[]>;
+
+  lastOnline_lt?: Maybe<DateTime>;
+
+  lastOnline_lte?: Maybe<DateTime>;
+
+  lastOnline_gt?: Maybe<DateTime>;
+
+  lastOnline_gte?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -751,6 +795,38 @@ export interface LocationWhereInput {
 
   longitude_gte?: Maybe<number>;
 
+  createdAt?: Maybe<DateTime>;
+
+  createdAt_not?: Maybe<DateTime>;
+
+  createdAt_in?: Maybe<DateTime[]>;
+
+  createdAt_not_in?: Maybe<DateTime[]>;
+
+  createdAt_lt?: Maybe<DateTime>;
+
+  createdAt_lte?: Maybe<DateTime>;
+
+  createdAt_gt?: Maybe<DateTime>;
+
+  createdAt_gte?: Maybe<DateTime>;
+
+  updatedAt?: Maybe<DateTime>;
+
+  updatedAt_not?: Maybe<DateTime>;
+
+  updatedAt_in?: Maybe<DateTime[]>;
+
+  updatedAt_not_in?: Maybe<DateTime[]>;
+
+  updatedAt_lt?: Maybe<DateTime>;
+
+  updatedAt_lte?: Maybe<DateTime>;
+
+  updatedAt_gt?: Maybe<DateTime>;
+
+  updatedAt_gte?: Maybe<DateTime>;
+
   AND?: Maybe<LocationWhereInput[]>;
 
   OR?: Maybe<LocationWhereInput[]>;
@@ -915,6 +991,8 @@ export interface UserWhereUniqueInput {
 }
 
 export interface ChatCreateInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   members?: Maybe<UserCreateManyWithoutChatsInput>;
@@ -929,7 +1007,11 @@ export interface PartyCreateOneInput {
 }
 
 export interface PartyCreateInput {
+  id?: Maybe<string>;
+
   title: string;
+
+  normalizedTitle: string;
 
   description: string;
 
@@ -957,6 +1039,8 @@ export interface UserCreateOneInput {
 }
 
 export interface UserCreateInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -972,6 +1056,8 @@ export interface UserCreateInput {
   pendingInvitations?: Maybe<UserCreateManyWithoutPendingInvitationsInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -989,7 +1075,11 @@ export interface PartyCreateManyWithoutMembersInput {
 }
 
 export interface PartyCreateWithoutMembersInput {
+  id?: Maybe<string>;
+
   title: string;
+
+  normalizedTitle: string;
 
   description: string;
 
@@ -1015,6 +1105,8 @@ export interface LocationCreateOneInput {
 }
 
 export interface LocationCreateInput {
+  id?: Maybe<string>;
+
   placeName: string;
 
   latitude: number;
@@ -1029,6 +1121,8 @@ export interface GameCreateManyInput {
 }
 
 export interface GameCreateInput {
+  id?: Maybe<string>;
+
   title: string;
 
   cover?: Maybe<string>;
@@ -1043,6 +1137,8 @@ export interface UserCreateManyWithoutFriendsInput {
 }
 
 export interface UserCreateWithoutFriendsInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -1056,6 +1152,8 @@ export interface UserCreateWithoutFriendsInput {
   pendingInvitations?: Maybe<UserCreateManyWithoutPendingInvitationsInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -1073,6 +1171,8 @@ export interface UserCreateManyWithoutPendingInvitationsInput {
 }
 
 export interface UserCreateWithoutPendingInvitationsInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -1086,6 +1186,8 @@ export interface UserCreateWithoutPendingInvitationsInput {
   friends?: Maybe<UserCreateManyWithoutFriendsInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -1103,6 +1205,8 @@ export interface ChatCreateManyWithoutMembersInput {
 }
 
 export interface ChatCreateWithoutMembersInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   messages?: Maybe<MessageCreateManyWithoutChatInput>;
@@ -1115,6 +1219,8 @@ export interface MessageCreateManyWithoutChatInput {
 }
 
 export interface MessageCreateWithoutChatInput {
+  id?: Maybe<string>;
+
   author: UserCreateOneInput;
 
   content: string;
@@ -1127,6 +1233,8 @@ export interface UserCreateManyWithoutPartiesInput {
 }
 
 export interface UserCreateWithoutPartiesInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -1140,6 +1248,8 @@ export interface UserCreateWithoutPartiesInput {
   pendingInvitations?: Maybe<UserCreateManyWithoutPendingInvitationsInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -1157,6 +1267,8 @@ export interface UserCreateManyWithoutChatsInput {
 }
 
 export interface UserCreateWithoutChatsInput {
+  id?: Maybe<string>;
+
   email: string;
 
   firstName: string;
@@ -1170,6 +1282,8 @@ export interface UserCreateWithoutChatsInput {
   friends?: Maybe<UserCreateManyWithoutFriendsInput>;
 
   pendingInvitations?: Maybe<UserCreateManyWithoutPendingInvitationsInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -1200,6 +1314,8 @@ export interface PartyUpdateOneRequiredInput {
 
 export interface PartyUpdateDataInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -1247,6 +1363,8 @@ export interface UserUpdateDataInput {
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 
+  lastOnline?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
@@ -1284,6 +1402,8 @@ export interface PartyUpdateWithWhereUniqueWithoutMembersInput {
 
 export interface PartyUpdateWithoutMembersDataInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -1579,6 +1699,34 @@ export interface PartyScalarWhereInput {
 
   title_not_ends_with?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
+  normalizedTitle_not?: Maybe<string>;
+
+  normalizedTitle_in?: Maybe<string[]>;
+
+  normalizedTitle_not_in?: Maybe<string[]>;
+
+  normalizedTitle_lt?: Maybe<string>;
+
+  normalizedTitle_lte?: Maybe<string>;
+
+  normalizedTitle_gt?: Maybe<string>;
+
+  normalizedTitle_gte?: Maybe<string>;
+
+  normalizedTitle_contains?: Maybe<string>;
+
+  normalizedTitle_not_contains?: Maybe<string>;
+
+  normalizedTitle_starts_with?: Maybe<string>;
+
+  normalizedTitle_not_starts_with?: Maybe<string>;
+
+  normalizedTitle_ends_with?: Maybe<string>;
+
+  normalizedTitle_not_ends_with?: Maybe<string>;
+
   description?: Maybe<string>;
 
   description_not?: Maybe<string>;
@@ -1719,6 +1867,8 @@ export interface PartyUpdateManyWithWhereNestedInput {
 export interface PartyUpdateManyDataInput {
   title?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
   description?: Maybe<string>;
 
   colorTint?: Maybe<string>;
@@ -1771,6 +1921,8 @@ export interface UserUpdateWithoutFriendsDataInput {
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 
+  lastOnline?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
@@ -1820,6 +1972,8 @@ export interface UserUpdateWithoutPendingInvitationsDataInput {
   friends?: Maybe<UserUpdateManyWithoutFriendsInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -2263,6 +2417,22 @@ export interface UserScalarWhereInput {
 
   updatedAt_gte?: Maybe<DateTime>;
 
+  lastOnline?: Maybe<DateTime>;
+
+  lastOnline_not?: Maybe<DateTime>;
+
+  lastOnline_in?: Maybe<DateTime[]>;
+
+  lastOnline_not_in?: Maybe<DateTime[]>;
+
+  lastOnline_lt?: Maybe<DateTime>;
+
+  lastOnline_lte?: Maybe<DateTime>;
+
+  lastOnline_gt?: Maybe<DateTime>;
+
+  lastOnline_gte?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   deleted_not?: Maybe<boolean>;
@@ -2353,6 +2523,8 @@ export interface UserUpdateManyDataInput {
 
   password?: Maybe<string>;
 
+  lastOnline?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
@@ -2416,6 +2588,8 @@ export interface UserUpdateWithoutPartiesDataInput {
   pendingInvitations?: Maybe<UserUpdateManyWithoutPendingInvitationsInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -2481,6 +2655,8 @@ export interface UserUpdateWithoutChatsDataInput {
 
   pendingInvitations?: Maybe<UserUpdateManyWithoutPendingInvitationsInput>;
 
+  lastOnline?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
@@ -2531,6 +2707,8 @@ export interface LocationUpdateManyMutationInput {
 }
 
 export interface MessageCreateInput {
+  id?: Maybe<string>;
+
   author: UserCreateOneInput;
 
   chat: ChatCreateOneWithoutMessagesInput;
@@ -2545,6 +2723,8 @@ export interface ChatCreateOneWithoutMessagesInput {
 }
 
 export interface ChatCreateWithoutMessagesInput {
+  id?: Maybe<string>;
+
   party: PartyCreateOneInput;
 
   members?: Maybe<UserCreateManyWithoutChatsInput>;
@@ -2587,6 +2767,8 @@ export interface MessageUpdateManyMutationInput {
 export interface PartyUpdateInput {
   title?: Maybe<string>;
 
+  normalizedTitle?: Maybe<string>;
+
   description?: Maybe<string>;
 
   author?: Maybe<UserUpdateOneRequiredInput>;
@@ -2608,6 +2790,8 @@ export interface PartyUpdateInput {
 
 export interface PartyUpdateManyMutationInput {
   title?: Maybe<string>;
+
+  normalizedTitle?: Maybe<string>;
 
   description?: Maybe<string>;
 
@@ -2637,6 +2821,8 @@ export interface UserUpdateInput {
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 
+  lastOnline?: Maybe<DateTime>;
+
   deleted?: Maybe<boolean>;
 
   provider?: Maybe<SocialMediaType>;
@@ -2654,6 +2840,8 @@ export interface UserUpdateManyMutationInput {
   lastName?: Maybe<string>;
 
   password?: Maybe<string>;
+
+  lastOnline?: Maybe<DateTime>;
 
   deleted?: Maybe<boolean>;
 
@@ -2789,6 +2977,8 @@ export enum PartyOrderByInput {
   IdDesc = 'id_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  NormalizedTitleAsc = 'normalizedTitle_ASC',
+  NormalizedTitleDesc = 'normalizedTitle_DESC',
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
   CreatedAtAsc = 'createdAt_ASC',
@@ -2820,6 +3010,8 @@ export enum UserOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  LastOnlineAsc = 'lastOnline_ASC',
+  LastOnlineDesc = 'lastOnline_DESC',
   DeletedAsc = 'deleted_ASC',
   DeletedDesc = 'deleted_DESC',
   ProviderAsc = 'provider_ASC',
@@ -2837,6 +3029,11 @@ export enum ChatOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export enum UserStatus {
+  Offline = 'OFFLINE',
+  Online = 'ONLINE'
 }
 
 export enum GameOrderByInput {
@@ -2984,6 +3181,23 @@ export type CreateMessageAuthor = {
   id: string;
 };
 
+export type UpdateUserVariables = {
+  data: UserUpdateInput;
+  where: UserWhereUniqueInput;
+};
+
+export type UpdateUserMutation = {
+  __typename?: 'Mutation';
+
+  updateUser: Maybe<UpdateUserUpdateUser>;
+};
+
+export type UpdateUserUpdateUser = {
+  __typename?: 'User';
+
+  id: string;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -3046,6 +3260,10 @@ export type PaginateUsersQueryNode = {
   lastName: string;
 
   avatar: Maybe<string>;
+
+  lastOnline: Maybe<DateTime>;
+
+  status: UserStatus;
 };
 
 export type PaginateUsersQueryPageInfo = {
@@ -3162,6 +3380,8 @@ export type PaginateChatsQueryNode = {
   members: Maybe<PaginateChatsQueryMembers[]>;
 
   messages: Maybe<PaginateChatsQueryMessages[]>;
+
+  hasUnreadMessages: boolean;
 };
 
 export type PaginateChatsQueryParty = {
@@ -3236,36 +3456,14 @@ export type PaginateMessagesQueryEdges = {
   node: PaginateMessagesQueryNode;
 };
 
-export type PaginateMessagesQueryNode = {
-  __typename?: 'Message';
+export type PaginateMessagesQueryNode = MessageFragmentFragment;
 
-  id: string;
+export type HasPartiesQueryVariables = {};
 
-  author: PaginateMessagesQueryAuthor;
+export type HasPartiesQueryQuery = {
+  __typename?: 'Query';
 
-  isSendByMe: boolean;
-
-  optimisticallyAdded: boolean;
-
-  optimisticallyCreated: boolean;
-
-  hasOptimisticError: boolean;
-
-  content: string;
-
-  createdAt: DateTime;
-};
-
-export type PaginateMessagesQueryAuthor = {
-  __typename?: 'User';
-
-  firstName: string;
-
-  lastName: string;
-
-  avatar: Maybe<string>;
-
-  id: string;
+  hasParties: boolean;
 };
 
 export type ChatMessagesSubscriptionVariables = {
@@ -3302,6 +3500,8 @@ export type ChatMessagesSubscriptionNode = {
   content: string;
 
   createdAt: DateTime;
+
+  chat: ChatMessagesSubscriptionChat;
 };
 
 export type ChatMessagesSubscriptionAuthor = {
@@ -3312,6 +3512,12 @@ export type ChatMessagesSubscriptionAuthor = {
   lastName: string;
 
   avatar: Maybe<string>;
+
+  id: string;
+};
+
+export type ChatMessagesSubscriptionChat = {
+  __typename?: 'Chat';
 
   id: string;
 };
@@ -3377,6 +3583,12 @@ export type MessageFragmentFragment = {
 
   isSendByMe: boolean;
 
+  optimisticallyAdded: boolean;
+
+  optimisticallyCreated: boolean;
+
+  hasOptimisticError: boolean;
+
   content: string;
 
   createdAt: DateTime;
@@ -3392,6 +3604,30 @@ export type MessageFragmentAuthor = {
   avatar: Maybe<string>;
 
   id: string;
+};
+
+export type LastChatMessageFragment = {
+  __typename?: 'Chat';
+
+  messages: Maybe<LastChatMessageMessages[]>;
+};
+
+export type LastChatMessageMessages = {
+  __typename?: 'Message';
+
+  createdAt: DateTime;
+
+  content: string;
+
+  author: LastChatMessageAuthor;
+};
+
+export type LastChatMessageAuthor = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
 };
 
 import gql from 'graphql-tag';
@@ -3439,8 +3675,24 @@ export const MessageFragmentFragmentDoc = gql`
       id
     }
     isSendByMe @client
+    optimisticallyAdded @client
+    optimisticallyCreated @client
+    hasOptimisticError @client
     content
     createdAt
+  }
+`;
+
+export const LastChatMessageFragmentDoc = gql`
+  fragment LAST_CHAT_MESSAGE on Chat {
+    messages(last: 1) {
+      createdAt
+      content
+      author {
+        firstName
+        lastName
+      }
+    }
   }
 `;
 
@@ -3594,6 +3846,36 @@ export function useCreateMessage(
     CreateMessageVariables
   >(CreateMessageDocument, baseOptions);
 }
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+    updateUser(data: $data, where: $where) {
+      id
+    }
+  }
+`;
+export class UpdateUserComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<UpdateUserMutation, UpdateUserVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpdateUserMutation, UpdateUserVariables>
+        mutation={UpdateUserDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useUpdateUser(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    UpdateUserMutation,
+    UpdateUserVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<UpdateUserMutation, UpdateUserVariables>(
+    UpdateUserDocument,
+    baseOptions
+  );
+}
 export const MeQueryDocument = gql`
   query MeQuery {
     me {
@@ -3650,6 +3932,8 @@ export const PaginateUsersQueryDocument = gql`
           firstName
           lastName
           avatar
+          lastOnline
+          status @client
         }
       }
       pageInfo {
@@ -3829,6 +4113,7 @@ export const PaginateChatsQueryDocument = gql`
               lastName
             }
           }
+          hasUnreadMessages @client
         }
       }
     }
@@ -3881,23 +4166,13 @@ export const PaginateMessagesQueryDocument = gql`
       }
       edges {
         node {
-          id
-          author {
-            firstName
-            lastName
-            avatar
-            id
-          }
-          isSendByMe @client
-          optimisticallyAdded @client
-          optimisticallyCreated @client
-          hasOptimisticError @client
-          content
-          createdAt
+          ...MESSAGE_FRAGMENT
         }
       }
     }
   }
+
+  ${MessageFragmentFragmentDoc}
 `;
 export class PaginateMessagesQueryComponent extends React.Component<
   Partial<
@@ -3929,6 +4204,33 @@ export function usePaginateMessagesQuery(
     PaginateMessagesQueryVariables
   >(PaginateMessagesQueryDocument, baseOptions);
 }
+export const HasPartiesQueryDocument = gql`
+  query HasPartiesQuery {
+    hasParties
+  }
+`;
+export class HasPartiesQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<HasPartiesQueryQuery, HasPartiesQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<HasPartiesQueryQuery, HasPartiesQueryVariables>
+        query={HasPartiesQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useHasPartiesQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<HasPartiesQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    HasPartiesQueryQuery,
+    HasPartiesQueryVariables
+  >(HasPartiesQueryDocument, baseOptions);
+}
 export const ChatMessagesSubscriptionDocument = gql`
   subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {
     message(where: $where) {
@@ -3946,6 +4248,9 @@ export const ChatMessagesSubscriptionDocument = gql`
         hasOptimisticError @client
         content
         createdAt
+        chat {
+          id
+        }
       }
     }
   }

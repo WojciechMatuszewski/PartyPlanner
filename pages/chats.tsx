@@ -3,11 +3,7 @@ import { Layout, Button } from 'antd';
 import css from '@emotion/css';
 
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import {
-  MeQueryMe,
-  PaginateChatsQueryEdges,
-  usePaginateChatsQuery
-} from '@generated/graphql';
+import { MeQueryMe, useHasPartiesQuery } from '@generated/graphql';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
@@ -22,8 +18,6 @@ const LayoutStyles = css`
   height: calc(100vh - 66px);
   display: flex;
 `;
-
-const INITIAL_PAGE_SIZE = 100;
 
 interface Props {
   me: MeQueryMe;
@@ -65,15 +59,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
     routeChangeStreamRef.current.next(currentlySelectedChatId);
   }, [router!.query]);
 
-  const { loading, data, error } = usePaginateChatsQuery({
-    variables: {
-      where: {
-        members_some: { id: me.id },
-        OR: [{ party: { isPublic: true } }, { party: { isPublic: false } }]
-      },
-      first: INITIAL_PAGE_SIZE
-    }
-  });
+  const { loading, data, error } = useHasPartiesQuery();
 
   if (loading || !data)
     return (
@@ -93,7 +79,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
       />
     );
 
-  if (data.chatsConnection.edges.length <= 0)
+  if (!data.hasParties)
     return (
       <NoData
         style={{ height: 'auto' }}
@@ -112,10 +98,7 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
   return (
     <Layout css={[LayoutStyles]}>
       <ChatsContext.Provider value={state}>
-        <ChatsMenu
-          userId={me.id}
-          initialChats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
-        />
+        <ChatsMenu />
         <ChatWindow />
         <ChatUsersMenu />
       </ChatsContext.Provider>

@@ -44,6 +44,7 @@ const LoginForm: React.FC<{
       onSubmit={async formValues => {
         try {
           const response = await mutate({ variables: formValues });
+
           if (response && response.data) {
             handleLogin(response.data.login.token);
           }

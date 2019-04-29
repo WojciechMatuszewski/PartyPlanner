@@ -48,6 +48,7 @@ export const withApolloAuth = ({
         const response = await ctx.apolloClient.query<MeQueryQuery>({
           query: MeQueryDocument
         });
+
         if (userHasToBe === 'notAuthenticated') {
           redirect(ctx, '/dashboard');
         }

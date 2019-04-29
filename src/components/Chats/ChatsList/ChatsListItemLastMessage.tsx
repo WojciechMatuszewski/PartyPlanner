@@ -30,9 +30,9 @@ class ChatsListItemLastMessage extends React.Component<Props> {
         return (
           <Typography.Text type="secondary">
             {diff < 24
-              ? parsedDate.format('hh:mm')
+              ? parsedDate.format('HH:mm')
               : diff < 24 * 7
-              ? parsedDate.format('dd:hh')
+              ? parsedDate.format('dd:HH')
               : parsedDate.format('MMM Do')}
           </Typography.Text>
         );

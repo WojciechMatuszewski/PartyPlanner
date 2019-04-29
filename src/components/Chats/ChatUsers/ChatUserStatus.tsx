@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { UserStatus } from '@generated/graphql';
 
 const UserStatusWrapper = styled.div`
   height: 100%;
@@ -9,17 +10,23 @@ const UserStatusWrapper = styled.div`
   padding-right: 8px;
 `;
 
-const OnlineDot = styled.div`
-  width: 6px;
-  height: 6px;
-  background: rgb(66, 183, 42);
+const StatusDot = styled.div<Props>`
+  width: 7px;
+  height: 7px;
+  background: ${props =>
+    props.status == UserStatus.Offline ? '#8c8c8c' : 'rgb(66, 183, 42)'};
+  opacity: ${props => (props.status == UserStatus.Offline ? '0.4' : 1)};
   border-radius: 50%;
 `;
 
-const ChatUserStatus: React.FC = () => {
+interface Props {
+  status: UserStatus;
+}
+
+const ChatUserStatus: React.FC<Props> = ({ status }) => {
   return (
     <UserStatusWrapper>
-      <OnlineDot />
+      <StatusDot status={status} />
     </UserStatusWrapper>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Icon, Typography } from 'antd';
+import { SerializedStyles } from '@emotion/css';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -13,9 +14,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const ChatSectionLoading: React.FC = () => {
+const ChatSectionLoading: React.FC<{ cssProp?: SerializedStyles }> = ({
+  cssProp
+}) => {
   return (
-    <Wrapper>
+    <Wrapper css={[cssProp]}>
       <Icon
         type="loading"
         spin={true}

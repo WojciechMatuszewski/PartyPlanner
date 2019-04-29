@@ -9,6 +9,8 @@ import {
 import ChatSectionLoading from './ChatSectionLoading';
 import ChatUsersList from './ChatUsers/ChatUsersList';
 
+const POOL_INTERVAL = 5000;
+
 const ChatUsersMenu: React.FC = () => {
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
 
@@ -39,10 +41,10 @@ const ChatUsersMenu: React.FC = () => {
               id_not: currentlyLoggedUserData.id
             }
           }}
+          pollInterval={POOL_INTERVAL}
         >
           {({ loading, data }) => {
             if (loading || !data) return <ChatSectionLoading />;
-
             return (
               <ChatUsersList
                 chatUsers={

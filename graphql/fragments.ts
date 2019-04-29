@@ -36,7 +36,24 @@ export const MESSAGE_FRAGMENT = gql`
       id
     }
     isSendByMe @client
+    optimisticallyAdded @client
+    optimisticallyCreated @client
+    hasOptimisticError @client
     content
     createdAt
+  }
+`;
+
+export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
+  fragment LAST_CHAT_MESSAGE_FRAGMENT on Chat {
+    messages(last: 1) {
+      createdAt
+      content
+      author {
+        firstName
+        lastName
+      }
+    }
+    hasUnreadMessages @client
   }
 `;

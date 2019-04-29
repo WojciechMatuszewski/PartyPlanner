@@ -9,18 +9,27 @@ import {
   FlexBoxHorizontallyCenteredStyles
 } from '@shared/styles';
 import { WithRouterProps, withRouter } from 'next/router';
+import { useApolloClient } from 'react-apollo-hooks';
+import { gql } from 'apollo-boost';
+import { cond } from 'ramda';
 
 interface Props {
   edge: PaginateChatsQueryEdges;
   selected: boolean;
 }
 
-const ChatsListItemWrapper = styled.li`
+interface StyleProps {
+  hasUnreadMessages: boolean;
+}
+
+const ChatsListItemWrapper = styled.li<StyleProps>`
   padding: 12px;
-  /* width: 298px; */
   display: flex;
   .ant-typography {
     margin-bottom: 0;
+    font-weight: ${props => (props.hasUnreadMessages ? 'bold' : 'inherit')};
+    color: ${props =>
+      props.hasUnreadMessages ? 'rgba(0, 0, 0, 0.65)' : 'inherit'};
   }
   &:hover {
     cursor: pointer;
@@ -57,9 +66,16 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   router,
   selected
 }) => {
+  const apolloClient = useApolloClient();
+
+  React.useEffect(() => {
+    if (selected) markAsReadThread();
+  }, [selected]);
+
   return (
     <ChatsListItemWrapper
-      onClick={handleListItemClick}
+      hasUnreadMessages={node.hasUnreadMessages}
+      onClick={cond([[shouldSwitchUrl, changeUrlToCorrectChat]])}
       className={selected ? 'selected' : ''}
     >
       <ChatsListItemAvatarList userAvatarsData={node.members || []} />
@@ -77,10 +93,28 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
     </ChatsListItemWrapper>
   );
 
-  function handleListItemClick() {
-    if (selected) return;
+  function shouldSwitchUrl() {
+    return !selected;
+  }
+
+  function changeUrlToCorrectChat() {
     const url = `/chats?chat=${node.id}`;
     router && router.push(url, url, { shallow: true });
+  }
+
+  function markAsReadThread() {
+    apolloClient.writeFragment({
+      id: `Chat:${node.id}`,
+      fragment: gql`
+        fragment IS_UNREAD_THREAD on Chat {
+          hasUnreadMessages @client
+        }
+      `,
+      data: {
+        hasUnreadMessages: false,
+        __typename: 'Chat'
+      }
+    });
   }
 };
 

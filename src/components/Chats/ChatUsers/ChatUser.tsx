@@ -1,10 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { PaginateUsersQueryNode } from '@generated/graphql';
+import { PaginateUsersQueryNode, UserStatus } from '@generated/graphql';
 import UserAvatar from '@components/UserDefaultAvatar';
 import { Typography } from 'antd';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import ChatUserStatus from './ChatUserStatus';
+import { useApolloClient } from 'react-apollo-hooks';
+import useInterval from '@hooks/useInterval';
+import { gql } from 'apollo-boost';
+import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
 
 const ChatUserWrapper = styled.li`
   padding: 4px 0;
@@ -33,6 +37,30 @@ interface Props {
 }
 
 const ChatUser: React.FC<Props> = ({ chatUser }) => {
+  const apolloClient = useApolloClient();
+
+  const [runnerInterval, setRunnerInterval] = React.useState<number | null>(
+    null
+  );
+
+  useInterval(handleRunnerUpdate, runnerInterval);
+
+  React.useEffect(() => {
+    setRunnerInterval(USER_PRESENCE_CONFIG.dateDiffLimit);
+  }, [chatUser.lastOnline]);
+
+  React.useEffect(() => {
+    if (chatUser.status == UserStatus.Offline) return;
+    const diffBetweenLastOnlineAndNow = getDiffBetweenLastOnlineAndNow();
+    const howMuchLongerShouldIWait =
+      diffBetweenLastOnlineAndNow > USER_PRESENCE_CONFIG.dateDiffLimit
+        ? 0
+        : USER_PRESENCE_CONFIG.dateDiffLimit +
+          USER_PRESENCE_CONFIG.localOfflineTimeoutOffset -
+          diffBetweenLastOnlineAndNow;
+    setRunnerInterval(howMuchLongerShouldIWait);
+  }, []);
+
   return (
     <ChatUserWrapper>
       <ChatUserAvatarNameWrapper>
@@ -41,9 +69,29 @@ const ChatUser: React.FC<Props> = ({ chatUser }) => {
           {chatUser.firstName} {chatUser.lastName}
         </Typography.Text>
       </ChatUserAvatarNameWrapper>
-      <ChatUserStatus />
+      <ChatUserStatus status={chatUser.status} />
     </ChatUserWrapper>
   );
+
+  function getDiffBetweenLastOnlineAndNow() {
+    return new Date().getTime() - new Date(chatUser.lastOnline).getTime();
+  }
+
+  function handleRunnerUpdate() {
+    apolloClient.writeFragment({
+      id: `User:${chatUser.id}`,
+      fragment: gql`
+        fragment user on User {
+          status
+        }
+      `,
+      data: {
+        __typename: 'User',
+        status: 'OFFLINE'
+      }
+    });
+    setRunnerInterval(null);
+  }
 };
 
 export default ChatUser;

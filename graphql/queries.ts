@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import { PARTY_FRAGMENT } from './fragments';
+import { PARTY_FRAGMENT, MESSAGE_FRAGMENT } from './fragments';
 
 export const ME_QUERY = gql`
   query MeQuery {
@@ -38,6 +38,8 @@ export const PAGINATE_USERS_QUERY = gql`
           firstName
           lastName
           avatar
+          lastOnline
+          status @client
         }
       }
       pageInfo {
@@ -148,6 +150,7 @@ export const PAGINATE_CHATS_QUERY = gql`
               lastName
             }
           }
+          hasUnreadMessages @client
         }
       }
     }
@@ -179,21 +182,16 @@ export const PAGINATE_MESSAGES_QUERY = gql`
       }
       edges {
         node {
-          id
-          author {
-            firstName
-            lastName
-            avatar
-            id
-          }
-          isSendByMe @client
-          optimisticallyAdded @client
-          optimisticallyCreated @client
-          hasOptimisticError @client
-          content
-          createdAt
+          ...MESSAGE_FRAGMENT
         }
       }
     }
+  }
+  ${MESSAGE_FRAGMENT}
+`;
+
+export const HAS_PARTIES_QUERY = gql`
+  query HasPartiesQuery {
+    hasParties
   }
 `;

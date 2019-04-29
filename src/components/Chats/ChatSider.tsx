@@ -20,6 +20,10 @@ const ChatSider: React.FC<
         overflow-y: auto;
         border-right: ${placement === 'left' ? '2px dashed #d9d9d9' : '0'};
         border-left: ${placement === 'right' ? '2px dashed #d9d9d9' : '0'};
+        .ant-layout-sider-children {
+          display: flex;
+          flex-direction: column;
+        }
       `}
     >
       {children}

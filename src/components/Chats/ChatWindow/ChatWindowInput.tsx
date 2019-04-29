@@ -6,13 +6,15 @@ import {
   PaginateMessagesQueryVariables,
   PaginateMessagesQueryDocument,
   PaginateMessagesQueryQuery,
-  CreateMessageMutation
+  CreateMessageMutation,
+  CreateMessageCreateMessage
 } from '@generated/graphql';
 import { ChatsContext } from '@pages/chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import moment from 'moment';
+import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
 
 const InputStyles = css`
   width: 100%;
@@ -63,7 +65,7 @@ const ChatInput: React.FC<Props> = ({
             optimisticResponse
           });
         } catch (e) {
-          message.error('could not send the message');
+          message.error('Could not send the message');
         }
       }}
     >
@@ -153,6 +155,8 @@ const ChatInput: React.FC<Props> = ({
       __typename: 'MessageEdge'
     });
 
+    updateCurrentThreadLastMessage(proxy, createMessage);
+
     proxy.writeQuery({
       query: PaginateMessagesQueryDocument,
       variables: currentQueryVariables,
@@ -164,35 +168,27 @@ const ChatInput: React.FC<Props> = ({
     onNewMessage();
   }
 
-  // function handleInputError({ createMessage }: any) {
-  //   const currentMessages = apolloClient.readQuery<PaginateMessagesQueryQuery>({
-  //     query: PaginateMessagesQueryDocument,
-  //     variables: currentQueryVariables
-  //   });
-
-  //   createMessage.hasOptimisticError = true;
-
-  //   if (!currentMessages) return;
-  //   currentMessages.messagesConnection.edges.push({
-  //     node: createMessage,
-  //     __typename: 'MessageEdge'
-  //   });
-
-  //   apolloClient.writeQuery({
-  //     query: PaginateMessagesQueryDocument,
-  //     variables: currentQueryVariables,
-  //     data: currentMessages
-  //   });
-  //   requestAnimationFrame(() => {
-  //     onNewMessage();
-  //   });
-  //   console.log(currentMessages);
-
-  //   // apolloClient.writeQuery({
-  //   //   query: PaginateMessagesQueryDocument,
-
-  //   // })
-  // }
+  function updateCurrentThreadLastMessage(
+    proxy: DataProxy,
+    createdMessage: CreateMessageCreateMessage
+  ) {
+    proxy.writeFragment({
+      id: `Chat:${currentlySelectedChatId}`,
+      fragment: LAST_CHAT_MESSAGE_FRAGMENT,
+      data: {
+        messages: [
+          {
+            author: createdMessage.author,
+            content: createdMessage.content,
+            createdAt: createdMessage.createdAt,
+            __typename: 'Message'
+          }
+        ],
+        hasUnreadMessages: false,
+        __typename: 'Chat'
+      }
+    });
+  }
 };
 
 export default ChatInput;

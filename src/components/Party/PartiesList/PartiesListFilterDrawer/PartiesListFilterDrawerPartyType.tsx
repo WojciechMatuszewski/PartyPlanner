@@ -15,9 +15,13 @@ const PartiesListFilterDrawerPartyType: React.FC<Props> = props => {
       value={props.filterValue}
       onChange={handleOnCheckboxGroupChange}
     >
-      <Checkbox value="also_public">Also show public parties</Checkbox>
+      <Checkbox value="also_public" data-testid="also-public">
+        Also show public parties
+      </Checkbox>
       <br />
-      <Checkbox value="only_public">Only show public parties</Checkbox>
+      <Checkbox value="only_public" data-testid="only-public">
+        Only show public parties
+      </Checkbox>
     </Checkbox.Group>
   );
 

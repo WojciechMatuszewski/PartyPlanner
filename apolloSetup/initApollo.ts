@@ -1,4 +1,4 @@
-import { MeQueryDocument, MeQueryQuery } from './../generated/graphql';
+import { LocalResolvers } from './../graphql/resolvers';
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,8 +7,6 @@ import {
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
-import { PaginateMessagesQueryNode } from '@generated/graphql';
-import { ApolloCache } from 'apollo-cache';
 import { WebSocketLink } from 'apollo-link-ws';
 import { ApolloLink } from 'apollo-link';
 import { split } from 'apollo-link';
@@ -70,25 +68,7 @@ function create(initialState: any, { getToken }: Options) {
     ssrMode: !isBrowser(), // Disables forceFetch on the server (so queries are only run once)
     link: link,
     cache: new InMemoryCache().restore(initialState || {}),
-    resolvers: {
-      Message: {
-        isSendByMe: (
-          message: PaginateMessagesQueryNode,
-          _,
-          { cache }: { cache: ApolloCache<any> }
-        ) => {
-          const data = cache.readQuery<MeQueryQuery>({
-            query: MeQueryDocument
-          });
-
-          if (!data || !data.me) return false;
-          return data.me.id === message.author.id;
-        },
-        optimisticallyAdded: () => false,
-        optimisticallyCreated: () => false,
-        hasOptimisticError: () => false
-      }
-    }
+    resolvers: LocalResolvers
   });
 }
 

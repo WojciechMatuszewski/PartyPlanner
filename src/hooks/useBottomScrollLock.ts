@@ -25,7 +25,7 @@ function useBottomScrollLock(
 ): ReturnProps {
   const [state, setState] = React.useState<State>(initialState);
   const onScrolledTopRef = React.useRef<() => void>(onScrolledTop);
-  const animationRef = React.useRef<any>();
+  const animationRef = React.useRef<any>(null);
   const scrollTopRef = React.useRef<number>(0);
 
   React.useEffect(() => {
@@ -45,8 +45,7 @@ function useBottomScrollLock(
       scrollTopRef.current = scrollParams.scrollTop;
 
       if (scrollTopRef.current == 0) onScrolledTopRef.current();
-      // TODO:
-      // stopCurrentAnimation();
+
       if (
         !state.isWithinBottomLockZone &&
         checkIfIsWithinBottomLockZone(scrollParams)
@@ -90,15 +89,6 @@ function useBottomScrollLock(
       }
     });
   }
-
-  // TODO:
-  // function stopCurrentAnimation() {
-  //   if (animationRef.current) {
-  //     animationRef.current.stop();
-  //     animationRef.current = null;
-  //     setState(prevState => ({ ...prevState, currentScrollTop: undefined }));
-  //   }
-  // }
 
   return {
     ...state,
