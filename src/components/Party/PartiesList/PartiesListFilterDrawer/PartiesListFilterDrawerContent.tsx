@@ -13,7 +13,7 @@ import PartiesListFilterDrawerPartyType from './PartiesListFilterDrawerPartyType
 import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt';
 import PartiesListFilterDrawerSort from './PartiesListFilterDrawerSort';
 import PartiesListFilterDrawerLocation from './PartiesListFilterDrawerLocation';
-import { PartiesListContext } from '../BetterPartiesList';
+import { PartiesListContext } from '../PartiesList';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;

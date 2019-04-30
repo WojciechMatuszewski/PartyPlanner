@@ -76,6 +76,7 @@ const PartiesListPane: React.FC<Props> = props => {
             Your Parties
           </Typography.Title>
           <Input.Search
+            data-testid="paneInput"
             placeholder="Type here..."
             onChange={compose(
               debouncedOnChangeRef.current,
@@ -90,7 +91,11 @@ const PartiesListPane: React.FC<Props> = props => {
             >
               {shouldButtonsHaveText ? 'Create new party' : null}
             </Button>
-            <Button icon="filter" onClick={props.onDrawerOpen}>
+            <Button
+              data-testid="onDrawerOpenBtn"
+              icon="filter"
+              onClick={props.onDrawerOpen}
+            >
               {shouldButtonsHaveText ? 'Filters' : null}
             </Button>
           </ButtonsWrapper>

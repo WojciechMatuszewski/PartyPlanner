@@ -1,334 +1,243 @@
-// import React from 'react';
-// import {
-//   PaginatePartiesQueryEdges,
-//   PaginatePartiesQueryDocument,
-//   PaginatePartiesQueryQuery,
-//   PaginatePartiesQueryVariables,
-//   PartyWhereInput
-// } from '@generated/graphql';
-// import PartiesListPane from './PartiesListPane';
-// import PartiesListFilterChips from './PartiesListFilterChips';
-// import PartiesListCardGrid from './PartiesListCardGrid';
-// import {
-//   PartiesListReducer,
-//   initialPartiesListState,
-//   PartiesListState,
-//   PartiesListFetchActions,
-//   PartiesListFilters,
-//   PartiesListFilterActions
-// } from './PartiesListReducer';
-// import { useApolloClient } from 'react-apollo-hooks';
-// import PartiesListLoadMore from './PartiesListLoadMore';
-// import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
-// import PartiesListNoResults from './PartiesListNoResults';
-// import styled from '@emotion/styled';
-// import NoData from '@components/NoData';
-// import { Button, message } from 'antd';
-// import { withRouter, WithRouterProps } from 'next/router';
-// import GraphqlException from '@components/GraphqlException';
-// import GraphqlLoading from '@components/GraphqlLoading';
+import React from 'react';
+import {
+  PartyWhereInput,
+  PaginatePartiesQueryVariables,
+  usePaginatePartiesQuery
+} from '@generated/graphql';
+import styled from '@emotion/styled';
+import PartiesListPane from './PartiesListPane';
+import {
+  PartiesListFilters,
+  PartiesListReducer,
+  initialPartiesListState,
+  PartiesListState,
+  PartiesListFilterActions,
+  PartiesListDrawerActions
+} from './PartiesListReducer';
+import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
+import PartiesListFilterChips from './PartiesListFilterChips';
+import PartiesListCardGrid from './PartiesListCardGrid';
+import PartiesListLoadMore from './PartiesListLoadMore';
+import PartiesListNoResults from './PartiesListNoResults';
+import GraphqlException from '@components/GraphqlException';
+import { Button } from 'antd';
+import { handleRefetch } from '@shared/graphqlUtils';
 
-// const PAGE_SIZE = 10;
+interface Props {
+  userId: string;
+}
 
-// const PartiesListWrapper = styled.div`
-//   width: 100%;
-//   display: flex;
-//   flex-direction: column;
-// `;
+const PartiesListWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 
-// function mapFiltersToWhereVariables(filters: PartiesListFilters) {
-//   const newFilters = { ...filters };
-//   if (!Object.keys(newFilters).includes('isPublic')) {
-//     newFilters['isPublic'] = {
-//       variablesName: 'OR',
-//       variablesType: 'where',
-//       variablesValue: { isPublic: false },
-//       id: Math.random().toString()
-//     } as any;
-//   }
-//   return Object.entries(newFilters).reduce(
-//     (acc: PartyWhereInput, [, filterObject]) => {
-//       if (filterObject.variablesType === 'where') {
-//         acc[filterObject.variablesName as keyof PartyWhereInput] = acc[
-//           filterObject.variablesName as keyof PartyWhereInput
-//         ]
-//           ? [
-//               ...acc[filterObject.variablesName as keyof PartyWhereInput],
-//               filterObject.variablesValue
-//             ]
-//           : filterObject.variablesValue;
-//       }
-//       return acc;
-//     },
-//     {}
-//   );
-// }
+function mapFiltersToWhereVariables(filters: PartiesListFilters) {
+  const newFilters = { ...filters };
+  if (!Object.keys(newFilters).includes('isPublic')) {
+    newFilters['isPublic'] = {
+      variablesName: 'OR',
+      variablesType: 'where',
+      variablesValue: { isPublic: false },
+      id: Math.random().toString()
+    } as any;
+  }
+  return Object.entries(newFilters).reduce(
+    (acc: PartyWhereInput, [, filterObject]) => {
+      if (filterObject.variablesType === 'where') {
+        acc[filterObject.variablesName as keyof PartyWhereInput] = acc[
+          filterObject.variablesName as keyof PartyWhereInput
+        ]
+          ? [
+              ...acc[filterObject.variablesName as keyof PartyWhereInput],
+              filterObject.variablesValue
+            ]
+          : filterObject.variablesValue;
+      }
+      return acc;
+    },
+    {}
+  );
+}
 
-// function queryConstructorFactory(userId: string) {
-//   return function(
-//     currentResults: PaginatePartiesQueryEdges[],
-//     searchValue: string,
-//     filters: PartiesListFilters = {},
-//     first: number = PAGE_SIZE
-//   ): PaginatePartiesQueryVariables {
-//     return {
-//       where: {
-//         members_some: {
-//           id: userId
-//         },
-//         id_not_in: currentResults.map(result => result.node.id),
-//         normalizedTitle_contains: searchValue.toLowerCase(),
-//         ...mapFiltersToWhereVariables(filters)
-//       },
-//       orderBy: filters['orderBy']
-//         ? filters['orderBy'].variablesValue
-//         : undefined,
-//       first
-//     };
-//   };
-// }
+function variablesConstructorFactory(userId: string) {
+  return function(
+    searchValue: string,
+    filters: PartiesListFilters = {},
+    first: number = 3
+  ): PaginatePartiesQueryVariables {
+    return {
+      where: {
+        members_some: {
+          id: userId
+        },
+        normalizedTitle_contains: searchValue.toLowerCase(),
+        ...mapFiltersToWhereVariables(filters)
+      },
+      orderBy: filters['orderBy']
+        ? filters['orderBy'].variablesValue
+        : undefined,
+      first
+    };
+  };
+}
 
-// // export const PartiesListContext = React.createContext<{
-// //   state: PartiesListState;
-// //   dispatch: React.Dispatch<any>;
-// // }>({
-// //   state: initialPartiesListState,
-// //   dispatch: () => {}
-// // });
+export const PartiesListContext = React.createContext<{
+  state: PartiesListState;
+  dispatch: React.Dispatch<any>;
+}>({
+  state: initialPartiesListState,
+  dispatch: () => {}
+});
 
-// interface Props {
-//   userId: string;
-// }
+const PartiesList: React.FC<Props> = ({ userId }) => {
+  const variablesConstructor = React.useRef<any>(
+    variablesConstructorFactory(userId)
+  );
+  const isFirstRender = React.useRef<boolean>(true);
 
-// const PartiesList: React.FC<Props & WithRouterProps> = ({ userId, router }) => {
-//   const apolloClient = useApolloClient();
+  const [appliedFilters, setAppliedFilters] = React.useState<
+    PartiesListFilters
+  >({});
 
-//   const [state, dispatch] = React.useReducer(
-//     PartiesListReducer,
-//     initialPartiesListState
-//   );
-//   const [shouldShowEmpty, setShouldShowEmpty] = React.useState<boolean>(false);
-//   const [contextState] = React.useState<{
-//     state: PartiesListState;
-//     dispatch: React.Dispatch<any>;
-//   }>({
-//     state,
-//     dispatch
-//   });
-//   const isFirstRender = React.useRef<boolean>(false);
-//   const queryConstructor = React.useCallback(queryConstructorFactory(userId), [
-//     userId
-//   ]);
+  const [state, dispatch] = React.useReducer(
+    PartiesListReducer,
+    initialPartiesListState
+  );
 
-//   React.useEffect(() => {
-//     handleDataFetch(true);
-//   }, []);
+  const [contextState] = React.useState<{
+    state: PartiesListState;
+    dispatch: React.Dispatch<any>;
+  }>({
+    state,
+    dispatch
+  });
 
-//   const isDrawerOpen = React.useCallback(() => {
-//     return state.drawerVisible;
-//   }, [state.drawerVisible]);
+  const isDrawerOpen = React.useCallback(() => state.drawerVisible, [
+    state.drawerVisible
+  ]);
 
-//   React.useEffect(handleFilterChipRemoved, [state.filters]);
+  const handleFiltersChanged = React.useCallback(
+    () => setAppliedFilters(state.filters),
+    [state.filters]
+  );
 
-//   const fetchData = React.useCallback(() => {
-//     return apolloClient.query<PaginatePartiesQueryQuery>({
-//       query: PaginatePartiesQueryDocument,
-//       variables: queryConstructor(
-//         state.parties,
-//         state.filterInputValue,
-//         state.filters
-//       )
-//     });
-//   }, [
-//     state.queryVariables,
-//     state.parties,
-//     state.filterInputValue,
-//     state.filters
-//   ]);
+  const hasFiltersApplied = React.useCallback(() => {
+    return Object.keys(state.filters).length > 0;
+  }, [state.filters]);
 
-//   const handleFiltersChanged = React.useCallback(async () => {
-//     try {
-//       dispatch(PartiesListFetchActions.setLoadingFilters(true));
-//       const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-//         query: PaginatePartiesQueryDocument,
-//         variables: queryConstructor([], state.filterInputValue, state.filters)
-//       });
-//       dispatch(PartiesListFetchActions.setLoadingFilters(false));
-//       dispatch(
-//         PartiesListFetchActions.setResults(data.partiesConnection
-//           .edges as PaginatePartiesQueryEdges[])
-//       );
-//       dispatch(
-//         PartiesListFetchActions.setPaginationInfo(
-//           data.partiesConnection.pageInfo
-//         )
-//       );
-//     } catch (e) {
-//       handleError();
-//     }
-//   }, [state.filters]);
+  React.useEffect(handleFilterChipRemoved, [state.filters]);
 
-//   const paginationInfoUpdater = React.useCallback(async () => {
-//     try {
-//       const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-//         query: PaginatePartiesQueryDocument,
-//         variables: queryConstructor(
-//           state.parties,
-//           state.filterInputValue,
-//           state.filters
-//         )
-//       });
-//       dispatch(
-//         PartiesListFetchActions.setPaginationInfo(
-//           data.partiesConnection.pageInfo
-//         )
-//       );
-//       dispatch(
-//         PartiesListFetchActions.setResults(data.partiesConnection
-//           .edges as PaginatePartiesQueryEdges[])
-//       );
-//     } catch (e) {
-//       handleError();
-//     }
-//   }, [
-//     state.queryVariables,
-//     state.parties,
-//     state.filterInputValue,
-//     state.filters
-//   ]);
+  const { data, loading, error, fetchMore, refetch } = usePaginatePartiesQuery({
+    variables: variablesConstructor.current(
+      state.filterInputValue,
+      appliedFilters
+    ),
+    notifyOnNetworkStatusChange: true
+  });
 
-//   return (
-//     <PartiesListContext.Provider value={contextState}>
-//       <PartiesListWrapper>
-//         <GraphqlLoading
-//           isLoadingInitially={state.initiallyLoading}
-//           loading={state.initiallyLoading || state.loadingFilters}
-//           textToDisplay="Loading your parties ..."
-//         />
-//         {!state.initiallyLoading && shouldShowEmpty && (
-//           <NoData
-//             message="You currently do not have any parties"
-//             action={
-//               <Button
-//                 type="primary"
-//                 onClick={() => router && router.push('/create-party')}
-//               >
-//                 Create new party
-//               </Button>
-//             }
-//           />
-//         )}
-//         {!state.initiallyLoading && !shouldShowEmpty && !state.hasError ? (
-//           <React.Fragment>
-//             <PartiesListPane
-//               onError={handleError}
-//               inputValue={state.filterInputValue}
-//               paginationInfoUpdater={paginationInfoUpdater}
-//               onDataFetch={handleTypeaheadDataFetch}
-//               onDataFetched={data => handleDataFetched(false, data)}
-//             />
-//             <PartiesListFilterDrawer
-//               onFiltersChanged={handleFiltersChanged}
-//               drawerVisible={state.drawerVisible}
-//               filters={state.filters}
-//             />
+  if (error)
+    return (
+      <GraphqlException
+        actions={
+          <Button
+            type="primary"
+            onClick={async () =>
+              await handleRefetch(
+                refetch,
+                variablesConstructor.current(
+                  state.filterInputValue,
+                  appliedFilters
+                )
+              )
+            }
+          >
+            Try again
+          </Button>
+        }
+      />
+    );
 
-//             <PartiesListFilterChips filters={state.filters} />
-//             <PartiesListCardGrid
-//               parties={state.parties}
-//               filterInputValue={state.filterInputValue}
-//             >
-//               {hasResultsAfterFiltering => (
-//                 <React.Fragment>
+  return (
+    <PartiesListContext.Provider value={contextState}>
+      <PartiesListWrapper>
+        <PartiesListPane
+          onDrawerOpen={() => dispatch(PartiesListDrawerActions.toggleDrawer())}
+          onChange={value =>
+            dispatch(PartiesListFilterActions.setInputFilterValue(value))
+          }
+        />
+        <PartiesListFilterDrawer
+          onFiltersChanged={handleFiltersChanged}
+          drawerVisible={state.drawerVisible}
+          filters={state.filters}
+        />
+        <PartiesListFilterChips filters={state.filters} />
+        <PartiesListCardGrid
+          parties={
+            data && data.partiesConnection
+              ? (data.partiesConnection.edges as any[])
+              : []
+          }
+          filterInputValue={state.filterInputValue}
+        >
+          {hasResults => (
+            <React.Fragment>
+              <PartiesListLoadMore
+                hasResults={hasResults}
+                isLoadingMore={loading}
+                canLoadMore={
+                  data && data.partiesConnection
+                    ? data.partiesConnection.pageInfo.hasNextPage
+                    : false
+                }
+                onLoadMoreButtonClick={() =>
+                  fetchMore({
+                    variables: {
+                      after: data!.partiesConnection!.pageInfo.endCursor
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      if (
+                        !fetchMoreResult ||
+                        fetchMoreResult.partiesConnection.edges.length == 0
+                      )
+                        return prev;
+                      return {
+                        partiesConnection: {
+                          edges: [
+                            ...prev.partiesConnection.edges,
+                            ...fetchMoreResult.partiesConnection.edges
+                          ],
+                          pageInfo: fetchMoreResult.partiesConnection.pageInfo,
+                          __typename: 'PartyConnection'
+                        }
+                      };
+                    }
+                  })
+                }
+              />
+              <PartiesListNoResults
+                hasFiltersApplied={hasFiltersApplied()}
+                showBeVisible={!hasResults && !loading}
+                onClearAllFilters={() =>
+                  dispatch(PartiesListFilterActions.removeAllFilters())
+                }
+                queryString={state.filterInputValue}
+              />
+            </React.Fragment>
+          )}
+        </PartiesListCardGrid>
+      </PartiesListWrapper>
+    </PartiesListContext.Provider>
+  );
 
-//                 </React.Fragment>
-//               )}
-//             </PartiesListCardGrid>
-//           </React.Fragment>
-//         ) : state.hasError ? (
-//           <GraphqlException />
-//         ) : null}
-//       </PartiesListWrapper>
-//     </PartiesListContext.Provider>
-//   );
+  function handleFilterChipRemoved() {
+    if (!isDrawerOpen() && !isFirstRender.current) handleFiltersChanged();
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+  }
+};
 
-//   function handleNoResultsResetFilters() {
-//     dispatch(PartiesListFilterActions.removeAllFilters());
-//     dispatch(PartiesListFilterActions.setInputFilterValue(''));
-//   }
-
-//   function handleDataFetched(
-//     wasInitialLoad: boolean = false,
-//     data: PaginatePartiesQueryQuery,
-//     shouldAppend = false
-//   ) {
-//     if (!wasInitialLoad) {
-//       dispatch(PartiesListFetchActions.setLoadingMore(false));
-//     } else {
-//       dispatch(PartiesListFetchActions.setLoadingInitially(false));
-//     }
-//     if (data.partiesConnection.edges.length <= 0 && wasInitialLoad) {
-//       setShouldShowEmpty(true);
-//     }
-//     if (shouldAppend)
-//       dispatch(
-//         PartiesListFetchActions.appendResults(data.partiesConnection
-//           .edges as PaginatePartiesQueryEdges[])
-//       );
-//     else
-//       dispatch(
-//         PartiesListFetchActions.setResults(data.partiesConnection
-//           .edges as PaginatePartiesQueryEdges[])
-//       );
-//     dispatch(
-//       PartiesListFetchActions.setPaginationInfo(data.partiesConnection.pageInfo)
-//     );
-//   }
-
-//   function handlePreDataFetch(isInitial: boolean) {
-//     if (!isInitial) {
-//       dispatch(PartiesListFetchActions.setLoadingMore(true));
-//     }
-//   }
-
-//   function handleTypeaheadDataFetch() {
-//     handlePreDataFetch(false);
-//     return fetchData();
-//   }
-
-//   async function handleDataFetch(
-//     isFromInitialFetch: boolean = false,
-//     isFromLoadMore: boolean = false
-//   ) {
-//     handlePreDataFetch(isFromInitialFetch);
-//     try {
-//       const { data } = await fetchData();
-//       handleDataFetched(isFromInitialFetch, data, isFromLoadMore);
-//     } catch (e) {
-//       handleError();
-//     }
-//   }
-
-//   function handleOnLoadMoreButton() {
-//     return handleDataFetch(false, true);
-//   }
-
-//   function handleFilterChipRemoved() {
-//     if (!isDrawerOpen() && !isFirstRender.current) {
-//       handleFiltersChanged();
-//     }
-//     if (isFirstRender.current) {
-//       isFirstRender.current = false;
-//     }
-//   }
-
-//   function handleError() {
-//     message.error('An error occurred!');
-//     dispatch(PartiesListFetchActions.setLoadingInitially(false));
-//     dispatch(PartiesListFetchActions.setLoadingMore(false));
-//     dispatch(PartiesListFetchActions.setLoadingFilters(false));
-//     dispatch(PartiesListFetchActions.setError(true));
-//   }
-// };
-
-// export default withRouter(PartiesList);
+export default PartiesList;

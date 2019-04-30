@@ -10,9 +10,8 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-
 import { areObjectsEqual } from '@shared/functionUtils';
-import { PartiesListContext } from '../BetterPartiesList';
+import { PartiesListContext } from '../PartiesList';
 
 const DrawerStyles = css`
   .ant-drawer-body {

@@ -3,8 +3,6 @@ import styled from '@emotion/styled';
 import PartiesListPartyCard from './PartiesListPartyCard';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
 
-import { useFuzzySearch } from '@hooks/useFuzzySearch';
-
 import posed from 'react-pose';
 
 const PosedGridOuterWrapper = styled(

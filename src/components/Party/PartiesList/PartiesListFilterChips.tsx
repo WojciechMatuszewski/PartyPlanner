@@ -11,7 +11,7 @@ import {
   NotWrappingTextStyles,
   FlexBoxFullCenteredStyles
 } from '@shared/styles';
-import { PartiesListContext } from './BetterPartiesList';
+import { PartiesListContext } from './PartiesList';
 
 const FilterChipsWrapper = styled.div`
   max-width: 1440px;

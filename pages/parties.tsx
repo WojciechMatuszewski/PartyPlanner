@@ -4,12 +4,13 @@ import { withApolloAuth } from '@apolloSetup/withApolloAuth';
 import { BackTop, Button } from 'antd';
 import { MeQueryMe, HasPartiesQueryComponent } from '@generated/graphql';
 import { NextFunctionComponent } from 'next';
-import BetterPartiesList from '@components/Party/PartiesList/BetterPartiesList';
+
 import GraphqlLoading from '@components/GraphqlLoading';
 import NoData from '@components/NoData';
 import { withRouter, WithRouterProps } from 'next/router';
 import GraphqlException from '@components/GraphqlException';
 import { handleRefetch } from '@shared/graphqlUtils';
+import PartiesList from '@components/Party/PartiesList/PartiesList';
 
 interface Props {
   me: MeQueryMe;
@@ -59,7 +60,7 @@ const PartiesPage: NextFunctionComponent<Props & WithRouterProps> = ({
 
         return (
           <React.Fragment>
-            <BetterPartiesList userId={me.id} />
+            <PartiesList userId={me.id} />
             <BackTop />
           </React.Fragment>
         );
