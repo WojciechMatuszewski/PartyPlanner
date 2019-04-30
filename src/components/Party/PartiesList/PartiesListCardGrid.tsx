@@ -52,7 +52,7 @@ const PartiesListCardGrid: React.FC<Props> = ({ parties, children }) => {
         initialPose="exit"
         pose="enter"
       >
-        <GridWrapper>
+        <GridWrapper data-testid="partiesListGrid">
           {parties.map((party, index) => (
             <PartiesListPartyCard
               party={party}

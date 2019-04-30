@@ -8,7 +8,7 @@ import axios from 'axios';
   this is just bad :c
 */
 
-const fakePosition: Position = {
+export const fakePosition: Position = {
   coords: {
     latitude: 1,
     longitude: 1,

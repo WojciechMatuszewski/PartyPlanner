@@ -24,9 +24,14 @@ const PartiesListLoadMore: React.FC<Props> = props => {
       shouldSpanFullHeight={!props.hasResults && props.isLoadingMore}
     >
       {props.canLoadMore && !props.isLoadingMore && props.hasResults && (
-        <Button onClick={props.onLoadMoreButtonClick}>Load More</Button>
+        <Button
+          data-testid="loadMoreButton"
+          onClick={props.onLoadMoreButtonClick}
+        >
+          Load More
+        </Button>
       )}
-      {props.isLoadingMore && <Spin />}
+      {props.isLoadingMore && <Spin data-testid="loadMoreSpinner" />}
     </LoadMoreWrapper>
   ) : null;
 };

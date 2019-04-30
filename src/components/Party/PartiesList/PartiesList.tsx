@@ -61,7 +61,7 @@ function mapFiltersToWhereVariables(filters: PartiesListFilters) {
   );
 }
 
-function variablesConstructorFactory(userId: string) {
+export function partiesListVariablesConstructorFactory(userId: string) {
   return function(
     searchValue: string,
     filters: PartiesListFilters = {},
@@ -93,7 +93,7 @@ export const PartiesListContext = React.createContext<{
 
 const PartiesList: React.FC<Props> = ({ userId }) => {
   const variablesConstructor = React.useRef<any>(
-    variablesConstructorFactory(userId)
+    partiesListVariablesConstructorFactory(userId)
   );
   const isFirstRender = React.useRef<boolean>(true);
 

@@ -1,7 +1,10 @@
+import { ApolloClient } from 'apollo-boost';
 import { PartiesQueryVariables } from '@generated/graphql';
 import moment from 'moment';
 import { OperationVariables } from 'react-apollo';
 import { message } from 'antd';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { MockLink } from 'apollo-link-mock';
 
 export function getPartiesDateVariables(
   dateToGetVariablesFor: Date,
@@ -47,4 +50,11 @@ export async function handleRefetch<QueryVariables extends OperationVariables>(
   } catch (e) {
     message.error('Could not fetch the data');
   }
+}
+
+export function createdMockedClient(mocks: any[]) {
+  return new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new MockLink(mocks)
+  })
 }

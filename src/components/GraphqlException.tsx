@@ -21,7 +21,13 @@ const ExceptionStyles = css`
 `;
 
 const GraphqlException: React.FC<IExceptionProps> = props => {
-  return <Exception css={[ExceptionStyles]} {...props} />;
+  return (
+    <Exception
+      data-testid="graphqlException"
+      css={[ExceptionStyles]}
+      {...props}
+    />
+  );
 };
 
 GraphqlException.defaultProps = {
