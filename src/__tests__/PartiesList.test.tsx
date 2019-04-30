@@ -3,17 +3,17 @@ import {
   PaginatePartiesQueryQuery,
   PaginatePartiesQueryEdges
 } from '@generated/graphql';
-import { render, wait } from 'react-testing-library';
+import { render, wait, fireEvent } from 'react-testing-library';
 import 'react-testing-library/cleanup-after-each';
 import PartiesList, {
   partiesListVariablesConstructorFactory
 } from '@components/Party/PartiesList/PartiesList';
 import { PAGINATE_PARTIES_QUERY } from '@graphql/queries';
-import { createdMockedClient } from '@shared/graphqlUtils';
+import { createMockedApolloClient } from '@shared/graphqlUtils';
 import { ApolloProvider } from 'react-apollo-hooks';
-
 import '../__mocks__/matchMedia';
 import { MockedResponse } from 'react-apollo/test-utils';
+import * as graphqlUtils from '@shared/graphqlUtils';
 
 const USER_ID = '123';
 
@@ -67,7 +67,7 @@ describe('PartiesList', () => {
         }
       }
     ];
-    const client = createdMockedClient(mocks);
+    const client = createMockedApolloClient(mocks);
     const { getByTestId } = render(
       <ApolloProvider client={client}>
         <PartiesList userId={USER_ID} />
@@ -79,7 +79,11 @@ describe('PartiesList', () => {
     expect(partiesGrid.childNodes).toHaveLength(1);
     expect(getByTestId('loadMoreButton')).toBeDefined();
   });
-  it('Correctly renders when there is an error', async () => {
+  it('Correctly handles an error', async () => {
+    jest
+      .spyOn(graphqlUtils, 'handleRefetch')
+      .mockImplementationOnce(async () => {});
+
     const mocks: MockedResponse[] = [
       {
         request: {
@@ -90,7 +94,7 @@ describe('PartiesList', () => {
         }
       }
     ];
-    const client = createdMockedClient(mocks);
+    const client = createMockedApolloClient(mocks);
     const { queryByTestId, getByTestId } = render(
       <ApolloProvider client={client}>
         <PartiesList userId={USER_ID} />
@@ -98,5 +102,15 @@ describe('PartiesList', () => {
     );
     await wait(() => expect(queryByTestId('loadMoreSpinner')).toBeNull);
     expect(getByTestId('graphqlException')).toBeDefined();
+    fireEvent.click(getByTestId('graphqlException').querySelector(
+      'button'
+    ) as HTMLButtonElement);
+    expect(graphqlUtils.handleRefetch).toHaveBeenCalled();
+    expect(graphqlUtils.handleRefetch).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining(
+        partiesListVariablesConstructorFactory(USER_ID)('', {})
+      )
+    );
   });
 });

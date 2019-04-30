@@ -46,36 +46,33 @@ const ChatUsersMenu: React.FC = () => {
         width: 205
       }}
     >
-      {currentlySelectedChatId == null ? null : (
-        <PaginateUsersQueryComponent
-          variables={getQueryVariables()}
-          pollInterval={POOL_INTERVAL}
-        >
-          {({ loading, data, error, refetch }) => {
-            if (error)
-              return (
-                <ChatError>
-                  <Button
-                    onClick={async () =>
-                      await handleRefetch(refetch, getQueryVariables())
-                    }
-                  >
-                    Try again
-                  </Button>
-                </ChatError>
-              );
-            if (loading || !data) return <ChatSectionLoading />;
-
+      <PaginateUsersQueryComponent
+        variables={getQueryVariables()}
+        pollInterval={POOL_INTERVAL}
+      >
+        {({ loading, data, error, refetch }) => {
+          if (error)
             return (
-              <ChatUsersList
-                chatUsers={
-                  data.paginateUsers.edges as PaginateUsersQueryEdges[]
-                }
-              />
+              <ChatError>
+                <Button
+                  onClick={async () =>
+                    await handleRefetch(refetch, getQueryVariables())
+                  }
+                >
+                  Try again
+                </Button>
+              </ChatError>
             );
-          }}
-        </PaginateUsersQueryComponent>
-      )}
+
+          if (loading || !data) return <ChatSectionLoading />;
+
+          return (
+            <ChatUsersList
+              chatUsers={data.paginateUsers.edges as PaginateUsersQueryEdges[]}
+            />
+          );
+        }}
+      </PaginateUsersQueryComponent>
     </ChatSideNavigation>
   );
 };
