@@ -51,12 +51,11 @@ const ChatsMenu: React.FC = () => {
             id_not: currentlyLoggedUserData.id
           },
           chat: {
-            id: currentlySelectedChatId
+            members_some: { id: currentlyLoggedUserData.id }
           }
         }
       }
     },
-
     onSubscriptionData: ({ client, subscriptionData: { data } }) => {
       if (!data || !data.message || !data.message.node) return;
       try {
