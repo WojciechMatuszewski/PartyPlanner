@@ -24,7 +24,7 @@ interface Props {
   me: MeQueryMe;
 }
 
-interface ChatContextProps {
+export interface ChatContextProps {
   currentlySelectedChatId: string | null;
   selectedChatIdStream$: BehaviorSubject<string | null>;
   currentlyLoggedUserData: MeQueryMe;

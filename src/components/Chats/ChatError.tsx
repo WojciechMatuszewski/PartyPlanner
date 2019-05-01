@@ -17,7 +17,7 @@ const ErrorWrapper = styled.div`
 
 export const ChatError: React.FC<Props> = ({ children, style }) => {
   return (
-    <ErrorWrapper style={style}>
+    <ErrorWrapper style={style} data-testid="chatError">
       <React.Fragment>
         <Typography.Paragraph type="danger">
           Some error occurred

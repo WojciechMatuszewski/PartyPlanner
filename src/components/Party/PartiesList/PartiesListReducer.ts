@@ -94,7 +94,7 @@ export interface PartiesListFilter<
   // https://github.com/Microsoft/TypeScript/issues/6230
   // sadly til this pull request is not finished i will probably not be able to type this correctly
   K = T extends 'where' ? any : boolean
-> {
+  > {
   id: string;
   variablesType: T;
   variablesName: K;
@@ -211,6 +211,7 @@ export function PartiesListReducer(
         filterInputValue: action.payload
       };
     case filterActionTypes.addFilter:
+
       return {
         ...state,
         filters: {
@@ -221,7 +222,6 @@ export function PartiesListReducer(
     case filterActionTypes.removeFilter:
       // eslint-disable-next-line
       const { [action.payload]: _, ...restOfFilters } = state.filters;
-
       return {
         ...state,
         filters: restOfFilters

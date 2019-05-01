@@ -3,8 +3,6 @@ import styled from '@emotion/styled';
 import PartiesListPartyCard from './PartiesListPartyCard';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
 
-import { useFuzzySearch } from '@hooks/useFuzzySearch';
-
 import posed from 'react-pose';
 
 const PosedGridOuterWrapper = styled(
@@ -43,35 +41,19 @@ const GridWrapper = styled.section`
 interface Props {
   parties: PaginatePartiesQueryEdges[];
   filterInputValue: string;
-  children: (hasResultsAfterFiltering: boolean) => React.ReactNode;
+  children: (hasResults: boolean) => React.ReactNode;
 }
 
-const PartiesListCardGrid: React.FC<Props> = ({
-  parties,
-  filterInputValue,
-  children
-}) => {
-  const filteredParties = useFuzzySearch<PaginatePartiesQueryEdges>(
-    filterInputValue,
-    parties,
-    {
-      keys: ['node.title'] as any,
-      shouldSort: true,
-      tokenize: true,
-      distance: 0,
-      threshold: 0.0
-    }
-  );
-
+const PartiesListCardGrid: React.FC<Props> = ({ parties, children }) => {
   return (
     <React.Fragment>
       <PosedGridOuterWrapper
-        style={{ paddingBottom: filteredParties.length > 0 ? 24 : 0 }}
+        style={{ paddingBottom: parties.length > 0 ? 24 : 0 }}
         initialPose="exit"
         pose="enter"
       >
-        <GridWrapper>
-          {filteredParties.map((party, index) => (
+        <GridWrapper data-testid="partiesListGrid">
+          {parties.map((party, index) => (
             <PartiesListPartyCard
               party={party}
               key={party.node.id}
@@ -80,7 +62,7 @@ const PartiesListCardGrid: React.FC<Props> = ({
           ))}
         </GridWrapper>
       </PosedGridOuterWrapper>
-      {children(filteredParties.length > 0)}
+      {children(parties.length > 0)}
     </React.Fragment>
   );
 };

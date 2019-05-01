@@ -1,34 +1,31 @@
 import React from 'react';
 import {
-  PaginatePartiesQueryEdges,
-  PaginatePartiesQueryDocument,
-  PaginatePartiesQueryQuery,
+  PartyWhereInput,
   PaginatePartiesQueryVariables,
-  PartyWhereInput
+  usePaginatePartiesQuery
 } from '@generated/graphql';
+import styled from '@emotion/styled';
 import PartiesListPane from './PartiesListPane';
-import PartiesListFilterChips from './PartiesListFilterChips';
-import PartiesListCardGrid from './PartiesListCardGrid';
 import {
+  PartiesListFilters,
   PartiesListReducer,
   initialPartiesListState,
   PartiesListState,
-  PartiesListFetchActions,
-  PartiesListFilters,
-  PartiesListFilterActions
+  PartiesListFilterActions,
+  PartiesListDrawerActions
 } from './PartiesListReducer';
-import { useApolloClient } from 'react-apollo-hooks';
-import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
+import PartiesListFilterChips from './PartiesListFilterChips';
+import PartiesListCardGrid from './PartiesListCardGrid';
+import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListNoResults from './PartiesListNoResults';
-import styled from '@emotion/styled';
-import NoData from '@components/NoData';
-import { Button } from 'antd';
-import { withRouter, WithRouterProps } from 'next/router';
 import GraphqlException from '@components/GraphqlException';
-import GraphqlLoading from '@components/GraphqlLoading';
+import { Button } from 'antd';
+import { handleRefetch } from '@shared/graphqlUtils';
 
-const PAGE_SIZE = 3;
+interface Props {
+  userId: string;
+}
 
 const PartiesListWrapper = styled.div`
   width: 100%;
@@ -64,21 +61,18 @@ function mapFiltersToWhereVariables(filters: PartiesListFilters) {
   );
 }
 
-function queryConstructorFactory(userId: string) {
+export function partiesListVariablesConstructorFactory(userId: string) {
   return function(
-    currentResults: PaginatePartiesQueryEdges[],
     searchValue: string,
     filters: PartiesListFilters = {},
-    first: number = PAGE_SIZE
+    first: number = 3
   ): PaginatePartiesQueryVariables {
     return {
       where: {
         members_some: {
           id: userId
         },
-        id_not_in: currentResults.map(edge => edge.node.id),
-        title_contains:
-          searchValue.trim().length === 0 ? undefined : searchValue,
+        normalizedTitle_contains: searchValue.toLowerCase(),
         ...mapFiltersToWhereVariables(filters)
       },
       orderBy: filters['orderBy']
@@ -97,17 +91,21 @@ export const PartiesListContext = React.createContext<{
   dispatch: () => {}
 });
 
-interface Props {
-  userId: string;
-}
+const PartiesList: React.FC<Props> = ({ userId }) => {
+  const variablesConstructor = React.useRef<any>(
+    partiesListVariablesConstructorFactory(userId)
+  );
+  const isFirstRender = React.useRef<boolean>(true);
 
-const PartiesList: React.FC<Props & WithRouterProps> = ({ userId, router }) => {
-  const apolloClient = useApolloClient();
+  const [appliedFilters, setAppliedFilters] = React.useState<
+    PartiesListFilters
+  >({});
+
   const [state, dispatch] = React.useReducer(
     PartiesListReducer,
     initialPartiesListState
   );
-  const [shouldShowEmpty, setShouldShowEmpty] = React.useState<boolean>(false);
+
   const [contextState] = React.useState<{
     state: PartiesListState;
     dispatch: React.Dispatch<any>;
@@ -115,215 +113,131 @@ const PartiesList: React.FC<Props & WithRouterProps> = ({ userId, router }) => {
     state,
     dispatch
   });
-  const isFirstRender = React.useRef<boolean>(false);
-  const queryConstructor = React.useCallback(queryConstructorFactory(userId), [
-    userId
+
+  const isDrawerOpen = React.useCallback(() => state.drawerVisible, [
+    state.drawerVisible
   ]);
 
-  React.useEffect(() => {
-    handleDataFetch(true);
-  }, []);
-
-  const isDrawerOpen = React.useCallback(() => {
-    return state.drawerVisible;
-  }, [state.drawerVisible]);
-
-  React.useEffect(handleFilterChipRemoved, [state.filters]);
+  const handleFiltersChanged = React.useCallback(
+    () => setAppliedFilters(state.filters),
+    [state.filters]
+  );
 
   const hasFiltersApplied = React.useCallback(() => {
     return Object.keys(state.filters).length > 0;
   }, [state.filters]);
 
-  const fetchData = React.useCallback(() => {
-    return apolloClient.query<PaginatePartiesQueryQuery>({
-      query: PaginatePartiesQueryDocument,
-      variables: queryConstructor(
-        state.parties,
-        state.filterInputValue,
-        state.filters
-      )
-    });
-  }, [
-    state.queryVariables,
-    state.parties,
-    state.filterInputValue,
-    state.filters
-  ]);
+  React.useEffect(handleFilterChipRemoved, [state.filters]);
 
-  const handleFiltersChanged = React.useCallback(async () => {
-    try {
-      dispatch(PartiesListFetchActions.setLoadingFilters(true));
-      const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-        query: PaginatePartiesQueryDocument,
-        variables: queryConstructor([], state.filterInputValue, state.filters)
-      });
-      dispatch(PartiesListFetchActions.setLoadingFilters(false));
-      dispatch(
-        PartiesListFetchActions.setResults(data.partiesConnection
-          .edges as PaginatePartiesQueryEdges[])
-      );
-      dispatch(
-        PartiesListFetchActions.setPaginationInfo(
-          data.partiesConnection.pageInfo
-        )
-      );
-    } catch (e) {
-      handleError();
-    }
-  }, [state.filters]);
+  const { data, loading, error, fetchMore, refetch } = usePaginatePartiesQuery({
+    variables: variablesConstructor.current(
+      state.filterInputValue,
+      appliedFilters
+    ),
+    notifyOnNetworkStatusChange: true
+  });
 
-  const paginationInfoUpdater = React.useCallback(async () => {
-    try {
-      const { data } = await apolloClient.query<PaginatePartiesQueryQuery>({
-        query: PaginatePartiesQueryDocument,
-        variables: queryConstructor(state.parties, state.filterInputValue)
-      });
-      dispatch(
-        PartiesListFetchActions.setPaginationInfo(
-          data.partiesConnection.pageInfo
-        )
-      );
-    } catch (e) {
-      handleError();
-    }
-  }, [state.queryVariables, state.parties, state.filterInputValue]);
+  if (error)
+    return (
+      <GraphqlException
+        actions={
+          <Button
+            type="primary"
+            onClick={async () =>
+              await handleRefetch(
+                refetch,
+                variablesConstructor.current(
+                  state.filterInputValue,
+                  appliedFilters
+                )
+              )
+            }
+          >
+            Try again
+          </Button>
+        }
+      />
+    );
 
   return (
     <PartiesListContext.Provider value={contextState}>
       <PartiesListWrapper>
-        <GraphqlLoading
-          isLoadingInitially={state.initiallyLoading}
-          loading={state.initiallyLoading || state.loadingFilters}
-          textToDisplay="Loading your parties ..."
+        <PartiesListPane
+          onDrawerOpen={() => dispatch(PartiesListDrawerActions.toggleDrawer())}
+          onChange={value =>
+            dispatch(PartiesListFilterActions.setInputFilterValue(value))
+          }
         />
-        {!state.initiallyLoading && shouldShowEmpty && (
-          <NoData
-            message="You currently do not have any parties"
-            action={
-              <Button
-                type="primary"
-                onClick={() => router && router.push('/create-party')}
-              >
-                Create new party
-              </Button>
-            }
-          />
-        )}
-        {!state.initiallyLoading && !shouldShowEmpty && !state.hasError ? (
-          <React.Fragment>
-            <PartiesListPane
-              onError={handleError}
-              inputValue={state.filterInputValue}
-              paginationInfoUpdater={paginationInfoUpdater}
-              onDataFetch={handleTypeaheadDataFetch}
-              onDataFetched={data => handleDataFetched(false, data)}
-            />
-            <PartiesListFilterDrawer
-              onFiltersChanged={handleFiltersChanged}
-              drawerVisible={state.drawerVisible}
-              filters={state.filters}
-            />
-
-            <PartiesListFilterChips filters={state.filters} />
-            <PartiesListCardGrid
-              parties={state.parties}
-              filterInputValue={state.filterInputValue}
-            >
-              {hasResultsAfterFiltering => (
-                <React.Fragment>
-                  <PartiesListLoadMore
-                    hasResults={hasResultsAfterFiltering}
-                    isLoadingMore={state.loadingMore}
-                    canLoadMore={state.paginationInfo.hasNextPage}
-                    onLoadMoreButtonClick={handleOnLoadMoreButton}
-                  />
-                  <PartiesListNoResults
-                    hasFiltersApplied={hasFiltersApplied()}
-                    showBeVisible={
-                      !hasResultsAfterFiltering &&
-                      !state.loadingMore &&
-                      !state.loadingFilters
+        <PartiesListFilterDrawer
+          onFiltersChanged={handleFiltersChanged}
+          drawerVisible={state.drawerVisible}
+          filters={state.filters}
+        />
+        <PartiesListFilterChips filters={state.filters} />
+        <PartiesListCardGrid
+          parties={
+            data && data.partiesConnection
+              ? (data.partiesConnection.edges as any[])
+              : []
+          }
+          filterInputValue={state.filterInputValue}
+        >
+          {hasResults => (
+            <React.Fragment>
+              <PartiesListLoadMore
+                hasResults={hasResults}
+                isLoadingMore={loading}
+                canLoadMore={
+                  data && data.partiesConnection
+                    ? data.partiesConnection.pageInfo.hasNextPage
+                    : false
+                }
+                onLoadMoreButtonClick={() =>
+                  fetchMore({
+                    variables: {
+                      after: data!.partiesConnection!.pageInfo.endCursor
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      if (
+                        !fetchMoreResult ||
+                        fetchMoreResult.partiesConnection.edges.length == 0
+                      )
+                        return prev;
+                      return {
+                        partiesConnection: {
+                          edges: [
+                            ...prev.partiesConnection.edges,
+                            ...fetchMoreResult.partiesConnection.edges
+                          ],
+                          pageInfo: fetchMoreResult.partiesConnection.pageInfo,
+                          __typename: 'PartyConnection'
+                        }
+                      };
                     }
-                    onClearAllFilters={handleNoResultsResetFilters}
-                    queryString={state.filterInputValue}
-                  />
-                </React.Fragment>
-              )}
-            </PartiesListCardGrid>
-          </React.Fragment>
-        ) : state.hasError ? (
-          <GraphqlException />
-        ) : null}
+                  })
+                }
+              />
+              <PartiesListNoResults
+                hasFiltersApplied={hasFiltersApplied()}
+                showBeVisible={!hasResults && !loading}
+                onClearAllFilters={() =>
+                  dispatch(PartiesListFilterActions.removeAllFilters())
+                }
+                queryString={state.filterInputValue}
+              />
+            </React.Fragment>
+          )}
+        </PartiesListCardGrid>
       </PartiesListWrapper>
     </PartiesListContext.Provider>
   );
 
-  function handleNoResultsResetFilters() {
-    dispatch(PartiesListFilterActions.removeAllFilters());
-    dispatch(PartiesListFilterActions.setInputFilterValue(''));
-  }
-
-  function handleDataFetched(
-    wasInitialLoad: boolean = false,
-    data: PaginatePartiesQueryQuery
-  ) {
-    if (!wasInitialLoad) {
-      dispatch(PartiesListFetchActions.setLoadingMore(false));
-    } else {
-      dispatch(PartiesListFetchActions.setLoadingInitially(false));
-    }
-    if (data.partiesConnection.edges.length <= 0 && wasInitialLoad) {
-      setShouldShowEmpty(true);
-    }
-    dispatch(
-      PartiesListFetchActions.appendResults(data.partiesConnection
-        .edges as PaginatePartiesQueryEdges[])
-    );
-    dispatch(
-      PartiesListFetchActions.setPaginationInfo(data.partiesConnection.pageInfo)
-    );
-  }
-
-  function handlePreDataFetch(isInitial: boolean) {
-    if (!isInitial) {
-      dispatch(PartiesListFetchActions.setLoadingMore(true));
-    }
-  }
-
-  function handleTypeaheadDataFetch() {
-    handlePreDataFetch(false);
-    return fetchData();
-  }
-
-  async function handleDataFetch(isFromInitialFetch: boolean = false) {
-    handlePreDataFetch(isFromInitialFetch);
-    try {
-      const { data } = await fetchData();
-      handleDataFetched(isFromInitialFetch, data);
-    } catch (e) {
-      handleError();
-    }
-  }
-
-  function handleOnLoadMoreButton() {
-    return handleDataFetch(false);
-  }
-
   function handleFilterChipRemoved() {
-    if (!isDrawerOpen() && !isFirstRender.current) {
-      handleFiltersChanged();
-    }
+    if (!isDrawerOpen() && !isFirstRender.current) handleFiltersChanged();
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
   }
-
-  function handleError() {
-    dispatch(PartiesListFetchActions.setLoadingInitially(false));
-    dispatch(PartiesListFetchActions.setLoadingMore(false));
-    dispatch(PartiesListFetchActions.setLoadingFilters(false));
-    dispatch(PartiesListFetchActions.setError(true));
-  }
 };
 
-export default withRouter(PartiesList);
+export default PartiesList;

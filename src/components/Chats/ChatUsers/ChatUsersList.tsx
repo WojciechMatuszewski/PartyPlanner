@@ -14,7 +14,7 @@ const ChatUsersWrapper = styled.ul`
 
 const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
   return (
-    <ChatUsersWrapper>
+    <ChatUsersWrapper data-testid="chatUsersList">
       {chatUsers
         .sort((a, b) =>
           a.node.status == UserStatus.Online

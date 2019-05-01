@@ -6,13 +6,14 @@ import {
   PartiesListFilterActions,
   PartiesListFilterPayload
 } from '../PartiesListReducer';
-import { PartiesListContext } from '../PartiesList';
+
 import { PartyWhereInput } from '@generated/graphql';
 import moment from 'moment';
 import PartiesListFilterDrawerPartyType from './PartiesListFilterDrawerPartyType';
 import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt';
 import PartiesListFilterDrawerSort from './PartiesListFilterDrawerSort';
 import PartiesListFilterDrawerLocation from './PartiesListFilterDrawerLocation';
+import { PartiesListContext } from '../PartiesList';
 
 const FiltersPaneWrapper = styled.div`
   width: 100%;

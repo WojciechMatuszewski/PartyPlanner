@@ -10,9 +10,8 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-
-import { PartiesListContext } from '../PartiesList';
 import { areObjectsEqual } from '@shared/functionUtils';
+import { PartiesListContext } from '../PartiesList';
 
 const DrawerStyles = css`
   .ant-drawer-body {
@@ -63,6 +62,7 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   const [filtersButtonsState, setFiltersButtonsState] = React.useState<
     'clear' | 'apply' | 'hidden'
   >('hidden');
+
   const { dispatch } = React.useContext(PartiesListContext);
 
   const hasFiltersOnVisible = React.useCallback(

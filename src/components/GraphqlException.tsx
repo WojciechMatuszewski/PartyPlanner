@@ -4,7 +4,8 @@ import Exception, { IExceptionProps } from 'ant-design-pro/lib/Exception';
 
 const ExceptionStyles = css`
   width: 100%;
-  height: 100%;
+  height: auto;
+  flex: 1;
   @media screen and (max-width: 575px) {
     padding-bottom: 24px;
     flex: 1;
@@ -20,7 +21,13 @@ const ExceptionStyles = css`
 `;
 
 const GraphqlException: React.FC<IExceptionProps> = props => {
-  return <Exception css={[ExceptionStyles]} {...props} />;
+  return (
+    <Exception
+      data-testid="graphqlException"
+      css={[ExceptionStyles]}
+      {...props}
+    />
+  );
 };
 
 GraphqlException.defaultProps = {

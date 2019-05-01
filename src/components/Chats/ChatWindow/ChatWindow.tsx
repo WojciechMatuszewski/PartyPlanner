@@ -152,6 +152,10 @@ const ChatWindow: React.FC = () => {
 
   React.useEffect(handleChatIdChange, [currentlySelectedChatId]);
 
+  React.useEffect(() => {
+    if (isWithinBottomScrollLockZone && unreadCount > 0) setUnreadCount(0);
+  }, [isWithinBottomScrollLockZone, unreadCount]);
+
   if (currentlySelectedChatId == null)
     return <ChatEmptySection image={'../static/group-chat.svg'} />;
 
