@@ -9,10 +9,10 @@ import PartiesList, {
   partiesListVariablesConstructorFactory
 } from '@components/Party/PartiesList/PartiesList';
 import { PAGINATE_PARTIES_QUERY } from '@graphql/queries';
-import { createMockedApolloClient } from '@shared/graphqlUtils';
+import { createMockedApolloClient } from '@shared/testUtils';
 import { ApolloProvider } from 'react-apollo-hooks';
 import '../__mocks__/matchMedia';
-import { MockedResponse } from 'react-apollo/test-utils';
+import { MockedResponse, MockLink } from 'react-apollo/test-utils';
 import * as graphqlUtils from '@shared/graphqlUtils';
 
 const USER_ID = '123';
@@ -67,7 +67,7 @@ describe('PartiesList', () => {
         }
       }
     ];
-    const client = createMockedApolloClient(mocks);
+    const client = createMockedApolloClient(new MockLink(mocks));
     const { getByTestId } = render(
       <ApolloProvider client={client}>
         <PartiesList userId={USER_ID} />
@@ -94,7 +94,7 @@ describe('PartiesList', () => {
         }
       }
     ];
-    const client = createMockedApolloClient(mocks);
+    const client = createMockedApolloClient(new MockLink(mocks));
     const { queryByTestId, getByTestId } = render(
       <ApolloProvider client={client}>
         <PartiesList userId={USER_ID} />

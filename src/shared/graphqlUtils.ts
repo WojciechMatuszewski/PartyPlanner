@@ -1,11 +1,9 @@
-import { ApolloClient } from 'apollo-boost';
+
 import { PartiesQueryVariables } from '@generated/graphql';
 import moment from 'moment';
 import { OperationVariables } from 'react-apollo';
 import { message } from 'antd';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { MockLink } from 'apollo-link-mock';
-import { LocalResolvers } from '@graphql/resolvers';
+
 
 export function getPartiesDateVariables(
   dateToGetVariablesFor: Date,
@@ -53,10 +51,4 @@ export async function handleRefetch<QueryVariables extends OperationVariables>(
   }
 }
 
-export function createMockedApolloClient(mocks: any[]) {
-  return new ApolloClient({
-    cache: new InMemoryCache(),
-    link: new MockLink(mocks),
-    resolvers: LocalResolvers
-  })
-}
+

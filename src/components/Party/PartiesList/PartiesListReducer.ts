@@ -150,13 +150,11 @@ export function PartiesListReducer(
         drawerVisible: !state.drawerVisible
       };
     case drawerActionTypes.setVisible:
-      console.log('setrting visible')
       return {
         ...state,
         drawerVisible: true
       };
     case drawerActionTypes.setHidden:
-      console.log('setting hidden')
       return {
         ...state,
         drawerVisible: false
@@ -224,13 +222,11 @@ export function PartiesListReducer(
     case filterActionTypes.removeFilter:
       // eslint-disable-next-line
       const { [action.payload]: _, ...restOfFilters } = state.filters;
-      console.log('removing filters')
       return {
         ...state,
         filters: restOfFilters
       };
     case filterActionTypes.removeAllFilters:
-      console.log('removing all filters')
       return {
         ...state,
         filters: {}

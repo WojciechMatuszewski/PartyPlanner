@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Input, Icon } from 'antd';
 import { InputProps } from 'antd/lib/input';
-
 import { compose } from 'ramda';
 import { debounce } from 'lodash';
 
@@ -25,11 +24,12 @@ const ChatsListSearch: React.FC<Props> = props => {
   return (
     <SearchWrapper>
       <Input
-        type="ghost"
+        {...props.inputProps}
+        data-testid="chatsMenuTypeahead"
+        // TYPE GHOST PREVENT THE EVENT FROM FIRING (when testing), WTF :D
         placeholder="Search ..."
         allowClear={true}
         prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-        {...props.inputProps}
         onChange={compose(
           debouncedOnChangeRef.current,
           parseInputEvent

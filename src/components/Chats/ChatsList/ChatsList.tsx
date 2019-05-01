@@ -17,7 +17,7 @@ const ChatsList: React.FC<Props> = ({ chats }) => {
   const { currentlySelectedChatId } = React.useContext(ChatsContext);
 
   return (
-    <ChatsListWrapper>
+    <ChatsListWrapper data-testid="chatsList">
       {chats.map(chat => (
         <ChatsListItem
           selected={currentlySelectedChatId === chat.node.id}

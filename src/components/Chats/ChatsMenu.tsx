@@ -51,11 +51,12 @@ const ChatsMenu: React.FC = () => {
             id_not: currentlyLoggedUserData.id
           },
           chat: {
-            members_some: { id: currentlyLoggedUserData.id }
+            id: currentlySelectedChatId
           }
         }
       }
     },
+
     onSubscriptionData: ({ client, subscriptionData: { data } }) => {
       if (!data || !data.message || !data.message.node) return;
       try {
@@ -92,13 +93,12 @@ const ChatsMenu: React.FC = () => {
     >
       <ChatsListSearch onChange={handleOnInputChange} />
       <PaginateChatsQueryComponent variables={getQueryVariables()}>
-        {({ data, loading, error, refetch, fetchMore }) => {
-          if (loading || !data || !data.chatsConnection)
-            return <ChatSectionLoading />;
+        {({ data, loading, error, refetch }) => {
           if (error)
             return (
               <ChatError>
                 <Button
+                  data-testid="chatsMenuRefetchButton"
                   onClick={async () =>
                     await handleRefetch(refetch, getQueryVariables())
                   }
@@ -107,6 +107,9 @@ const ChatsMenu: React.FC = () => {
                 </Button>
               </ChatError>
             );
+          if (loading || !data || !data.chatsConnection)
+            return <ChatSectionLoading />;
+
           if (!loading && data && data.chatsConnection.edges.length === 0)
             return <ChatsListFilteredEmpty filterQuery={filterQuery} />;
 

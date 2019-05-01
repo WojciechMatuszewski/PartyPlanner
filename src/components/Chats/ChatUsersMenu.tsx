@@ -55,6 +55,7 @@ const ChatUsersMenu: React.FC = () => {
             return (
               <ChatError>
                 <Button
+                  data-testid="refetchButton"
                   onClick={async () =>
                     await handleRefetch(refetch, getQueryVariables())
                   }
