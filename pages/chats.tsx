@@ -101,11 +101,13 @@ const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
 
         return (
           <Layout css={[LayoutStyles]}>
-            <ChatsContext.Provider value={state}>
-              <ChatsMenu />
-              <ChatWindow />
-              <ChatUsersMenu />
-            </ChatsContext.Provider>
+            <Layout.Content>
+              <ChatsContext.Provider value={state}>
+                <ChatsMenu />
+                <ChatWindow />
+                <ChatUsersMenu />
+              </ChatsContext.Provider>
+            </Layout.Content>
           </Layout>
         );
       }}
