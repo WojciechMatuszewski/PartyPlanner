@@ -22,7 +22,7 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-const SpotifyIconStyles = css`
+export const SpotifyIconStyles = css`
   svg {
     width: 24px;
     height: 24px;
@@ -33,7 +33,7 @@ const SpotifyIconStyles = css`
   }
 `;
 
-const SpotifyButtonStyles = css`
+export const SpotifyButtonStyles = css`
   ${FlexBoxFullCenteredStyles}
   &:hover, &:focus {
     color: rgba(0, 0, 0, 0.65);
