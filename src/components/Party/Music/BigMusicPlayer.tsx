@@ -3,11 +3,16 @@ import styled from '@emotion/styled';
 import posed from 'react-pose';
 import {
   FlexBoxFullCenteredStyles,
-  FlexBoxHorizontallyCenteredStyles
+  TransparentButtonStyles
 } from '@shared/styles';
 import { useAudio } from '@hooks/useAudio';
 import { Icon, Button, Typography, Slider, Tooltip } from 'antd';
 import BigMusicPlayerUserControls from './BigMusicPlayerUserControls';
+import useMedia from '@hooks/useMedia';
+import BigMusicPlayerTrackInfo from './BigMusicPlayerTrackInfo';
+import { debounce } from 'lodash';
+
+export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
 const BigMusicPlayerWrapper = styled(
   posed.div({
@@ -29,13 +34,14 @@ const BottomInnerWrapper = styled.div`
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
+
+  @media screen and (max-width: ${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px) {
+    padding: 0;
+  }
 `;
 
 const TransparentButton = styled.button`
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  display: inline-block;
+  ${TransparentButtonStyles};
   margin-top: 6px;
   .anticon {
     font-size: 20px;
@@ -86,23 +92,8 @@ const SliderWrapper = styled.div`
   }
 `;
 
-const TrackInfoWrapper = styled.div`
-  height: 64px;
-  display: flex;
-  .track-info-text {
-    padding-left: 12px;
-    ${FlexBoxHorizontallyCenteredStyles};
-    text-align: left;
-    flex-direction: column;
-    h4 {
-      margin: 0;
-    }
-  }
-`;
-
 const BigMusicPlayer: React.FC = () => {
   const audioRef = React.useRef<HTMLAudioElement>(null);
-
   const {
     play,
     pause,
@@ -111,16 +102,20 @@ const BigMusicPlayer: React.FC = () => {
     toggle,
     state: { audioCurrentTime, audioDuration, loading, playing }
   } = useAudio(audioRef, false);
+  const playFuncRef = React.useRef<() => void>(play);
+  // TODO: trigger logic stuff
+  const debouncedAfterValueChange = React.useRef<() => void>(
+    debounce(() => playFuncRef.current(), 100)
+  );
+  React.useEffect(() => void (playFuncRef.current = play), [play]);
+
+  const isOnMobile = useMedia(
+    `(max-width:${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px)`
+  );
 
   return (
     <BigMusicPlayerWrapper pose={loading ? 'loading' : 'loaded'}>
-      <TrackInfoWrapper>
-        <img src="https://i.scdn.co/image/81a3f82578dc938c53efdcb405f6a3d3ebbf009f" />
-        <div className="track-info-text">
-          <Typography.Title level={4}>Title</Typography.Title>
-          <a>Artist Name</a>
-        </div>
-      </TrackInfoWrapper>
+      <BigMusicPlayerTrackInfo isOnMobile={isOnMobile} />
       <BottomInnerWrapper>
         <ControlButtonsWrapper>
           <Tooltip title="Fast backwards by 5 seconds">
@@ -136,7 +131,7 @@ const BigMusicPlayer: React.FC = () => {
             disabled={loading}
             icon={playing ? 'pause' : 'caret-right'}
             shape="circle"
-            size="large"
+            size={!isOnMobile ? 'large' : 'default'}
             className="play-pause-button"
           />
           <Tooltip trigger="hover" title="Fast forward by 5 seconds">
@@ -160,6 +155,8 @@ const BigMusicPlayer: React.FC = () => {
             {audioCurrentTime < 10 ? `0${audioCurrentTime}` : audioCurrentTime}
           </Typography.Text>
           <Slider
+            onChange={value => setTime(value as number, true)}
+            onAfterChange={() => debouncedAfterValueChange.current()}
             disabled={loading}
             max={audioDuration}
             value={audioCurrentTime}
@@ -167,7 +164,7 @@ const BigMusicPlayer: React.FC = () => {
           <Typography.Text type="secondary">0:{audioDuration}</Typography.Text>
         </SliderWrapper>
       </BottomInnerWrapper>
-      <BigMusicPlayerUserControls />
+      <BigMusicPlayerUserControls isOnMobile={isOnMobile} />
     </BigMusicPlayerWrapper>
   );
 };
