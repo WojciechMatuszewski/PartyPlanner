@@ -2,9 +2,18 @@ import React from 'react';
 
 export interface UseAudioState {
   audioDuration: number;
-  audioCurrentTime: number;
+  audioCurrentTime: {
+    value: number;
+    dispatchedFrom: 'setTime' | 'timeUpdate' | 'init';
+  };
   loading: boolean;
   playing: boolean;
+}
+
+interface SetTimeProps {
+  timeToSet: number;
+  pauseOnSet?: boolean;
+  shouldIgnoreAudioElementTime?: boolean;
 }
 
 export interface UseAudioApi {
@@ -12,7 +21,7 @@ export interface UseAudioApi {
   pause: VoidFunction;
   toggle: VoidFunction;
   skip: (amountToSkip: number, pauseOnSkip?: boolean) => void;
-  setTime: (timeToSet: number, pauseOnSet?: boolean) => void;
+  setTime: (props: SetTimeProps) => void;
   state: UseAudioState;
 }
 
@@ -22,7 +31,7 @@ export function useAudio(
 ): UseAudioApi {
   const [state, setState] = React.useState<UseAudioState>({
     audioDuration: 0,
-    audioCurrentTime: 0,
+    audioCurrentTime: { value: 0, dispatchedFrom: 'init' },
     loading: !disabled,
     playing: false
   });
@@ -50,19 +59,19 @@ export function useAudio(
   }, [audioRef.current]);
 
   const hasReachedTheEndOfTrack = React.useCallback(
-    () => state.audioCurrentTime === state.audioDuration,
+    () => state.audioCurrentTime.value === state.audioDuration,
     [state.audioCurrentTime, state.audioDuration]
   );
 
   const skip: UseAudioApi['skip'] = React.useCallback(
     (amountToSkip, shouldPauseOnSkip = false) => {
       let actualAmountToSkip = 0;
-      const timeAfterSkipping = state.audioCurrentTime + amountToSkip;
+      const timeAfterSkipping = state.audioCurrentTime.value + amountToSkip;
       if (timeAfterSkipping >= state.audioDuration)
         actualAmountToSkip = state.audioDuration;
       else if (timeAfterSkipping <= 0) actualAmountToSkip = 0;
       else actualAmountToSkip = timeAfterSkipping;
-      setTime(actualAmountToSkip, shouldPauseOnSkip);
+      setTime({ timeToSet: actualAmountToSkip, pauseOnSet: shouldPauseOnSkip });
     },
     [state.audioCurrentTime, state.audioDuration]
   );
@@ -91,18 +100,24 @@ export function useAudio(
     audioRef.current.pause();
   }
 
-  function setTime(timeToSet: number, pauseOnSet = false) {
+  function setTime({
+    timeToSet,
+    pauseOnSet = false,
+    shouldIgnoreAudioElementTime = false
+  }: SetTimeProps) {
     if (!audioRef.current) return;
 
     const shouldPause = hasReachedTheEndOfTrack() || pauseOnSet;
 
     shouldPause && audioRef.current.pause();
-    audioRef.current.currentTime = timeToSet;
+
+    if (!shouldIgnoreAudioElementTime) {
+      audioRef.current.currentTime = timeToSet;
+    }
 
     setState(prevState => ({
       ...prevState,
-      audioCurrentTime: timeToSet,
-      playing: !shouldPause
+      audioCurrentTime: { value: timeToSet, dispatchedFrom: 'setTime' }
     }));
   }
 
@@ -132,7 +147,7 @@ export function useAudio(
     const parsedAudioTime = parseCurrentAudioTime();
     setState(prevState => ({
       ...prevState,
-      audioCurrentTime: parsedAudioTime
+      audioCurrentTime: { value: parsedAudioTime, dispatchedFrom: 'timeUpdate' }
     }));
   }
 

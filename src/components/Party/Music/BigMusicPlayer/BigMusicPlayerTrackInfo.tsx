@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { FlexBoxHorizontallyCenteredStyles } from '@shared/styles';
+import {
+  FlexBoxHorizontallyCenteredStyles,
+  TransparentButtonStyles
+} from '@shared/styles';
 
-import { Button, Typography } from 'antd';
+import { Typography, Icon } from 'antd';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
@@ -18,6 +21,10 @@ const TrackInfoWrapper = styled.div`
   }
   @media screen and (max-width: 800px) {
     align-items: center;
+    height: auto;
+    display: block;
+    margin-right: auto;
+    margin-left: -6px;
   }
 `;
 
@@ -29,7 +36,12 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
-        <Button size="small" icon="info" />
+        <button
+          css={[TransparentButtonStyles]}
+          onClick={() => console.log('click')}
+        >
+          <Icon type="info" />
+        </button>
       ) : (
         <React.Fragment>
           <img src="https://i.scdn.co/image/81a3f82578dc938c53efdcb405f6a3d3ebbf009f" />

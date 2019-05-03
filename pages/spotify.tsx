@@ -1,13 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Button, Slider, Icon, Typography, Spin } from 'antd';
-import {
-  FlexBoxHorizontallyCenteredStyles,
-  FlexBoxFullCenteredStyles
-} from '@shared/styles';
-import { useAudio } from '@hooks/useAudio';
 import posed from 'react-pose';
-import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer';
+import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer/BigMusicPlayer';
 
 const StickedToBottom = styled(
   posed.div({
@@ -31,17 +25,6 @@ const StickedToBottom = styled(
 `;
 
 export default function Spotify() {
-  const audioRef = React.useRef<HTMLAudioElement>(null);
-
-  const {
-    play,
-    pause,
-    setTime,
-    skip,
-    toggle,
-    state: { audioCurrentTime, audioDuration, loading, playing }
-  } = useAudio(audioRef, false);
-
   return (
     <StickedToBottom>
       <BigMusicPlayer />
