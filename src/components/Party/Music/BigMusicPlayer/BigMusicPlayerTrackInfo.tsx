@@ -36,10 +36,7 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
-        <button
-          css={[TransparentButtonStyles]}
-          onClick={() => console.log('click')}
-        >
+        <button css={[TransparentButtonStyles]}>
           <Icon type="info" />
         </button>
       ) : (

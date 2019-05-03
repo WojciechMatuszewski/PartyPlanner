@@ -15,11 +15,6 @@ import { SliderValue } from 'antd/lib/slider';
 
 export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
-interface SliderDragState {
-  wasMusicPlayingWhenStartedDragging: boolean;
-  alreadySet: boolean;
-}
-
 const BigMusicPlayerWrapper = styled(
   posed.div({
     loading: {
@@ -154,8 +149,6 @@ const BigMusicPlayer: React.FC = () => {
   >(false);
 
   const {
-    play,
-    pause,
     setTime,
     skip,
     toggle,
