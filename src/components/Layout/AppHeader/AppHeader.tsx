@@ -5,7 +5,13 @@ import AppNotAuthenticatedHeader from './AppNotAuthenticatedHeader';
 import AppAuthenticatedHeader from './AppAuthenticatedHeader';
 
 const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
-  const notAuthenticatedRoutes = ['/', '/login', '/register', '/social-auth'];
+  const notAuthenticatedRoutes = [
+    '/',
+    '/login',
+    '/register',
+    '/social-auth',
+    '/spotify'
+  ];
 
   return router ? (
     notAuthenticatedRoutes.includes(router.pathname) ? (

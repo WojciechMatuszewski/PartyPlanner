@@ -81,7 +81,7 @@ describe('ChatUsersMenu', () => {
 
     const client = createMockedApolloClient(new MockLink(mocks));
 
-    const { container, getByTestId } = render(
+    const { container, getByTestId, queryByTestId } = render(
       <ApolloProvider client={client}>
         <MockedProvider mocks={mocks}>
           <ChatsContext.Provider value={fakeContextValues}>
@@ -93,6 +93,7 @@ describe('ChatUsersMenu', () => {
     await wait(() =>
       expect(container.querySelector('.ant-spinner')).toBeNull()
     );
+    await wait(() => expect(queryByTestId('chatUsersList')).not.toBeNull());
     expect(getByTestId('chatUsersList').childNodes).toHaveLength(1);
   });
   it('Correctly displays error', async () => {
@@ -140,7 +141,7 @@ describe('ChatUsersMenu', () => {
       }
     ];
     const client = createMockedApolloClient(new MockLink(mocks));
-    const { container, getByTestId } = render(
+    const { container, getByTestId, queryByTestId } = render(
       <ApolloProvider client={client}>
         <MockedProvider mocks={mocks}>
           <ChatsContext.Provider value={fakeContextValues}>
@@ -154,6 +155,7 @@ describe('ChatUsersMenu', () => {
     );
     expect(getByTestId('chatError')).toBeDefined();
     fireEvent.click(getByTestId('refetchButton'));
+    await wait(() => expect(queryByTestId('chatUsersList')).not.toBeNull());
     await wait(() =>
       expect(getByTestId('chatUsersList').childNodes).toHaveLength(1)
     );

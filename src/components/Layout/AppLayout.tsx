@@ -7,12 +7,12 @@ import AppHeader from './AppHeader/AppHeader';
 const LayoutStyles = css`
   min-height: 100vh;
   width: 100%;
-  background: #f3f7f7;
   .ant-layout-content {
     min-height: calc(100vh - 66px);
     display: flex;
     position: relative;
     overflow: hidden;
+    background: #fafafa;
   }
 `;
 

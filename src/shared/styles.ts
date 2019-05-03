@@ -14,6 +14,13 @@ export const FlexBoxFullCenteredStyles = css`
   justify-content: center;
 `;
 
+export const TransparentButtonStyles = css`
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+`;
+
 export const FlexBoxVerticallyCenteredStyles = css`
   display: flex;
   align-items: center;
