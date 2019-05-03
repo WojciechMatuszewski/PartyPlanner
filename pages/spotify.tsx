@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer/BigMusicPlayer';
+import UserTopSongs from '@components/Party/Music/UserTop/UserTopSongs';
 
 const StickedToBottom = styled(
   posed.div({
@@ -26,8 +27,11 @@ const StickedToBottom = styled(
 
 export default function Spotify() {
   return (
-    <StickedToBottom>
-      <BigMusicPlayer />
-    </StickedToBottom>
+    <React.Fragment>
+      <UserTopSongs />
+      <StickedToBottom>
+        <BigMusicPlayer />
+      </StickedToBottom>
+    </React.Fragment>
   );
 }
