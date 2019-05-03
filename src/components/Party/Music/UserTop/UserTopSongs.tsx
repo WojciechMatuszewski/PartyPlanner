@@ -1,132 +1,24 @@
 import React from 'react';
-import axiosSpotifyInstance from '@axios/axiosSpotifyInstance';
-import { Typography, Divider, Button, Icon } from 'antd';
+import { Typography, Button, Spin, Divider } from 'antd';
 import styled from '@emotion/styled';
-import posed from 'react-pose';
+import posed, { PoseGroup } from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { getCurrentUserTopTracks, Page, Track } from 'spotify-web-sdk';
+import { UserTopWrapper, UserTopTitleWrapper } from './shared';
+import UserTopHeading from './UserTopHeading';
 
-export declare module SpotifyTracksData {
-  export interface ExternalUrls {
-    spotify: string;
-  }
-
-  export interface Artist {
-    external_urls: ExternalUrls;
-    href: string;
-    id: string;
-    name: string;
-    type: string;
-    uri: string;
-  }
-
-  export interface ExternalUrls2 {
-    spotify: string;
-  }
-
-  export interface Image {
-    height: number;
-    url: string;
-    width: number;
-  }
-
-  export interface Album {
-    album_type: string;
-    artists: Artist[];
-    available_markets: string[];
-    external_urls: ExternalUrls2;
-    href: string;
-    id: string;
-    images: Image[];
-    name: string;
-    release_date: string;
-    release_date_precision: string;
-    total_tracks: number;
-    type: string;
-    uri: string;
-  }
-
-  export interface ExternalUrls3 {
-    spotify: string;
-  }
-
-  export interface Artist2 {
-    external_urls: ExternalUrls3;
-    href: string;
-    id: string;
-    name: string;
-    type: string;
-    uri: string;
-  }
-
-  export interface ExternalIds {
-    isrc: string;
-  }
-
-  export interface ExternalUrls4 {
-    spotify: string;
-  }
-
-  export interface Item {
-    album: Album;
-    artists: Artist2[];
-    available_markets: string[];
-    disc_number: number;
-    duration_ms: number;
-    explicit: boolean;
-    external_ids: ExternalIds;
-    external_urls: ExternalUrls4;
-    href: string;
-    id: string;
-    is_local: boolean;
-    name: string;
-    popularity: number;
-    preview_url: string;
-    track_number: number;
-    type: string;
-    uri: string;
-  }
-
-  export interface ResponseData {
-    items: Item[];
-    total: number;
-    limit: number;
-    offset: number;
-    previous: string;
-    href: string;
-    next: string;
-  }
-}
-
-const UserTopArtistsWrapper = styled.div`
-  width: 100%;
-  .ant-divider {
-    margin-top: 0;
-    background: #f0f1f5;
-  }
-  padding: 24px;
-
-  @media screen and (max-width: 400px) {
-    padding-left: 6px;
-    padding-right: 6px;
-  }
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
+const STAGGER_DURATION = 50;
 
 const TopSongsGrid = styled(
   posed.div({
-    loading: {
-      opacity: 0
-    },
-    loaded: {
+    enter: {
       opacity: 1,
-      delayChildren: 500404040
+      delay: ({ staggerIndex }: { staggerIndex: number }) =>
+        staggerIndex * STAGGER_DURATION
     },
-    initialPose: 'loading'
+    exit: {
+      opacity: 0
+    }
   })
 )`
   display: grid;
@@ -150,12 +42,6 @@ const TopSongTile = styled(
   &:hover {
     cursor: pointer;
     background: #e6f7ff;
-    .ant-typography {
-      //   color: #f0f1f2;
-    }
-    .ant-typography-secondary {
-      //   color: #bdbebf;
-    }
   }
 `;
 
@@ -213,29 +99,37 @@ const SongTileControlsWrapper = styled(
   }
 `;
 
+interface State {
+  loading: boolean;
+  data: Page<Track> | null;
+}
+
 const UserTopSongs: React.FC = () => {
-  const [
-    topTracks,
-    setTopTracks
-  ] = React.useState<SpotifyTracksData.ResponseData | null>(null);
+  const [state, setState] = React.useState<State>({
+    loading: true,
+    data: null
+  });
 
   React.useEffect(() => {
     async function handleDataFetch() {
-      const { data } = await fetchTopTracks();
-      setTopTracks(data);
+      const data = await getCurrentUserTopTracks();
+      setState({ loading: false, data });
     }
     handleDataFetch();
   }, []);
 
+  if (state.loading || !state.data) return <Spin />;
+
   return (
-    <UserTopArtistsWrapper>
-      <TitleWrapper>
-        <Typography.Title level={3}>Your top songs</Typography.Title>
-        <Button shape="round">Show more</Button>
-      </TitleWrapper>
-      <TopSongsGrid pose={!topTracks ? 'loading' : 'loaded'}>
-        {topTracks &&
-          topTracks.items.map(topTrack => (
+    <UserTopWrapper>
+      <PoseGroup animateOnMount={true}>
+        <UserTopHeading
+          headingText="Your top songs"
+          onMoreClick={() => {}}
+          key={1}
+        />
+        <TopSongsGrid key={2} staggerIndex={2} className="grid-wrapper">
+          {state.data.items.map(topTrack => (
             <TopSongTile key={topTrack.id}>
               <SongTileImageWrapper>
                 <img src={topTrack.album.images[1].url} />
@@ -248,7 +142,7 @@ const UserTopSongs: React.FC = () => {
                   <p>{topTrack.artists[0].name}</p>
                 </Typography.Paragraph>
                 <Typography.Paragraph type="secondary" ellipsis={true}>
-                  <p>4:30</p>
+                  <p>{topTrack.length}</p>
                 </Typography.Paragraph>
               </SongTileInfoWrapper>
               <SongTileControlsWrapper>
@@ -267,13 +161,10 @@ const UserTopSongs: React.FC = () => {
               </SongTileControlsWrapper>
             </TopSongTile>
           ))}
-      </TopSongsGrid>
-    </UserTopArtistsWrapper>
+        </TopSongsGrid>
+      </PoseGroup>
+    </UserTopWrapper>
   );
-
-  async function fetchTopTracks() {
-    return await axiosSpotifyInstance.get('/me/top/tracks');
-  }
 };
 
 export default UserTopSongs;
