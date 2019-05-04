@@ -8,6 +8,7 @@ import { Typography, Button } from 'antd';
 import css from '@emotion/css';
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
+import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 
 const StickedToBottom = styled(
   posed.div({
@@ -76,7 +77,7 @@ const PosedListsWrapper = styled(
 
 init({
   token:
-    'BQCSg0nDOtwoTOzHpO2msjMYRCRmM2fs6tPgFBUsO7WMoTAb-xj8vjD9wzNS7pfDdyz_oMzEVOz8uMb-ZD2fEI45GtDeai5S_QvIi18HaHgYoNeTIpFx_OpblDThrEGJZxaWHrgtIJRxunDoTxbcwa3qYANG2JuMoCqmvksQx1_RUETFVDcjU0HjF6JINmZg2mqg2hiae2hxdEBhk0gQxexSK1KH0YjlUgMX6bJQCm8B_3iP-QtWmxm49n8V23U7zzPGREZvW661bBC8e7D10d6twPdpyShSNk_JDfU"'
+    'BQD3W9yOf-vIeFmJ8PMUGdfUVotzTXAXOHXHXTFagahBvGzrDyEskAEnkTjlUQijTxMQZO9UohAwB0QvbItnM-DROEJ6cojiajYBiEtS0SOXftSyNZvlIdP-3ZnR2l1_iqxhSnp5dWHrMjm0bt74FsYYeWfP7tQt2fe9iXEVDT34G4VkVVnV6R-TEvP3gnmXq6wxOBst42cLj988xqgae6PoHzzZTx9deam6OSuuL3BDjrIG9nZvXV_flq0OhFJ7r9dvIeqv-PXOs9ysX-NTTAKk7cEZWdQ_AZ-7ZHY'
 });
 
 export default function Spotify() {
@@ -87,30 +88,32 @@ export default function Spotify() {
   );
 
   return (
-    <PageWrapper playerVisible={musicPlayerVisible}>
-      {resourcesLoaded < 2 && (
-        <GraphqlInlineLoading
-          style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
-        >
-          <Typography.Text>Loading Spotify data ...</Typography.Text>
-        </GraphqlInlineLoading>
-      )}
-      <PosedListsWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
-        <UserTopTracks onResourceLoaded={handleResourceLoaded} />
-        <UserTopArtists onResourceLoaded={handleResourceLoaded} />
-      </PosedListsWrapper>
+    <BigMusicPlayerProvider>
+      <PageWrapper playerVisible={musicPlayerVisible}>
+        {resourcesLoaded < 2 && (
+          <GraphqlInlineLoading
+            style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
+          >
+            <Typography.Text>Loading Spotify data ...</Typography.Text>
+          </GraphqlInlineLoading>
+        )}
+        <PosedListsWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
+          <UserTopTracks onResourceLoaded={handleResourceLoaded} />
+          <UserTopArtists onResourceLoaded={handleResourceLoaded} />
+        </PosedListsWrapper>
 
-      <StickedToBottom pose={musicPlayerVisible ? 'visible' : 'hidden'}>
-        <Button
-          icon={musicPlayerVisible ? 'caret-down' : 'caret-up'}
-          css={[StickedVisibilityTriggerStyles]}
-          onClick={() => setMusicPlayerVisible(prev => !prev)}
-        >
-          Music Player
-        </Button>
-        <BigMusicPlayer />
-      </StickedToBottom>
-    </PageWrapper>
+        <StickedToBottom pose={musicPlayerVisible ? 'visible' : 'hidden'}>
+          <Button
+            icon={musicPlayerVisible ? 'caret-down' : 'caret-up'}
+            css={[StickedVisibilityTriggerStyles]}
+            onClick={() => setMusicPlayerVisible(prev => !prev)}
+          >
+            Music Player
+          </Button>
+          <BigMusicPlayer />
+        </StickedToBottom>
+      </PageWrapper>
+    </BigMusicPlayerProvider>
   );
 
   function handleResourceLoaded() {

@@ -21,9 +21,9 @@ const AppLayout: React.FC<{
   withHeader: boolean;
 }> = ({ children, withHeader }) => {
   return (
-    <Layout css={LayoutStyles}>
+    <Layout css={LayoutStyles} hasSider={false}>
       {withHeader && <AppHeader />}
-      <Layout.Content>{children}</Layout.Content>
+      <Layout.Content hasSider={false}>{children}</Layout.Content>
     </Layout>
   );
 };

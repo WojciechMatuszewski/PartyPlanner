@@ -6,11 +6,14 @@ import {
 } from '@shared/styles';
 
 import { Typography, Icon } from 'antd';
+import { Track } from 'spotify-web-sdk';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
   display: flex;
+  max-width: 150px;
   .track-info-text {
+    max-width: 100%;
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
     text-align: left;
@@ -18,6 +21,10 @@ const TrackInfoWrapper = styled.div`
     h4 {
       margin: 0;
     }
+  }
+  img {
+    height: 64px;
+    width: auto;
   }
   @media screen and (max-width: 800px) {
     align-items: center;
@@ -30,10 +37,10 @@ const TrackInfoWrapper = styled.div`
 
 interface Props {
   isOnMobile: boolean;
+  track: Track | null;
 }
 
 const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
-  console.log('rerender');
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
@@ -42,10 +49,12 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
         </button>
       ) : (
         <React.Fragment>
-          <img src="https://i.scdn.co/image/81a3f82578dc938c53efdcb405f6a3d3ebbf009f" />
+          <img src={props.track ? props.track.album.imageUrl : ''} />
           <div className="track-info-text">
-            <Typography.Title level={4}>Title</Typography.Title>
-            <a>Artist Name</a>
+            <Typography.Title level={4} ellipsis={true}>
+              {props.track ? props.track.name : ''}
+            </Typography.Title>
+            <a>{props.track ? props.track.artists[0].name : ''}</a>
           </div>
         </React.Fragment>
       )}

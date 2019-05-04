@@ -76,11 +76,9 @@ export function useAudio(
     [state.audioCurrentTime, state.audioDuration]
   );
 
-  const toggle = React.useCallback(() => (state.playing ? pause() : play()), [
-    state.playing,
-    state.audioCurrentTime,
-    state.audioDuration
-  ]);
+  function toggle() {
+    state.playing ? pause() : play();
+  }
 
   function onAudioLoaded() {
     if (!audioRef.current) return;

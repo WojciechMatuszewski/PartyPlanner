@@ -3,6 +3,7 @@ import { Track, Page } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import UserTopTrack from './UserTopTrack';
+import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
 
 const TopTracksGrid = styled(
   posed.div({
@@ -28,13 +29,34 @@ interface Props {
   tracks: Page<Track>;
 }
 const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
+  const {
+    setTrack,
+    playing,
+    track,
+    audioPlayerCommands$
+  } = useBigMusicPlayer();
+
+  const handleOnPlayClick = React.useCallback((track: Track) => {
+    setTrack(track);
+    setTimeout(() => {
+      audioPlayerCommands$.next('toggle');
+    }, 100);
+  }, []);
+
   return (
     <TopTracksGrid className="grid-wrapper">
       {tracks.items.map(topTrack => (
-        <UserTopTrack track={topTrack} key={topTrack.id} />
+        <UserTopTrack
+          onPlayClick={handleOnPlayClick}
+          // trackPlaying={track ? true : false}
+          // trackLoading={track ? track.id == topTrack.id && loading : false}
+          trackPlaying={track ? track.id == topTrack.id && playing : false}
+          track={topTrack}
+          key={topTrack.id}
+        />
       ))}
     </TopTracksGrid>
   );
 };
 
-export default UserTopTracksList;
+export default React.memo(UserTopTracksList);

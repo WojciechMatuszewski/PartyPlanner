@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import posed from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Button, Typography } from 'antd';
+import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
 
 const TopTrackTile = styled(
   posed.div({
@@ -75,8 +76,11 @@ const TrackTileControlsWrapper = styled(
 
 interface Props {
   track: Track;
+  trackPlaying: boolean;
+  onPlayClick: (track: Track) => void;
 }
 const UserTopTrack: React.FC<Props> = props => {
+  console.log(props);
   return (
     <TopTrackTile key={props.track.id}>
       <TrackTileImageWrapper>
@@ -95,10 +99,11 @@ const UserTopTrack: React.FC<Props> = props => {
       </TrackTileInfoWrapper>
       <TrackTileControlsWrapper>
         <Button
-          icon="caret-right"
+          icon={props.trackPlaying ? 'pause' : 'caret-right'}
           type="ghost"
           shape="circle-outline"
           size="small"
+          onClick={() => props.onPlayClick(props.track)}
         />
         <Button
           icon="ellipsis"
@@ -111,4 +116,4 @@ const UserTopTrack: React.FC<Props> = props => {
   );
 };
 
-export default UserTopTrack;
+export default React.memo(UserTopTrack);

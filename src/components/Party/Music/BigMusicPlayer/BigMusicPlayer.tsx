@@ -12,6 +12,8 @@ import useMedia from '@hooks/useMedia';
 import BigMusicPlayerTrackInfo from './BigMusicPlayerTrackInfo';
 import { debounce } from 'lodash';
 import { SliderValue } from 'antd/lib/slider';
+import { useBigMusicPlayer } from './BigMusicPlayerProvider';
+import { Subscription } from 'rxjs/observable';
 
 export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
@@ -142,6 +144,7 @@ const BigMusicPlayer: React.FC = () => {
   const isOnMobile = useMedia(
     `(max-width:${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px)`
   );
+  const { track, audioPlayerCommands$, setPlaying } = useBigMusicPlayer();
   // used when we want to ignore time update
   const latestDragValue = React.useRef<number>(0);
   const audioRef = React.useRef<HTMLAudioElement>(null);
@@ -150,6 +153,8 @@ const BigMusicPlayer: React.FC = () => {
   >(false);
 
   const {
+    play,
+    pause,
     setTime,
     skip,
     toggle,
@@ -157,8 +162,15 @@ const BigMusicPlayer: React.FC = () => {
   } = useAudio(audioRef, false);
 
   const setTimeFuncRef = React.useRef<any>(setTime);
-
   React.useEffect(() => void (setTimeFuncRef.current = setTime), [setTime]);
+
+  React.useEffect(() => {
+    let commandsSub: Subscription;
+    commandsSub = audioPlayerCommands$.subscribe(handleMusicPlayerCommand);
+    return () => commandsSub && commandsSub.unsubscribe();
+  }, [playing]);
+
+  React.useEffect(() => setPlaying(playing), [playing]);
 
   const debouncedAfterValueChange = React.useRef<(value: SliderValue) => void>(
     debounce((value: SliderValue) => {
@@ -173,10 +185,14 @@ const BigMusicPlayer: React.FC = () => {
 
   return (
     <BigMusicPlayerWrapper pose={loading ? 'loading' : 'loaded'}>
-      {!isOnMobile && <BigMusicPlayerTrackInfo isOnMobile={isOnMobile} />}
+      {!isOnMobile && (
+        <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
+      )}
       <BottomInnerWrapper>
         <ControlButtonsWrapper>
-          {isOnMobile && <BigMusicPlayerTrackInfo isOnMobile={isOnMobile} />}
+          {isOnMobile && (
+            <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
+          )}
           <Tooltip title="Fast backwards by 5 seconds">
             <TransparentButton
               disabled={loading}
@@ -205,7 +221,7 @@ const BigMusicPlayer: React.FC = () => {
         </ControlButtonsWrapper>
         <SliderWrapper>
           <audio
-            src="https://p.scdn.co/mp3-preview/d7624ec5f93b6d92c1836a95c40ecce463584f6e?cid=774b29d4f13844c495f206cafdad9c86"
+            src={track ? track.previewUrl : ''}
             ref={audioRef}
             controls={false}
             preload="auto"
@@ -286,6 +302,16 @@ const BigMusicPlayer: React.FC = () => {
         }
       }
     };
+  }
+
+  function handleMusicPlayerCommand(command: string) {
+    if (command === 'play') {
+      play();
+    } else if (command == 'stop') {
+      pause();
+    } else {
+      toggle();
+    }
   }
 };
 
