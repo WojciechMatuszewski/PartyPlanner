@@ -2,19 +2,28 @@ import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer/BigMusicPlayer';
-import UserTopSongs from '@components/Party/Music/UserTop/UserTopSongs';
 import { init } from 'spotify-web-sdk';
-import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
+import css from '@emotion/css';
+import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
+import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 
 const StickedToBottom = styled(
   posed.div({
     visible: {
-      y: 0
+      y: 0,
+      transition: {
+        ease: 'linear',
+        duration: 100
+      }
     },
     hidden: {
-      y: -100
+      y: 100,
+      transition: {
+        ease: 'linear',
+        duration: 100
+      }
     }
   })
 )`
@@ -29,16 +38,32 @@ const StickedToBottom = styled(
   flex: 1;
 `;
 
+const StickedVisibilityTriggerStyles = css`
+  position: absolute;
+  top: 0;
+  right: 12px;
+  width: 178.2px;
+  height: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  transform: translateY(-100%);
+  background: #f0f1f5;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px solid #f0f1f5 !important;
+  box-shadow: none;
+`;
+
 const PageWrapper = styled(
   posed.div({
     loading: {},
     loaded: {
-      staggerChildren: 50
+      staggerChildren: 100
     }
   })
-)`
+)<{ playerVisible: boolean }>`
   width: 100%;
-  padding-bottom: 100px;
+  padding-bottom: ${props => (props.playerVisible ? '100px' : '0')};
   display: flex;
   min-height: calc(100vh - 66px);
   flex-direction: column;
@@ -46,14 +71,21 @@ const PageWrapper = styled(
 
 init({
   token:
-    'BQCa2DIHz4yTHunP2gObMiYcNqo6B7mFxVCxwALsydhFe_73d5-ZAGBU_g9P5YO3NPs6LQm6eQJALwiNBO1-XhxwWUqK2ksKourpdXc-y2D4sXaSYmRuwz28SQPfylahs5lOz1CkAMQPVBMmF1SPBETH84x9trtWJazrWCc8ICVoGaDhk-GfEbak8v5dNurQInjf578iu6rrBWae9zu3qRJS0UsknG33qKgDZzRx9xJq_wgxQezafRtfc0F4f_HAZmhTzIqm_NCaryZDrBu5gRNvRZb-p4TKwEnQ1lY'
+    'BQCSg0nDOtwoTOzHpO2msjMYRCRmM2fs6tPgFBUsO7WMoTAb-xj8vjD9wzNS7pfDdyz_oMzEVOz8uMb-ZD2fEI45GtDeai5S_QvIi18HaHgYoNeTIpFx_OpblDThrEGJZxaWHrgtIJRxunDoTxbcwa3qYANG2JuMoCqmvksQx1_RUETFVDcjU0HjF6JINmZg2mqg2hiae2hxdEBhk0gQxexSK1KH0YjlUgMX6bJQCm8B_3iP-QtWmxm49n8V23U7zzPGREZvW661bBC8e7D10d6twPdpyShSNk_JDfU"'
 });
 
 export default function Spotify() {
   const [resourcesLoaded, setResourcesLoaded] = React.useState<number>(0);
 
+  const [musicPlayerVisible, setMusicPlayerVisible] = React.useState<boolean>(
+    false
+  );
+
   return (
-    <PageWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
+    <PageWrapper
+      pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}
+      playerVisible={musicPlayerVisible}
+    >
       {resourcesLoaded < 2 && (
         <GraphqlInlineLoading
           style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
@@ -61,9 +93,16 @@ export default function Spotify() {
           <Typography.Text>Loading Spotify data ...</Typography.Text>
         </GraphqlInlineLoading>
       )}
-      <UserTopSongs onResourceLoaded={handleResourceLoaded} />
+      <UserTopTracks onResourceLoaded={handleResourceLoaded} />
       <UserTopArtists onResourceLoaded={handleResourceLoaded} />
-      <StickedToBottom>
+      <StickedToBottom pose={musicPlayerVisible ? 'visible' : 'hidden'}>
+        <Button
+          icon={musicPlayerVisible ? 'caret-down' : 'caret-up'}
+          css={[StickedVisibilityTriggerStyles]}
+          onClick={() => setMusicPlayerVisible(prev => !prev)}
+        >
+          Music Player
+        </Button>
         <BigMusicPlayer />
       </StickedToBottom>
     </PageWrapper>

@@ -33,6 +33,7 @@ interface Props {
 }
 
 const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
+  console.log('rerender');
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
@@ -52,4 +53,4 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   );
 };
 
-export default BigMusicPlayerTrackInfo;
+export default React.memo(BigMusicPlayerTrackInfo);
