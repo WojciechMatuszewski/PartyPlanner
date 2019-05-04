@@ -25,6 +25,12 @@ export const UserTopTitleWrapper = styled(
     },
     notFixed: {
       background: 'rgba(255,255,255, 0)'
+    },
+    loaded: {
+      opacity: 1
+    },
+    loading: {
+      opacity: 0
     }
   })
 )`
@@ -57,9 +63,6 @@ const UserTopHeading: React.FC<Props> = props => {
       >
         <UserTopTitleInnerWrapper>
           <Typography.Title level={3}>{props.headingText}</Typography.Title>
-          <Button shape="round" type="primary" onClick={props.onMoreClick}>
-            Show more
-          </Button>
         </UserTopTitleInnerWrapper>
       </UserTopTitleWrapper>
     </Affix>

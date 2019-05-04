@@ -5,6 +5,8 @@ import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer/BigMusicPlaye
 import UserTopSongs from '@components/Party/Music/UserTop/UserTopSongs';
 import { init } from 'spotify-web-sdk';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists';
+import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
+import { Typography } from 'antd';
 
 const StickedToBottom = styled(
   posed.div({
@@ -27,19 +29,47 @@ const StickedToBottom = styled(
   flex: 1;
 `;
 
+const PageWrapper = styled(
+  posed.div({
+    loading: {},
+    loaded: {
+      staggerChildren: 50
+    }
+  })
+)`
+  width: 100%;
+  padding-bottom: 100px;
+  display: flex;
+  min-height: calc(100vh - 66px);
+  flex-direction: column;
+`;
+
 init({
   token:
-    'BQAlh1x67cNWfHlmZyMWn5Q4h1sgUYAr2LOU7tJqjUGWSQTbqwTMHXEF3XKv5Q6x4MObvpsk3w16DMd3dR8JS4Fb-1-vS4KUgLqT0wHh7StuQPFg7P51JHneJUXlNdRu9RxzHTVyS9sMv2XqPjrJiIBUiiuTXaZmMrbGb4PxJL8-ysdJzDvEwK8EaSladUM6g9Y_GX8OEai_cU0z27_3XnlfyA82SwgfS1p_mxRe7O2oWVf6RjNfspWwVUmOhFazy5cyEijN-LUxcB3mUgYDL2EzFdcJ5Mpj5JBh7sU'
+    'BQCa2DIHz4yTHunP2gObMiYcNqo6B7mFxVCxwALsydhFe_73d5-ZAGBU_g9P5YO3NPs6LQm6eQJALwiNBO1-XhxwWUqK2ksKourpdXc-y2D4sXaSYmRuwz28SQPfylahs5lOz1CkAMQPVBMmF1SPBETH84x9trtWJazrWCc8ICVoGaDhk-GfEbak8v5dNurQInjf578iu6rrBWae9zu3qRJS0UsknG33qKgDZzRx9xJq_wgxQezafRtfc0F4f_HAZmhTzIqm_NCaryZDrBu5gRNvRZb-p4TKwEnQ1lY'
 });
 
 export default function Spotify() {
+  const [resourcesLoaded, setResourcesLoaded] = React.useState<number>(0);
+
   return (
-    <div style={{ width: '100%', paddingBottom: 100 }}>
-      <UserTopSongs />
-      <UserTopArtists />
+    <PageWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
+      {resourcesLoaded < 2 && (
+        <GraphqlInlineLoading
+          style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
+        >
+          <Typography.Text>Loading Spotify data ...</Typography.Text>
+        </GraphqlInlineLoading>
+      )}
+      <UserTopSongs onResourceLoaded={handleResourceLoaded} />
+      <UserTopArtists onResourceLoaded={handleResourceLoaded} />
       <StickedToBottom>
         <BigMusicPlayer />
       </StickedToBottom>
-    </div>
+    </PageWrapper>
   );
+
+  function handleResourceLoaded() {
+    setResourcesLoaded(prev => prev + 1);
+  }
 }

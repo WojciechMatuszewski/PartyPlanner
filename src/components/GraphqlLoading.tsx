@@ -13,7 +13,7 @@ const LoaderWrapper = styled(
       opacity: 0
     }
   })
-)`
+)<{ isLoadingInitially: boolean }>`
   ${FlexBoxFullCenteredStyles};
   width: 100%;
   height: 100%;

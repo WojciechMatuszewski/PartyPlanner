@@ -2,7 +2,8 @@ import React from 'react';
 import {
   UserTopWrapper,
   UserTopTitleWrapper,
-  UserTopTitleInnerWrapper
+  UserTopTitleInnerWrapper,
+  LoaderWrapper
 } from './shared';
 import { Typography, Button, Spin, Icon, Divider, Affix } from 'antd';
 import { Artist, getCurrentUserTopArtists, Page } from 'spotify-web-sdk';
@@ -16,7 +17,16 @@ interface State {
   data: Page<Artist> | null;
 }
 
-const ArtistsGridWrapper = styled.div`
+const ArtistsGridWrapper = styled(
+  posed.div({
+    loading: {
+      opacity: 0
+    },
+    loaded: {
+      opacity: 1
+    }
+  })
+)`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(203px, 1fr));
@@ -40,6 +50,12 @@ const TopArtistImageWrapper = styled(
     margin: 0 auto;
     display: block;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  @media screen and (max-width: 660px) {
+    height: 270px;
+    width: 100%;
+    border-radius: 0;
   }
 `;
 
@@ -78,8 +94,12 @@ const ArtistImageOverlay = styled(
 const TopArtistTileWrapper = styled.div`
   position: relative;
   width: 203px;
+  margin: 0 auto;
   .ant-typography {
     margin-bottom: 0;
+  }
+  @media screen and (max-width: 660px) {
+    width: 100%;
   }
 `;
 
@@ -89,23 +109,26 @@ const TopArtistNameWrapper = styled.div`
   text-align: center;
 `;
 
-const UserTopArtists: React.FC = () => {
+interface Props {
+  onResourceLoaded: () => void;
+}
+
+const UserTopArtists: React.FC<Props> = props => {
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
   });
 
-  const [headingFixed, setHeadingFixed] = React.useState<boolean>(false);
-
   React.useEffect(() => {
     async function handleDataFetch() {
       const data = await getCurrentUserTopArtists();
       setState({ loading: false, data });
+      props.onResourceLoaded();
     }
     handleDataFetch();
   }, []);
 
-  if (state.loading || !state.data) return <Spin />;
+  if (state.loading || !state.data) return null;
 
   return (
     <UserTopWrapper>

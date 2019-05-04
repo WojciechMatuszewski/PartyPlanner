@@ -1,23 +1,19 @@
 import React from 'react';
-import { Typography, Button, Spin, Divider } from 'antd';
+import { Typography, Button } from 'antd';
 import styled from '@emotion/styled';
-import posed, { PoseGroup } from 'react-pose';
+import posed from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { getCurrentUserTopTracks, Page, Track } from 'spotify-web-sdk';
-import { UserTopWrapper, UserTopTitleWrapper } from './shared';
+import { UserTopWrapper } from './shared';
 import UserTopHeading from './UserTopHeading';
-
-const STAGGER_DURATION = 50;
 
 const TopSongsGrid = styled(
   posed.div({
-    enter: {
-      opacity: 1,
-      delay: ({ staggerIndex }: { staggerIndex: number }) =>
-        staggerIndex * STAGGER_DURATION
-    },
-    exit: {
+    loading: {
       opacity: 0
+    },
+    loaded: {
+      opacity: 1
     }
   })
 )`
@@ -75,7 +71,6 @@ const SongTileInfoWrapper = styled.div`
     margin-bottom: 0;
   }
 `;
-
 const SongTileControlsWrapper = styled(
   posed.div({
     init: { opacity: 0 },
@@ -104,7 +99,11 @@ interface State {
   data: Page<Track> | null;
 }
 
-const UserTopSongs: React.FC = () => {
+interface Props {
+  onResourceLoaded: () => void;
+}
+
+const UserTopSongs: React.FC<Props> = props => {
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
@@ -114,55 +113,50 @@ const UserTopSongs: React.FC = () => {
     async function handleDataFetch() {
       const data = await getCurrentUserTopTracks();
       setState({ loading: false, data });
+      props.onResourceLoaded();
     }
     handleDataFetch();
   }, []);
 
-  if (state.loading || !state.data) return <Spin />;
+  if (state.loading || !state.data) return null;
 
   return (
     <UserTopWrapper>
-      <PoseGroup animateOnMount={true}>
-        <UserTopHeading
-          headingText="Your top songs"
-          onMoreClick={() => {}}
-          key={1}
-        />
-        <TopSongsGrid key={2} staggerIndex={2} className="grid-wrapper">
-          {state.data.items.map(topTrack => (
-            <TopSongTile key={topTrack.id}>
-              <SongTileImageWrapper>
-                <img src={topTrack.album.images[1].url} />
-              </SongTileImageWrapper>
-              <SongTileInfoWrapper>
-                <Typography.Paragraph ellipsis={true}>
-                  <p>{topTrack.name}</p>
-                </Typography.Paragraph>
-                <Typography.Paragraph type="secondary" ellipsis={true}>
-                  <p>{topTrack.artists[0].name}</p>
-                </Typography.Paragraph>
-                <Typography.Paragraph type="secondary" ellipsis={true}>
-                  <p>{topTrack.length}</p>
-                </Typography.Paragraph>
-              </SongTileInfoWrapper>
-              <SongTileControlsWrapper>
-                <Button
-                  icon="caret-right"
-                  type="ghost"
-                  shape="circle-outline"
-                  size="small"
-                />
-                <Button
-                  icon="ellipsis"
-                  type="ghost"
-                  size="small"
-                  shape="circle-outline"
-                />
-              </SongTileControlsWrapper>
-            </TopSongTile>
-          ))}
-        </TopSongsGrid>
-      </PoseGroup>
+      <UserTopHeading headingText="Your top songs" onMoreClick={() => {}} />
+      <TopSongsGrid className="grid-wrapper">
+        {state.data.items.map(topTrack => (
+          <TopSongTile key={topTrack.id}>
+            <SongTileImageWrapper>
+              <img src={topTrack.album.images[1].url} />
+            </SongTileImageWrapper>
+            <SongTileInfoWrapper>
+              <Typography.Paragraph ellipsis={true}>
+                <p>{topTrack.name}</p>
+              </Typography.Paragraph>
+              <Typography.Paragraph type="secondary" ellipsis={true}>
+                <p>{topTrack.artists[0].name}</p>
+              </Typography.Paragraph>
+              <Typography.Paragraph type="secondary" ellipsis={true}>
+                <p>{topTrack.length}</p>
+              </Typography.Paragraph>
+            </SongTileInfoWrapper>
+            <SongTileControlsWrapper>
+              <Button
+                icon="caret-right"
+                type="ghost"
+                shape="circle-outline"
+                size="small"
+              />
+              <Button
+                icon="ellipsis"
+                type="ghost"
+                size="small"
+                shape="circle-outline"
+              />
+            </SongTileControlsWrapper>
+          </TopSongTile>
+        ))}
+      </TopSongsGrid>
     </UserTopWrapper>
   );
 };

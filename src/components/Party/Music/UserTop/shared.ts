@@ -1,3 +1,4 @@
+import { FlexBoxFullCenteredStyles } from './../../../../shared/styles';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 
@@ -14,4 +15,12 @@ export const UserTopWrapper = styled.section`
       padding-right: 6px;
     }
   }
+`;
+
+export const UserTopLoaderWrapper = styled.div`
+  width: 100%;
+  padding: 12px;
+  ${FlexBoxFullCenteredStyles}
+  flex-direction:column;
+  flex: 1%;
 `;
