@@ -1,6 +1,5 @@
-import { FlexBoxFullCenteredStyles } from './../../../../shared/styles';
 import styled from '@emotion/styled';
-import posed from 'react-pose';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 export const UserTopWrapper = styled.section`
   width: 100%;

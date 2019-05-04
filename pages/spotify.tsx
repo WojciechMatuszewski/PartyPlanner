@@ -54,18 +54,23 @@ const StickedVisibilityTriggerStyles = css`
   box-shadow: none;
 `;
 
-const PageWrapper = styled(
+const PageWrapper = styled.div<{ playerVisible: boolean }>`
+  width: 100%;
+  padding-bottom: ${props => (props.playerVisible ? '100px' : '0')};
+  min-height: calc(100vh - 66px);
+`;
+
+const PosedListsWrapper = styled(
   posed.div({
     loading: {},
     loaded: {
-      staggerChildren: 100
+      staggerChildren: 150,
+      staggerDirection: 1
     }
   })
-)<{ playerVisible: boolean }>`
-  width: 100%;
-  padding-bottom: ${props => (props.playerVisible ? '100px' : '0')};
+)`
+  flex: 1;
   display: flex;
-  min-height: calc(100vh - 66px);
   flex-direction: column;
 `;
 
@@ -82,10 +87,7 @@ export default function Spotify() {
   );
 
   return (
-    <PageWrapper
-      pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}
-      playerVisible={musicPlayerVisible}
-    >
+    <PageWrapper playerVisible={musicPlayerVisible}>
       {resourcesLoaded < 2 && (
         <GraphqlInlineLoading
           style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
@@ -93,8 +95,11 @@ export default function Spotify() {
           <Typography.Text>Loading Spotify data ...</Typography.Text>
         </GraphqlInlineLoading>
       )}
-      <UserTopTracks onResourceLoaded={handleResourceLoaded} />
-      <UserTopArtists onResourceLoaded={handleResourceLoaded} />
+      <PosedListsWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
+        <UserTopTracks onResourceLoaded={handleResourceLoaded} />
+        <UserTopArtists onResourceLoaded={handleResourceLoaded} />
+      </PosedListsWrapper>
+
       <StickedToBottom pose={musicPlayerVisible ? 'visible' : 'hidden'}>
         <Button
           icon={musicPlayerVisible ? 'caret-down' : 'caret-up'}

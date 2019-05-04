@@ -32,7 +32,7 @@ const UserTopTracks: React.FC<Props> = props => {
 
   return (
     <UserTopWrapper>
-      <UserTopHeading headingText="Your top songs" onMoreClick={() => {}} />
+      <UserTopHeading headingText="Your top tracks" onMoreClick={() => {}} />
       <UserTopTracksList tracks={state.data} />
     </UserTopWrapper>
   );
