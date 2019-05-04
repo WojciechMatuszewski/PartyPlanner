@@ -80,7 +80,6 @@ interface Props {
   onPlayClick: (track: Track) => void;
 }
 const UserTopTrack: React.FC<Props> = props => {
-  console.log(props);
   return (
     <TopTrackTile key={props.track.id}>
       <TrackTileImageWrapper>

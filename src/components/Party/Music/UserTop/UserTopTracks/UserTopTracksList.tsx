@@ -38,9 +38,7 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
 
   const handleOnPlayClick = React.useCallback((track: Track) => {
     setTrack(track);
-    setTimeout(() => {
-      audioPlayerCommands$.next('toggle');
-    }, 100);
+    audioPlayerCommands$.next('toggle');
   }, []);
 
   return (
@@ -48,8 +46,6 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
       {tracks.items.map(topTrack => (
         <UserTopTrack
           onPlayClick={handleOnPlayClick}
-          // trackPlaying={track ? true : false}
-          // trackLoading={track ? track.id == topTrack.id && loading : false}
           trackPlaying={track ? track.id == topTrack.id && playing : false}
           track={topTrack}
           key={topTrack.id}

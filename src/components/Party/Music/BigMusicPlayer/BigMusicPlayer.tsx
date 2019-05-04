@@ -1,19 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
-import {
-  FlexBoxFullCenteredStyles,
-  TransparentButtonStyles
-} from '@shared/styles';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { useAudio } from '@hooks/useAudio';
-import { Icon, Button, Typography, Slider, Tooltip } from 'antd';
+import { Typography, Slider } from 'antd';
 import BigMusicPlayerUserControls from './BigMusicPlayerUserControls';
 import useMedia from '@hooks/useMedia';
 import BigMusicPlayerTrackInfo from './BigMusicPlayerTrackInfo';
 import { debounce } from 'lodash';
 import { SliderValue } from 'antd/lib/slider';
 import { useBigMusicPlayer } from './BigMusicPlayerProvider';
-import { Subscription } from 'rxjs/observable';
+import BigMusicPlayerControlButtons from './BigMusicPlayerControlButtons';
+import { Subscription } from 'rxjs';
 
 export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
@@ -33,7 +31,7 @@ const BigMusicPlayerWrapper = styled(
   position: relative;
 `;
 
-const BottomInnerWrapper = styled.div`
+const BigMusicPlayerInnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 12px;
@@ -48,14 +46,6 @@ const BottomInnerWrapper = styled.div`
     max-width: 100%;
     height: 100%;
     justify-content: center;
-  }
-`;
-
-const TransparentButton = styled.button`
-  ${TransparentButtonStyles};
-  margin-top: 6px;
-  .anticon {
-    font-size: 20px;
   }
 `;
 
@@ -152,6 +142,17 @@ const BigMusicPlayer: React.FC = () => {
     boolean
   >(false);
 
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+
+  // tracks disabled state, player should be disabled if no track is present
+  React.useEffect(() => {
+    if (!track && !disabled) {
+      setDisabled(true);
+    } else if (disabled && track) {
+      setDisabled(false);
+    }
+  }, [track, disabled]);
+
   const {
     play,
     pause,
@@ -159,17 +160,21 @@ const BigMusicPlayer: React.FC = () => {
     skip,
     toggle,
     state: { audioCurrentTime, audioDuration, loading, playing }
-  } = useAudio(audioRef, false);
+  } = useAudio(audioRef, disabled);
 
+  // used in debounceAfterChange
   const setTimeFuncRef = React.useRef<any>(setTime);
   React.useEffect(() => void (setTimeFuncRef.current = setTime), [setTime]);
 
+  // react ;) to commands from context
   React.useEffect(() => {
-    let commandsSub: Subscription;
-    commandsSub = audioPlayerCommands$.subscribe(handleMusicPlayerCommand);
-    return () => commandsSub && commandsSub.unsubscribe();
+    const commandsSub = audioPlayerCommands$.subscribe(
+      handleMusicPlayerCommand
+    );
+    return () => commandsSub.unsubscribe();
   }, [playing]);
 
+  // notify context consumers
   React.useEffect(() => setPlaying(playing), [playing]);
 
   const debouncedAfterValueChange = React.useRef<(value: SliderValue) => void>(
@@ -188,35 +193,18 @@ const BigMusicPlayer: React.FC = () => {
       {!isOnMobile && (
         <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
       )}
-      <BottomInnerWrapper>
+      <BigMusicPlayerInnerWrapper>
         <ControlButtonsWrapper>
           {isOnMobile && (
             <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
           )}
-          <Tooltip title="Fast backwards by 5 seconds">
-            <TransparentButton
-              disabled={loading}
-              onClick={() => skip(-5, !playing)}
-            >
-              <Icon type="fast-backward" />
-            </TransparentButton>
-          </Tooltip>
-          <Button
-            onClick={toggle}
-            disabled={loading}
-            icon={playing ? 'pause' : 'caret-right'}
-            shape="circle"
-            size={!isOnMobile ? 'large' : 'default'}
-            className="play-pause-button"
+          <BigMusicPlayerControlButtons
+            playing={playing}
+            toggle={toggle}
+            disabled={loading || disabled}
+            isOnMobile={isOnMobile}
+            skip={skip}
           />
-          <Tooltip trigger="hover" title="Fast forward by 5 seconds">
-            <TransparentButton
-              onClick={() => skip(5, !playing)}
-              disabled={loading}
-            >
-              <Icon type="fast-forward" />
-            </TransparentButton>
-          </Tooltip>
           {isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
         </ControlButtonsWrapper>
         <SliderWrapper>
@@ -252,7 +240,7 @@ const BigMusicPlayer: React.FC = () => {
             </Typography.Text>
           )}
         </SliderWrapper>
-      </BottomInnerWrapper>
+      </BigMusicPlayerInnerWrapper>
       {!isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
     </BigMusicPlayerWrapper>
   );
@@ -271,7 +259,8 @@ const BigMusicPlayer: React.FC = () => {
 
   function getCurrentAudioTime() {
     return ignoreStateTimeUpdate
-      ? formatNumberToAudioTime(latestDragValue.current)
+      ? // since we are ignoring audioState format latest dragState
+        formatNumberToAudioTime(latestDragValue.current)
       : formatNumberToAudioTime(audioCurrentTime.value);
   }
 
@@ -283,6 +272,7 @@ const BigMusicPlayer: React.FC = () => {
     return `${value}s`;
   }
 
+  // used for mobile styling
   function getMobileSliderMarks() {
     return {
       0: {
@@ -303,6 +293,11 @@ const BigMusicPlayer: React.FC = () => {
       }
     };
   }
+
+  // if current track is different than song in question,
+  // wait for that track to load
+  //
+  // play that track
 
   function handleMusicPlayerCommand(command: string) {
     if (command === 'play') {

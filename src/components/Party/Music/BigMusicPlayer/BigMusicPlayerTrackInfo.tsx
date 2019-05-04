@@ -2,7 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import {
   FlexBoxHorizontallyCenteredStyles,
-  TransparentButtonStyles
+  TransparentButtonStyles,
+  FlexBoxVerticallyCenteredStyles
 } from '@shared/styles';
 
 import { Typography, Icon } from 'antd';
@@ -25,6 +26,7 @@ const TrackInfoWrapper = styled.div`
   img {
     height: 64px;
     width: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
   @media screen and (max-width: 800px) {
     align-items: center;
@@ -32,6 +34,19 @@ const TrackInfoWrapper = styled.div`
     display: block;
     margin-right: auto;
     margin-left: -6px;
+  }
+`;
+
+const DefaultImageWrapper = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  .anticon {
+    ${FlexBoxVerticallyCenteredStyles}
   }
 `;
 
@@ -49,7 +64,14 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
         </button>
       ) : (
         <React.Fragment>
-          <img src={props.track ? props.track.album.imageUrl : ''} />
+          {props.track ? (
+            <img src={props.track.album.imageUrl} />
+          ) : (
+            <DefaultImageWrapper>
+              <Icon type="question" />
+            </DefaultImageWrapper>
+          )}
+
           <div className="track-info-text">
             <Typography.Title level={4} ellipsis={true}>
               {props.track ? props.track.name : ''}
