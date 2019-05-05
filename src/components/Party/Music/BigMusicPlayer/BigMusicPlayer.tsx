@@ -9,9 +9,11 @@ import useMedia from '@hooks/useMedia';
 import BigMusicPlayerTrackInfo from './BigMusicPlayerTrackInfo';
 import { debounce } from 'lodash';
 import { SliderValue } from 'antd/lib/slider';
-import { useBigMusicPlayer } from './BigMusicPlayerProvider';
+import {
+  useBigMusicPlayer,
+  UseBigMusicPlayerCommandsPayload
+} from './BigMusicPlayerProvider';
 import BigMusicPlayerControlButtons from './BigMusicPlayerControlButtons';
-import { Subscription } from 'rxjs';
 
 export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
@@ -134,7 +136,7 @@ const BigMusicPlayer: React.FC = () => {
   const isOnMobile = useMedia(
     `(max-width:${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px)`
   );
-  const { track, audioPlayerCommands$, setPlaying } = useBigMusicPlayer();
+  const { track, audioPlayerCommands$, setPlayerState } = useBigMusicPlayer();
   // used when we want to ignore time update
   const latestDragValue = React.useRef<number>(0);
   const audioRef = React.useRef<HTMLAudioElement>(null);
@@ -142,7 +144,9 @@ const BigMusicPlayer: React.FC = () => {
     boolean
   >(false);
 
-  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const shouldPlayOnLoad = React.useRef<boolean>(false);
+
+  const [disabled, setDisabled] = React.useState<boolean>(true);
 
   // tracks disabled state, player should be disabled if no track is present
   React.useEffect(() => {
@@ -155,12 +159,11 @@ const BigMusicPlayer: React.FC = () => {
 
   const {
     play,
-    pause,
     setTime,
     skip,
     toggle,
     state: { audioCurrentTime, audioDuration, loading, playing }
-  } = useAudio(audioRef, disabled);
+  } = useAudio(audioRef, track ? track.previewUrl : null, disabled);
 
   // used in debounceAfterChange
   const setTimeFuncRef = React.useRef<any>(setTime);
@@ -172,10 +175,22 @@ const BigMusicPlayer: React.FC = () => {
       handleMusicPlayerCommand
     );
     return () => commandsSub.unsubscribe();
-  }, [playing]);
+  }, [playing, track]);
 
   // notify context consumers
-  React.useEffect(() => setPlaying(playing), [playing]);
+  React.useEffect(
+    () =>
+      setPlayerState(playing ? 'playing' : loading ? 'loading' : 'disabled'),
+    [playing, loading, disabled]
+  );
+
+  // play on track loaded
+  React.useEffect(() => {
+    if (!loading && shouldPlayOnLoad.current) {
+      play();
+      shouldPlayOnLoad.current = false;
+    }
+  }, [loading]);
 
   const debouncedAfterValueChange = React.useRef<(value: SliderValue) => void>(
     debounce((value: SliderValue) => {
@@ -208,12 +223,7 @@ const BigMusicPlayer: React.FC = () => {
           {isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
         </ControlButtonsWrapper>
         <SliderWrapper>
-          <audio
-            src={track ? track.previewUrl : ''}
-            ref={audioRef}
-            controls={false}
-            preload="auto"
-          />
+          <audio ref={audioRef} controls={false} preload="auto" />
           {!isOnMobile && (
             <Typography.Text type="secondary">
               0:{getCurrentAudioTime()}
@@ -294,18 +304,15 @@ const BigMusicPlayer: React.FC = () => {
     };
   }
 
-  // if current track is different than song in question,
-  // wait for that track to load
-  //
-  // play that track
-
-  function handleMusicPlayerCommand(command: string) {
-    if (command === 'play') {
-      play();
-    } else if (command == 'stop') {
-      pause();
-    } else {
-      toggle();
+  function handleMusicPlayerCommand({
+    command,
+    trackInQuestion
+  }: UseBigMusicPlayerCommandsPayload) {
+    const isTrackDifferent = track ? track.id != trackInQuestion.id : true;
+    // more commands should be added if needed
+    if (command == 'toggle') {
+      if (isTrackDifferent) return (shouldPlayOnLoad.current = true);
+      return toggle();
     }
   }
 };

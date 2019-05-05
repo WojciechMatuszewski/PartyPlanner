@@ -3,18 +3,19 @@ import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { Button, Typography } from 'antd';
+import { Button, Typography, Tooltip } from 'antd';
 import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
 
 const TopTrackTile = styled(
   posed.div({
     hoverable: true
   })
-)`
+)<{ hasPreviewUrl: boolean }>`
   display: flex;
   position: relative;
   height: 64px;
   border-radius: 4px;
+  opacity: ${props => (props.hasPreviewUrl ? '1' : '0.3')};
   &:hover {
     cursor: pointer;
     background: #e6f7ff;
@@ -79,9 +80,10 @@ interface Props {
   trackPlaying: boolean;
   onPlayClick: (track: Track) => void;
 }
+
 const UserTopTrack: React.FC<Props> = props => {
   return (
-    <TopTrackTile key={props.track.id}>
+    <TopTrackTile key={props.track.id} hasPreviewUrl={hasPreviewUrl()}>
       <TrackTileImageWrapper>
         <img src={props.track.album.images[1].url} />
       </TrackTileImageWrapper>
@@ -102,9 +104,11 @@ const UserTopTrack: React.FC<Props> = props => {
           type="ghost"
           shape="circle-outline"
           size="small"
+          disabled={!hasPreviewUrl()}
           onClick={() => props.onPlayClick(props.track)}
         />
         <Button
+          disabled={!hasPreviewUrl()}
           icon="ellipsis"
           type="ghost"
           size="small"
@@ -113,6 +117,12 @@ const UserTopTrack: React.FC<Props> = props => {
       </TrackTileControlsWrapper>
     </TopTrackTile>
   );
+
+  function hasPreviewUrl() {
+    return (
+      props.track.previewUrl != null && props.track.previewUrl.trim().length > 0
+    );
+  }
 };
 
 export default React.memo(UserTopTrack);

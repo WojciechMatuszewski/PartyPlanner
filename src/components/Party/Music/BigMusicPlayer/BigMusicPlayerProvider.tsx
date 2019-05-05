@@ -2,12 +2,22 @@ import React from 'react';
 import { Track } from 'spotify-web-sdk';
 import { Subject } from 'rxjs';
 
+export interface UseBigMusicPlayerCommandsPayload {
+  command: 'toggle';
+  trackInQuestion: Track;
+}
+
+export type UseBigMusicPlayerStates =
+  | 'loading'
+  | 'playing'
+  | 'paused'
+  | 'disabled';
 interface BigMusicPlayerContextValue {
   track: Track | null;
   setTrack: (track: Track) => void;
-  playing: boolean;
-  setPlaying: (playing: boolean) => void;
-  audioPlayerCommands$: Subject<'play' | 'stop' | 'toggle'>;
+  playerState: UseBigMusicPlayerStates;
+  setPlayerState: (state: UseBigMusicPlayerStates) => void;
+  audioPlayerCommands$: Subject<UseBigMusicPlayerCommandsPayload>;
 }
 
 interface BigMusicPlayerProviderProps {
@@ -22,19 +32,23 @@ export const BigMusicPlayerProvider: React.FC<BigMusicPlayerProviderProps> = ({
   children
 }) => {
   const [track, setTrack] = React.useState<Track | null>(null);
-  const [playing, setPlaying] = React.useState<boolean>(false);
+  const [playerState, setPlayerState] = React.useState<UseBigMusicPlayerStates>(
+    'disabled'
+  );
 
-  const subjectRef = React.useRef<Subject<'play' | 'stop'>>(new Subject());
+  const subjectRef = React.useRef<Subject<UseBigMusicPlayerCommandsPayload>>(
+    new Subject()
+  );
 
   const contextValue = React.useMemo(
     () => ({
       track,
       setTrack,
       audioPlayerCommands$: subjectRef.current,
-      setPlaying,
-      playing
+      playerState,
+      setPlayerState
     }),
-    [track, playing]
+    [track, playerState]
   );
 
   return (

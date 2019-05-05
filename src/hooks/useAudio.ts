@@ -27,6 +27,7 @@ export interface UseAudioApi {
 
 export function useAudio(
   audioRef: React.RefObject<HTMLAudioElement>,
+  trackUrl: string | null,
   disabled: boolean
 ): UseAudioApi {
   const [state, setState] = React.useState<UseAudioState>({
@@ -44,7 +45,14 @@ export function useAudio(
   );
 
   React.useEffect(() => {
-    if (!audioRef.current || listenersApplied.current) return;
+    if (
+      !audioRef.current ||
+      listenersApplied.current ||
+      !trackUrl ||
+      trackUrl.trim().length <= 0
+    )
+      return;
+    audioRef.current.src = trackUrl;
     setState(prevState => ({ ...prevState, loading: true }));
     if (audioRef.current.readyState > 3) {
       handleAudioLoadedCached();
@@ -56,7 +64,7 @@ export function useAudio(
       clearListeners();
       listenersApplied.current = false;
     };
-  }, [audioRef.current]);
+  }, [audioRef.current, trackUrl]);
 
   const hasReachedTheEndOfTrack = React.useCallback(
     () => state.audioCurrentTime.value === state.audioDuration,

@@ -12,9 +12,9 @@ import { Track } from 'spotify-web-sdk';
 const TrackInfoWrapper = styled.div`
   height: 64px;
   display: flex;
-  max-width: 150px;
+  max-width: 250px;
   .track-info-text {
-    max-width: 100%;
+    /* max-width: 186px; */
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
     text-align: left;
@@ -25,7 +25,7 @@ const TrackInfoWrapper = styled.div`
   }
   img {
     height: 64px;
-    width: auto;
+    width: 64px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
   @media screen and (max-width: 800px) {
@@ -76,7 +76,9 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
             <Typography.Title level={4} ellipsis={true}>
               {props.track ? props.track.name : ''}
             </Typography.Title>
-            <a>{props.track ? props.track.artists[0].name : ''}</a>
+            <Typography.Text ellipsis={true}>
+              <a>{props.track ? props.track.artists[0].name : ''}</a>
+            </Typography.Text>
           </div>
         </React.Fragment>
       )}

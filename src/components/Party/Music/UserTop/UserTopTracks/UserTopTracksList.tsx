@@ -31,14 +31,14 @@ interface Props {
 const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
   const {
     setTrack,
-    playing,
+    playerState,
     track,
     audioPlayerCommands$
   } = useBigMusicPlayer();
 
   const handleOnPlayClick = React.useCallback((track: Track) => {
+    audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
     setTrack(track);
-    audioPlayerCommands$.next('toggle');
   }, []);
 
   return (
@@ -46,7 +46,9 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
       {tracks.items.map(topTrack => (
         <UserTopTrack
           onPlayClick={handleOnPlayClick}
-          trackPlaying={track ? track.id == topTrack.id && playing : false}
+          trackPlaying={
+            track ? track.id == topTrack.id && playerState == 'playing' : false
+          }
           track={topTrack}
           key={topTrack.id}
         />
