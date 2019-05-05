@@ -83,22 +83,22 @@ const SliderWrapper = styled.div`
 
   width: 100%;
   .ant-slider-track {
-    background: #66d26e;
+    /* background: #66d26e; */
   }
 
   .ant-slider-rail {
-    background: #e1e1e1;
+    /* background: #e1e1e1; */
   }
 
   .ant-slider-handle {
-    border: solid 2px #66d26e;
+    /* border: solid 2px #66d26e; */
     &:focus {
-      border-color: #48aa58;
+      /* border-color: #48aa58; */
     }
   }
   .ant-slider:hover {
     .ant-slider-track {
-      background: #48aa58;
+      /* background: #48aa58; */
     }
   }
   .ant-slider {
@@ -204,7 +204,7 @@ const BigMusicPlayer: React.FC = () => {
   );
 
   return (
-    <BigMusicPlayerWrapper pose={loading ? 'loading' : 'loaded'}>
+    <BigMusicPlayerWrapper pose={loading || disabled ? 'loading' : 'loaded'}>
       {!isOnMobile && (
         <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
       )}

@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
-import BigMusicPlayer from '@components/Party/Music/BigMusicPlayer/BigMusicPlayer';
 import { init } from 'spotify-web-sdk';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import { Typography, Button } from 'antd';
-import css from '@emotion/css';
+import { Typography, Modal } from 'antd';
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import TrackInfoModal from '@components/Party/Music/TrackInfoModal';
 
 const PageWrapper = styled.div<{ playerVisible: boolean }>`
   width: 100%;
@@ -33,7 +32,7 @@ const PosedListsWrapper = styled(
 
 init({
   token:
-    'BQClm6bdsfgAL2N0jS5FUxK6SU72BhN8O76C8tQ5RsHiaTd4XiC4LLOjzmns5WHsTPbLm4zjWo7gvcyfs_FT2kTmTaqATaAGgxYoHyFIeP4DMTcyX939ZSdOepmC1JUiHPg3zlqg4wstZGkJJR2XtUW884r3cZyv8cgc08yt6GfurVjyYP_Sxnpt767Cw5K9GhXtei9tFKRXN6We4NXairJ_C8t4KbLHAJqHoTA7wEQS7RwG_P5t_-0rf0fX01xGTn0ClYHM9gW2uvhW6tgeEMAJvvdR-njWdui0by4'
+    'BQDWQOLZ52cdCGuU823EcPRkrsgK-3fMFkMWdoFy6NzCwZuED75ohnOqfF-sPpAxlmK0-Pp4A4GQ3T_JuR8XGQfUETKbe_gDMWBlgURQniJ5EsC9UWEjVqdwDDuESbT_u-I6V06EEHvcHDP6yK91iCWDjo9PLdSgJLaQdU5jjT20nW-Tu7nXTNKDEnUIwpXF8yL7qMBmiUyW8qAAE0OjWorLfGaoChUM6uLYT_kvNhsLceK6sd8tLE1GDQaPIltTAP1o7ZbbAlAdj6ViraQzIjl1oUzAPqWtYE17KI4'
 });
 
 export default function Spotify() {
@@ -45,6 +44,7 @@ export default function Spotify() {
 
   return (
     <BigMusicPlayerProvider>
+      <TrackInfoModal />
       <PageWrapper playerVisible={musicPlayerVisible}>
         {resourcesLoaded < 2 && (
           <GraphqlInlineLoading
@@ -57,12 +57,27 @@ export default function Spotify() {
           <UserTopTracks onResourceLoaded={handleResourceLoaded} />
           <UserTopArtists onResourceLoaded={handleResourceLoaded} />
         </PosedListsWrapper>
-        <BigMusicPlayerStickedToBottom />
+        <BigMusicPlayerStickedToBottom
+          onTrackChanged={handleTrackChanged}
+          onVisibilityTriggerClicked={onVisibilityTriggerClicked}
+          visible={musicPlayerVisible}
+        />
       </PageWrapper>
     </BigMusicPlayerProvider>
   );
 
   function handleResourceLoaded() {
     setResourcesLoaded(prev => prev + 1);
+  }
+
+  function handleTrackChanged() {
+    if (!musicPlayerVisible) {
+      setMusicPlayerVisible(true);
+    }
+  }
+
+  function onVisibilityTriggerClicked() {
+    console.log('GOING TO CHANGE TO', !musicPlayerVisible);
+    setMusicPlayerVisible(!musicPlayerVisible);
   }
 }

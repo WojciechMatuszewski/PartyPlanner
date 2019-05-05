@@ -45,13 +45,7 @@ export function useAudio(
   );
 
   React.useEffect(() => {
-    if (
-      !audioRef.current ||
-      listenersApplied.current ||
-      !trackUrl ||
-      trackUrl.trim().length <= 0
-    )
-      return;
+    if (!shouldApplyListeners(audioRef.current) || trackUrl == null) return;
     audioRef.current.src = trackUrl;
     setState(prevState => ({ ...prevState, loading: true }));
     if (audioRef.current.readyState > 3) {
@@ -175,6 +169,12 @@ export function useAudio(
       if (!disabled) return fnToCall(...args);
       return null;
     };
+  }
+
+  function shouldApplyListeners(
+    audioRefElement: HTMLAudioElement | null
+  ): audioRefElement is HTMLAudioElement {
+    return audioRefElement != null && !listenersApplied.current;
   }
 
   return {

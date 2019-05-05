@@ -3,8 +3,10 @@ import { useBigMusicPlayer } from './BigMusicPlayerProvider';
 import css from '@emotion/css';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import BigMusicPlayer from './BigMusicPlayer';
+import { Track } from 'spotify-web-sdk';
+import { isBrowser } from '@apolloSetup/initApollo';
 
 const StickedToBottom = styled(
   posed.div({
@@ -24,7 +26,7 @@ const StickedToBottom = styled(
     }
   })
 )`
-  background: #f0f1f5;
+  background: white;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -44,37 +46,51 @@ const StickedVisibilityTriggerStyles = css`
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   transform: translateY(-100%);
-  background: #f0f1f5;
+  background: white;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-bottom: 1px solid #f0f1f5 !important;
+  border-bottom: 1px solid white !important;
   box-shadow: none;
 `;
 
-const BigMusicPlayerStickedToBottom: React.FC = () => {
-  const { playerState } = useBigMusicPlayer();
-  const [visible, setVisible] = React.useState<boolean>(false);
+interface Props {
+  onTrackChanged: () => void;
+  onVisibilityTriggerClicked: () => void;
+  visible: boolean;
+}
+
+const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
+  const { track, playerState } = useBigMusicPlayer();
+  const previousTrackRef = React.useRef<Track | null>(track);
+
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (playerState == 'loading' && !visible) setVisible(true);
-  }, [playerState, visible]);
+    if (!track) return;
+    if (!previousTrackRef.current || previousTrackRef.current.id !== track.id) {
+      previousTrackRef.current = track;
+      props.onTrackChanged();
+    }
+  }, [track]);
 
   return (
-    <StickedToBottom pose={visible ? 'visible' : 'hidden'}>
+    <StickedToBottom
+      ref={wrapperRef}
+      pose={props.visible ? 'visible' : 'hidden'}
+    >
       <Button
-        icon={visible ? 'caret-down' : 'caret-up'}
+        icon={props.visible ? 'caret-down' : 'caret-up'}
         css={[StickedVisibilityTriggerStyles]}
-        onClick={handleVisibilityTriggerClick}
+        onClick={props.onVisibilityTriggerClicked}
       >
         Music Player
+        {playerState === 'playing' && !props.visible && (
+          <Icon type="sound" theme="twoTone" />
+        )}
       </Button>
       <BigMusicPlayer />
     </StickedToBottom>
   );
-
-  function handleVisibilityTriggerClick() {
-    setVisible(prev => !prev);
-  }
 };
 
 export default BigMusicPlayerStickedToBottom;

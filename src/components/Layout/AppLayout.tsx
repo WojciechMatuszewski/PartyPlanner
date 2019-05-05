@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout } from 'antd';
-
 import css from '@emotion/css';
 import AppHeader from './AppHeader/AppHeader';
 
@@ -21,7 +20,11 @@ const AppLayout: React.FC<{
   withHeader: boolean;
 }> = ({ children, withHeader }) => {
   return (
-    <Layout css={LayoutStyles} hasSider={false}>
+    <Layout
+      css={LayoutStyles}
+      hasSider={false}
+      className="global-layout-wrapper"
+    >
       {withHeader && <AppHeader />}
       <Layout.Content hasSider={false}>{children}</Layout.Content>
     </Layout>

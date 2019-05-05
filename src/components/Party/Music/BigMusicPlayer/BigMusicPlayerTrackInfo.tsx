@@ -41,7 +41,7 @@ const DefaultImageWrapper = styled.div`
   width: 64px;
   height: 64px;
   border-radius: 6px;
-  background: #fafafa;
+  background: #f0f1f5;
   display: flex;
   justify-content: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
