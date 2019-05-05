@@ -35,8 +35,10 @@ export const SpotifyIconStyles = css`
 
 export const SpotifyButtonStyles = css`
   ${FlexBoxFullCenteredStyles}
-  &:hover, &:focus {
+
+  &:hover, &:focus, &:active {
     color: rgba(0, 0, 0, 0.65);
+    border-color: white;
   }
 
   @media screen and (max-width: 1050px) {

@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import posed from 'react-pose';
 import UserTopTrack from './UserTopTrack';
 import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
+import { useTrackInfoModal } from '../../TrackInfoModal/TrackInfoModalProvider';
 
 const TopTracksGrid = styled(
   posed.div({
@@ -36,6 +37,8 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
     audioPlayerCommands$
   } = useBigMusicPlayer();
 
+  const { openModal } = useTrackInfoModal();
+
   const handleOnPlayClick = React.useCallback((track: Track) => {
     audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
     setTrack(track);
@@ -45,6 +48,7 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
     <TopTracksGrid className="grid-wrapper">
       {tracks.items.map(topTrack => (
         <UserTopTrack
+          onMoreInfoClick={handleMoreInfoClick}
           onPlayClick={handleOnPlayClick}
           trackPlaying={
             track ? track.id == topTrack.id && playerState == 'playing' : false
@@ -55,6 +59,10 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
       ))}
     </TopTracksGrid>
   );
+
+  function handleMoreInfoClick(track: Track) {
+    openModal(track);
+  }
 };
 
 export default React.memo(UserTopTracksList);

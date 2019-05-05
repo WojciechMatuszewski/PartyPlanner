@@ -8,7 +8,8 @@ import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTop
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
-import TrackInfoModal from '@components/Party/Music/TrackInfoModal';
+import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
+import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 
 const PageWrapper = styled.div<{ playerVisible: boolean }>`
   width: 100%;
@@ -32,7 +33,7 @@ const PosedListsWrapper = styled(
 
 init({
   token:
-    'BQDWQOLZ52cdCGuU823EcPRkrsgK-3fMFkMWdoFy6NzCwZuED75ohnOqfF-sPpAxlmK0-Pp4A4GQ3T_JuR8XGQfUETKbe_gDMWBlgURQniJ5EsC9UWEjVqdwDDuESbT_u-I6V06EEHvcHDP6yK91iCWDjo9PLdSgJLaQdU5jjT20nW-Tu7nXTNKDEnUIwpXF8yL7qMBmiUyW8qAAE0OjWorLfGaoChUM6uLYT_kvNhsLceK6sd8tLE1GDQaPIltTAP1o7ZbbAlAdj6ViraQzIjl1oUzAPqWtYE17KI4'
+    'BQBWhvJOxFhXrcxLSFctwXOhHpCNpDktv-_AXeuGlnoTTxcG-kAObrbj3WfnoOyvujCo3sRSABenEVu37TLmObsH4Ub3NOIm6NGvOA3F9Wkqqrz-2dtmOIsdDEFZgeBn7u3Z1TAonQS_uSKGN_iI4u417m4MtmZ31l3rGgmTO0tfCSou8e6Uf1HJ7RVUN4WAYM15f4w94v7U1PZLTaqWczbDgmN25XT7BEcx1abzePcJ5G8bXcCUrMr_cfUwsr5rfW10m7_-n_FdtrWg_i9pfSEXcnPZU2ZDDWRgQfY'
 });
 
 export default function Spotify() {
@@ -44,25 +45,27 @@ export default function Spotify() {
 
   return (
     <BigMusicPlayerProvider>
-      <TrackInfoModal />
-      <PageWrapper playerVisible={musicPlayerVisible}>
-        {resourcesLoaded < 2 && (
-          <GraphqlInlineLoading
-            style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
-          >
-            <Typography.Text>Loading Spotify data ...</Typography.Text>
-          </GraphqlInlineLoading>
-        )}
-        <PosedListsWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
-          <UserTopTracks onResourceLoaded={handleResourceLoaded} />
-          <UserTopArtists onResourceLoaded={handleResourceLoaded} />
-        </PosedListsWrapper>
-        <BigMusicPlayerStickedToBottom
-          onTrackChanged={handleTrackChanged}
-          onVisibilityTriggerClicked={onVisibilityTriggerClicked}
-          visible={musicPlayerVisible}
-        />
-      </PageWrapper>
+      <TrackInfoModalProvider>
+        <TrackInfoModal />
+        <PageWrapper playerVisible={musicPlayerVisible}>
+          {resourcesLoaded < 2 && (
+            <GraphqlInlineLoading
+              style={{ position: 'absolute', height: 'calc(100vh - 66px)' }}
+            >
+              <Typography.Text>Loading Spotify data ...</Typography.Text>
+            </GraphqlInlineLoading>
+          )}
+          <PosedListsWrapper pose={resourcesLoaded < 2 ? 'loading' : 'loaded'}>
+            <UserTopTracks onResourceLoaded={handleResourceLoaded} />
+            <UserTopArtists onResourceLoaded={handleResourceLoaded} />
+          </PosedListsWrapper>
+          <BigMusicPlayerStickedToBottom
+            onTrackChanged={handleTrackChanged}
+            onVisibilityTriggerClicked={onVisibilityTriggerClicked}
+            visible={musicPlayerVisible}
+          />
+        </PageWrapper>
+      </TrackInfoModalProvider>
     </BigMusicPlayerProvider>
   );
 

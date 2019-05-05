@@ -78,6 +78,7 @@ interface Props {
   track: Track;
   trackPlaying: boolean;
   onPlayClick: (track: Track) => void;
+  onMoreInfoClick: (track: Track) => void;
 }
 
 const UserTopTrack: React.FC<Props> = props => {
@@ -107,6 +108,7 @@ const UserTopTrack: React.FC<Props> = props => {
           onClick={() => props.onPlayClick(props.track)}
         />
         <Button
+          onClick={() => props.onMoreInfoClick(props.track)}
           icon="ellipsis"
           type="ghost"
           size="small"
