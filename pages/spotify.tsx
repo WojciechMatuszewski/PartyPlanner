@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import posed from 'react-pose';
 import { init } from 'spotify-web-sdk';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import { Typography, Modal } from 'antd';
+import { Typography } from 'antd';
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
@@ -33,7 +33,7 @@ const PosedListsWrapper = styled(
 
 init({
   token:
-    'BQBWhvJOxFhXrcxLSFctwXOhHpCNpDktv-_AXeuGlnoTTxcG-kAObrbj3WfnoOyvujCo3sRSABenEVu37TLmObsH4Ub3NOIm6NGvOA3F9Wkqqrz-2dtmOIsdDEFZgeBn7u3Z1TAonQS_uSKGN_iI4u417m4MtmZ31l3rGgmTO0tfCSou8e6Uf1HJ7RVUN4WAYM15f4w94v7U1PZLTaqWczbDgmN25XT7BEcx1abzePcJ5G8bXcCUrMr_cfUwsr5rfW10m7_-n_FdtrWg_i9pfSEXcnPZU2ZDDWRgQfY'
+    'BQDD0eUsbnZVe2L4xoN_8JkMdTQFD1gHPgMwdsZlS2Bd_PrsahBbgjDVZh_PA2N_6rspQHDX14du1UHLkwWPgmO3TdQDt4-4mSh_-W25RupwLXCx9Z3IQsG-AarB-1cVgS8HeDOwdizGWidZv-Kf_8LBtwDM14iU5gs9CFDmh0I21VtzHpLCF0YvkHH4lFYwis7ykHwY62HC0VoDumjhggZHzhL2Pm299iuhTwMsaUtib5qtMwTO18R273r94X-_FGXJuvVOZYDZ9nG_IFe26Bea6dNP-gcgs9X8UgM'
 });
 
 export default function Spotify() {
@@ -80,7 +80,6 @@ export default function Spotify() {
   }
 
   function onVisibilityTriggerClicked() {
-    console.log('GOING TO CHANGE TO', !musicPlayerVisible);
     setMusicPlayerVisible(!musicPlayerVisible);
   }
 }

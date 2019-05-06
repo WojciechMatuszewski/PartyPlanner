@@ -3,7 +3,6 @@ import css from '@emotion/css';
 import { Modal, Button, Icon } from 'antd';
 import { Global } from '@emotion/core';
 import styled from '@emotion/styled';
-import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { Track } from 'spotify-web-sdk';
 import {
   SpotifyButtonStyles,
@@ -13,15 +12,14 @@ import SpotifyIcon from '@customIcons/spotify.svg';
 import TrackInfoModalBasicInfo from './TrackInfoModalBasicInfo';
 import TrackInfoModalDetailedInformation from './TrackInfoModalDetailedInformation';
 import { useTrackInfoModal } from './TrackInfoModalProvider';
+import {
+  GreenSpotifyButtonStyles,
+  FlexBoxFullCenteredStyles
+} from '@shared/styles';
 
 const BlurredBackgroundStyles = css`
   .global-layout-wrapper {
     filter: blur(8px);
-  }
-  .ant-modal-wrap {
-    .ant-modal {
-      /* width: 650px !important; */
-    }
   }
 `;
 
@@ -51,6 +49,9 @@ const TrackInfoModalBodyWrapper = styled.div`
     border-radius: 6px;
     display: inline-block;
   }
+  .spotify-button .anticon {
+    color: white;
+  }
 `;
 
 const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
@@ -59,7 +60,12 @@ const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
       <TrackInfoModalBasicInfo track={track} />
       <TrackInfoModalDetailedInformation track={track} />
       <Button
-        css={[SpotifyButtonStyles]}
+        className="spotify-button"
+        css={[
+          SpotifyButtonStyles,
+          GreenSpotifyButtonStyles,
+          FlexBoxFullCenteredStyles
+        ]}
         style={{ marginTop: 24 }}
         size="large"
         onClick={() => window.open(track.uri)}

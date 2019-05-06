@@ -14,6 +14,34 @@ export const FlexBoxFullCenteredStyles = css`
   justify-content: center;
 `;
 
+export const WhiteSpotifyButtonStyles = css`
+  &:hover,
+  &:focus,
+  &:active {
+    color: rgba(0, 0, 0, 0.65);
+    border-color: white;
+  }
+`;
+
+export const GreenSpotifyButtonStyles = css`
+  background: #1db954;
+  border-color: #1db954;
+  color: white;
+  &:hover,
+  &:focus,
+  &:active {
+    background: #1db954;
+    color: white;
+  }
+  &:disabled,
+  &:disabled:hover {
+    background: #1db954;
+    .anticon {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+`;
+
 export const TransparentButtonStyles = css`
   background: transparent;
   border: 0;

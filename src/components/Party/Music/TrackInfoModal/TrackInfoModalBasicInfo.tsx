@@ -34,7 +34,7 @@ const TrackInfoModalBasicInfo: React.FC<Props> = ({ track }) => {
       <TitleAuthorsWrapper>
         <Typography.Title level={1}>{track.name}</Typography.Title>
         <Typography.Title level={3}>
-          By : {track.mainArtists.map(artist => artist.name)}
+          By : {track.stringArtists}
         </Typography.Title>
       </TitleAuthorsWrapper>
     </TrackImageInfoWrapper>

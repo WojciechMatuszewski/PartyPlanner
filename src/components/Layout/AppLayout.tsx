@@ -26,7 +26,7 @@ const AppLayout: React.FC<{
       className="global-layout-wrapper"
     >
       {withHeader && <AppHeader />}
-      <Layout.Content hasSider={false}>{children}</Layout.Content>
+      <Layout.Content>{children}</Layout.Content>
     </Layout>
   );
 };

@@ -9,10 +9,6 @@ const DetailedInfoWrapper = styled.div`
     color: white;
     padding-top: 24px;
   }
-  .ant-list-item {
-    padding-top: 12px;
-    padding-bottom: 2px;
-  }
 
   .list-item-content {
     color: rgba(255, 255, 255, 0.8);
@@ -24,7 +20,7 @@ const DetailedInfoWrapper = styled.div`
 
 interface ListDataEntry {
   title: string;
-  content: string;
+  content: React.ReactNode;
 }
 interface Props {
   track: Track;
@@ -33,20 +29,24 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
   const listData = React.useMemo(
     () =>
       [
-        { title: 'Popularity', content: track.popularity },
+        {
+          title: 'Popularity',
+          content: getTrackPopularity(track)
+        },
         { title: 'Explicit', content: track.explicit ? 'Yes' : 'No' },
         { title: 'Album name', content: track.albumName },
-        { title: 'Album type', content: track.album.albumType },
-        { title: 'Release date', content: track.releaseYear }
+        { title: 'Album type', content: track.album.releaseDate }
       ] as ListDataEntry[],
-    []
+    [track]
   );
+
   return (
     <DetailedInfoWrapper>
       <Typography.Title level={3} className="actions-heading">
         Detailed information
       </Typography.Title>
       <List
+        bordered={true}
         dataSource={listData}
         renderItem={({ title, content }: ListDataEntry) => (
           <List.Item>
@@ -59,6 +59,14 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
       />
     </DetailedInfoWrapper>
   );
+
+  function getTrackPopularity(track: Track) {
+    if (track.popularity > 80) return 'Very Popular';
+    else if (track.popularity > 60 && track.popularity < 80) return 'Popular';
+    else if (track.popularity > 40 && track.popularity < 60)
+      return 'Semi-popular';
+    else return 'Not very popular';
+  }
 };
 
 export default TrackInfoModalDetailedInformation;

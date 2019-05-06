@@ -33,10 +33,7 @@ const UserTopArtists: React.FC<Props> = props => {
 
   return (
     <UserTopWrapper>
-      <UserTopHeading
-        headingText="Your top artists"
-        onMoreClick={() => console.log('artists clicked')}
-      />
+      <UserTopHeading headingText="Your top artists" onMoreClick={() => {}} />
       <UserTopArtistsList artists={state.data} />
     </UserTopWrapper>
   );

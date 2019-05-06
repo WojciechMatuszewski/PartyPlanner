@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Typography, Button } from 'antd';
+import { Affix, Typography } from 'antd';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 

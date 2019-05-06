@@ -3,7 +3,11 @@ import { Button, Icon } from 'antd';
 import css from '@emotion/css';
 import SpotifyIcon from '@customIcons/spotify.svg';
 import styled from '@emotion/styled';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import {
+  FlexBoxFullCenteredStyles,
+  GreenSpotifyButtonStyles,
+  WhiteSpotifyButtonStyles
+} from '@shared/styles';
 import socialLoginPopup from '@shared/socialLoginPopup';
 import { handleLogin } from './AuthService';
 import { WithRouterProps } from 'next/router';
@@ -34,29 +38,10 @@ export const SpotifyIconStyles = css`
 `;
 
 export const SpotifyButtonStyles = css`
-  ${FlexBoxFullCenteredStyles}
-
-  &:hover, &:focus, &:active {
-    color: rgba(0, 0, 0, 0.65);
-    border-color: white;
-  }
-
+  ${WhiteSpotifyButtonStyles};
+  ${FlexBoxFullCenteredStyles};
   @media screen and (max-width: 1050px) {
-    background: #1db954;
-    color: white;
-    &:hover,
-    &:focus,
-    &:active {
-      background: #1db954;
-      color: white;
-    }
-    &:disabled,
-    &:disabled:hover {
-      background: #1db954;
-      .anticon {
-        color: rgba(0, 0, 0, 0.25);
-      }
-    }
+    ${GreenSpotifyButtonStyles};
   }
 `;
 

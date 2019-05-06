@@ -8,6 +8,7 @@ import {
 
 import { Typography, Icon } from 'antd';
 import { Track } from 'spotify-web-sdk';
+import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
@@ -56,10 +57,12 @@ interface Props {
 }
 
 const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
+  const { openModal } = useTrackInfoModal();
+
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
-        <button css={[TransparentButtonStyles]}>
+        <button css={[TransparentButtonStyles]} onClick={handleMoreInfoClick}>
           <Icon type="info" />
         </button>
       ) : (
@@ -84,6 +87,11 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
       )}
     </TrackInfoWrapper>
   );
+
+  function handleMoreInfoClick() {
+    if (!props.track) return null;
+    openModal(props.track);
+  }
 };
 
 export default React.memo(BigMusicPlayerTrackInfo);

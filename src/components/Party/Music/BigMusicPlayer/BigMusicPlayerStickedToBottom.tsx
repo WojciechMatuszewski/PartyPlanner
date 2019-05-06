@@ -6,7 +6,6 @@ import posed from 'react-pose';
 import { Button, Icon } from 'antd';
 import BigMusicPlayer from './BigMusicPlayer';
 import { Track } from 'spotify-web-sdk';
-import { isBrowser } from '@apolloSetup/initApollo';
 
 const StickedToBottom = styled(
   posed.div({
@@ -35,6 +34,8 @@ const StickedToBottom = styled(
   border-top: 1px solid #e8e8e8;
   display: flex;
   flex: 1;
+  transform: translateY(100%);
+  z-index: 10;
 `;
 
 const StickedVisibilityTriggerStyles = css`

@@ -52,7 +52,9 @@ export const BigMusicPlayerProvider: React.FC<BigMusicPlayerProviderProps> = ({
   );
 
   return (
-    <BigMusicPlayerContext.Provider value={contextValue} children={children} />
+    <BigMusicPlayerContext.Provider value={contextValue}>
+      {children}
+    </BigMusicPlayerContext.Provider>
   );
 };
 
