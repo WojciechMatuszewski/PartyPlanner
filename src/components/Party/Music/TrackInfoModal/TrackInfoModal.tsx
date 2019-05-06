@@ -17,6 +17,8 @@ import {
   FlexBoxFullCenteredStyles
 } from '@shared/styles';
 
+const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
+
 const BlurredBackgroundStyles = css`
   .global-layout-wrapper {
     filter: blur(8px);
@@ -33,6 +35,12 @@ const ModalStyles = css`
     color: white;
     font-size: 26px;
   }
+
+  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
+    .ant-modal-body {
+      padding: 12px 4px;
+    }
+  }
 `;
 
 const TrackInfoModalBodyWrapper = styled.div`
@@ -43,14 +51,18 @@ const TrackInfoModalBodyWrapper = styled.div`
   h4 {
     color: white;
   }
-  img {
-    width: 196px;
-    height: 196px;
-    border-radius: 6px;
-    display: inline-block;
-  }
+
   .spotify-button .anticon {
     color: white;
+  }
+  .spotify-button {
+    margin-top: 24px;
+  }
+  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
+    .spotify-button {
+      margin-top: 8px;
+      width: 100%;
+    }
   }
 `;
 
@@ -66,7 +78,6 @@ const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
           GreenSpotifyButtonStyles,
           FlexBoxFullCenteredStyles
         ]}
-        style={{ marginTop: 24 }}
         size="large"
         onClick={() => window.open(track.uri)}
       >

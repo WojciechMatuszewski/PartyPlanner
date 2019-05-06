@@ -2,9 +2,27 @@ import React from 'react';
 import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
+// import { TRACK_INFO_MODAL_MOBILE_BREAKPOINT } from './TrackInfoModal';
+
+const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
 
 const TrackImageInfoWrapper = styled.div`
   display: flex;
+  img {
+    width: 196px;
+    height: 196px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
+    flex-direction: column;
+    margin-top: 24px;
+    img {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto;
+    }
+  }
 `;
 
 const TitleAuthorsWrapper = styled.div`
@@ -22,6 +40,19 @@ const TitleAuthorsWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   text-align: left;
+
+  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
+    text-align: center;
+    padding: 0;
+    margin-top: 12px;
+    h1 {
+      font-size: 20px;
+    }
+    h3.ant-typography {
+      font-size: 16px;
+      margin-top: 0;
+    }
+  }
 `;
 
 interface Props {

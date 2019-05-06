@@ -59,10 +59,14 @@ const TrackTileImageWrapper = styled.div`
 
 const TrackTileInfoWrapper = styled.div`
   padding-left: calc(72px + 8px);
-
+  min-width: 0;
   max-width: 100%;
   .ant-typography {
     margin-bottom: 0;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   p {
     max-width: 100%;
