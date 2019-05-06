@@ -27,6 +27,7 @@ export interface UseAudioApi {
 
 export function useAudio(
   audioRef: React.RefObject<HTMLAudioElement>,
+  trackUrl: string | null,
   disabled: boolean
 ): UseAudioApi {
   const [state, setState] = React.useState<UseAudioState>({
@@ -44,7 +45,8 @@ export function useAudio(
   );
 
   React.useEffect(() => {
-    if (!audioRef.current || listenersApplied.current) return;
+    if (!shouldApplyListeners(audioRef.current) || trackUrl == null) return;
+    audioRef.current.src = trackUrl;
     setState(prevState => ({ ...prevState, loading: true }));
     if (audioRef.current.readyState > 3) {
       handleAudioLoadedCached();
@@ -56,7 +58,7 @@ export function useAudio(
       clearListeners();
       listenersApplied.current = false;
     };
-  }, [audioRef.current]);
+  }, [audioRef.current, trackUrl]);
 
   const hasReachedTheEndOfTrack = React.useCallback(
     () => state.audioCurrentTime.value === state.audioDuration,
@@ -76,11 +78,9 @@ export function useAudio(
     [state.audioCurrentTime, state.audioDuration]
   );
 
-  const toggle = React.useCallback(() => (state.playing ? pause() : play()), [
-    state.playing,
-    state.audioCurrentTime,
-    state.audioDuration
-  ]);
+  function toggle() {
+    state.playing ? pause() : play();
+  }
 
   function onAudioLoaded() {
     if (!audioRef.current) return;
@@ -169,6 +169,12 @@ export function useAudio(
       if (!disabled) return fnToCall(...args);
       return null;
     };
+  }
+
+  function shouldApplyListeners(
+    audioRefElement: HTMLAudioElement | null
+  ): audioRefElement is HTMLAudioElement {
+    return audioRefElement != null && !listenersApplied.current;
   }
 
   return {

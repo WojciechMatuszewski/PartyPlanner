@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
-import {
-  FlexBoxFullCenteredStyles,
-  TransparentButtonStyles
-} from '@shared/styles';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { useAudio } from '@hooks/useAudio';
-import { Icon, Button, Typography, Slider, Tooltip } from 'antd';
+import { Typography, Slider } from 'antd';
 import BigMusicPlayerUserControls from './BigMusicPlayerUserControls';
 import useMedia from '@hooks/useMedia';
 import BigMusicPlayerTrackInfo from './BigMusicPlayerTrackInfo';
 import { debounce } from 'lodash';
 import { SliderValue } from 'antd/lib/slider';
+import {
+  useBigMusicPlayer,
+  UseBigMusicPlayerCommandsPayload
+} from './BigMusicPlayerProvider';
+import BigMusicPlayerControlButtons from './BigMusicPlayerControlButtons';
 
 export const BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT = 800;
 
@@ -28,9 +30,10 @@ const BigMusicPlayerWrapper = styled(
   width: 100%;
   height: 100%;
   ${FlexBoxFullCenteredStyles};
+  position: relative;
 `;
 
-const BottomInnerWrapper = styled.div`
+const BigMusicPlayerInnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 12px;
@@ -45,14 +48,6 @@ const BottomInnerWrapper = styled.div`
     max-width: 100%;
     height: 100%;
     justify-content: center;
-  }
-`;
-
-const TransparentButton = styled.button`
-  ${TransparentButtonStyles};
-  margin-top: 6px;
-  .anticon {
-    font-size: 20px;
   }
 `;
 
@@ -88,22 +83,22 @@ const SliderWrapper = styled.div`
 
   width: 100%;
   .ant-slider-track {
-    background: #66d26e;
+    /* background: #66d26e; */
   }
 
   .ant-slider-rail {
-    background: #e1e1e1;
+    /* background: #e1e1e1; */
   }
 
   .ant-slider-handle {
-    border: solid 2px #66d26e;
+    /* border: solid 2px #66d26e; */
     &:focus {
-      border-color: #48aa58;
+      /* border-color: #48aa58; */
     }
   }
   .ant-slider:hover {
     .ant-slider-track {
-      background: #48aa58;
+      /* background: #48aa58; */
     }
   }
   .ant-slider {
@@ -141,6 +136,7 @@ const BigMusicPlayer: React.FC = () => {
   const isOnMobile = useMedia(
     `(max-width:${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px)`
   );
+  const { track, audioPlayerCommands$, setPlayerState } = useBigMusicPlayer();
   // used when we want to ignore time update
   const latestDragValue = React.useRef<number>(0);
   const audioRef = React.useRef<HTMLAudioElement>(null);
@@ -148,16 +144,53 @@ const BigMusicPlayer: React.FC = () => {
     boolean
   >(false);
 
+  const shouldPlayOnLoad = React.useRef<boolean>(false);
+
+  const [disabled, setDisabled] = React.useState<boolean>(true);
+
+  // tracks disabled state, player should be disabled if no track is present
+  React.useEffect(() => {
+    if (!track && !disabled) {
+      setDisabled(true);
+    } else if (disabled && track) {
+      setDisabled(false);
+    }
+  }, [track, disabled]);
+
   const {
+    play,
     setTime,
     skip,
     toggle,
     state: { audioCurrentTime, audioDuration, loading, playing }
-  } = useAudio(audioRef, false);
+  } = useAudio(audioRef, track ? track.previewUrl : null, disabled);
 
+  // used in debounceAfterChange
   const setTimeFuncRef = React.useRef<any>(setTime);
-
   React.useEffect(() => void (setTimeFuncRef.current = setTime), [setTime]);
+
+  // react ;) to commands from context
+  React.useEffect(() => {
+    const commandsSub = audioPlayerCommands$.subscribe(
+      handleMusicPlayerCommand
+    );
+    return () => commandsSub.unsubscribe();
+  }, [playing, track]);
+
+  // notify context consumers
+  React.useEffect(
+    () =>
+      setPlayerState(playing ? 'playing' : loading ? 'loading' : 'disabled'),
+    [playing, loading, disabled]
+  );
+
+  // play on track loaded
+  React.useEffect(() => {
+    if (!loading && shouldPlayOnLoad.current) {
+      play();
+      shouldPlayOnLoad.current = false;
+    }
+  }, [loading]);
 
   const debouncedAfterValueChange = React.useRef<(value: SliderValue) => void>(
     debounce((value: SliderValue) => {
@@ -171,44 +204,26 @@ const BigMusicPlayer: React.FC = () => {
   );
 
   return (
-    <BigMusicPlayerWrapper pose={loading ? 'loading' : 'loaded'}>
-      {!isOnMobile && <BigMusicPlayerTrackInfo isOnMobile={isOnMobile} />}
-      <BottomInnerWrapper>
+    <BigMusicPlayerWrapper pose={loading || disabled ? 'loading' : 'loaded'}>
+      {!isOnMobile && (
+        <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
+      )}
+      <BigMusicPlayerInnerWrapper>
         <ControlButtonsWrapper>
-          {isOnMobile && <BigMusicPlayerTrackInfo isOnMobile={isOnMobile} />}
-          <Tooltip title="Fast backwards by 5 seconds">
-            <TransparentButton
-              disabled={loading}
-              onClick={() => skip(-5, !playing)}
-            >
-              <Icon type="fast-backward" />
-            </TransparentButton>
-          </Tooltip>
-          <Button
-            onClick={toggle}
-            disabled={loading}
-            icon={playing ? 'pause' : 'caret-right'}
-            shape="circle"
-            size={!isOnMobile ? 'large' : 'default'}
-            className="play-pause-button"
+          {isOnMobile && (
+            <BigMusicPlayerTrackInfo track={track} isOnMobile={isOnMobile} />
+          )}
+          <BigMusicPlayerControlButtons
+            playing={playing}
+            toggle={toggle}
+            disabled={loading || disabled}
+            isOnMobile={isOnMobile}
+            skip={skip}
           />
-          <Tooltip trigger="hover" title="Fast forward by 5 seconds">
-            <TransparentButton
-              onClick={() => skip(5, !playing)}
-              disabled={loading}
-            >
-              <Icon type="fast-forward" />
-            </TransparentButton>
-          </Tooltip>
           {isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
         </ControlButtonsWrapper>
         <SliderWrapper>
-          <audio
-            src="https://p.scdn.co/mp3-preview/d7624ec5f93b6d92c1836a95c40ecce463584f6e?cid=774b29d4f13844c495f206cafdad9c86"
-            ref={audioRef}
-            controls={false}
-            preload="auto"
-          />
+          <audio ref={audioRef} controls={false} preload="auto" />
           {!isOnMobile && (
             <Typography.Text type="secondary">
               0:{getCurrentAudioTime()}
@@ -235,7 +250,7 @@ const BigMusicPlayer: React.FC = () => {
             </Typography.Text>
           )}
         </SliderWrapper>
-      </BottomInnerWrapper>
+      </BigMusicPlayerInnerWrapper>
       {!isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
     </BigMusicPlayerWrapper>
   );
@@ -254,7 +269,8 @@ const BigMusicPlayer: React.FC = () => {
 
   function getCurrentAudioTime() {
     return ignoreStateTimeUpdate
-      ? formatNumberToAudioTime(latestDragValue.current)
+      ? // since we are ignoring audioState format latest dragState
+        formatNumberToAudioTime(latestDragValue.current)
       : formatNumberToAudioTime(audioCurrentTime.value);
   }
 
@@ -266,6 +282,7 @@ const BigMusicPlayer: React.FC = () => {
     return `${value}s`;
   }
 
+  // used for mobile styling
   function getMobileSliderMarks() {
     return {
       0: {
@@ -285,6 +302,18 @@ const BigMusicPlayer: React.FC = () => {
         }
       }
     };
+  }
+
+  function handleMusicPlayerCommand({
+    command,
+    trackInQuestion
+  }: UseBigMusicPlayerCommandsPayload) {
+    const isTrackDifferent = track ? track.id != trackInQuestion.id : true;
+    // more commands should be added if needed
+    if (command == 'toggle') {
+      if (isTrackDifferent) return (shouldPlayOnLoad.current = true);
+      return toggle();
+    }
   }
 };
 

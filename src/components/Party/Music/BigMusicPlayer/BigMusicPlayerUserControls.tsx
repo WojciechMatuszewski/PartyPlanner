@@ -48,4 +48,4 @@ const BigMusicPlayerUserControls: React.FC<Props> = props => {
   );
 };
 
-export default BigMusicPlayerUserControls;
+export default React.memo(BigMusicPlayerUserControls);

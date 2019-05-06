@@ -180,9 +180,11 @@ const AppAuthenticatedHeader: React.FC<WithRouterProps> = ({ router }) => {
   const [runnerInterval, setRunnerInterval] = React.useState<number | null>(
     null
   );
+
   const { retrieveFromStorage, saveToStorage } = useLocalStorage(
     'last-heartbeat'
   );
+
   const { data: meData } = useMeQuery({ fetchPolicy: 'cache-first' });
   const mutate = useUpdateUser();
 
