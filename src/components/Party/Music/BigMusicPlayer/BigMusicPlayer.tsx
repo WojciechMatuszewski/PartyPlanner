@@ -160,6 +160,7 @@ const BigMusicPlayer: React.FC = () => {
 
   const {
     play,
+    pause,
     setTime,
     skip,
     toggle,
@@ -319,6 +320,9 @@ const BigMusicPlayer: React.FC = () => {
     if (command == 'toggle') {
       if (isTrackDifferent) return (shouldPlayOnLoad.current = true);
       return toggle();
+    } else if (command == 'pause') {
+      if (!track) return;
+      pause();
     }
   }
 };

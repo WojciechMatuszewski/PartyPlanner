@@ -5,7 +5,8 @@ import {
   PaginateChatsQueryComponent,
   useChatMessagesSubscription,
   ChatMessagesSubscriptionNode,
-  PaginateChatsQueryVariables
+  PaginateChatsQueryVariables,
+  ChatOrderByInput
 } from '@generated/graphql';
 import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
@@ -24,6 +25,9 @@ import { ChatError } from './ChatError';
 import { Button } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
 
+export const CHATS_MENU_PAGE_SIZE = 10;
+export const CHATS_MENU_ORDER_BY = ChatOrderByInput.CreatedAtAsc;
+
 const ChatsMenu: React.FC = () => {
   const { currentlyLoggedUserData, currentlySelectedChatId } = React.useContext(
     ChatsContext
@@ -39,7 +43,8 @@ const ChatsMenu: React.FC = () => {
           normalizedTitle_contains: filterQuery.toLocaleLowerCase()
         }
       },
-      first: 10
+      first: CHATS_MENU_PAGE_SIZE,
+      orderBy: CHATS_MENU_ORDER_BY
     };
   }, [currentlyLoggedUserData, filterQuery]);
 
@@ -106,6 +111,7 @@ const ChatsMenu: React.FC = () => {
                 </Button>
               </ChatError>
             );
+
           if (loading || !data || !data.chatsConnection)
             return <ChatSectionLoading />;
 

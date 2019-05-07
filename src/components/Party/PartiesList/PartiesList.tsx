@@ -2,7 +2,8 @@ import React from 'react';
 import {
   PartyWhereInput,
   PaginatePartiesQueryVariables,
-  usePaginatePartiesQuery
+  usePaginatePartiesQuery,
+  PaginatePartiesQueryQuery
 } from '@generated/graphql';
 import styled from '@emotion/styled';
 import PartiesListPane from './PartiesListPane';
@@ -20,8 +21,10 @@ import PartiesListCardGrid from './PartiesListCardGrid';
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListNoResults from './PartiesListNoResults';
 import GraphqlException from '@components/GraphqlException';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
+
+const NUM_OF_RESULTS_PER_PAGE = 10;
 
 interface Props {
   userId: string;
@@ -65,7 +68,7 @@ export function partiesListVariablesConstructorFactory(userId: string) {
   return function(
     searchValue: string,
     filters: PartiesListFilters = {},
-    first: number = 3
+    first: number = NUM_OF_RESULTS_PER_PAGE
   ): PaginatePartiesQueryVariables {
     return {
       where: {
@@ -192,30 +195,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
                     ? data.partiesConnection.pageInfo.hasNextPage
                     : false
                 }
-                onLoadMoreButtonClick={() =>
-                  fetchMore({
-                    variables: {
-                      after: data!.partiesConnection!.pageInfo.endCursor
-                    },
-                    updateQuery: (prev, { fetchMoreResult }) => {
-                      if (
-                        !fetchMoreResult ||
-                        fetchMoreResult.partiesConnection.edges.length == 0
-                      )
-                        return prev;
-                      return {
-                        partiesConnection: {
-                          edges: [
-                            ...prev.partiesConnection.edges,
-                            ...fetchMoreResult.partiesConnection.edges
-                          ],
-                          pageInfo: fetchMoreResult.partiesConnection.pageInfo,
-                          __typename: 'PartyConnection'
-                        }
-                      };
-                    }
-                  })
-                }
+                onLoadMoreButtonClick={handleLoadMore}
               />
               <PartiesListNoResults
                 hasFiltersApplied={hasFiltersApplied()}
@@ -237,6 +217,39 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     }
+  }
+
+  function handleLoadMore() {
+    try {
+      fetchMore({
+        variables: {
+          after: data!.partiesConnection!.pageInfo.endCursor
+        },
+        updateQuery: fetchMoreQueryUpdater
+      });
+    } catch (e) {
+      message.error('Something went wrong!');
+    }
+  }
+
+  function fetchMoreQueryUpdater(
+    prev: PaginatePartiesQueryQuery,
+    {
+      fetchMoreResult
+    }: { fetchMoreResult?: PaginatePartiesQueryQuery | undefined }
+  ): PaginatePartiesQueryQuery {
+    if (!fetchMoreResult || fetchMoreResult.partiesConnection.edges.length == 0)
+      return prev;
+    return {
+      partiesConnection: {
+        edges: [
+          ...prev.partiesConnection.edges,
+          ...fetchMoreResult.partiesConnection.edges
+        ],
+        pageInfo: fetchMoreResult.partiesConnection.pageInfo,
+        __typename: 'PartyConnection'
+      }
+    };
   }
 };
 

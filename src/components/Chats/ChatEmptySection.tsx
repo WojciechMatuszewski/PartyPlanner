@@ -27,7 +27,9 @@ const ChatEmptySection = (props: Props) => {
     <ChatEmptySectionWrapper>
       {props.image && props.image.length > 0 && <img src={props.image} />}
       <Typography.Title level={4}>{props.title}</Typography.Title>
-      <Typography.Text type="secondary">{props.description}</Typography.Text>
+      <Typography.Text type="secondary" style={{ textAlign: 'center' }}>
+        {props.description}
+      </Typography.Text>
     </ChatEmptySectionWrapper>
   );
 };

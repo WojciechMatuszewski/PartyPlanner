@@ -68,22 +68,22 @@ const ChatWindow: React.FC = () => {
     isWithinBottomScrollLockZone
   } = useBottomScrollLock(250);
 
-  const scrollToBottom = React.useCallback(() => {
-    if (!data || !data.messagesConnection) return;
-    scrolledInitially.current = true;
-    setScrollToIndex(data.messagesConnection.edges.length);
-  }, [data, scrollToIndex]);
+  // const scrollToBottom = React.useCallback(() => {
+  //   if (!data || !data.messagesConnection) return;
+  //   scrolledInitially.current = true;
+  //   setScrollToIndex(data.messagesConnection.edges.length);
+  // }, [data, scrollToIndex]);
 
-  const handleSubscriptionMessage = React.useCallback(() => {
-    if (!isWithinBottomScrollLockZone) {
-      setUnreadCount(prevUnread => prevUnread + 1);
-    } else scrollToParticularIndex(getLengthOfCurrentMessages());
-  }, [isWithinBottomScrollLockZone]);
+  // const handleSubscriptionMessage = React.useCallback(() => {
+  //   if (!isWithinBottomScrollLockZone) {
+  //     setUnreadCount(prevUnread => prevUnread + 1);
+  //   } else scrollToParticularIndex(getLengthOfCurrentMessages());
+  // }, [isWithinBottomScrollLockZone]);
 
-  const getLengthOfCurrentMessages = React.useCallback(() => {
-    if (!data || !data.messagesConnection.edges) return 0;
-    return data.messagesConnection.edges.length;
-  }, [data]);
+  // const getLengthOfCurrentMessages = React.useCallback(() => {
+  //   if (!data || !data.messagesConnection.edges) return 0;
+  //   return data.messagesConnection.edges.length;
+  // }, [data]);
 
   const getStartCursor = React.useCallback(() => {
     return data!.messagesConnection.pageInfo.startCursor;
@@ -244,7 +244,11 @@ const ChatWindow: React.FC = () => {
   }
 
   function handleVirtualizedGridMessagesLengthChanged(currentLength: number) {
-    if (scrolledInitially.current && !isScrollingOnPrepend.current)
+    if (
+      scrolledInitially.current &&
+      !isScrollingOnPrepend.current &&
+      isWithinBottomScrollLockZone
+    )
       scrollToParticularIndex(currentLength);
   }
 
@@ -260,6 +264,23 @@ const ChatWindow: React.FC = () => {
       !fetchMoreState.error &&
       !fetchMoreState.loadingMore
     );
+  }
+
+  function getLengthOfCurrentMessages() {
+    if (!data || !data.messagesConnection.edges) return 0;
+    return data.messagesConnection.edges.length;
+  }
+
+  function handleSubscriptionMessage() {
+    if (!isWithinBottomScrollLockZone) {
+      setUnreadCount(prevUnread => prevUnread + 1);
+    } else scrollToParticularIndex(getLengthOfCurrentMessages());
+  }
+
+  function scrollToBottom() {
+    if (!data || !data.messagesConnection) return;
+    scrolledInitially.current = true;
+    setScrollToIndex(data.messagesConnection.edges.length);
   }
 };
 

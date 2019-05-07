@@ -3,7 +3,7 @@ import { Track } from 'spotify-web-sdk';
 import { Subject } from 'rxjs';
 
 export interface UseBigMusicPlayerCommandsPayload {
-  command: 'toggle';
+  command: 'toggle' | 'pause';
   trackInQuestion: Track;
 }
 

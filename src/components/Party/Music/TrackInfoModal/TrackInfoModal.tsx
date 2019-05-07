@@ -16,6 +16,7 @@ import {
   GreenSpotifyButtonStyles,
   FlexBoxFullCenteredStyles
 } from '@shared/styles';
+import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 
 const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
 
@@ -67,6 +68,8 @@ const TrackInfoModalBodyWrapper = styled.div`
 `;
 
 const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
+  const { audioPlayerCommands$ } = useBigMusicPlayer();
+
   return (
     <TrackInfoModalBodyWrapper>
       <TrackInfoModalBasicInfo track={track} />
@@ -79,13 +82,18 @@ const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
           FlexBoxFullCenteredStyles
         ]}
         size="large"
-        onClick={() => window.open(track.uri)}
+        onClick={handleOnSpotifyButtonClick}
       >
         <Icon component={SpotifyIcon} css={[SpotifyIconStyles]} />
         Listen on Spotify!
       </Button>
     </TrackInfoModalBodyWrapper>
   );
+
+  function handleOnSpotifyButtonClick() {
+    audioPlayerCommands$.next({ command: 'pause', trackInQuestion: track });
+    window.open(track.externalUrls.spotify);
+  }
 };
 
 const TrackInfoModal: React.FC = () => {

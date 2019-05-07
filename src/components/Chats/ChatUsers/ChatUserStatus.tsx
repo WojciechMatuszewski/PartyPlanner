@@ -7,7 +7,7 @@ const UserStatusWrapper = styled.div`
   height: 100%;
   ${FlexBoxFullCenteredStyles}
   margin-left:auto;
-  padding-right: 8px;
+  padding-right: 12px;
 `;
 
 const StatusDot = styled.div<Props>`

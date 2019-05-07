@@ -11,7 +11,10 @@ import { render, wait, fireEvent } from 'react-testing-library';
 import { ApolloProvider } from 'react-apollo-hooks';
 import { MockedProvider } from 'react-apollo/test-utils';
 import { ChatsContext } from '@pages/chats';
-import ChatsMenu from '@components/Chats/ChatsMenu';
+import ChatsMenu, {
+  CHATS_MENU_PAGE_SIZE,
+  CHATS_MENU_ORDER_BY
+} from '@components/Chats/ChatsMenu';
 import { createMockedApolloClient } from '@shared/testUtils';
 import '../__mocks__/matchMedia';
 const CURRENTLY_SELECTED_CHAT_ID = '1';
@@ -118,7 +121,8 @@ function makeVariables(title: string = '') {
         normalizedTitle_contains: title
       }
     },
-    first: 10
+    first: CHATS_MENU_PAGE_SIZE,
+    orderBy: CHATS_MENU_ORDER_BY
   };
 }
 
