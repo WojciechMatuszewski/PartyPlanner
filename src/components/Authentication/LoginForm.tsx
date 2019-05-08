@@ -9,6 +9,7 @@ import { MutationFn, MutationResult } from 'react-apollo';
 
 import GraphqlError from '@components/GraphqlError';
 import { handleLogin } from './AuthService';
+import Link from 'next/link';
 interface FormValues {
   email: string;
   password: string;
@@ -86,7 +87,9 @@ const LoginForm: React.FC<{
             >
               Login
             </Button>
-            <a>Forgot password ? </a>
+            <Link href="/forgot-password">
+              <a>Forgot password ? </a>
+            </Link>
           </LoginControlsWrapper>
           <div style={{ marginTop: 24 }}>
             <GraphqlError error={error} />

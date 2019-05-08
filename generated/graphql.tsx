@@ -517,6 +517,50 @@ export interface UserWhereInput {
 
   thirdPartyId_not_ends_with?: Maybe<string>;
 
+  resetToken?: Maybe<string>;
+
+  resetToken_not?: Maybe<string>;
+
+  resetToken_in?: Maybe<string[]>;
+
+  resetToken_not_in?: Maybe<string[]>;
+
+  resetToken_lt?: Maybe<string>;
+
+  resetToken_lte?: Maybe<string>;
+
+  resetToken_gt?: Maybe<string>;
+
+  resetToken_gte?: Maybe<string>;
+
+  resetToken_contains?: Maybe<string>;
+
+  resetToken_not_contains?: Maybe<string>;
+
+  resetToken_starts_with?: Maybe<string>;
+
+  resetToken_not_starts_with?: Maybe<string>;
+
+  resetToken_ends_with?: Maybe<string>;
+
+  resetToken_not_ends_with?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
+
+  resetTokenExpiry_not?: Maybe<DateTime>;
+
+  resetTokenExpiry_in?: Maybe<DateTime[]>;
+
+  resetTokenExpiry_not_in?: Maybe<DateTime[]>;
+
+  resetTokenExpiry_lt?: Maybe<DateTime>;
+
+  resetTokenExpiry_lte?: Maybe<DateTime>;
+
+  resetTokenExpiry_gt?: Maybe<DateTime>;
+
+  resetTokenExpiry_gte?: Maybe<DateTime>;
+
   AND?: Maybe<UserWhereInput[]>;
 
   OR?: Maybe<UserWhereInput[]>;
@@ -1066,6 +1110,10 @@ export interface UserCreateInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface PartyCreateManyWithoutMembersInput {
@@ -1162,6 +1210,10 @@ export interface UserCreateWithoutFriendsInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserCreateManyWithoutPendingInvitationsInput {
@@ -1196,6 +1248,10 @@ export interface UserCreateWithoutPendingInvitationsInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface ChatCreateManyWithoutMembersInput {
@@ -1258,6 +1314,10 @@ export interface UserCreateWithoutPartiesInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserCreateManyWithoutChatsInput {
@@ -1292,6 +1352,10 @@ export interface UserCreateWithoutChatsInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface ChatUpdateInput {
@@ -1372,6 +1436,10 @@ export interface UserUpdateDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface PartyUpdateManyWithoutMembersInput {
@@ -1930,6 +1998,10 @@ export interface UserUpdateWithoutFriendsDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserUpdateManyWithoutPendingInvitationsInput {
@@ -1982,6 +2054,10 @@ export interface UserUpdateWithoutPendingInvitationsDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface ChatUpdateManyWithoutMembersInput {
@@ -2501,6 +2577,50 @@ export interface UserScalarWhereInput {
 
   thirdPartyId_not_ends_with?: Maybe<string>;
 
+  resetToken?: Maybe<string>;
+
+  resetToken_not?: Maybe<string>;
+
+  resetToken_in?: Maybe<string[]>;
+
+  resetToken_not_in?: Maybe<string[]>;
+
+  resetToken_lt?: Maybe<string>;
+
+  resetToken_lte?: Maybe<string>;
+
+  resetToken_gt?: Maybe<string>;
+
+  resetToken_gte?: Maybe<string>;
+
+  resetToken_contains?: Maybe<string>;
+
+  resetToken_not_contains?: Maybe<string>;
+
+  resetToken_starts_with?: Maybe<string>;
+
+  resetToken_not_starts_with?: Maybe<string>;
+
+  resetToken_ends_with?: Maybe<string>;
+
+  resetToken_not_ends_with?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
+
+  resetTokenExpiry_not?: Maybe<DateTime>;
+
+  resetTokenExpiry_in?: Maybe<DateTime[]>;
+
+  resetTokenExpiry_not_in?: Maybe<DateTime[]>;
+
+  resetTokenExpiry_lt?: Maybe<DateTime>;
+
+  resetTokenExpiry_lte?: Maybe<DateTime>;
+
+  resetTokenExpiry_gt?: Maybe<DateTime>;
+
+  resetTokenExpiry_gte?: Maybe<DateTime>;
+
   AND?: Maybe<UserScalarWhereInput[]>;
 
   OR?: Maybe<UserScalarWhereInput[]>;
@@ -2532,6 +2652,10 @@ export interface UserUpdateManyDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutFriendsInput {
@@ -2598,6 +2722,10 @@ export interface UserUpdateWithoutPartiesDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutPartiesInput {
@@ -2664,6 +2792,10 @@ export interface UserUpdateWithoutChatsDataInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutChatsInput {
@@ -2830,6 +2962,10 @@ export interface UserUpdateInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -2850,6 +2986,10 @@ export interface UserUpdateManyMutationInput {
   avatar?: Maybe<string>;
 
   thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
 }
 
 export interface ChatSubscriptionWhereInput {
@@ -3019,7 +3159,11 @@ export enum UserOrderByInput {
   AvatarAsc = 'avatar_ASC',
   AvatarDesc = 'avatar_DESC',
   ThirdPartyIdAsc = 'thirdPartyId_ASC',
-  ThirdPartyIdDesc = 'thirdPartyId_DESC'
+  ThirdPartyIdDesc = 'thirdPartyId_DESC',
+  ResetTokenAsc = 'resetToken_ASC',
+  ResetTokenDesc = 'resetToken_DESC',
+  ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
+  ResetTokenExpiryDesc = 'resetTokenExpiry_DESC'
 }
 
 export enum ChatOrderByInput {
@@ -3179,6 +3323,22 @@ export type CreateMessageAuthor = {
   avatar: Maybe<string>;
 
   id: string;
+};
+
+export type RequestPasswordResetVariables = {
+  email: string;
+};
+
+export type RequestPasswordResetMutation = {
+  __typename?: 'Mutation';
+
+  requestReset: Maybe<RequestPasswordResetRequestReset>;
+};
+
+export type RequestPasswordResetRequestReset = {
+  __typename?: 'SuccessMessage';
+
+  message: string;
 };
 
 export type UpdateUserVariables = {
@@ -3606,23 +3766,25 @@ export type MessageFragmentAuthor = {
   id: string;
 };
 
-export type LastChatMessageFragment = {
+export type LastChatMessageFragmentFragment = {
   __typename?: 'Chat';
 
-  messages: Maybe<LastChatMessageMessages[]>;
+  messages: Maybe<LastChatMessageFragmentMessages[]>;
+
+  hasUnreadMessages: boolean;
 };
 
-export type LastChatMessageMessages = {
+export type LastChatMessageFragmentMessages = {
   __typename?: 'Message';
 
   createdAt: DateTime;
 
   content: string;
 
-  author: LastChatMessageAuthor;
+  author: LastChatMessageFragmentAuthor;
 };
 
-export type LastChatMessageAuthor = {
+export type LastChatMessageFragmentAuthor = {
   __typename?: 'User';
 
   firstName: string;
@@ -3683,8 +3845,8 @@ export const MessageFragmentFragmentDoc = gql`
   }
 `;
 
-export const LastChatMessageFragmentDoc = gql`
-  fragment LAST_CHAT_MESSAGE on Chat {
+export const LastChatMessageFragmentFragmentDoc = gql`
+  fragment LAST_CHAT_MESSAGE_FRAGMENT on Chat {
     messages(last: 1) {
       createdAt
       content
@@ -3693,6 +3855,7 @@ export const LastChatMessageFragmentDoc = gql`
         lastName
       }
     }
+    hasUnreadMessages @client
   }
 `;
 
@@ -3845,6 +4008,44 @@ export function useCreateMessage(
     CreateMessageMutation,
     CreateMessageVariables
   >(CreateMessageDocument, baseOptions);
+}
+export const RequestPasswordResetDocument = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestReset(email: $email) {
+      message
+    }
+  }
+`;
+export class RequestPasswordResetComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      RequestPasswordResetMutation,
+      RequestPasswordResetVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        RequestPasswordResetMutation,
+        RequestPasswordResetVariables
+      >
+        mutation={RequestPasswordResetDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useRequestPasswordReset(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    RequestPasswordResetMutation,
+    RequestPasswordResetVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    RequestPasswordResetMutation,
+    RequestPasswordResetVariables
+  >(RequestPasswordResetDocument, baseOptions);
 }
 export const UpdateUserDocument = gql`
   mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
