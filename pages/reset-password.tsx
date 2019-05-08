@@ -1,10 +1,17 @@
 import React from 'react';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
+import { NextFunctionComponent } from 'next';
 
 const ResetPassword: React.FC = () => {
   return <div>Works</div>;
 };
 
-export default withApolloAuth({ userHasToBe: 'notAuthenticated' })(
+const Test: any = withApolloAuth({ userHasToBe: 'authenticated' })(
   ResetPassword
 );
+
+Test.getInitialProps = async function() {
+  console.log('works');
+};
+
+export default Test;
