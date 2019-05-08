@@ -3341,6 +3341,24 @@ export type RequestPasswordResetRequestReset = {
   message: string;
 };
 
+export type ResetPasswordVariables = {
+  password: string;
+  confirmPassword: string;
+  resetToken: string;
+};
+
+export type ResetPasswordMutation = {
+  __typename?: 'Mutation';
+
+  resetPassword: Maybe<ResetPasswordResetPassword>;
+};
+
+export type ResetPasswordResetPassword = {
+  __typename?: 'AuthPayload';
+
+  token: string;
+};
+
 export type UpdateUserVariables = {
   data: UserUpdateInput;
   where: UserWhereUniqueInput;
@@ -4046,6 +4064,46 @@ export function useRequestPasswordReset(
     RequestPasswordResetMutation,
     RequestPasswordResetVariables
   >(RequestPasswordResetDocument, baseOptions);
+}
+export const ResetPasswordDocument = gql`
+  mutation ResetPassword(
+    $password: String!
+    $confirmPassword: String!
+    $resetToken: String!
+  ) {
+    resetPassword(
+      password: $password
+      confirmPassword: $confirmPassword
+      resetToken: $resetToken
+    ) {
+      token
+    }
+  }
+`;
+export class ResetPasswordComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<ResetPasswordMutation, ResetPasswordVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<ResetPasswordMutation, ResetPasswordVariables>
+        mutation={ResetPasswordDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useResetPassword(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    ResetPasswordMutation,
+    ResetPasswordVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    ResetPasswordMutation,
+    ResetPasswordVariables
+  >(ResetPasswordDocument, baseOptions);
 }
 export const UpdateUserDocument = gql`
   mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {

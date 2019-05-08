@@ -2,7 +2,7 @@ import { NextContext } from 'next';
 import { ApolloClient } from 'apollo-boost';
 import { parseCookies } from './withApollo';
 import redirect from './redirect';
-import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
+import { MeQueryQuery, MeQueryDocument, MeQueryMe } from '@generated/graphql';
 import { handleLogout } from '@components/Authentication/AuthService';
 
 interface ApolloAuthenticatorProps {
@@ -24,13 +24,13 @@ export function makeApolloAuthenticator({
     authenticate
   };
 
-  async function authenticate() {
+  async function authenticate(): Promise<{ me: MeQueryMe } | null> {
     const hasRequestToken = doesRequestTokenExists();
 
     if (!hasRequestToken) {
       if (userHasToBe == 'authenticated')
         return redirectWithCheck('/login', {}, {});
-      else return {};
+      else return null;
     }
 
     const userData = await getUserDataFromServer();
@@ -38,13 +38,14 @@ export function makeApolloAuthenticator({
     if (!userData) {
       if (userHasToBe == 'authenticated')
         return handleMustBeAuthenticatedNoServerData();
-      else return {};
+      else return null;
     }
 
     if (userData) {
       if (userHasToBe == 'authenticated') return userData;
       else return redirectWithCheck('/dashboard', userData, ctx);
     }
+    return null;
   }
 
   async function getUserDataFromServer() {
@@ -54,7 +55,7 @@ export function makeApolloAuthenticator({
       });
       if (isServerResponseValid(data)) {
         return {
-          me: data.me
+          me: data.me as MeQueryMe
         };
       } else {
         return null;
@@ -76,7 +77,7 @@ export function makeApolloAuthenticator({
 
   function handleMustBeAuthenticatedNoServerData() {
     handleLogout(ctx.apolloClient);
-    return {};
+    return null;
   }
 
   function isServerResponseValid(meData: MeQueryQuery) {

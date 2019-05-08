@@ -22,8 +22,7 @@ export const withApolloAuth = ({
       }
     ) {
       const authenticator = makeApolloAuthenticator({ userHasToBe, ctx });
-      const dataToReturn = await authenticator.authenticate();
-      return dataToReturn;
+      return await authenticator.authenticate();
     }
 
     public render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
-import { Form, Button, Alert } from 'antd';
+import { Form, Button } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { ForgotPasswordFormValues } from '@pages/forgot-password';
 import GraphqlError from '@components/GraphqlError';
@@ -10,7 +10,6 @@ interface Props {
   handleSubmit: FormikProps<ForgotPasswordFormValues>['handleSubmit'];
   loading: boolean;
   error: ApolloError | undefined;
-  success: boolean;
 }
 
 const ForgotPasswordForm: React.FC<Props> = props => {
@@ -42,14 +41,6 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         Request password reset
       </Button>
       <div style={{ marginTop: 24 }}>
-        {props.success && (
-          <Alert
-            message="Email has been send"
-            description="Check your inbox for further instructions"
-            type="success"
-            showIcon={true}
-          />
-        )}
         <GraphqlError error={props.error} />
       </div>
     </Form>

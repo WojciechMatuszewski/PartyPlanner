@@ -8,8 +8,7 @@ import {
 } from '@components/Authentication/styles';
 import { RequestPasswordResetComponent } from '@generated/graphql';
 import ForgotPasswordForm from '@components/Authentication/ForgotPasswordForm';
-import GraphqlError from '@components/GraphqlError';
-import { Alert } from 'antd';
+import { Modal } from 'antd';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
@@ -45,12 +44,13 @@ const ForgotPassword: React.FC = () => {
         <AuthInnerWrapper>
           <h1>Forgot Password</h1>
           <RequestPasswordResetComponent>
-            {(mutate, { loading, error, data }) => (
+            {(mutate, { loading, error }) => (
               <Formik
                 onSubmit={async ({ email }, { resetForm }) => {
                   try {
                     await mutate({ variables: { email } });
                     resetForm();
+                    handleSuccess();
                   } catch (e) {
                     return;
                   }
@@ -59,14 +59,11 @@ const ForgotPassword: React.FC = () => {
                 validationSchema={validationSchema}
               >
                 {({ handleSubmit }) => (
-                  <React.Fragment>
-                    <ForgotPasswordForm
-                      error={error}
-                      success={data != null && error == null}
-                      loading={loading}
-                      handleSubmit={handleSubmit}
-                    />
-                  </React.Fragment>
+                  <ForgotPasswordForm
+                    error={error}
+                    loading={loading}
+                    handleSubmit={handleSubmit}
+                  />
                 )}
               </Formik>
             )}
@@ -75,6 +72,15 @@ const ForgotPassword: React.FC = () => {
       </AuthWrapper>
     </PoseGroup>
   );
+
+  function handleSuccess() {
+    Modal.success({
+      title: 'Success',
+      content:
+        'An email providing further instructions has been sent to your inbox.',
+      centered: true
+    });
+  }
 };
 
 export default withApolloAuth({ userHasToBe: 'notAuthenticated' })(

@@ -57,3 +57,4 @@ export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
     hasUnreadMessages @client
   }
 `;
+
