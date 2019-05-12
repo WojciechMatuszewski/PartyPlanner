@@ -10,7 +10,9 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/login',
     '/register',
     '/social-auth',
-    '/spotify'
+    '/spotify',
+    '/forgot-password',
+    '/reset-password'
   ];
 
   return router ? (

@@ -56,6 +56,22 @@ export const CREATE_MESSAGE_MUTATION = gql`
   }
 `;
 
+export const REQUEST_PASSWORD_RESET_MUTATION = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestReset(email: $email) {
+      message
+    }
+  }
+`
+
+export const RESET_PASSWORD_MUTATION = gql`
+  mutation ResetPassword($password: String!, $confirmPassword: String!, $resetToken: String!) {
+    resetPassword(password: $password, confirmPassword: $confirmPassword, resetToken: $resetToken) {
+      token
+    }
+  }
+`
+
 export const UPDATE_USER_MUTATION = gql`
   mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
     updateUser(data: $data, where: $where) {

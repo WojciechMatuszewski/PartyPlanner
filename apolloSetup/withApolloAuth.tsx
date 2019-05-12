@@ -1,10 +1,7 @@
 import React from 'react';
 import { NextContext } from 'next';
 import { ApolloClient } from 'apollo-boost';
-import redirect from './redirect';
-import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
-import { parseCookies } from './withApollo';
-import { handleLogout } from '@components/Authentication/AuthService';
+import { makeApolloAuthenticator } from './apolloAuthenticator';
 
 export const withApolloAuth = ({
   userHasToBe
@@ -24,41 +21,8 @@ export const withApolloAuth = ({
         isVirtualCall?: boolean;
       }
     ) {
-      function checkCookieValidity() {
-        const { token } = parseCookies(ctx.req);
-
-        if (!token && userHasToBe === 'authenticated') {
-          ctx.pathname !== '/login' && redirect(ctx, '/login');
-          return true;
-        }
-        if (!token && userHasToBe === 'notAuthenticated') {
-          return true;
-        }
-      }
-
-      if (ctx.isVirtualCall) {
-        return ctx;
-      }
-
-      const shouldReturnEmpty = checkCookieValidity();
-
-      if (shouldReturnEmpty) return {};
-
-      try {
-        const response = await ctx.apolloClient.query<MeQueryQuery>({
-          query: MeQueryDocument
-        });
-
-        if (userHasToBe === 'notAuthenticated') {
-          redirect(ctx, '/dashboard');
-        }
-        return {
-          me: response.data.me
-        };
-      } catch (e) {
-        await handleLogout(ctx.apolloClient);
-        return {};
-      }
+      const authenticator = makeApolloAuthenticator({ userHasToBe, ctx });
+      return await authenticator.authenticate();
     }
 
     public render() {
