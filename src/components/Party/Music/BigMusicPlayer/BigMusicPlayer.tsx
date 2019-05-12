@@ -71,7 +71,7 @@ const ControlButtonsWrapper = styled.div`
     }
     padding-bottom: 0;
     button {
-      margin-top: 6px;
+      margin-top: 0;
     }
   }
 `;
@@ -116,7 +116,8 @@ const SliderWrapper = styled.div`
   @media screen and (max-width: 800px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
-    height: 36px;
+    margin-bottom: 12px;
+    margin-top: 4px;
     .ant-slider-dot {
       display: none;
     }
@@ -159,6 +160,7 @@ const BigMusicPlayer: React.FC = () => {
 
   const {
     play,
+    pause,
     setTime,
     skip,
     toggle,
@@ -222,6 +224,11 @@ const BigMusicPlayer: React.FC = () => {
           />
           {isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
         </ControlButtonsWrapper>
+        {isOnMobile && track && (
+          <Typography.Text style={{ order: 1 }} ellipsis={true}>
+            {track.name} by <strong>{track.mainArtists[0].name}</strong>
+          </Typography.Text>
+        )}
         <SliderWrapper>
           <audio ref={audioRef} controls={false} preload="auto" />
           {!isOnMobile && (
@@ -313,6 +320,9 @@ const BigMusicPlayer: React.FC = () => {
     if (command == 'toggle') {
       if (isTrackDifferent) return (shouldPlayOnLoad.current = true);
       return toggle();
+    } else if (command == 'pause') {
+      if (!track) return;
+      pause();
     }
   }
 };

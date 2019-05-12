@@ -33,7 +33,7 @@ const PosedListsWrapper = styled(
 
 init({
   token:
-    'BQDD0eUsbnZVe2L4xoN_8JkMdTQFD1gHPgMwdsZlS2Bd_PrsahBbgjDVZh_PA2N_6rspQHDX14du1UHLkwWPgmO3TdQDt4-4mSh_-W25RupwLXCx9Z3IQsG-AarB-1cVgS8HeDOwdizGWidZv-Kf_8LBtwDM14iU5gs9CFDmh0I21VtzHpLCF0YvkHH4lFYwis7ykHwY62HC0VoDumjhggZHzhL2Pm299iuhTwMsaUtib5qtMwTO18R273r94X-_FGXJuvVOZYDZ9nG_IFe26Bea6dNP-gcgs9X8UgM'
+    'BQBPTytg18MjO6QinYiA0oLa-UX7N1ON_bBqToTGMAoNtWfk_LUUMPaWI7R6eH3XReXKPHtBtnyn80p-lsNKG2aYFW3MH9xUknZ1rsXTfYb1v21tJ-iVsyc9zkgEK8UlclxDJQu-_16LtGgOPCuPoCNt9wAcXSMF45JJrgVRIz_orDdixnYpspfSi1LwJRtDQ_Y5KHULo25-6_QpfF3nNekrM1MCwLFJCDmHrQZdKvyBDmZzjyrfNLeX2i36CiQqRzSf7dtXHzhwM2JZH023I-iL_cOKYdnLwA0oJwo'
 });
 
 export default function Spotify() {

@@ -7,13 +7,17 @@ interface Props {
   userAvatarsData: UserAvatarData[];
 }
 
-const ChatsListChatAvatarBase = styled.div`
+interface AvatarProps {
+  numOfItems: number;
+}
+
+const ChatsListChatAvatarBase = styled.div<AvatarProps>`
   width: 50px;
   height: 50px;
   overflow: hidden;
   border-radius: 50%;
   display: inline-grid;
-  grid-template-columns: ${({ numOfItems }: { numOfItems: number }) =>
+  grid-template-columns: ${({ numOfItems }) =>
     numOfItems === 1 ? '1fr' : '1fr 1fr'};
   grid-gap: ${({ numOfItems }: { numOfItems: number }) =>
     numOfItems === 1 ? '0' : '1px'};
@@ -28,22 +32,20 @@ const BaseSliceStyles = css`
   }
 `;
 
-const LeftSlice = styled.div`
+const LeftSlice = styled.div<AvatarProps>`
   ${BaseSliceStyles};
   grid-row-start: 1;
-  grid-row-end: ${({ numOfItems }: { numOfItems: number }) =>
-    numOfItems < 3 ? '2' : '3'};
+  grid-row-end: ${({ numOfItems }) => (numOfItems < 3 ? '2' : '3')};
   img {
-    margin-left: ${({ numOfItems }: { numOfItems: number }) =>
+    margin-left: ${({ numOfItems }) =>
       numOfItems === 2 ? '-12px' : numOfItems === 3 ? '-8px' : '0'};
   }
 `;
 
-const OtherSlice = styled.div`
+const OtherSlice = styled.div<AvatarProps>`
   ${BaseSliceStyles};
   img {
-    margin-left: ${({ numOfItems }: { numOfItems: number }) =>
-      numOfItems === 1 ? '-12px' : 0};
+    margin-left: ${({ numOfItems }) => (numOfItems === 1 ? '-12px' : 0)};
   }
 `;
 

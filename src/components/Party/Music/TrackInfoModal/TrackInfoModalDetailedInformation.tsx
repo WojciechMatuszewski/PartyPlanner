@@ -3,6 +3,8 @@ import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import { List, Typography } from 'antd';
 
+const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
+
 const DetailedInfoWrapper = styled.div`
   .actions-heading {
     width: 100%;
@@ -15,6 +17,14 @@ const DetailedInfoWrapper = styled.div`
   }
   h4 {
     margin-bottom: 0;
+  }
+  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
+    .ant-list-item {
+      padding: 8px;
+    }
+    .actions-heading {
+      font-size: 16px;
+    }
   }
 `;
 
