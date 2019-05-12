@@ -14,7 +14,7 @@ interface Props {
 
 const ForgotPasswordForm: React.FC<Props> = props => {
   return (
-    <Form onSubmit={props.handleSubmit}>
+    <Form data-testid="forgot-password-form" onSubmit={props.handleSubmit}>
       <Field
         name="email"
         placeholder="Your email address"
@@ -27,7 +27,7 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         name="confirmEmail"
         placeholder="Confirm email address"
         type="email"
-        aria-label="email"
+        aria-label="confirm-email"
         size="large"
         component={FormikInputField}
       />
@@ -37,6 +37,7 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         size="large"
         block={true}
         type="primary"
+        data-testid="forgot-password-submit"
       >
         Request password reset
       </Button>
