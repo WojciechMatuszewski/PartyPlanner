@@ -175,9 +175,11 @@ const AppAuthenticatedHeader: React.FC<WithRouterProps> = ({ router }) => {
 
   const { data: meData } = useMeQuery({ fetchPolicy: 'cache-first' });
 
+  if (!meData || !meData.me) return null;
+
   return (
     <React.Fragment>
-      <UserPresenceReporter userId={meData!.me!.id} />
+      <UserPresenceReporter userId={meData.me.id} />
       {isOnMobile ? (
         <MobileHeader currentRouterPath={routerCurrentPath} />
       ) : (

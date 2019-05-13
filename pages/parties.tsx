@@ -46,6 +46,7 @@ const PartiesPage: NextFunctionComponent<Props & WithRouterProps> = ({
         if (!data.hasParties)
           return (
             <NoData
+              style={{ height: 'auto' }}
               message="You currently do not have any parties"
               action={
                 <Button
