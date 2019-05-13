@@ -16,6 +16,7 @@ const ResetPasswordForm: React.FC<Props> = props => {
   return (
     <Form onSubmit={props.handleSubmit}>
       <Field
+        aria-label="password"
         name="password"
         type="password"
         placeholder="Your new password"
@@ -23,6 +24,7 @@ const ResetPasswordForm: React.FC<Props> = props => {
         size="large"
       />
       <Field
+        aria-label="confirm-password"
         name="confirmPassword"
         type="password"
         placeholder="Confirm your new password"
@@ -30,6 +32,7 @@ const ResetPasswordForm: React.FC<Props> = props => {
         size="large"
       />
       <Button
+        data-testid="reset-password"
         loading={props.loading}
         type="primary"
         size="large"

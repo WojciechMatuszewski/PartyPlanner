@@ -33,7 +33,7 @@ const FAILED_MOCKED_RESPONSE: MockedResponse = {
 
 describe('ForgotPasswordForm', () => {
   it('Correctly calls mutation and resets form on success', async () => {
-    const { getByLabelText, getByTestId, container } = render(
+    const { getByLabelText, getByTestId, queryByTestId } = render(
       <MockedProvider mocks={[SUCCESSFUL_MOCKED_RESPONSE]} addTypename={false}>
         <ForgotPassword />
       </MockedProvider>
@@ -52,10 +52,10 @@ describe('ForgotPasswordForm', () => {
     await wait(() => expect(submitButton).not.toHaveClass('ant-btn-loading'));
     expect(emailInput.nodeValue).toBe(null);
     expect(confirmEmailInput.nodeValue).toBe(null);
-    expect(container.querySelector('graphql-error')).toBe(null);
+    expect(queryByTestId('graphql-error')).toBe(null);
   });
   it('Correctly handles error and resend', async () => {
-    const { getByLabelText, getByTestId, container } = render(
+    const { getByLabelText, getByTestId, queryByTestId } = render(
       <MockedProvider
         mocks={[FAILED_MOCKED_RESPONSE, SUCCESSFUL_MOCKED_RESPONSE]}
         addTypename={false}
@@ -81,6 +81,6 @@ describe('ForgotPasswordForm', () => {
     await wait(() => expect(submitButton).not.toHaveClass('ant-btn-loading'));
     expect(emailInput.nodeValue).toBe(null);
     expect(confirmEmailInput.nodeValue).toBe(null);
-    expect(container.querySelector('graphql-error')).toBe(null);
+    expect(queryByTestId('graphql-error')).toBe(null);
   });
 });
