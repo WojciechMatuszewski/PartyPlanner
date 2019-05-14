@@ -2,7 +2,6 @@ import React from 'react';
 import css from '@emotion/css';
 import { Layout } from 'antd';
 import { SiderProps } from 'antd/lib/layout';
-const { Sider } = Layout;
 
 const ChatSider: React.FC<
   {
@@ -10,7 +9,7 @@ const ChatSider: React.FC<
   } & SiderProps
 > = ({ placement, width, children, ...restOfProps }) => {
   return (
-    <Sider
+    <Layout.Sider
       width={width ? width : 300}
       theme="light"
       collapsible={false}
@@ -27,7 +26,7 @@ const ChatSider: React.FC<
       `}
     >
       {children}
-    </Sider>
+    </Layout.Sider>
   );
 };
 
