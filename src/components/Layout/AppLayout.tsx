@@ -15,18 +15,26 @@ const LayoutStyles = css`
   }
 `;
 
+const HeaderStyles = css`
+  padding: 0;
+  height: auto;
+  box-shadow: 0 2px 8px #f0f1f2;
+  z-index: 2;
+`;
+
 const AppLayout: React.FC<{
   children: React.ReactNode;
   withHeader: boolean;
-}> = ({ children, withHeader }) => {
+  hasSider: boolean;
+}> = ({ children, withHeader, hasSider }) => {
   return (
-    <Layout
-      css={LayoutStyles}
-      hasSider={false}
-      className="global-layout-wrapper"
-    >
-      {withHeader && <AppHeader />}
-      <Layout.Content>{children}</Layout.Content>
+    <Layout className="global-layout-wrapper" css={LayoutStyles}>
+      <Layout.Header css={[HeaderStyles]}>
+        {withHeader && <AppHeader />}
+      </Layout.Header>
+      <Layout hasSider={hasSider} className="test">
+        <Layout.Content>{children}</Layout.Content>
+      </Layout>
     </Layout>
   );
 };

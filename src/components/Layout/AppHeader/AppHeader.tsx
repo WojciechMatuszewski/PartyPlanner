@@ -12,17 +12,16 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/social-auth',
     '/spotify',
     '/forgot-password',
-    '/reset-password'
+    '/reset-password',
+    '/party'
   ];
 
-  return router ? (
-    notAuthenticatedRoutes.includes(router.pathname) ? (
-      <AppNotAuthenticatedHeader />
-    ) : (
-      <AppAuthenticatedHeader />
-    )
-  ) : (
+  if (!router) return null;
+
+  return notAuthenticatedRoutes.includes(router.pathname) ? (
     <AppNotAuthenticatedHeader />
+  ) : (
+    <AppAuthenticatedHeader />
   );
 };
 

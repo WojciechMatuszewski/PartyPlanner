@@ -14,6 +14,7 @@ Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
 const PAGES_WITHOUT_HEADER = ['/social-auth'];
+const PAGES_WITH_SIDER = ['/party'];
 
 class MyApp extends App<{
   apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -30,13 +31,22 @@ class MyApp extends App<{
     return { pageProps, withHeader };
   }
   public render() {
-    const { Component, pageProps, apolloClient, withHeader } = this.props;
+    const {
+      Component,
+      pageProps,
+      apolloClient,
+      withHeader,
+      router
+    } = this.props;
 
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
           <ApolloHooksProvider client={apolloClient}>
-            <AppLayout withHeader={withHeader}>
+            <AppLayout
+              withHeader={withHeader}
+              hasSider={router && PAGES_WITH_SIDER.includes(router.pathname)}
+            >
               <Component {...pageProps} />
             </AppLayout>
           </ApolloHooksProvider>

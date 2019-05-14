@@ -6,3 +6,5 @@ declare module '*.svg' {
 }
 
 declare module 'hex-rgb';
+
+declare module 'rc-drawer';
