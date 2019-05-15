@@ -9,9 +9,8 @@ import UserAvatar from '@components/UserDefaultAvatar';
 import { CalendarContext } from './UserCalendar';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 
-const CalendarEventPopoverWrapper = styled.div`
-  width: ${(props: { isInModal: boolean }) =>
-    props.isInModal ? '100%' : '300px'};
+const CalendarEventPopoverWrapper = styled.div<{ isInModal: boolean }>`
+  width: ${props => (props.isInModal ? '100%' : '300px')};
   .title {
     margin: 0;
   }

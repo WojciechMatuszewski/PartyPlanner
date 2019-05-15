@@ -32,6 +32,10 @@ class MyDocument extends Document<EmotionCritical> {
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <link rel="stylesheet" href="../static/nprogress.css" />
           <link rel="stylesheet" href="../static/utils.css" />
+          <link
+            href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
+            rel="stylesheet"
+          />
         </Head>
         <body className="custom_class">
           <Main />
