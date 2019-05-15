@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
 import withApollo from '../apolloSetup/withApollo';
 import AppLayout from '@components/Layout/AppLayout';
-import Router from 'next/router';
+import Router, { DefaultQuery } from 'next/router';
 import NProgress from 'nprogress';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import { NextContext } from 'next';
@@ -17,7 +17,9 @@ Router.onRouteChangeError = () => NProgress.done();
 const PAGES_WITHOUT_HEADER = ['/social-auth'];
 const PAGES_WITH_SIDER = ['/party'];
 
-export interface NextContextWithApollo extends NextContext {
+export interface NextContextWithApollo<
+  Query extends DefaultQuery = DefaultQuery
+> extends NextContext<Query> {
   apolloClient: ApolloClient<any>;
   isVirtualCall?: boolean;
 }

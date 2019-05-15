@@ -10,7 +10,7 @@ import BusIcon from '@customIcons/bus.svg';
 const ButtonsWrapper = styled.div`
   display: flex;
   margin: 0 auto;
-
+  padding-bottom: 24px !important;
   button {
     margin: 0 5px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 6px 6px rgba(0, 0, 0, 0.015);

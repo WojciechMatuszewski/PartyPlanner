@@ -1,19 +1,23 @@
 import React from 'react';
 import { Row, Col, Typography } from 'antd';
 
-const PartyDashboardBasicInfo: React.FC = () => {
+interface Props {
+  description: string;
+  title: string;
+}
+
+const PartyDashboardBasicInfo: React.FC<Props> = props => {
   return (
     <Row gutter={24} className="dashboard-content-item">
       <Col span={24}>
-        <Typography.Title level={3}>Party Title</Typography.Title>
+        <Typography.Title level={3}>{props.title}</Typography.Title>
       </Col>
       <Col sm={24} lg={16}>
         <Typography.Title level={4}>Description</Typography.Title>
-        <Typography.Paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis
-          possimus, doloremque laboriosam autem, quam aut architecto ex suscipit
-          quasi odit dicta. Perspiciatis debitis quisquam voluptates, eius
-          itaque repellendus exercitationem harum!
+        <Typography.Paragraph
+          type={props.description ? undefined : 'secondary'}
+        >
+          {props.description || 'No description provided'}
         </Typography.Paragraph>
       </Col>
       <Col sm={24} lg={8}>

@@ -6,6 +6,7 @@ import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import useMedia from '@hooks/useMedia';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
+import Link from 'next/link';
 
 const PartiesCardWrapper = styled(
   posed.div({
@@ -224,7 +225,9 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
             </PartyCardLocationWrapper>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>
-            <a>Go to party dashboard</a>
+            <Link href={`/party?id=${party.node.id}`}>
+              <a>Go to party dashboard</a>
+            </Link>
           </PartiesCardMoreInfoItemWrapper>
         </PartiesCardInfoInnerWrapper>
       </PartiesCardInfoWrapper>

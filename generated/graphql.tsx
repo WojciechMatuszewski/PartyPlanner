@@ -1,5 +1,221 @@
 export type Maybe<T> = T | null;
 
+export interface AlbumWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
+export interface ImageWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  height?: Maybe<number>;
+
+  height_not?: Maybe<number>;
+
+  height_in?: Maybe<number[]>;
+
+  height_not_in?: Maybe<number[]>;
+
+  height_lt?: Maybe<number>;
+
+  height_lte?: Maybe<number>;
+
+  height_gt?: Maybe<number>;
+
+  height_gte?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  width_not?: Maybe<number>;
+
+  width_in?: Maybe<number[]>;
+
+  width_not_in?: Maybe<number[]>;
+
+  width_lt?: Maybe<number>;
+
+  width_lte?: Maybe<number>;
+
+  width_gt?: Maybe<number>;
+
+  width_gte?: Maybe<number>;
+
+  url?: Maybe<string>;
+
+  url_not?: Maybe<string>;
+
+  url_in?: Maybe<string[]>;
+
+  url_not_in?: Maybe<string[]>;
+
+  url_lt?: Maybe<string>;
+
+  url_lte?: Maybe<string>;
+
+  url_gt?: Maybe<string>;
+
+  url_gte?: Maybe<string>;
+
+  url_contains?: Maybe<string>;
+
+  url_not_contains?: Maybe<string>;
+
+  url_starts_with?: Maybe<string>;
+
+  url_not_starts_with?: Maybe<string>;
+
+  url_ends_with?: Maybe<string>;
+
+  url_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<ImageWhereInput[]>;
+
+  OR?: Maybe<ImageWhereInput[]>;
+
+  NOT?: Maybe<ImageWhereInput[]>;
+}
+
+export interface ArtistWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  name_not?: Maybe<string>;
+
+  name_in?: Maybe<string[]>;
+
+  name_not_in?: Maybe<string[]>;
+
+  name_lt?: Maybe<string>;
+
+  name_lte?: Maybe<string>;
+
+  name_gt?: Maybe<string>;
+
+  name_gte?: Maybe<string>;
+
+  name_contains?: Maybe<string>;
+
+  name_not_contains?: Maybe<string>;
+
+  name_starts_with?: Maybe<string>;
+
+  name_not_starts_with?: Maybe<string>;
+
+  name_ends_with?: Maybe<string>;
+
+  name_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<ArtistWhereInput[]>;
+
+  OR?: Maybe<ArtistWhereInput[]>;
+
+  NOT?: Maybe<ArtistWhereInput[]>;
+}
+
+export interface AlbumWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  images_every?: Maybe<ImageWhereInput>;
+
+  images_some?: Maybe<ImageWhereInput>;
+
+  images_none?: Maybe<ImageWhereInput>;
+
+  artists_every?: Maybe<ArtistWhereInput>;
+
+  artists_some?: Maybe<ArtistWhereInput>;
+
+  artists_none?: Maybe<ArtistWhereInput>;
+
+  AND?: Maybe<AlbumWhereInput[]>;
+
+  OR?: Maybe<AlbumWhereInput[]>;
+
+  NOT?: Maybe<AlbumWhereInput[]>;
+}
+
+export interface ArtistWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
 export interface ChatWhereUniqueInput {
   id?: Maybe<string>;
 }
@@ -1016,6 +1232,10 @@ export interface GameWhereUniqueInput {
   title?: Maybe<string>;
 }
 
+export interface ImageWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
 export interface LocationWhereUniqueInput {
   id?: Maybe<string>;
 }
@@ -1028,10 +1248,552 @@ export interface PartyWhereUniqueInput {
   id?: Maybe<string>;
 }
 
+export interface PlaylistWhereUniqueInput {
+  id?: Maybe<string>;
+
+  playlist_id?: Maybe<string>;
+}
+
+export interface TrackWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  name_not?: Maybe<string>;
+
+  name_in?: Maybe<string[]>;
+
+  name_not_in?: Maybe<string[]>;
+
+  name_lt?: Maybe<string>;
+
+  name_lte?: Maybe<string>;
+
+  name_gt?: Maybe<string>;
+
+  name_gte?: Maybe<string>;
+
+  name_contains?: Maybe<string>;
+
+  name_not_contains?: Maybe<string>;
+
+  name_starts_with?: Maybe<string>;
+
+  name_not_starts_with?: Maybe<string>;
+
+  name_ends_with?: Maybe<string>;
+
+  name_not_ends_with?: Maybe<string>;
+
+  album?: Maybe<AlbumWhereInput>;
+
+  artists_every?: Maybe<ArtistWhereInput>;
+
+  artists_some?: Maybe<ArtistWhereInput>;
+
+  artists_none?: Maybe<ArtistWhereInput>;
+
+  duration?: Maybe<number>;
+
+  duration_not?: Maybe<number>;
+
+  duration_in?: Maybe<number[]>;
+
+  duration_not_in?: Maybe<number[]>;
+
+  duration_lt?: Maybe<number>;
+
+  duration_lte?: Maybe<number>;
+
+  duration_gt?: Maybe<number>;
+
+  duration_gte?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+
+  preview_url_not?: Maybe<string>;
+
+  preview_url_in?: Maybe<string[]>;
+
+  preview_url_not_in?: Maybe<string[]>;
+
+  preview_url_lt?: Maybe<string>;
+
+  preview_url_lte?: Maybe<string>;
+
+  preview_url_gt?: Maybe<string>;
+
+  preview_url_gte?: Maybe<string>;
+
+  preview_url_contains?: Maybe<string>;
+
+  preview_url_not_contains?: Maybe<string>;
+
+  preview_url_starts_with?: Maybe<string>;
+
+  preview_url_not_starts_with?: Maybe<string>;
+
+  preview_url_ends_with?: Maybe<string>;
+
+  preview_url_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<TrackWhereInput[]>;
+
+  OR?: Maybe<TrackWhereInput[]>;
+
+  NOT?: Maybe<TrackWhereInput[]>;
+}
+
+export interface PlaylistWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  playlist_id?: Maybe<string>;
+
+  playlist_id_not?: Maybe<string>;
+
+  playlist_id_in?: Maybe<string[]>;
+
+  playlist_id_not_in?: Maybe<string[]>;
+
+  playlist_id_lt?: Maybe<string>;
+
+  playlist_id_lte?: Maybe<string>;
+
+  playlist_id_gt?: Maybe<string>;
+
+  playlist_id_gte?: Maybe<string>;
+
+  playlist_id_contains?: Maybe<string>;
+
+  playlist_id_not_contains?: Maybe<string>;
+
+  playlist_id_starts_with?: Maybe<string>;
+
+  playlist_id_not_starts_with?: Maybe<string>;
+
+  playlist_id_ends_with?: Maybe<string>;
+
+  playlist_id_not_ends_with?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  name_not?: Maybe<string>;
+
+  name_in?: Maybe<string[]>;
+
+  name_not_in?: Maybe<string[]>;
+
+  name_lt?: Maybe<string>;
+
+  name_lte?: Maybe<string>;
+
+  name_gt?: Maybe<string>;
+
+  name_gte?: Maybe<string>;
+
+  name_contains?: Maybe<string>;
+
+  name_not_contains?: Maybe<string>;
+
+  name_starts_with?: Maybe<string>;
+
+  name_not_starts_with?: Maybe<string>;
+
+  name_ends_with?: Maybe<string>;
+
+  name_not_ends_with?: Maybe<string>;
+
+  tracks_every?: Maybe<TrackWhereInput>;
+
+  tracks_some?: Maybe<TrackWhereInput>;
+
+  tracks_none?: Maybe<TrackWhereInput>;
+
+  isTemporary?: Maybe<boolean>;
+
+  isTemporary_not?: Maybe<boolean>;
+
+  AND?: Maybe<PlaylistWhereInput[]>;
+
+  OR?: Maybe<PlaylistWhereInput[]>;
+
+  NOT?: Maybe<PlaylistWhereInput[]>;
+}
+
+export interface TrackWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
 export interface UserWhereUniqueInput {
   id?: Maybe<string>;
 
   email?: Maybe<string>;
+}
+
+export interface AlbumCreateInput {
+  id?: Maybe<string>;
+
+  images?: Maybe<ImageCreateManyInput>;
+
+  artists?: Maybe<ArtistCreateManyInput>;
+}
+
+export interface ImageCreateManyInput {
+  create?: Maybe<ImageCreateInput[]>;
+
+  connect?: Maybe<ImageWhereUniqueInput[]>;
+}
+
+export interface ImageCreateInput {
+  id?: Maybe<string>;
+
+  height: number;
+
+  width: number;
+
+  url: string;
+}
+
+export interface ArtistCreateManyInput {
+  create?: Maybe<ArtistCreateInput[]>;
+
+  connect?: Maybe<ArtistWhereUniqueInput[]>;
+}
+
+export interface ArtistCreateInput {
+  id?: Maybe<string>;
+
+  name: string;
+}
+
+export interface AlbumUpdateInput {
+  images?: Maybe<ImageUpdateManyInput>;
+
+  artists?: Maybe<ArtistUpdateManyInput>;
+}
+
+export interface ImageUpdateManyInput {
+  create?: Maybe<ImageCreateInput[]>;
+
+  update?: Maybe<ImageUpdateWithWhereUniqueNestedInput[]>;
+
+  upsert?: Maybe<ImageUpsertWithWhereUniqueNestedInput[]>;
+
+  delete?: Maybe<ImageWhereUniqueInput[]>;
+
+  connect?: Maybe<ImageWhereUniqueInput[]>;
+
+  set?: Maybe<ImageWhereUniqueInput[]>;
+
+  disconnect?: Maybe<ImageWhereUniqueInput[]>;
+
+  deleteMany?: Maybe<ImageScalarWhereInput[]>;
+
+  updateMany?: Maybe<ImageUpdateManyWithWhereNestedInput[]>;
+}
+
+export interface ImageUpdateWithWhereUniqueNestedInput {
+  where: ImageWhereUniqueInput;
+
+  data: ImageUpdateDataInput;
+}
+
+export interface ImageUpdateDataInput {
+  height?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  url?: Maybe<string>;
+}
+
+export interface ImageUpsertWithWhereUniqueNestedInput {
+  where: ImageWhereUniqueInput;
+
+  update: ImageUpdateDataInput;
+
+  create: ImageCreateInput;
+}
+
+export interface ImageScalarWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  height?: Maybe<number>;
+
+  height_not?: Maybe<number>;
+
+  height_in?: Maybe<number[]>;
+
+  height_not_in?: Maybe<number[]>;
+
+  height_lt?: Maybe<number>;
+
+  height_lte?: Maybe<number>;
+
+  height_gt?: Maybe<number>;
+
+  height_gte?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  width_not?: Maybe<number>;
+
+  width_in?: Maybe<number[]>;
+
+  width_not_in?: Maybe<number[]>;
+
+  width_lt?: Maybe<number>;
+
+  width_lte?: Maybe<number>;
+
+  width_gt?: Maybe<number>;
+
+  width_gte?: Maybe<number>;
+
+  url?: Maybe<string>;
+
+  url_not?: Maybe<string>;
+
+  url_in?: Maybe<string[]>;
+
+  url_not_in?: Maybe<string[]>;
+
+  url_lt?: Maybe<string>;
+
+  url_lte?: Maybe<string>;
+
+  url_gt?: Maybe<string>;
+
+  url_gte?: Maybe<string>;
+
+  url_contains?: Maybe<string>;
+
+  url_not_contains?: Maybe<string>;
+
+  url_starts_with?: Maybe<string>;
+
+  url_not_starts_with?: Maybe<string>;
+
+  url_ends_with?: Maybe<string>;
+
+  url_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<ImageScalarWhereInput[]>;
+
+  OR?: Maybe<ImageScalarWhereInput[]>;
+
+  NOT?: Maybe<ImageScalarWhereInput[]>;
+}
+
+export interface ImageUpdateManyWithWhereNestedInput {
+  where: ImageScalarWhereInput;
+
+  data: ImageUpdateManyDataInput;
+}
+
+export interface ImageUpdateManyDataInput {
+  height?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  url?: Maybe<string>;
+}
+
+export interface ArtistUpdateManyInput {
+  create?: Maybe<ArtistCreateInput[]>;
+
+  update?: Maybe<ArtistUpdateWithWhereUniqueNestedInput[]>;
+
+  upsert?: Maybe<ArtistUpsertWithWhereUniqueNestedInput[]>;
+
+  delete?: Maybe<ArtistWhereUniqueInput[]>;
+
+  connect?: Maybe<ArtistWhereUniqueInput[]>;
+
+  set?: Maybe<ArtistWhereUniqueInput[]>;
+
+  disconnect?: Maybe<ArtistWhereUniqueInput[]>;
+
+  deleteMany?: Maybe<ArtistScalarWhereInput[]>;
+
+  updateMany?: Maybe<ArtistUpdateManyWithWhereNestedInput[]>;
+}
+
+export interface ArtistUpdateWithWhereUniqueNestedInput {
+  where: ArtistWhereUniqueInput;
+
+  data: ArtistUpdateDataInput;
+}
+
+export interface ArtistUpdateDataInput {
+  name?: Maybe<string>;
+}
+
+export interface ArtistUpsertWithWhereUniqueNestedInput {
+  where: ArtistWhereUniqueInput;
+
+  update: ArtistUpdateDataInput;
+
+  create: ArtistCreateInput;
+}
+
+export interface ArtistScalarWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  name_not?: Maybe<string>;
+
+  name_in?: Maybe<string[]>;
+
+  name_not_in?: Maybe<string[]>;
+
+  name_lt?: Maybe<string>;
+
+  name_lte?: Maybe<string>;
+
+  name_gt?: Maybe<string>;
+
+  name_gte?: Maybe<string>;
+
+  name_contains?: Maybe<string>;
+
+  name_not_contains?: Maybe<string>;
+
+  name_starts_with?: Maybe<string>;
+
+  name_not_starts_with?: Maybe<string>;
+
+  name_ends_with?: Maybe<string>;
+
+  name_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<ArtistScalarWhereInput[]>;
+
+  OR?: Maybe<ArtistScalarWhereInput[]>;
+
+  NOT?: Maybe<ArtistScalarWhereInput[]>;
+}
+
+export interface ArtistUpdateManyWithWhereNestedInput {
+  where: ArtistScalarWhereInput;
+
+  data: ArtistUpdateManyDataInput;
+}
+
+export interface ArtistUpdateManyDataInput {
+  name?: Maybe<string>;
+}
+
+export interface ArtistUpdateInput {
+  name?: Maybe<string>;
+}
+
+export interface ArtistUpdateManyMutationInput {
+  name?: Maybe<string>;
 }
 
 export interface ChatCreateInput {
@@ -2822,6 +3584,22 @@ export interface GameUpdateManyMutationInput {
   type?: Maybe<GameType>;
 }
 
+export interface ImageUpdateInput {
+  height?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  url?: Maybe<string>;
+}
+
+export interface ImageUpdateManyMutationInput {
+  height?: Maybe<number>;
+
+  width?: Maybe<number>;
+
+  url?: Maybe<string>;
+}
+
 export interface LocationUpdateInput {
   placeName?: Maybe<string>;
 
@@ -2936,6 +3714,272 @@ export interface PartyUpdateManyMutationInput {
   end?: Maybe<DateTime>;
 }
 
+export interface PlaylistCreateInput {
+  id?: Maybe<string>;
+
+  playlist_id?: Maybe<string>;
+
+  name: string;
+
+  tracks?: Maybe<TrackCreateManyInput>;
+
+  isTemporary?: Maybe<boolean>;
+}
+
+export interface TrackCreateManyInput {
+  create?: Maybe<TrackCreateInput[]>;
+
+  connect?: Maybe<TrackWhereUniqueInput[]>;
+}
+
+export interface TrackCreateInput {
+  id?: Maybe<string>;
+
+  name: string;
+
+  album: AlbumCreateOneInput;
+
+  artists?: Maybe<ArtistCreateManyInput>;
+
+  duration: number;
+
+  preview_url: string;
+}
+
+export interface AlbumCreateOneInput {
+  create?: Maybe<AlbumCreateInput>;
+
+  connect?: Maybe<AlbumWhereUniqueInput>;
+}
+
+export interface PlaylistUpdateInput {
+  playlist_id?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  tracks?: Maybe<TrackUpdateManyInput>;
+
+  isTemporary?: Maybe<boolean>;
+}
+
+export interface TrackUpdateManyInput {
+  create?: Maybe<TrackCreateInput[]>;
+
+  update?: Maybe<TrackUpdateWithWhereUniqueNestedInput[]>;
+
+  upsert?: Maybe<TrackUpsertWithWhereUniqueNestedInput[]>;
+
+  delete?: Maybe<TrackWhereUniqueInput[]>;
+
+  connect?: Maybe<TrackWhereUniqueInput[]>;
+
+  set?: Maybe<TrackWhereUniqueInput[]>;
+
+  disconnect?: Maybe<TrackWhereUniqueInput[]>;
+
+  deleteMany?: Maybe<TrackScalarWhereInput[]>;
+
+  updateMany?: Maybe<TrackUpdateManyWithWhereNestedInput[]>;
+}
+
+export interface TrackUpdateWithWhereUniqueNestedInput {
+  where: TrackWhereUniqueInput;
+
+  data: TrackUpdateDataInput;
+}
+
+export interface TrackUpdateDataInput {
+  name?: Maybe<string>;
+
+  album?: Maybe<AlbumUpdateOneRequiredInput>;
+
+  artists?: Maybe<ArtistUpdateManyInput>;
+
+  duration?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+}
+
+export interface AlbumUpdateOneRequiredInput {
+  create?: Maybe<AlbumCreateInput>;
+
+  update?: Maybe<AlbumUpdateDataInput>;
+
+  upsert?: Maybe<AlbumUpsertNestedInput>;
+
+  connect?: Maybe<AlbumWhereUniqueInput>;
+}
+
+export interface AlbumUpdateDataInput {
+  images?: Maybe<ImageUpdateManyInput>;
+
+  artists?: Maybe<ArtistUpdateManyInput>;
+}
+
+export interface AlbumUpsertNestedInput {
+  update: AlbumUpdateDataInput;
+
+  create: AlbumCreateInput;
+}
+
+export interface TrackUpsertWithWhereUniqueNestedInput {
+  where: TrackWhereUniqueInput;
+
+  update: TrackUpdateDataInput;
+
+  create: TrackCreateInput;
+}
+
+export interface TrackScalarWhereInput {
+  id?: Maybe<string>;
+
+  id_not?: Maybe<string>;
+
+  id_in?: Maybe<string[]>;
+
+  id_not_in?: Maybe<string[]>;
+
+  id_lt?: Maybe<string>;
+
+  id_lte?: Maybe<string>;
+
+  id_gt?: Maybe<string>;
+
+  id_gte?: Maybe<string>;
+
+  id_contains?: Maybe<string>;
+
+  id_not_contains?: Maybe<string>;
+
+  id_starts_with?: Maybe<string>;
+
+  id_not_starts_with?: Maybe<string>;
+
+  id_ends_with?: Maybe<string>;
+
+  id_not_ends_with?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  name_not?: Maybe<string>;
+
+  name_in?: Maybe<string[]>;
+
+  name_not_in?: Maybe<string[]>;
+
+  name_lt?: Maybe<string>;
+
+  name_lte?: Maybe<string>;
+
+  name_gt?: Maybe<string>;
+
+  name_gte?: Maybe<string>;
+
+  name_contains?: Maybe<string>;
+
+  name_not_contains?: Maybe<string>;
+
+  name_starts_with?: Maybe<string>;
+
+  name_not_starts_with?: Maybe<string>;
+
+  name_ends_with?: Maybe<string>;
+
+  name_not_ends_with?: Maybe<string>;
+
+  duration?: Maybe<number>;
+
+  duration_not?: Maybe<number>;
+
+  duration_in?: Maybe<number[]>;
+
+  duration_not_in?: Maybe<number[]>;
+
+  duration_lt?: Maybe<number>;
+
+  duration_lte?: Maybe<number>;
+
+  duration_gt?: Maybe<number>;
+
+  duration_gte?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+
+  preview_url_not?: Maybe<string>;
+
+  preview_url_in?: Maybe<string[]>;
+
+  preview_url_not_in?: Maybe<string[]>;
+
+  preview_url_lt?: Maybe<string>;
+
+  preview_url_lte?: Maybe<string>;
+
+  preview_url_gt?: Maybe<string>;
+
+  preview_url_gte?: Maybe<string>;
+
+  preview_url_contains?: Maybe<string>;
+
+  preview_url_not_contains?: Maybe<string>;
+
+  preview_url_starts_with?: Maybe<string>;
+
+  preview_url_not_starts_with?: Maybe<string>;
+
+  preview_url_ends_with?: Maybe<string>;
+
+  preview_url_not_ends_with?: Maybe<string>;
+
+  AND?: Maybe<TrackScalarWhereInput[]>;
+
+  OR?: Maybe<TrackScalarWhereInput[]>;
+
+  NOT?: Maybe<TrackScalarWhereInput[]>;
+}
+
+export interface TrackUpdateManyWithWhereNestedInput {
+  where: TrackScalarWhereInput;
+
+  data: TrackUpdateManyDataInput;
+}
+
+export interface TrackUpdateManyDataInput {
+  name?: Maybe<string>;
+
+  duration?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+}
+
+export interface PlaylistUpdateManyMutationInput {
+  playlist_id?: Maybe<string>;
+
+  name?: Maybe<string>;
+
+  isTemporary?: Maybe<boolean>;
+}
+
+export interface TrackUpdateInput {
+  name?: Maybe<string>;
+
+  album?: Maybe<AlbumUpdateOneRequiredInput>;
+
+  artists?: Maybe<ArtistUpdateManyInput>;
+
+  duration?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+}
+
+export interface TrackUpdateManyMutationInput {
+  name?: Maybe<string>;
+
+  duration?: Maybe<number>;
+
+  preview_url?: Maybe<string>;
+}
+
 export interface UserUpdateInput {
   email?: Maybe<string>;
 
@@ -2992,6 +4036,42 @@ export interface UserUpdateManyMutationInput {
   resetTokenExpiry?: Maybe<DateTime>;
 }
 
+export interface AlbumSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[]>;
+
+  updatedFields_contains?: Maybe<string>;
+
+  updatedFields_contains_every?: Maybe<string[]>;
+
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<AlbumWhereInput>;
+
+  AND?: Maybe<AlbumSubscriptionWhereInput[]>;
+
+  OR?: Maybe<AlbumSubscriptionWhereInput[]>;
+
+  NOT?: Maybe<AlbumSubscriptionWhereInput[]>;
+}
+
+export interface ArtistSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[]>;
+
+  updatedFields_contains?: Maybe<string>;
+
+  updatedFields_contains_every?: Maybe<string[]>;
+
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<ArtistWhereInput>;
+
+  AND?: Maybe<ArtistSubscriptionWhereInput[]>;
+
+  OR?: Maybe<ArtistSubscriptionWhereInput[]>;
+
+  NOT?: Maybe<ArtistSubscriptionWhereInput[]>;
+}
+
 export interface ChatSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[]>;
 
@@ -3026,6 +4106,24 @@ export interface GameSubscriptionWhereInput {
   OR?: Maybe<GameSubscriptionWhereInput[]>;
 
   NOT?: Maybe<GameSubscriptionWhereInput[]>;
+}
+
+export interface ImageSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[]>;
+
+  updatedFields_contains?: Maybe<string>;
+
+  updatedFields_contains_every?: Maybe<string[]>;
+
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<ImageWhereInput>;
+
+  AND?: Maybe<ImageSubscriptionWhereInput[]>;
+
+  OR?: Maybe<ImageSubscriptionWhereInput[]>;
+
+  NOT?: Maybe<ImageSubscriptionWhereInput[]>;
 }
 
 export interface LocationSubscriptionWhereInput {
@@ -3082,6 +4180,42 @@ export interface PartySubscriptionWhereInput {
   NOT?: Maybe<PartySubscriptionWhereInput[]>;
 }
 
+export interface PlaylistSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[]>;
+
+  updatedFields_contains?: Maybe<string>;
+
+  updatedFields_contains_every?: Maybe<string[]>;
+
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<PlaylistWhereInput>;
+
+  AND?: Maybe<PlaylistSubscriptionWhereInput[]>;
+
+  OR?: Maybe<PlaylistSubscriptionWhereInput[]>;
+
+  NOT?: Maybe<PlaylistSubscriptionWhereInput[]>;
+}
+
+export interface TrackSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[]>;
+
+  updatedFields_contains?: Maybe<string>;
+
+  updatedFields_contains_every?: Maybe<string[]>;
+
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<TrackWhereInput>;
+
+  AND?: Maybe<TrackSubscriptionWhereInput[]>;
+
+  OR?: Maybe<TrackSubscriptionWhereInput[]>;
+
+  NOT?: Maybe<TrackSubscriptionWhereInput[]>;
+}
+
 export interface UserSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[]>;
 
@@ -3098,6 +4232,29 @@ export interface UserSubscriptionWhereInput {
   OR?: Maybe<UserSubscriptionWhereInput[]>;
 
   NOT?: Maybe<UserSubscriptionWhereInput[]>;
+}
+
+export enum ImageOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  HeightAsc = 'height_ASC',
+  HeightDesc = 'height_DESC',
+  WidthAsc = 'width_ASC',
+  WidthDesc = 'width_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC'
+}
+
+export enum ArtistOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC'
+}
+
+export enum AlbumOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC'
 }
 
 export enum SocialMediaType {
@@ -3219,6 +4376,28 @@ export enum LocationOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export enum TrackOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  DurationAsc = 'duration_ASC',
+  DurationDesc = 'duration_DESC',
+  PreviewUrlAsc = 'preview_url_ASC',
+  PreviewUrlDesc = 'preview_url_DESC'
+}
+
+export enum PlaylistOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PlaylistIdAsc = 'playlist_id_ASC',
+  PlaylistIdDesc = 'playlist_id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  IsTemporaryAsc = 'isTemporary_ASC',
+  IsTemporaryDesc = 'isTemporary_DESC'
 }
 
 export enum MutationType {
@@ -3468,7 +4647,21 @@ export type PartiesQueryQuery = {
   parties: (Maybe<PartiesQueryParties>)[];
 };
 
-export type PartiesQueryParties = PartyFragmentFragment;
+export type PartiesQueryParties = {
+  __typename?: 'Party';
+
+  location: PartiesQueryLocation;
+} & PartyFragmentFragment;
+
+export type PartiesQueryLocation = {
+  __typename?: 'Location';
+
+  placeName: string;
+
+  latitude: number;
+
+  longitude: number;
+};
 
 export type PaginatePartiesQueryVariables = {
   where?: Maybe<PartyWhereInput>;
@@ -4243,6 +5436,11 @@ export const PartiesQueryDocument = gql`
       first: $first
       last: $last
     ) {
+      location {
+        placeName
+        latitude
+        longitude
+      }
       ...PARTY_FRAGMENT
     }
   }

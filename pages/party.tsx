@@ -11,9 +11,15 @@ import posed from 'react-pose';
 
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { NextFunctionComponent, NextContext } from 'next';
-import { ApolloClient } from 'apollo-boost';
+import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
+import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
+import {
+  PartiesQueryParties,
+  PartiesQueryQuery,
+  PartiesQueryVariables
+} from '@generated/graphql';
+import { PARTIES_QUERY } from '@graphql/queries';
 
 const PartyDashboardMap = dynamic(
   () => import('@components/Party/PartyDashboard/PartyDashboardMap'),
@@ -90,20 +96,38 @@ const LoaderWrapper = styled(
   ${FlexBoxFullCenteredStyles};
 `;
 
-const Party: NextFunctionComponent<{}, {}, NextContextWithApollo> = () => {
+type RouteQueryProps = { id?: string };
+
+interface InjectedProps {
+  party: PartiesQueryParties | null;
+}
+
+const Party: NextFunctionComponent<
+  InjectedProps,
+  InjectedProps,
+  NextContextWithApollo<RouteQueryProps>
+> = ({ party }) => {
   const [mapLoaded, setMapLoaded] = React.useState<boolean>(false);
+  if (!party) return null;
+
   return (
     <React.Fragment>
       <PartyMenu />
       <PartyDashboardContentWrapper>
-        <PartyDashboardBasicInfo />
+        <PartyDashboardBasicInfo
+          description={party.description}
+          title={party.title}
+        />
         <Row
           css={[PartyMapRowStyles]}
           className="dashboard-content-item no-padding-mobile"
         >
           <Col span={24} css={[PartyMapColumnStyles]}>
             <MapWrapper pose={mapLoaded ? 'visible' : 'hidden'}>
-              <PartyDashboardMap onMapLoaded={() => setMapLoaded(true)} />
+              <PartyDashboardMap
+                location={party.location}
+                onMapLoaded={() => setMapLoaded(true)}
+              />
             </MapWrapper>
             <LoaderWrapper pose={mapLoaded ? 'hidden' : 'visible'}>
               <GraphqlInlineLoading />
@@ -111,7 +135,10 @@ const Party: NextFunctionComponent<{}, {}, NextContextWithApollo> = () => {
           </Col>
         </Row>
 
-        <PartyDashboardLocationSecondary />
+        <PartyDashboardLocationSecondary
+          placeName={party.location.placeName}
+          title={party.title}
+        />
         <PartyDashboardCommuteButtons />
       </PartyDashboardContentWrapper>
     </React.Fragment>
@@ -119,7 +146,42 @@ const Party: NextFunctionComponent<{}, {}, NextContextWithApollo> = () => {
 };
 
 Party.getInitialProps = async context => {
-  console.log(Object.keys(context));
+  const userData = await ApolloAuthenticator.authenticateRoute({
+    userHasToBe: 'authenticated',
+    ctx: context
+  });
+
+  if (!userData) return { party: null };
+
+  const {
+    query: { id: partyId }
+  } = context;
+  if (!partyId) {
+    return { party: null };
+  }
+
+  try {
+    const { data } = await context.apolloClient.query<
+      PartiesQueryQuery,
+      PartiesQueryVariables
+    >({
+      query: PARTIES_QUERY,
+      variables: {
+        where: {
+          id: partyId,
+          members_some: {
+            id: userData.me.id
+          }
+        }
+      }
+    });
+    const {
+      parties: [party]
+    } = data;
+    return { party };
+  } catch (e) {
+    return { party: null };
+  }
 };
 
 export default Party;

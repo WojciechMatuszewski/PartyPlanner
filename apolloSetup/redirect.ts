@@ -2,6 +2,7 @@ import Router from 'next/router';
 import { NextContext } from 'next';
 
 export default (context: NextContext, target: string) => {
+  console.log(context, target);
   if (context.res) {
     // server
     // 303: "See other"

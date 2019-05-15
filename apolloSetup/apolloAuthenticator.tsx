@@ -20,7 +20,7 @@ const ApolloAuthenticator = (function() {
 
     if (!hasRequestToken) {
       if (userHasToBe == 'authenticated')
-        return redirectWithCheck('/login', {}, {});
+        return redirectWithCheck('/login', {}, ctx);
       else return null;
     }
 
@@ -39,7 +39,7 @@ const ApolloAuthenticator = (function() {
     return null;
   }
 
-  async function getUserDataFromServer(ctx: ApolloAuthenticatorContext) {
+  async function getUserDataFromServer(ctx: NextContextWithApollo) {
     try {
       const { data } = await ctx.apolloClient.query<MeQueryQuery>({
         query: MeQueryDocument
@@ -56,19 +56,18 @@ const ApolloAuthenticator = (function() {
     }
   }
 
-  function doesRequestTokenExists(ctx: ApolloAuthenticatorContext) {
+  function doesRequestTokenExists(ctx: NextContextWithApollo) {
     const { token } = parseCookies(ctx.req);
     return token != null && token.trim().length > 0;
   }
 
   function redirectWithCheck(route: string, dataToReturn: any, ctx: any) {
+    console.log('REDIRECTING WITH CHECK');
     ctx.pathname != route && redirect(ctx as any, route);
     return dataToReturn;
   }
 
-  function handleMustBeAuthenticatedNoServerData(
-    ctx: ApolloAuthenticatorContext
-  ) {
+  function handleMustBeAuthenticatedNoServerData(ctx: NextContextWithApollo) {
     handleLogout(ctx.apolloClient);
     return null;
   }
