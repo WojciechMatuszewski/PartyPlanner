@@ -1,6 +1,6 @@
 import React from 'react';
 import PartyMenu from '@components/Party/PartyMenu';
-import { Row, Col, Typography, Divider, Input } from 'antd';
+import { Row, Col } from 'antd';
 import dynamic from 'next/dynamic';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
 import css from '@emotion/css';
@@ -11,8 +11,9 @@ import posed from 'react-pose';
 
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { NextFunctionComponent } from 'next';
-import { HeaderSearch } from 'ant-design-pro';
+import { NextFunctionComponent, NextContext } from 'next';
+import { ApolloClient } from 'apollo-boost';
+import { NextContextWithApollo } from './_app';
 
 const PartyDashboardMap = dynamic(
   () => import('@components/Party/PartyDashboard/PartyDashboardMap'),
@@ -89,7 +90,7 @@ const LoaderWrapper = styled(
   ${FlexBoxFullCenteredStyles};
 `;
 
-const Party: NextFunctionComponent = () => {
+const Party: NextFunctionComponent<{}, {}, NextContextWithApollo> = () => {
   const [mapLoaded, setMapLoaded] = React.useState<boolean>(false);
   return (
     <React.Fragment>
@@ -112,23 +113,13 @@ const Party: NextFunctionComponent = () => {
 
         <PartyDashboardLocationSecondary />
         <PartyDashboardCommuteButtons />
-        <Row className="dashboard-content-item">
-          <Col span={12}>
-            <Typography.Title level={4} style={{ marginBottom: 0 }}>
-              Participants
-            </Typography.Title>
-          </Col>
-          <Col span={12}>
-            <HeaderSearch
-              style={{ borderColor: 'red' }}
-              placeholder="Search for a user"
-            />
-          </Col>
-          <Divider style={{ marginTop: 12 }} />
-        </Row>
       </PartyDashboardContentWrapper>
     </React.Fragment>
   );
+};
+
+Party.getInitialProps = async context => {
+  console.log(Object.keys(context));
 };
 
 export default Party;
