@@ -7,10 +7,6 @@ import css from '@emotion/css';
 import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
 import styled from '@emotion/styled';
 import PartyDashboardLocationSecondary from '@components/Party/PartyDashboard/PartyDashboardLocationSecondary';
-import posed from 'react-pose';
-
-import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
@@ -20,10 +16,15 @@ import {
   PartiesQueryVariables
 } from '@generated/graphql';
 import { PARTIES_QUERY } from '@graphql/queries';
+import GraphqlException from '@components/GraphqlException';
+import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 
 const PartyDashboardMap = dynamic(
   () => import('@components/Party/PartyDashboard/PartyDashboardMap'),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => <GraphqlInlineLoading style={{ height: '100%' }} />
+  }
 );
 
 const BREAKPOINT = '992px';
@@ -32,7 +33,8 @@ const PartyMapColumnStyles = css`
   position: relative;
   width: 100%;
   height: 300px;
-  background: white;
+  background: #e8e8e8;
+  border-radius: 4px;
   @media screen and (max-width: ${BREAKPOINT}) {
     box-shadow: none;
   }
@@ -58,80 +60,46 @@ const PartyDashboardContentWrapper = styled.section`
   }
 `;
 
-const MapWrapper = styled(
-  posed.div({
-    hidden: {
-      opacity: 0
-    },
-    visible: { opacity: 1 }
-  })
-)`
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-`;
-
-const LoaderWrapper = styled(
-  posed.div({
-    hidden: {
-      opacity: 0,
-      applyAtEnd: {
-        display: 'none'
-      }
-    },
-    visible: {
-      opacity: 1,
-      applyAtStart: {
-        display: 'flex'
-      }
-    }
-  })
-)`
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  ${FlexBoxFullCenteredStyles};
-`;
-
 type RouteQueryProps = { id?: string };
 
 interface InjectedProps {
-  party: PartiesQueryParties | null;
+  partyData: {
+    party: PartiesQueryParties | null;
+    responseType: 'error' | 'success' | 'missingOrUnauthorized';
+  };
 }
 
 const Party: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
   NextContextWithApollo<RouteQueryProps>
-> = ({ party }) => {
-  const [mapLoaded, setMapLoaded] = React.useState<boolean>(false);
-  if (!party) return null;
+> = ({ partyData }) => {
+  if (partyData.responseType == 'missingOrUnauthorized')
+    return (
+      <GraphqlException desc="Party either does not exist or you are not invited" />
+    );
+  if (partyData.responseType == 'error') return null;
+
+  const { party } = partyData as { party: PartiesQueryParties };
 
   return (
     <React.Fragment>
       <PartyMenu />
       <PartyDashboardContentWrapper>
         <PartyDashboardBasicInfo
+          author={party.author}
           description={party.description}
           title={party.title}
+          partyEnd={party.end}
+          partyStart={party.start}
+          placeName={party.location.placeName}
         />
         <Row
           css={[PartyMapRowStyles]}
           className="dashboard-content-item no-padding-mobile"
         >
           <Col span={24} css={[PartyMapColumnStyles]}>
-            <MapWrapper pose={mapLoaded ? 'visible' : 'hidden'}>
-              <PartyDashboardMap
-                location={party.location}
-                onMapLoaded={() => setMapLoaded(true)}
-              />
-            </MapWrapper>
-            <LoaderWrapper pose={mapLoaded ? 'hidden' : 'visible'}>
-              <GraphqlInlineLoading />
-            </LoaderWrapper>
+            <PartyDashboardMap location={party.location} />
           </Col>
         </Row>
 
@@ -139,48 +107,69 @@ const Party: NextFunctionComponent<
           placeName={party.location.placeName}
           title={party.title}
         />
-        <PartyDashboardCommuteButtons />
+        <PartyDashboardCommuteButtons location={party.location} />
       </PartyDashboardContentWrapper>
     </React.Fragment>
   );
 };
 
-Party.getInitialProps = async context => {
+async function getParty(
+  partyId: string,
+  userId: string,
+  context: NextContextWithApollo
+): Promise<InjectedProps> {
+  const {
+    data: { parties }
+  } = await context.apolloClient.query<
+    PartiesQueryQuery,
+    PartiesQueryVariables
+  >({
+    query: PARTIES_QUERY,
+    variables: {
+      where: {
+        id: partyId,
+        members_some: {
+          id: userId
+        }
+      }
+    }
+  });
+
+  const [party] = parties;
+
+  return {
+    partyData: {
+      party,
+      responseType: party ? 'success' : 'missingOrUnauthorized'
+    }
+  };
+}
+
+Party.getInitialProps = async (context): Promise<InjectedProps> => {
   const userData = await ApolloAuthenticator.authenticateRoute({
     userHasToBe: 'authenticated',
     ctx: context
   });
 
-  if (!userData) return { party: null };
+  if (!userData)
+    return {
+      partyData: { party: null, responseType: 'missingOrUnauthorized' }
+    };
 
   const {
     query: { id: partyId }
   } = context;
+
   if (!partyId) {
-    return { party: null };
+    return {
+      partyData: { party: null, responseType: 'missingOrUnauthorized' }
+    };
   }
 
   try {
-    const { data } = await context.apolloClient.query<
-      PartiesQueryQuery,
-      PartiesQueryVariables
-    >({
-      query: PARTIES_QUERY,
-      variables: {
-        where: {
-          id: partyId,
-          members_some: {
-            id: userData.me.id
-          }
-        }
-      }
-    });
-    const {
-      parties: [party]
-    } = data;
-    return { party };
+    return await getParty(partyId, userData.me.id, context);
   } catch (e) {
-    return { party: null };
+    return { partyData: { party: null, responseType: 'error' } };
   }
 };
 

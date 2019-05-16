@@ -1,6 +1,5 @@
 import React from 'react';
 import { NextFunctionComponent, NextContext } from 'next';
-import { makeApolloAuthenticator } from '@apolloSetup/apolloAuthenticator';
 import { ApolloClient } from 'apollo-boost';
 import { withRouter, WithRouterProps } from 'next/router';
 import GraphqlException from '@components/GraphqlException';
@@ -15,6 +14,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { ResetPasswordComponent } from '@generated/graphql';
 import { Modal } from 'antd';
+import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
 
 interface Props {
   hasTokenQuery: boolean;
@@ -116,11 +116,11 @@ const ResetPassword: NextFunctionComponent<
 };
 
 ResetPassword.getInitialProps = async function(ctx) {
-  const authenticator = makeApolloAuthenticator({
+  const dataToReturn = ApolloAuthenticator.authenticateRoute({
     userHasToBe: 'notAuthenticated',
     ctx
   });
-  const dataToReturn = await authenticator.authenticate();
+
   if (dataToReturn != null) {
     return dataToReturn;
   }

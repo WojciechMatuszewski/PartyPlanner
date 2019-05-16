@@ -12,8 +12,7 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/social-auth',
     '/spotify',
     '/forgot-password',
-    '/reset-password',
-    '/party'
+    '/reset-password'
   ];
 
   if (!router) return null;

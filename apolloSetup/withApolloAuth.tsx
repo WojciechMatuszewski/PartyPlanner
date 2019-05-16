@@ -1,6 +1,5 @@
 import React from 'react';
-import { NextContext } from 'next';
-import { ApolloClient } from 'apollo-boost';
+
 import ApolloAuthenticator from './apolloAuthenticator';
 import { NextContextWithApollo } from '@pages/_app';
 

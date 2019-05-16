@@ -62,7 +62,6 @@ const ApolloAuthenticator = (function() {
   }
 
   function redirectWithCheck(route: string, dataToReturn: any, ctx: any) {
-    console.log('REDIRECTING WITH CHECK');
     ctx.pathname != route && redirect(ctx as any, route);
     return dataToReturn;
   }
