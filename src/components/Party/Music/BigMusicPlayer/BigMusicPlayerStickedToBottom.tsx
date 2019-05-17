@@ -64,8 +64,6 @@ const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
   const { track, playerState } = useBigMusicPlayer();
   const previousTrackRef = React.useRef<Track | null>(track);
 
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-
   React.useEffect(() => {
     if (!track) return;
     if (!previousTrackRef.current || previousTrackRef.current.id !== track.id) {
@@ -75,10 +73,7 @@ const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
   }, [track]);
 
   return (
-    <StickedToBottom
-      ref={wrapperRef}
-      pose={props.visible ? 'visible' : 'hidden'}
-    >
+    <StickedToBottom pose={props.visible ? 'visible' : 'hidden'}>
       <Button
         icon={props.visible ? 'caret-down' : 'caret-up'}
         css={[StickedVisibilityTriggerStyles]}

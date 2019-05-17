@@ -32,11 +32,19 @@ const BREAKPOINT = '992px';
 const PartyMapColumnStyles = css`
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 400px;
   background: #e8e8e8;
   border-radius: 4px;
   @media screen and (max-width: ${BREAKPOINT}) {
     box-shadow: none;
+  }
+  .map-wrapper {
+    height: 400px;
+  }
+
+  .fullscreen-enabled .map-wrapper {
+    height: 100%;
+    overflow: hidden;
   }
 `;
 
@@ -50,6 +58,10 @@ const PartyDashboardContentWrapper = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-top: 24px;
+  padding-bottom: 24px;
   .dashboard-content-item {
     padding: 12px 24px;
   }
