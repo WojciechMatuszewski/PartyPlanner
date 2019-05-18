@@ -18,7 +18,7 @@ const LayoutStyles = css`
 const HeaderStyles = css`
   padding: 0;
   height: auto;
-  box-shadow: 0 2px 8px #f0f1f2;
+  /* box-shadow: 0 2px 8px #f0f1f2; */
   z-index: 2;
 `;
 

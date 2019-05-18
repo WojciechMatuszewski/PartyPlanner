@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactMapboxGl, { ZoomControl } from 'react-mapbox-gl';
 import { PartiesQueryLocation } from '@generated/graphql';
-
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
@@ -10,6 +9,10 @@ import PartyDashboardMapMarker from './PartyDashboardMap/PartyDashboardMapMarker
 import PartyDashboardMapPopup from './PartyDashboardMap/PartyDashboardMapPopup';
 import FullScreen from 'react-full-screen';
 import PartyDashboardMapFullscreenButton from './PartyDashboardMap/PartyDashboardMapFullscreenButton';
+import SlidableWithTrigger from '@components/SlidableWithTrigger';
+import PartyDashboardCommuteButtons from './PartyDashboardCommuteButtons';
+import { Button } from 'antd';
+import css from '@emotion/css';
 
 const Map = ReactMapboxGl({
   accessToken: process.env.MAPBOX_TOKEN as string,
@@ -59,6 +62,19 @@ const LoaderWrapper = styled(
   ${FlexBoxFullCenteredStyles};
 `;
 
+const SlidableContainerStyles = css`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: white;
+  transform: translateY(100%);
+  ${FlexBoxFullCenteredStyles};
+`;
+
+const SlidableTriggerStyles = css`
+  left: 12px;
+`;
+
 interface Props {
   location: PartiesQueryLocation;
 }
@@ -69,6 +85,8 @@ const PartyDashboardMap: React.FC<Props> = ({ location }) => {
   const [fullscreenEnabled, setFullscreenEnabled] = React.useState<boolean>(
     false
   );
+  const [slidableExposed, setSlidableExposed] = React.useState<boolean>(false);
+
   return (
     <FullScreen enabled={fullscreenEnabled} onChange={setFullscreenEnabled}>
       <MapWrapper
@@ -97,6 +115,25 @@ const PartyDashboardMap: React.FC<Props> = ({ location }) => {
             fullscreenEnabled={fullscreenEnabled}
             onClick={toggleFullscreen}
           />
+          {fullscreenEnabled ? (
+            <SlidableWithTrigger
+              containerCSS={SlidableContainerStyles}
+              visible={slidableExposed}
+              trigger={suggestedStyles => (
+                <Button
+                  icon={slidableExposed ? 'caret-down' : 'caret-up'}
+                  onClick={handleSlidableTrigger}
+                  css={[suggestedStyles, SlidableTriggerStyles]}
+                >
+                  Commute options
+                </Button>
+              )}
+            >
+              <PartyDashboardCommuteButtons location={location} />
+            </SlidableWithTrigger>
+          ) : (
+            undefined
+          )}
         </Map>
       </MapWrapper>
       <LoaderWrapper pose={mapLoaded ? 'hidden' : 'visible'}>
@@ -111,6 +148,10 @@ const PartyDashboardMap: React.FC<Props> = ({ location }) => {
 
   function handleMapLoaded() {
     setMapLoaded(true);
+  }
+
+  function handleSlidableTrigger() {
+    setSlidableExposed(!slidableExposed);
   }
 };
 

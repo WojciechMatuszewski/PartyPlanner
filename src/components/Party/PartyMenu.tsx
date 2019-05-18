@@ -13,6 +13,7 @@ const MenuStyles = css`
 
 const AffixStyles = css`
   display: flex;
+  z-index: 10;
 `;
 
 const PartyMenu: React.FC = () => {

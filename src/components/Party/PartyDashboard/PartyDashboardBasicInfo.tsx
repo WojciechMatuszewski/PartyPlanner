@@ -61,11 +61,8 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
 
   return (
     <Row gutter={24} className="dashboard-content-item">
-      <Col span={24}>
-        <Typography.Title level={3}>{props.title}</Typography.Title>
-      </Col>
       <Col sm={24} lg={16}>
-        <Typography.Title level={4}>Description</Typography.Title>
+        <Typography.Title level={3}>Description</Typography.Title>
         <Typography.Paragraph
           ellipsis={{ rows: 4, expandable: true }}
           style={{ wordBreak: 'break-all' }}
@@ -74,7 +71,7 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
           {props.description || 'No description provided'}
         </Typography.Paragraph>
         <UserAvatarWrapper>
-          <UserAvatar userData={props.author} shape="square" />
+          <UserAvatar userData={props.author} />
           <div className="creator-info">
             <span>{props.author.firstName}</span>
             <span>{props.author.lastName}</span>
@@ -82,14 +79,14 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
         </UserAvatarWrapper>
       </Col>
       <Col sm={24} lg={8}>
-        <Typography.Title level={4}>Date and time</Typography.Title>
+        <Typography.Title level={3}>Date and time</Typography.Title>
         <BasicInfoList>
           <li>
             <Icon type="calendar" />
             {dateString}
           </li>
         </BasicInfoList>
-        <Typography.Title level={4}>Location</Typography.Title>
+        <Typography.Title level={3}>Location</Typography.Title>
         <BasicInfoList>
           {parsePlaceName(props.placeName).map(
             ({ fragment, iconName }: any, index: number) => (

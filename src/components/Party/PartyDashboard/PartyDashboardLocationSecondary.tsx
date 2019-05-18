@@ -14,7 +14,7 @@ const PartyDashboardLocationSecondary: React.FC<Props> = props => {
       >
         {props.title}
       </Typography.Paragraph>
-      <Typography.Paragraph type="secondary">
+      <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
         {props.placeName}
       </Typography.Paragraph>
     </span>
