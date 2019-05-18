@@ -5,6 +5,7 @@ const composePlugins = require('next-compose-plugins');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+const antdLessLoader = require('next-antd-aza-less');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
@@ -14,6 +15,7 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = composePlugins([withTypescript, withCSS], {
+  // target: 'serverless',
   webpack: config => {
     config.plugins = config.plugins || [];
 
@@ -48,9 +50,6 @@ module.exports = composePlugins([withTypescript, withCSS], {
       new FilterWarningsPlugin({
         exclude: /mini-css-extract-plugin[^]*Conflicting order between:/
       })
-      // new BundleAnalyzerPlugin({
-      //   analyzerMode: 'static'
-      // })
     ];
 
     config.resolve.alias = {

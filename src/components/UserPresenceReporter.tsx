@@ -56,6 +56,7 @@ const UserPresenceReporter: React.FC<Props> = props => {
     await lastOnlineUpdater().then(() => saveToStorage(new Date().getTime()));
   }
 
+  // TODO: edge case here, when it tries to update and user logs off
   async function lastOnlineUpdater() {
     await mutate({
       variables: {

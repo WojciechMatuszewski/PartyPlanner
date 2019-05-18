@@ -56,7 +56,6 @@ interface Props {
 }
 
 const SlidableWithTrigger: React.FC<Props> = props => {
-  console.log(props.visible);
   return (
     <SlidableWrapper
       css={[props.containerCSS]}

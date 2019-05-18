@@ -21,7 +21,6 @@ import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import posed from 'react-pose';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
-import useMedia from '@hooks/useMedia';
 
 const PartyDashboardMap = dynamic(
   () =>

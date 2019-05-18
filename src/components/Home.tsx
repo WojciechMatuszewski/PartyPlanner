@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Button } from 'antd';
+import { Button, Typography } from 'antd';
 import { useSpring, animated } from 'react-spring';
 import { withRouter, WithRouterProps } from 'next/router';
 
@@ -23,10 +23,10 @@ const HomeHeroText = styled(animated.div)`
 
   h3 {
     color: rgba(0, 0, 0, 0.45);
+    margin-top: 0 !important;
   }
 
   h1 {
-    font-size: 32px;
     color: rgb(49, 70, 89);
     margin-bottom: 0;
   }
@@ -65,8 +65,10 @@ const Home: React.FC<WithRouterProps> = ({ router }) => {
   return (
     <HomeHeroImage>
       <HomeHeroText style={animationStyles}>
-        <h1>Simplify your party life</h1>
-        <h3>Organize, make plans, schedule, invite others!</h3>
+        <Typography.Title>Simplify your party life</Typography.Title>
+        <Typography.Title level={3}>
+          Organize, make plans, schedule, invite others!
+        </Typography.Title>
         <HomeHeroControlsWrapper>
           <Button onClick={() => router && router.push('/register')}>
             Register now

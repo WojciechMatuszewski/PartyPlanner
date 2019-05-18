@@ -5,7 +5,6 @@ import SpotifyIcon from '@customIcons/spotify.svg';
 import RCDrawer from 'rc-drawer';
 import 'rc-drawer/dist/rc-drawer.css';
 import useMedia from '@hooks/useMedia';
-import { isBrowser } from '@apolloSetup/initApollo';
 
 const MenuStyles = css`
   height: 100%;

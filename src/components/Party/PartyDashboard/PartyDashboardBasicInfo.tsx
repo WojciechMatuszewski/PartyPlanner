@@ -78,7 +78,7 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
           </div>
         </UserAvatarWrapper>
       </Col>
-      <Col sm={24} lg={8}>
+      <Col sm={24} lg={8} style={{ paddingLeft: 24, paddingRight: 24 }}>
         <Typography.Title level={3}>Date and time</Typography.Title>
         <BasicInfoList>
           <li>
