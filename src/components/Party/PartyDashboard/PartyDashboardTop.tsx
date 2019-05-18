@@ -24,7 +24,7 @@ const RowStyles = css`
 `;
 
 const InfoTileStyles = css`
-  background: white;
+  background: #fafafa;
   border-left: 1px solid #e8e8e8;
   height: 100%;
   padding: 24px;
@@ -74,14 +74,12 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
             by {party.author.firstName} {party.author.lastName}
           </Typography.Paragraph>
         </div>
-        <Typography.Text
-          type="warning"
-          strong={true}
-          style={{ fontSize: 16 }}
-          className="party-type"
-        >
-          Party is set to: {party.isPublic ? 'Public' : 'Private'}
-        </Typography.Text>
+        <div className="party-type">
+          <Typography.Text>Party is set to: </Typography.Text>
+          <Typography.Text type="warning" strong={true}>
+            {party.isPublic ? 'Public' : 'Private'}
+          </Typography.Text>
+        </div>
       </Col>
     </Row>
   );

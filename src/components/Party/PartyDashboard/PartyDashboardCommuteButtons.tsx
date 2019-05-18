@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Icon } from 'antd';
 import styled from '@emotion/styled';
-import { TransparentButtonStyles } from '@shared/styles';
+
 import CarIcon from '@customIcons/car.svg';
 import WalkingIcon from '@customIcons/walking.svg';
 import BicycleIcon from '@customIcons/bicycle.svg';
@@ -15,7 +15,6 @@ const ButtonsWrapper = styled.div`
   display: flex;
   margin: 0 auto;
   button {
-    background: #eee;
     margin: 0 5px;
   }
 `;
@@ -29,7 +28,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
 }) => {
   return (
     <ButtonsWrapper className="dashboard-content-item">
-      <Button css={[TransparentButtonStyles]} size="large" shape="round">
+      <Button size="large" shape="round">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -39,7 +38,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
         </a>
       </Button>
 
-      <Button css={[TransparentButtonStyles]} size="large" shape="round">
+      <Button size="large" shape="round">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -48,7 +47,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
           <Icon component={BusIcon} />
         </a>
       </Button>
-      <Button css={[TransparentButtonStyles]} size="large" shape="round">
+      <Button size="large" shape="round">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -57,7 +56,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
           <Icon component={WalkingIcon} />
         </a>
       </Button>
-      <Button css={[TransparentButtonStyles]} size="large" shape="round">
+      <Button size="large" shape="round">
         <a
           rel="noopener noreferrer"
           target="_blank"

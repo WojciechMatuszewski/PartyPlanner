@@ -5,6 +5,7 @@ import SpotifyIcon from '@customIcons/spotify.svg';
 import RCDrawer from 'rc-drawer';
 import 'rc-drawer/dist/rc-drawer.css';
 import useMedia from '@hooks/useMedia';
+import { isBrowser } from '@apolloSetup/initApollo';
 
 const MenuStyles = css`
   height: 100%;
@@ -17,7 +18,8 @@ const AffixStyles = css`
 `;
 
 const PartyMenu: React.FC = () => {
-  const isOnMobile = useMedia('(max-width:992px)');
+  const isOnMobile = useMedia('(max-width:1080px)');
+
   if (isOnMobile)
     return (
       <DrawerNavigation>

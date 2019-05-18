@@ -28,11 +28,15 @@ const AppLayout: React.FC<{
   hasSider: boolean;
 }> = ({ children, withHeader, hasSider }) => {
   return (
-    <Layout className="global-layout-wrapper" css={LayoutStyles}>
+    <Layout
+      className="global-layout-wrapper"
+      css={LayoutStyles}
+      hasSider={false}
+    >
       <Layout.Header css={[HeaderStyles]}>
         {withHeader && <AppHeader />}
       </Layout.Header>
-      <Layout hasSider={hasSider} className="test">
+      <Layout hasSider={hasSider}>
         <Layout.Content>{children}</Layout.Content>
       </Layout>
     </Layout>

@@ -21,9 +21,13 @@ import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import posed from 'react-pose';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
+import useMedia from '@hooks/useMedia';
 
 const PartyDashboardMap = dynamic(
-  () => import('@components/Party/PartyDashboard/PartyDashboardMap'),
+  () =>
+    import(
+      '@components/Party/PartyDashboard/PartyDashboardMap/PartyDashboardMap'
+    ),
   {
     ssr: false,
     loading: () => <GraphqlInlineLoading style={{ height: '100%' }} />
@@ -91,7 +95,8 @@ const PartyDashboardContentWrapper = styled(
     }
   }
   @media screen and (max-width: 1500px) {
-    margin-top: 0;
+    margin-top: auto;
+    margin-bottom: auto;
     border-radius: 0;
     width: 100%;
     max-width: 100%;
@@ -117,6 +122,9 @@ const PartyBgContainer = styled(
   z-index: 0;
   opacity: 0;
   border-bottom: 1px solid #e8e8e8;
+  @media screen and (max-width: 1500px) {
+    display: none;
+  }
 `;
 
 const PartyBgImage = styled.div`
@@ -128,7 +136,7 @@ const PartyBgImage = styled.div`
 const PosedWrapper = styled(
   posed.div({
     visible: {
-      staggerChildren: 500
+      staggerChildren: 200
     },
     hidden: {}
   })

@@ -5,12 +5,12 @@ import styled from '@emotion/styled';
 import posed from 'react-pose';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import PartyDashboardMapMarker from './PartyDashboardMap/PartyDashboardMapMarker';
-import PartyDashboardMapPopup from './PartyDashboardMap/PartyDashboardMapPopup';
+import PartyDashboardMapMarker from './PartyDashboardMapMarker';
+import PartyDashboardMapPopup from './PartyDashboardMapPopup';
 import FullScreen from 'react-full-screen';
-import PartyDashboardMapFullscreenButton from './PartyDashboardMap/PartyDashboardMapFullscreenButton';
+import PartyDashboardMapFullscreenButton from './PartyDashboardMapFullscreenButton';
 import SlidableWithTrigger from '@components/SlidableWithTrigger';
-import PartyDashboardCommuteButtons from './PartyDashboardCommuteButtons';
+import PartyDashboardCommuteButtons from '../PartyDashboardCommuteButtons';
 import { Button } from 'antd';
 import css from '@emotion/css';
 
