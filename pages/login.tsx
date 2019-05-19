@@ -24,7 +24,7 @@ const Login: React.FC = () => {
             <React.Fragment>
               <Typography.Title>Login</Typography.Title>
               <LoginForm mutate={mutate} mutationResult={mutationResult} />
-              <Typography.Title level={3}>
+              <Typography.Title level={4} type="secondary">
                 Login via social options
               </Typography.Title>
               <LoginSocial disabledFromMutation={mutationResult.loading} />

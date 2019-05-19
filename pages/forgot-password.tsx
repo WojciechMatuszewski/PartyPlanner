@@ -8,7 +8,7 @@ import {
 } from '@components/Authentication/styles';
 import { RequestPasswordResetComponent } from '@generated/graphql';
 import ForgotPasswordForm from '@components/Authentication/ForgotPasswordForm';
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
@@ -42,7 +42,7 @@ const ForgotPassword: React.FC = () => {
           <img src="../static/forgot-password.svg" />
         </AuthImageWrapper>
         <AuthInnerWrapper>
-          <h1>Forgot Password</h1>
+          <Typography.Title>Forgot Password</Typography.Title>
           <RequestPasswordResetComponent>
             {(mutate, { loading, error }) => (
               <Formik

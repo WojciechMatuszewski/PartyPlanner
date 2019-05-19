@@ -5,7 +5,6 @@ const composePlugins = require('next-compose-plugins');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-const antdLessLoader = require('next-antd-aza-less');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;

@@ -2,7 +2,9 @@ import React from 'react';
 import { Input, List, Button, Affix } from 'antd';
 import {
   PaginateUsersQueryNode,
-  PaginateUsersQueryComponent
+  PaginateUsersQueryComponent,
+  useMeQuery,
+  PaginateUsersQueryEdges
 } from '@generated/graphql';
 import UserAvatar from '@components/UserDefaultAvatar';
 import styled from '@emotion/styled';
@@ -12,6 +14,7 @@ import { compose } from 'ramda';
 import NoData from '@components/NoData';
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch } from '@shared/graphqlUtils';
+import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 
 const ModalContentWrapper = styled.div`
   .ant-list-item-meta-avatar {
@@ -30,12 +33,6 @@ const SearchInputStyles = css`
     border-radius: 0;
   }
   margin-bottom: 0;
-`;
-
-const ListContainer = styled.div`
-  max-height: 400px;
-  overflow-y: auto;
-  padding: 0px 6px;
 `;
 
 const PartyDashboardInviteFriendsModalContent: React.FC = () => {
@@ -85,31 +82,14 @@ const PartyDashboardInviteFriendsModalContent: React.FC = () => {
             );
           if (error || !data) return null;
           return (
-            <ListContainer>
-              <List
-                locale={{
-                  emptyText: (
-                    <NoData
-                      cssStyles={css`
-                        img {
-                          height: 200px;
-                        }
-                      `}
-                      message="No results found"
-                      action={null}
-                    />
-                  ) as any
-                }}
-                loading={loading}
-                size="small"
-                dataSource={
-                  data && data.paginateUsers ? data.paginateUsers.edges : []
-                }
-                renderItem={({ node }: { node: PaginateUsersQueryNode }) =>
-                  renderListItem(node)
-                }
-              />
-            </ListContainer>
+            <PartyDashboardInviteFriendsModalList
+              loading={loading}
+              data={
+                data && data.paginateUsers && data.paginateUsers.edges
+                  ? (data.paginateUsers.edges as PaginateUsersQueryEdges[])
+                  : []
+              }
+            />
           );
         }}
       </PaginateUsersQueryComponent>
@@ -124,24 +104,5 @@ const PartyDashboardInviteFriendsModalContent: React.FC = () => {
     return event.currentTarget.value;
   }
 };
-
-function renderListItem(node: PaginateUsersQueryNode) {
-  return (
-    <List.Item
-      key={node.id}
-      actions={[
-        <Button key={1} size="small" type="primary">
-          Invite now!
-        </Button>
-      ]}
-    >
-      <List.Item.Meta
-        avatar={<UserAvatar userData={node} />}
-        title={node.firstName}
-        description={node.lastName}
-      />
-    </List.Item>
-  );
-}
 
 export default PartyDashboardInviteFriendsModalContent;

@@ -13,7 +13,8 @@ import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
 import {
   PartiesQueryParties,
   PartiesQueryQuery,
-  PartiesQueryVariables
+  PartiesQueryVariables,
+  MeQueryMe
 } from '@generated/graphql';
 import { PARTIES_QUERY } from '@graphql/queries';
 import GraphqlException from '@components/GraphqlException';
@@ -63,12 +64,10 @@ const PartyMapRowStyles = css`
 const PartyDashboardContentWrapper = styled(
   posed.section({
     visible: {
-      opacity: 1,
-      y: 0
+      opacity: 1
     },
     hidden: {
-      opacity: 0,
-      y: 100
+      opacity: 0
     }
   })
 )`
@@ -84,7 +83,6 @@ const PartyDashboardContentWrapper = styled(
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   overflow: hidden;
-  transform: translateY(100%);
   .dashboard-content-item {
     padding: 12px 24px;
   }
@@ -151,18 +149,19 @@ interface InjectedProps {
     party: PartiesQueryParties | null;
     responseType: 'error' | 'success' | 'missingOrUnauthorized';
   };
+  userData: MeQueryMe | null;
 }
 
 const Party: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
   NextContextWithApollo<RouteQueryProps>
-> = ({ partyData }) => {
+> = ({ partyData, userData }) => {
   if (partyData.responseType == 'missingOrUnauthorized')
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />
     );
-  if (partyData.responseType == 'error') return null;
+  if (partyData.responseType == 'error' || !userData) return null;
 
   const { party } = partyData as { party: PartiesQueryParties };
 
@@ -202,7 +201,7 @@ async function getParty(
   partyId: string,
   userId: string,
   context: NextContextWithApollo
-): Promise<InjectedProps> {
+): Promise<InjectedProps['partyData']> {
   const {
     data: { parties }
   } = await context.apolloClient.query<
@@ -223,10 +222,8 @@ async function getParty(
   const [party] = parties;
 
   return {
-    partyData: {
-      party,
-      responseType: party ? 'success' : 'missingOrUnauthorized'
-    }
+    party,
+    responseType: party ? 'success' : 'missingOrUnauthorized'
   };
 }
 
@@ -238,7 +235,8 @@ Party.getInitialProps = async (context): Promise<InjectedProps> => {
 
   if (!userData)
     return {
-      partyData: { party: null, responseType: 'missingOrUnauthorized' }
+      partyData: { party: null, responseType: 'missingOrUnauthorized' },
+      userData: null
     };
 
   const {
@@ -247,14 +245,22 @@ Party.getInitialProps = async (context): Promise<InjectedProps> => {
 
   if (!partyId) {
     return {
-      partyData: { party: null, responseType: 'missingOrUnauthorized' }
+      partyData: { party: null, responseType: 'missingOrUnauthorized' },
+      userData: null
     };
   }
 
   try {
-    return await getParty(partyId, userData.me.id, context);
+    const partyData = await getParty(partyId, userData.me.id, context);
+    return {
+      partyData,
+      userData: userData.me
+    };
   } catch (e) {
-    return { partyData: { party: null, responseType: 'error' } };
+    return {
+      partyData: { party: null, responseType: 'error' },
+      userData: null
+    };
   }
 };
 

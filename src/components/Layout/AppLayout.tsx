@@ -31,7 +31,7 @@ const AppLayout: React.FC<{
     <Layout
       className="global-layout-wrapper"
       css={LayoutStyles}
-      hasSider={false}
+      // hasSider={false}
     >
       <Layout.Header css={[HeaderStyles]}>
         {withHeader && <AppHeader />}
