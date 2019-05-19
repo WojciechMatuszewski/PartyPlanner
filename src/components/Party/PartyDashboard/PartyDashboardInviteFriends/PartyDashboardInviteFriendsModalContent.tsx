@@ -1,17 +1,13 @@
 import React from 'react';
-import { Input, List, Button, Affix } from 'antd';
+import { Input, Button, Affix } from 'antd';
 import {
-  PaginateUsersQueryNode,
   PaginateUsersQueryComponent,
-  useMeQuery,
   PaginateUsersQueryEdges
 } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
 import styled from '@emotion/styled';
 import css from '@emotion/css';
 import { debounce } from 'lodash';
 import { compose } from 'ramda';
-import NoData from '@components/NoData';
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
