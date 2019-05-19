@@ -15,14 +15,12 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/reset-password'
   ];
 
-  return router ? (
-    notAuthenticatedRoutes.includes(router.pathname) ? (
-      <AppNotAuthenticatedHeader />
-    ) : (
-      <AppAuthenticatedHeader />
-    )
-  ) : (
+  if (!router) return null;
+
+  return notAuthenticatedRoutes.includes(router.pathname) ? (
     <AppNotAuthenticatedHeader />
+  ) : (
+    <AppAuthenticatedHeader />
   );
 };
 

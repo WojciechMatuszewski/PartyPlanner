@@ -131,8 +131,8 @@ const LocationTypeahead = (props: Props) => {
       placeName: feature.place_name,
       id: feature.id,
       coords: {
-        latitude: feature.geometry.coordinates[0],
-        longitude: feature.geometry.coordinates[1]
+        latitude: feature.geometry.coordinates[1],
+        longitude: feature.geometry.coordinates[0]
       }
     }));
   }

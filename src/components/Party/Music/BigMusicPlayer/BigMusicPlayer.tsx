@@ -82,25 +82,7 @@ const SliderWrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  .ant-slider-track {
-    /* background: #66d26e; */
-  }
 
-  .ant-slider-rail {
-    /* background: #e1e1e1; */
-  }
-
-  .ant-slider-handle {
-    /* border: solid 2px #66d26e; */
-    &:focus {
-      /* border-color: #48aa58; */
-    }
-  }
-  .ant-slider:hover {
-    .ant-slider-track {
-      /* background: #48aa58; */
-    }
-  }
   .ant-slider {
     margin: 0;
     flex: 1;

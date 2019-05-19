@@ -21,9 +21,10 @@ import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
 } from './shared';
-import { ChatError } from './ChatError';
+
 import { Button } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
+import GraphqlInlineError from '@components/GraphqlInlineError';
 
 export const CHATS_MENU_PAGE_SIZE = 10;
 export const CHATS_MENU_ORDER_BY = ChatOrderByInput.CreatedAtAsc;
@@ -100,7 +101,7 @@ const ChatsMenu: React.FC = () => {
         {({ data, loading, error, refetch }) => {
           if (error)
             return (
-              <ChatError>
+              <GraphqlInlineError>
                 <Button
                   data-testid="chatsMenuRefetchButton"
                   onClick={async () =>
@@ -109,7 +110,7 @@ const ChatsMenu: React.FC = () => {
                 >
                   Try again
                 </Button>
-              </ChatError>
+              </GraphqlInlineError>
             );
 
           if (loading || !data || !data.chatsConnection)

@@ -119,7 +119,7 @@ describe('ChatUsersMenu', () => {
     await wait(() =>
       expect(container.querySelector('.ant-spinner')).toBeNull()
     );
-    expect(getByTestId('chatError')).toBeDefined();
+    expect(getByTestId('graphqlInlineError')).toBeDefined();
   });
   it('Correctly refetches data on error', async () => {
     const mocks: MockedResponse[] = [
@@ -153,7 +153,7 @@ describe('ChatUsersMenu', () => {
     await wait(() =>
       expect(container.querySelector('.ant-spinner')).toBeNull()
     );
-    expect(getByTestId('chatError')).toBeDefined();
+    expect(getByTestId('graphqlInlineError')).toBeDefined();
     fireEvent.click(getByTestId('refetchButton'));
     await wait(() => expect(queryByTestId('chatUsersList')).not.toBeNull());
     await wait(() =>

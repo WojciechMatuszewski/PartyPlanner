@@ -5,15 +5,11 @@ import Document, {
   NextDocumentContext
 } from 'next/document';
 import React from 'react';
-import { extractCritical } from 'emotion-server';
-import { EmotionCritical } from 'create-emotion-server';
 
-class MyDocument extends Document<EmotionCritical> {
+class MyDocument extends Document {
   static async getInitialProps(ctx: NextDocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
-    const page = ctx.renderPage();
-    const styles = extractCritical(page.html || '');
-    return { ...initialProps, ...styles };
+    return { ...initialProps };
   }
 
   constructor(props: any) {
@@ -29,9 +25,12 @@ class MyDocument extends Document<EmotionCritical> {
       <html>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
           <link rel="stylesheet" href="../static/nprogress.css" />
           <link rel="stylesheet" href="../static/utils.css" />
+          <link
+            href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
+            rel="stylesheet"
+          />
         </Head>
         <body className="custom_class">
           <Main />

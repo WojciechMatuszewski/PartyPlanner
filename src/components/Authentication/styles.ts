@@ -41,6 +41,7 @@ export const AuthInnerWrapper = styled.div`
     border-bottom: 3px solid #1890ff;
     display: inline-block;
     margin-bottom: 24px;
+    padding-bottom: 6px;
   }
   border-left: 2px dashed #d9d9d9;
   padding: 20px 0;

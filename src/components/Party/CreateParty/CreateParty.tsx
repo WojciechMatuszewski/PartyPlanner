@@ -9,7 +9,7 @@ import {
   PaginateChatsQueryDocument
 } from '@generated/graphql';
 import { MutationUpdaterFn } from 'apollo-boost';
-import { PARTIES_QUERY } from '@graphql/queries';
+import { PARTIES_QUERY, PAGINATE_PARTIES_QUERY } from '@graphql/queries';
 import { getPartiesDateVariables } from '@shared/graphqlUtils';
 import CreatePartyForm, { CreatePartyFormValues } from './CreatePartyForm';
 import { MutationFn } from 'react-apollo';
@@ -108,6 +108,9 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
                 ]
               }
             }
+          },
+          {
+            query: PAGINATE_PARTIES_QUERY
           }
         ]
       });

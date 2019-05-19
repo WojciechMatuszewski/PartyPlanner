@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { SerializedStyles } from '@emotion/css';
 
 const NoDataWrapper = styled.div`
   width: 100%;
@@ -26,11 +27,12 @@ interface Props {
   message: string;
   action: React.ReactNode;
   style?: React.CSSProperties;
+  cssStyles?: SerializedStyles;
 }
 
-const NoData: React.FC<Props> = ({ action, message, style }) => {
+const NoData: React.FC<Props> = ({ action, message, style, cssStyles }) => {
   return (
-    <NoDataWrapper style={style}>
+    <NoDataWrapper style={style} css={[cssStyles]}>
       <NoDataInnerWrapper>
         <img src="../static/no-data.svg" />
         <Typography.Paragraph style={{ fontSize: 18 }} type="secondary">

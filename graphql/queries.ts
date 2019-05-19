@@ -69,6 +69,11 @@ export const PARTIES_QUERY = gql`
       first: $first
       last: $last
     ) {
+      location {
+        placeName
+        latitude
+        longitude
+      }
       ...PARTY_FRAGMENT
     }
   }

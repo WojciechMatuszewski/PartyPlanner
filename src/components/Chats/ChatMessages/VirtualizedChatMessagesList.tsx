@@ -17,7 +17,7 @@ import moment from 'moment';
 import ChatMessageDivider from './ChatMessageDivider';
 import { Button } from 'antd';
 import { FetchMoreState } from '../ChatWindow/ChatWindow';
-import { ChatError } from '../ChatError';
+import GraphqlInlineError from '@components/GraphqlInlineError';
 
 interface Props {
   messages: PaginateMessagesQueryEdges[];
@@ -134,9 +134,9 @@ class VirtualizedChatMessagesList extends React.Component<Props> {
           {!error ? (
             <FetchMoreLoader style={style} loading={loadingMore} />
           ) : (
-            <ChatError style={{ paddingTop: 24, ...style }}>
+            <GraphqlInlineError style={{ paddingTop: 24, ...style }}>
               <Button onClick={this.props.onRetryClick}>Try again</Button>
-            </ChatError>
+            </GraphqlInlineError>
           )}
         </CellMeasurer>
       );

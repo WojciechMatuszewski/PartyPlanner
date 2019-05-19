@@ -1,0 +1,147 @@
+import React from 'react';
+import { Input, List, Button, Affix } from 'antd';
+import {
+  PaginateUsersQueryNode,
+  PaginateUsersQueryComponent
+} from '@generated/graphql';
+import UserAvatar from '@components/UserDefaultAvatar';
+import styled from '@emotion/styled';
+import css from '@emotion/css';
+import { debounce } from 'lodash';
+import { compose } from 'ramda';
+import NoData from '@components/NoData';
+import GraphqlInlineError from '@components/GraphqlInlineError';
+import { handleRefetch } from '@shared/graphqlUtils';
+
+const ModalContentWrapper = styled.div`
+  .ant-list-item-meta-avatar {
+    margin-bottom: auto;
+    margin-top: auto;
+  }
+  .ant-list-item {
+    height: 65px;
+  }
+`;
+
+const SearchInputStyles = css`
+  input {
+    border: 0;
+    border-bottom: 1px solid #e8e8e8;
+    border-radius: 0;
+  }
+  margin-bottom: 0;
+`;
+
+const ListContainer = styled.div`
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0px 6px;
+`;
+
+const PartyDashboardInviteFriendsModalContent: React.FC = () => {
+  const [searchValue, setSearchValue] = React.useState<string>('');
+
+  const debouncedSearchHandlerRef = React.useRef<typeof handleOnSearch>(
+    debounce(handleOnSearch, 300)
+  );
+
+  const handleOnChange = compose(
+    debouncedSearchHandlerRef.current,
+    parseOnChangeEvent
+  );
+
+  return (
+    <ModalContentWrapper>
+      <Affix>
+        <Input.Search
+          onChange={handleOnChange}
+          css={[SearchInputStyles]}
+          placeholder="Search ..."
+        />
+      </Affix>
+      <PaginateUsersQueryComponent
+        notifyOnNetworkStatusChange={true}
+        variables={{
+          where: {
+            OR: [
+              { firstName_contains: searchValue },
+              { lastName_contains: searchValue }
+            ]
+          },
+          first: 10
+        }}
+      >
+        {({ data, loading, error, refetch }) => {
+          if (error)
+            return (
+              <GraphqlInlineError style={{ padding: '24px 0px' }}>
+                <Button
+                  data-testid="chatsMenuRefetchButton"
+                  onClick={async () => await handleRefetch(refetch)}
+                >
+                  Try again
+                </Button>
+              </GraphqlInlineError>
+            );
+          if (error || !data) return null;
+          return (
+            <ListContainer>
+              <List
+                locale={{
+                  emptyText: (
+                    <NoData
+                      cssStyles={css`
+                        img {
+                          height: 200px;
+                        }
+                      `}
+                      message="No results found"
+                      action={null}
+                    />
+                  ) as any
+                }}
+                loading={loading}
+                size="small"
+                dataSource={
+                  data && data.paginateUsers ? data.paginateUsers.edges : []
+                }
+                renderItem={({ node }: { node: PaginateUsersQueryNode }) =>
+                  renderListItem(node)
+                }
+              />
+            </ListContainer>
+          );
+        }}
+      </PaginateUsersQueryComponent>
+    </ModalContentWrapper>
+  );
+
+  function handleOnSearch(value: string) {
+    setSearchValue(value);
+  }
+
+  function parseOnChangeEvent(event: React.ChangeEvent<HTMLInputElement>) {
+    return event.currentTarget.value;
+  }
+};
+
+function renderListItem(node: PaginateUsersQueryNode) {
+  return (
+    <List.Item
+      key={node.id}
+      actions={[
+        <Button key={1} size="small" type="primary">
+          Invite now!
+        </Button>
+      ]}
+    >
+      <List.Item.Meta
+        avatar={<UserAvatar userData={node} />}
+        title={node.firstName}
+        description={node.lastName}
+      />
+    </List.Item>
+  );
+}
+
+export default PartyDashboardInviteFriendsModalContent;
