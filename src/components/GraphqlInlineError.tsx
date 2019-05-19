@@ -15,9 +15,9 @@ const ErrorWrapper = styled.div`
   flex-direction: column;
 `;
 
-export const ChatError: React.FC<Props> = ({ children, style }) => {
+const GraphqlInlineError: React.FC<Props> = ({ children, style }) => {
   return (
-    <ErrorWrapper style={style} data-testid="chatError">
+    <ErrorWrapper style={style} data-testid="graphqlInlineError">
       <React.Fragment>
         <Typography.Paragraph type="danger">
           Some error occurred
@@ -27,3 +27,5 @@ export const ChatError: React.FC<Props> = ({ children, style }) => {
     </ErrorWrapper>
   );
 };
+
+export default GraphqlInlineError;

@@ -9,9 +9,10 @@ import {
 } from '@generated/graphql';
 import ChatSectionLoading from './ChatSectionLoading';
 import ChatUsersList from './ChatUsers/ChatUsersList';
-import { ChatError } from './ChatError';
+
 import { Button } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
+import GraphqlInlineError from '@components/GraphqlInlineError';
 
 const POOL_INTERVAL = 5000;
 
@@ -53,7 +54,7 @@ const ChatUsersMenu: React.FC = () => {
         {({ loading, data, error, refetch }) => {
           if (error)
             return (
-              <ChatError>
+              <GraphqlInlineError>
                 <Button
                   data-testid="refetchButton"
                   onClick={async () =>
@@ -62,7 +63,7 @@ const ChatUsersMenu: React.FC = () => {
                 >
                   Try again
                 </Button>
-              </ChatError>
+              </GraphqlInlineError>
             );
 
           if (loading || !data) return <ChatSectionLoading />;

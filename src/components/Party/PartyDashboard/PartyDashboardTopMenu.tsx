@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Icon } from 'antd';
+import { Button } from 'antd';
 import styled from '@emotion/styled';
 import useMedia from '@hooks/useMedia';
+import PartyDashboardInviteFriends from './PartyDashboardInviteFriends/PartyDashboardInviteFriends';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -19,13 +20,7 @@ const PartyDashboardTopMenu: React.FC = () => {
     <Wrapper>
       <InnerWrapper className="dashboard-content-item ">
         <Button.Group>
-          <Button type="primary">
-            {!isOnMobile ? (
-              'Invite your friends'
-            ) : (
-              <Icon type="usergroup-add" />
-            )}
-          </Button>
+          <PartyDashboardInviteFriends isOnMobile={isOnMobile} />
           <Button icon="paper-clip">
             {!isOnMobile ? 'Copy invitation link' : 'Invitation link'}
           </Button>

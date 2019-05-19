@@ -78,7 +78,7 @@ const PartyDashboardContentWrapper = styled(
   flex-direction: column;
   max-width: 1280px;
   align-self: flex-start;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background: white;
   z-index: 1;
   border-top-left-radius: 4px;
@@ -104,33 +104,33 @@ const PartyDashboardContentWrapper = styled(
 
 type RouteQueryProps = { id?: string };
 
-const PartyBgContainer = styled(
-  posed.div({
-    visible: {
-      opacity: 1
-    },
-    hidden: {
-      opacity: 0
-    }
-  })
-)`
-  width: 100%;
-  height: 500px;
-  overflow: hidden;
-  position: absolute;
-  z-index: 0;
-  opacity: 0;
-  border-bottom: 1px solid #e8e8e8;
-  @media screen and (max-width: 1500px) {
-    display: none;
-  }
-`;
+// const PartyBgContainer = styled(
+//   posed.div({
+//     visible: {
+//       opacity: 1
+//     },
+//     hidden: {
+//       opacity: 0
+//     }
+//   })
+// )`
+//   width: 100%;
+//   height: 500px;
+//   overflow: hidden;
+//   position: absolute;
+//   z-index: 0;
+//   opacity: 0;
+//   border-bottom: 1px solid #e8e8e8;
+//   @media screen and (max-width: 1500px) {
+//     display: none;
+//   }
+// `;
 
-const PartyBgImage = styled.div`
-  z-index: 0;
-  height: 100%;
-  background: linear-gradient(to right, #00c6ff, #0072ff);
-`;
+// const PartyBgImage = styled.div`
+//   z-index: 0;
+//   height: 100%;
+//   background: linear-gradient(to right, #00c6ff, #0072ff);
+// `;
 
 const PosedWrapper = styled(
   posed.div({
@@ -169,9 +169,9 @@ const Party: NextFunctionComponent<
   return (
     <PosedWrapper initialPose="hidden" pose="visible">
       <PartyMenu />
-      <PartyBgContainer initialPose="hidden">
+      {/* <PartyBgContainer initialPose="hidden">
         <PartyBgImage />
-      </PartyBgContainer>
+      </PartyBgContainer> */}
       <PartyDashboardContentWrapper initialPose="hidden">
         <PartyDashboardTop party={party} />
         <PartyDashboardTopMenu />

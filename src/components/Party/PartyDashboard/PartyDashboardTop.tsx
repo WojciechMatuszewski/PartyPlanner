@@ -24,7 +24,7 @@ const RowStyles = css`
 `;
 
 const InfoTileStyles = css`
-  background: #fafafa;
+  background: white;
   border-left: 1px solid #e8e8e8;
   height: 100%;
   padding: 24px;
