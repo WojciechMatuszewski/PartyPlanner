@@ -971,33 +971,33 @@ export interface PartyInvitationWhereInput {
   /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<PartyInvitationWhereInput[]>;
 
-  od?: Maybe<string>;
+  id?: Maybe<string>;
   /** All values that are not equal to given value. */
-  od_not?: Maybe<string>;
+  id_not?: Maybe<string>;
   /** All values that are contained in given list. */
-  od_in?: Maybe<string[]>;
+  id_in?: Maybe<string[]>;
   /** All values that are not contained in given list. */
-  od_not_in?: Maybe<string[]>;
+  id_not_in?: Maybe<string[]>;
   /** All values less than the given value. */
-  od_lt?: Maybe<string>;
+  id_lt?: Maybe<string>;
   /** All values less than or equal the given value. */
-  od_lte?: Maybe<string>;
+  id_lte?: Maybe<string>;
   /** All values greater than the given value. */
-  od_gt?: Maybe<string>;
+  id_gt?: Maybe<string>;
   /** All values greater than or equal the given value. */
-  od_gte?: Maybe<string>;
+  id_gte?: Maybe<string>;
   /** All values containing the given string. */
-  od_contains?: Maybe<string>;
+  id_contains?: Maybe<string>;
   /** All values not containing the given string. */
-  od_not_contains?: Maybe<string>;
+  id_not_contains?: Maybe<string>;
   /** All values starting with the given string. */
-  od_starts_with?: Maybe<string>;
+  id_starts_with?: Maybe<string>;
   /** All values not starting with the given string. */
-  od_not_starts_with?: Maybe<string>;
+  id_not_starts_with?: Maybe<string>;
   /** All values ending with the given string. */
-  od_ends_with?: Maybe<string>;
+  id_ends_with?: Maybe<string>;
   /** All values not ending with the given string. */
-  od_not_ends_with?: Maybe<string>;
+  id_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
   /** All values that are not equal to given value. */
@@ -1573,7 +1573,7 @@ export interface ArtistWhereUniqueInput {
 }
 
 export interface PartyInvitationWhereUniqueInput {
-  od?: Maybe<string>;
+  id?: Maybe<string>;
 }
 
 export interface TrackWhereUniqueInput {
@@ -1721,7 +1721,7 @@ export interface PartyInvitationCreateManyInput {
 }
 
 export interface PartyInvitationCreateInput {
-  od?: Maybe<string>;
+  id?: Maybe<string>;
 
   invitedBy: UserCreateOneInput;
 
@@ -3337,33 +3337,33 @@ export interface PartyInvitationScalarWhereInput {
   /** Logical NOT on all given filters combined by AND. */
   NOT?: Maybe<PartyInvitationScalarWhereInput[]>;
 
-  od?: Maybe<string>;
+  id?: Maybe<string>;
   /** All values that are not equal to given value. */
-  od_not?: Maybe<string>;
+  id_not?: Maybe<string>;
   /** All values that are contained in given list. */
-  od_in?: Maybe<string[]>;
+  id_in?: Maybe<string[]>;
   /** All values that are not contained in given list. */
-  od_not_in?: Maybe<string[]>;
+  id_not_in?: Maybe<string[]>;
   /** All values less than the given value. */
-  od_lt?: Maybe<string>;
+  id_lt?: Maybe<string>;
   /** All values less than or equal the given value. */
-  od_lte?: Maybe<string>;
+  id_lte?: Maybe<string>;
   /** All values greater than the given value. */
-  od_gt?: Maybe<string>;
+  id_gt?: Maybe<string>;
   /** All values greater than or equal the given value. */
-  od_gte?: Maybe<string>;
+  id_gte?: Maybe<string>;
   /** All values containing the given string. */
-  od_contains?: Maybe<string>;
+  id_contains?: Maybe<string>;
   /** All values not containing the given string. */
-  od_not_contains?: Maybe<string>;
+  id_not_contains?: Maybe<string>;
   /** All values starting with the given string. */
-  od_starts_with?: Maybe<string>;
+  id_starts_with?: Maybe<string>;
   /** All values not starting with the given string. */
-  od_not_starts_with?: Maybe<string>;
+  id_not_starts_with?: Maybe<string>;
   /** All values ending with the given string. */
-  od_ends_with?: Maybe<string>;
+  id_ends_with?: Maybe<string>;
   /** All values not ending with the given string. */
-  od_not_ends_with?: Maybe<string>;
+  id_not_ends_with?: Maybe<string>;
 
   createdAt?: Maybe<DateTime>;
   /** All values that are not equal to given value. */
@@ -4486,8 +4486,8 @@ export enum UserOrderByInput {
 }
 
 export enum PartyInvitationOrderByInput {
-  OdAsc = 'od_ASC',
-  OdDesc = 'od_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC'
 }
@@ -4720,6 +4720,38 @@ export type UpdateUserUpdateUser = {
   __typename?: 'User';
 
   id: string;
+};
+
+export type CreatePartyInvitationVariables = {
+  data: PartyInvitationCreateInput;
+};
+
+export type CreatePartyInvitationMutation = {
+  __typename?: 'Mutation';
+
+  createPartyInvitation: CreatePartyInvitationCreatePartyInvitation;
+};
+
+export type CreatePartyInvitationCreatePartyInvitation = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+};
+
+export type DeleteManyPartyInvitationsVariables = {
+  where?: Maybe<PartyInvitationWhereInput>;
+};
+
+export type DeleteManyPartyInvitationsMutation = {
+  __typename?: 'Mutation';
+
+  deleteManyPartyInvitations: DeleteManyPartyInvitationsDeleteManyPartyInvitations;
+};
+
+export type DeleteManyPartyInvitationsDeleteManyPartyInvitations = {
+  __typename?: 'BatchPayload';
+
+  count: Long;
 };
 
 export type MeQueryVariables = {};
@@ -4995,6 +5027,87 @@ export type PaginateMessagesQueryEdges = {
 };
 
 export type PaginateMessagesQueryNode = MessageFragmentFragment;
+
+export type PaginateUsersInviteToPartyQueryVariables = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<UserOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+  partyInvitationWhere?: Maybe<PartyInvitationWhereInput>;
+};
+
+export type PaginateUsersInviteToPartyQueryQuery = {
+  __typename?: 'Query';
+
+  paginateUsers: PaginateUsersInviteToPartyQueryPaginateUsers;
+};
+
+export type PaginateUsersInviteToPartyQueryPaginateUsers = {
+  __typename?: 'UserConnection';
+
+  edges: (Maybe<PaginateUsersInviteToPartyQueryEdges>)[];
+
+  pageInfo: PaginateUsersInviteToPartyQueryPageInfo;
+};
+
+export type PaginateUsersInviteToPartyQueryEdges = {
+  __typename?: 'UserEdge';
+
+  node: PaginateUsersInviteToPartyQueryNode;
+};
+
+export type PaginateUsersInviteToPartyQueryNode = {
+  __typename?: 'User';
+
+  id: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+
+  lastOnline: Maybe<DateTime>;
+
+  status: UserStatus;
+
+  pendingPartyInvitations: Maybe<
+    PaginateUsersInviteToPartyQueryPendingPartyInvitations[]
+  >;
+};
+
+export type PaginateUsersInviteToPartyQueryPendingPartyInvitations = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+
+  invitedBy: PaginateUsersInviteToPartyQueryInvitedBy;
+
+  party: PaginateUsersInviteToPartyQueryParty;
+};
+
+export type PaginateUsersInviteToPartyQueryInvitedBy = {
+  __typename?: 'User';
+
+  id: string;
+};
+
+export type PaginateUsersInviteToPartyQueryParty = {
+  __typename?: 'Party';
+
+  id: string;
+};
+
+export type PaginateUsersInviteToPartyQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
 
 export type HasPartiesQueryVariables = {};
 
@@ -5495,6 +5608,82 @@ export function useUpdateUser(
     baseOptions
   );
 }
+export const CreatePartyInvitationDocument = gql`
+  mutation CreatePartyInvitation($data: PartyInvitationCreateInput!) {
+    createPartyInvitation(data: $data) {
+      id
+    }
+  }
+`;
+export class CreatePartyInvitationComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      CreatePartyInvitationMutation,
+      CreatePartyInvitationVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        CreatePartyInvitationMutation,
+        CreatePartyInvitationVariables
+      >
+        mutation={CreatePartyInvitationDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useCreatePartyInvitation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreatePartyInvitationMutation,
+    CreatePartyInvitationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreatePartyInvitationMutation,
+    CreatePartyInvitationVariables
+  >(CreatePartyInvitationDocument, baseOptions);
+}
+export const DeleteManyPartyInvitationsDocument = gql`
+  mutation DeleteManyPartyInvitations($where: PartyInvitationWhereInput) {
+    deleteManyPartyInvitations(where: $where) {
+      count
+    }
+  }
+`;
+export class DeleteManyPartyInvitationsComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      DeleteManyPartyInvitationsMutation,
+      DeleteManyPartyInvitationsVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        DeleteManyPartyInvitationsMutation,
+        DeleteManyPartyInvitationsVariables
+      >
+        mutation={DeleteManyPartyInvitationsDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useDeleteManyPartyInvitations(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    DeleteManyPartyInvitationsMutation,
+    DeleteManyPartyInvitationsVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    DeleteManyPartyInvitationsMutation,
+    DeleteManyPartyInvitationsVariables
+  >(DeleteManyPartyInvitationsDocument, baseOptions);
+}
 export const MeQueryDocument = gql`
   query MeQuery {
     me {
@@ -5827,6 +6016,82 @@ export function usePaginateMessagesQuery(
     PaginateMessagesQueryQuery,
     PaginateMessagesQueryVariables
   >(PaginateMessagesQueryDocument, baseOptions);
+}
+export const PaginateUsersInviteToPartyQueryDocument = gql`
+  query PaginateUsersInviteToPartyQuery(
+    $where: UserWhereInput
+    $orderBy: UserOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $partyInvitationWhere: PartyInvitationWhereInput
+  ) {
+    paginateUsers(
+      where: $where
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      orderBy: $orderBy
+    ) {
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          avatar
+          lastOnline
+          status @client
+          pendingPartyInvitations(where: $partyInvitationWhere) {
+            id
+            invitedBy {
+              id
+            }
+            party {
+              id
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+export class PaginateUsersInviteToPartyQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      PaginateUsersInviteToPartyQueryQuery,
+      PaginateUsersInviteToPartyQueryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        PaginateUsersInviteToPartyQueryQuery,
+        PaginateUsersInviteToPartyQueryVariables
+      >
+        query={PaginateUsersInviteToPartyQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePaginateUsersInviteToPartyQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    PaginateUsersInviteToPartyQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    PaginateUsersInviteToPartyQueryQuery,
+    PaginateUsersInviteToPartyQueryVariables
+  >(PaginateUsersInviteToPartyQueryDocument, baseOptions);
 }
 export const HasPartiesQueryDocument = gql`
   query HasPartiesQuery {

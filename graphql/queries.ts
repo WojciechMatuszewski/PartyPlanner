@@ -195,6 +195,53 @@ export const PAGINATE_MESSAGES_QUERY = gql`
   ${MESSAGE_FRAGMENT}
 `;
 
+export const PAGINATE_USERS_INVITE_TO_PARTY_QUERY = gql`
+  query PaginateUsersInviteToPartyQuery(
+    $where: UserWhereInput
+    $orderBy: UserOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $partyInvitationWhere: PartyInvitationWhereInput
+  ) {
+    paginateUsers(
+      where: $where
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      orderBy: $orderBy
+    ) {
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          avatar
+          lastOnline
+          status @client
+          pendingPartyInvitations(where: $partyInvitationWhere) {
+            id
+            invitedBy {
+              id
+            }
+            party {
+              id
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
 export const HAS_PARTIES_QUERY = gql`
   query HasPartiesQuery {
     hasParties

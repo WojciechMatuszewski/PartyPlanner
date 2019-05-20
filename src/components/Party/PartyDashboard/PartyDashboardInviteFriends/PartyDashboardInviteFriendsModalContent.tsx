@@ -1,16 +1,10 @@
 import React from 'react';
-import { Input, Button, Affix } from 'antd';
-import {
-  PaginateUsersQueryComponent,
-  PaginateUsersQueryEdges
-} from '@generated/graphql';
+import { Input, Affix } from 'antd';
+
 import styled from '@emotion/styled';
 import css from '@emotion/css';
 import { debounce } from 'lodash';
 import { compose } from 'ramda';
-import GraphqlInlineError from '@components/GraphqlInlineError';
-import { handleRefetch } from '@shared/graphqlUtils';
-import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 
 const ModalContentWrapper = styled.div`
   .ant-list-item-meta-avatar {
@@ -31,7 +25,13 @@ const SearchInputStyles = css`
   margin-bottom: 0;
 `;
 
-const PartyDashboardInviteFriendsModalContent: React.FC = () => {
+interface Props {
+  children: (searchValue: string) => React.ReactNode;
+}
+
+const PartyDashboardInviteFriendsModalContent: React.FC<Props> = ({
+  children
+}) => {
   const [searchValue, setSearchValue] = React.useState<string>('');
 
   const debouncedSearchHandlerRef = React.useRef<typeof handleOnSearch>(
@@ -52,43 +52,7 @@ const PartyDashboardInviteFriendsModalContent: React.FC = () => {
           placeholder="Search ..."
         />
       </Affix>
-      <PaginateUsersQueryComponent
-        notifyOnNetworkStatusChange={true}
-        variables={{
-          where: {
-            OR: [
-              { firstName_contains: searchValue },
-              { lastName_contains: searchValue }
-            ]
-          },
-          first: 10
-        }}
-      >
-        {({ data, loading, error, refetch }) => {
-          if (error)
-            return (
-              <GraphqlInlineError style={{ padding: '24px 0px' }}>
-                <Button
-                  data-testid="chatsMenuRefetchButton"
-                  onClick={async () => await handleRefetch(refetch)}
-                >
-                  Try again
-                </Button>
-              </GraphqlInlineError>
-            );
-          if (error || !data) return null;
-          return (
-            <PartyDashboardInviteFriendsModalList
-              loading={loading}
-              data={
-                data && data.paginateUsers && data.paginateUsers.edges
-                  ? (data.paginateUsers.edges as PaginateUsersQueryEdges[])
-                  : []
-              }
-            />
-          );
-        }}
-      </PaginateUsersQueryComponent>
+      {children(searchValue)}
     </ModalContentWrapper>
   );
 

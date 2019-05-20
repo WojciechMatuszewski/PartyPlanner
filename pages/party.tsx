@@ -152,6 +152,18 @@ interface InjectedProps {
   userData: MeQueryMe | null;
 }
 
+interface PartyDashboardContextValue {
+  currentlyAuthenticatedUserId: string;
+  partyId: string;
+}
+
+export const PartyDashboardContext = React.createContext<
+  PartyDashboardContextValue
+>({
+  currentlyAuthenticatedUserId: '',
+  partyId: ''
+});
+
 const Party: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
@@ -165,34 +177,44 @@ const Party: NextFunctionComponent<
 
   const { party } = partyData as { party: PartiesQueryParties };
 
+  const contextValue = React.useMemo<PartyDashboardContextValue>(
+    () => ({
+      currentlyAuthenticatedUserId: userData.id,
+      partyId: partyData.party!.id
+    }),
+    []
+  );
+
   return (
     <PosedWrapper initialPose="hidden" pose="visible">
-      <PartyMenu />
-      {/* <PartyBgContainer initialPose="hidden">
+      <PartyDashboardContext.Provider value={contextValue}>
+        <PartyMenu />
+        {/* <PartyBgContainer initialPose="hidden">
         <PartyBgImage />
       </PartyBgContainer> */}
-      <PartyDashboardContentWrapper initialPose="hidden">
-        <PartyDashboardTop party={party} />
-        <PartyDashboardTopMenu />
-        <PartyDashboardBasicInfo
-          author={party.author}
-          description={party.description}
-          title={party.title}
-          partyEnd={party.end}
-          partyStart={party.start}
-          placeName={party.location.placeName}
-        />
-        <Row css={[PartyMapRowStyles]}>
-          <Col span={24} css={[PartyMapColumnStyles]}>
-            <PartyDashboardMap location={party.location} />
-          </Col>
-        </Row>
-        <PartyDashboardLocationSecondary
-          placeName={party.location.placeName}
-          title={party.title}
-        />
-        <PartyDashboardCommuteButtons location={party.location} />
-      </PartyDashboardContentWrapper>
+        <PartyDashboardContentWrapper initialPose="hidden">
+          <PartyDashboardTop party={party} />
+          <PartyDashboardTopMenu />
+          <PartyDashboardBasicInfo
+            author={party.author}
+            description={party.description}
+            title={party.title}
+            partyEnd={party.end}
+            partyStart={party.start}
+            placeName={party.location.placeName}
+          />
+          <Row css={[PartyMapRowStyles]}>
+            <Col span={24} css={[PartyMapColumnStyles]}>
+              <PartyDashboardMap location={party.location} />
+            </Col>
+          </Row>
+          <PartyDashboardLocationSecondary
+            placeName={party.location.placeName}
+            title={party.title}
+          />
+          <PartyDashboardCommuteButtons location={party.location} />
+        </PartyDashboardContentWrapper>
+      </PartyDashboardContext.Provider>
     </PosedWrapper>
   );
 };
