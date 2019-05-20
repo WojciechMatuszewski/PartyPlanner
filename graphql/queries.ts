@@ -242,6 +242,52 @@ export const PAGINATE_USERS_INVITE_TO_PARTY_QUERY = gql`
   }
 `;
 
+export const PARTY_INVITATIONS_CONNECTION_QUERY = gql`
+  query PartyInvitationsConnectionQuery(
+    $where: PartyInvitationWhereInput
+    $orderBy: PartyInvitationOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partyInvitationsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      edges {
+        node {
+          id
+          createdAt
+          invitedBy {
+            firstName
+            lastName
+            avatar
+          }
+          party {
+            title
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+    full: partyInvitationsConnection(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
 export const HAS_PARTIES_QUERY = gql`
   query HasPartiesQuery {
     hasParties

@@ -12,6 +12,7 @@ import { handleLogout } from '@components/Authentication/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';
+import PartyInvites from './PartyInvites';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -82,6 +83,11 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
                   <a>Your Parties</a>
                 </Link>
               </Menu.Item>
+              {data && data.me && (
+                <Menu.Item>
+                  <PartyInvites userId = {data.me.id}/>
+                </Menu.Item>
+              )}
               <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
                 <Link href="/user-profile">
                   <a>
@@ -128,6 +134,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
               <a>Chats</a>
             </Link>
           </Menu.Item>
+
           <Menu.Item key="/parties">
             <Link href="/parties">
               <a>Your Parties</a>
@@ -135,6 +142,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
           </Menu.Item>
         </Menu>
       </Drawer>
+
       <ApolloConsumer>
         {client => (
           <MeQueryComponent fetchPolicy="cache-first">
@@ -146,6 +154,11 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
                 mode="horizontal"
                 style={{ lineHeight: '64px', display: 'flex' }}
               >
+                {data && data.me && (
+                  <Menu.Item>
+                    <PartyInvites userId = {data.me.id}/>
+                  </Menu.Item>
+                )}
                 <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
                   <Link href="/user-profile">
                     <a>

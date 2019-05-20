@@ -5109,6 +5109,86 @@ export type PaginateUsersInviteToPartyQueryPageInfo = {
   endCursor: Maybe<string>;
 };
 
+export type PartyInvitationsConnectionQueryVariables = {
+  where?: Maybe<PartyInvitationWhereInput>;
+  orderBy?: Maybe<PartyInvitationOrderByInput>;
+  skip?: Maybe<number>;
+  after?: Maybe<string>;
+  before?: Maybe<string>;
+  first?: Maybe<number>;
+  last?: Maybe<number>;
+};
+
+export type PartyInvitationsConnectionQueryQuery = {
+  __typename?: 'Query';
+
+  partyInvitationsConnection: PartyInvitationsConnectionQueryPartyInvitationsConnection;
+
+  full: PartyInvitationsConnectionQueryFull;
+};
+
+export type PartyInvitationsConnectionQueryPartyInvitationsConnection = {
+  __typename?: 'PartyInvitationConnection';
+
+  edges: (Maybe<PartyInvitationsConnectionQueryEdges>)[];
+
+  pageInfo: PartyInvitationsConnectionQueryPageInfo;
+};
+
+export type PartyInvitationsConnectionQueryEdges = {
+  __typename?: 'PartyInvitationEdge';
+
+  node: PartyInvitationsConnectionQueryNode;
+};
+
+export type PartyInvitationsConnectionQueryNode = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+
+  createdAt: DateTime;
+
+  invitedBy: PartyInvitationsConnectionQueryInvitedBy;
+
+  party: PartyInvitationsConnectionQueryParty;
+};
+
+export type PartyInvitationsConnectionQueryInvitedBy = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+};
+
+export type PartyInvitationsConnectionQueryParty = {
+  __typename?: 'Party';
+
+  title: string;
+};
+
+export type PartyInvitationsConnectionQueryPageInfo = {
+  __typename?: 'PageInfo';
+
+  hasNextPage: boolean;
+
+  endCursor: Maybe<string>;
+};
+
+export type PartyInvitationsConnectionQueryFull = {
+  __typename?: 'PartyInvitationConnection';
+
+  aggregate: PartyInvitationsConnectionQueryAggregate;
+};
+
+export type PartyInvitationsConnectionQueryAggregate = {
+  __typename?: 'AggregatePartyInvitation';
+
+  count: number;
+};
+
 export type HasPartiesQueryVariables = {};
 
 export type HasPartiesQueryQuery = {
@@ -6092,6 +6172,81 @@ export function usePaginateUsersInviteToPartyQuery(
     PaginateUsersInviteToPartyQueryQuery,
     PaginateUsersInviteToPartyQueryVariables
   >(PaginateUsersInviteToPartyQueryDocument, baseOptions);
+}
+export const PartyInvitationsConnectionQueryDocument = gql`
+  query PartyInvitationsConnectionQuery(
+    $where: PartyInvitationWhereInput
+    $orderBy: PartyInvitationOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partyInvitationsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      edges {
+        node {
+          id
+          createdAt
+          invitedBy {
+            firstName
+            lastName
+            avatar
+          }
+          party {
+            title
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+    full: partyInvitationsConnection(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+export class PartyInvitationsConnectionQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<
+      PartyInvitationsConnectionQueryQuery,
+      PartyInvitationsConnectionQueryVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<
+        PartyInvitationsConnectionQueryQuery,
+        PartyInvitationsConnectionQueryVariables
+      >
+        query={PartyInvitationsConnectionQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePartyInvitationsConnectionQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    PartyInvitationsConnectionQueryVariables
+  >
+) {
+  return ReactApolloHooks.useQuery<
+    PartyInvitationsConnectionQueryQuery,
+    PartyInvitationsConnectionQueryVariables
+  >(PartyInvitationsConnectionQueryDocument, baseOptions);
 }
 export const HasPartiesQueryDocument = gql`
   query HasPartiesQuery {
