@@ -4754,6 +4754,24 @@ export type DeleteManyPartyInvitationsDeleteManyPartyInvitations = {
   count: Long;
 };
 
+export type DeletePartyInvitationMutationVariables = {
+  where: PartyInvitationWhereUniqueInput;
+};
+
+export type DeletePartyInvitationMutationMutation = {
+  __typename?: 'Mutation';
+
+  deletePartyInvitation: Maybe<
+    DeletePartyInvitationMutationDeletePartyInvitation
+  >;
+};
+
+export type DeletePartyInvitationMutationDeletePartyInvitation = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -5249,6 +5267,60 @@ export type ChatMessagesSubscriptionAuthor = {
 
 export type ChatMessagesSubscriptionChat = {
   __typename?: 'Chat';
+
+  id: string;
+};
+
+export type PartyInvitationSubscriptionVariables = {
+  where?: Maybe<PartyInvitationSubscriptionWhereInput>;
+};
+
+export type PartyInvitationSubscriptionSubscription = {
+  __typename?: 'Subscription';
+
+  partyInvitation: Maybe<PartyInvitationSubscriptionPartyInvitation>;
+};
+
+export type PartyInvitationSubscriptionPartyInvitation = {
+  __typename?: 'PartyInvitationSubscriptionPayload';
+
+  node: Maybe<PartyInvitationSubscriptionNode>;
+
+  previousValues: Maybe<PartyInvitationSubscriptionPreviousValues>;
+
+  mutation: MutationType;
+};
+
+export type PartyInvitationSubscriptionNode = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+
+  createdAt: DateTime;
+
+  invitedBy: PartyInvitationSubscriptionInvitedBy;
+
+  party: PartyInvitationSubscriptionParty;
+};
+
+export type PartyInvitationSubscriptionInvitedBy = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+};
+
+export type PartyInvitationSubscriptionParty = {
+  __typename?: 'Party';
+
+  title: string;
+};
+
+export type PartyInvitationSubscriptionPreviousValues = {
+  __typename?: 'PartyInvitationPreviousValues';
 
   id: string;
 };
@@ -5763,6 +5835,46 @@ export function useDeleteManyPartyInvitations(
     DeleteManyPartyInvitationsMutation,
     DeleteManyPartyInvitationsVariables
   >(DeleteManyPartyInvitationsDocument, baseOptions);
+}
+export const DeletePartyInvitationMutationDocument = gql`
+  mutation DeletePartyInvitationMutation(
+    $where: PartyInvitationWhereUniqueInput!
+  ) {
+    deletePartyInvitation(where: $where) {
+      id
+    }
+  }
+`;
+export class DeletePartyInvitationMutationComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      DeletePartyInvitationMutationMutation,
+      DeletePartyInvitationMutationVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        DeletePartyInvitationMutationMutation,
+        DeletePartyInvitationMutationVariables
+      >
+        mutation={DeletePartyInvitationMutationDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useDeletePartyInvitationMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    DeletePartyInvitationMutationMutation,
+    DeletePartyInvitationMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    DeletePartyInvitationMutationMutation,
+    DeletePartyInvitationMutationVariables
+  >(DeletePartyInvitationMutationDocument, baseOptions);
 }
 export const MeQueryDocument = gql`
   query MeQuery {
@@ -6329,4 +6441,59 @@ export function useChatMessagesSubscription(
     ChatMessagesSubscriptionSubscription,
     ChatMessagesSubscriptionVariables
   >(ChatMessagesSubscriptionDocument, baseOptions);
+}
+export const PartyInvitationSubscriptionDocument = gql`
+  subscription PartyInvitationSubscription(
+    $where: PartyInvitationSubscriptionWhereInput
+  ) {
+    partyInvitation(where: $where) {
+      node {
+        id
+        createdAt
+        invitedBy {
+          firstName
+          lastName
+          avatar
+        }
+        party {
+          title
+        }
+      }
+      previousValues {
+        id
+      }
+      mutation
+    }
+  }
+`;
+export class PartyInvitationSubscriptionComponent extends React.Component<
+  Partial<
+    ReactApollo.SubscriptionProps<
+      PartyInvitationSubscriptionSubscription,
+      PartyInvitationSubscriptionVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<
+        PartyInvitationSubscriptionSubscription,
+        PartyInvitationSubscriptionVariables
+      >
+        subscription={PartyInvitationSubscriptionDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function usePartyInvitationSubscription(
+  baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
+    PartyInvitationSubscriptionSubscription,
+    PartyInvitationSubscriptionVariables
+  >
+) {
+  return ReactApolloHooks.useSubscription<
+    PartyInvitationSubscriptionSubscription,
+    PartyInvitationSubscriptionVariables
+  >(PartyInvitationSubscriptionDocument, baseOptions);
 }

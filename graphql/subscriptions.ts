@@ -23,3 +23,28 @@ export const CHAT_MESSAGES_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const PARTY_INVITATION_SUBSCRIPTION = gql`
+  subscription PartyInvitationSubscription(
+    $where: PartyInvitationSubscriptionWhereInput
+  ) {
+    partyInvitation(where: $where) {
+      node {
+        id
+        createdAt
+        invitedBy {
+          firstName
+          lastName
+          avatar
+        }
+        party {
+          title
+        }
+      }
+      previousValues {
+        id
+      }
+      mutation
+    }
+  }
+`;

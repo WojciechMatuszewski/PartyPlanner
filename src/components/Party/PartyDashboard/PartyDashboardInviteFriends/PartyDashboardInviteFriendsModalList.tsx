@@ -104,7 +104,11 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
       ];
 
     if (hasInvites && yourInvitationId == null)
-      return [<Tag color="green">Already invited</Tag>];
+      return [
+        <Tag color="green" key={1}>
+          Already invited
+        </Tag>
+      ];
 
     if (
       hasInvites &&
@@ -135,7 +139,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
         >
           <span className="hide-on-mobile">Cancel invitation</span>
         </Button>,
-        <Tag color="green" style={{ margin: 0 }}>
+        <Tag color="green" key={1} style={{ margin: 0 }}>
           Invited by you
         </Tag>
       ];

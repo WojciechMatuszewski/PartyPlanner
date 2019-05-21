@@ -6,7 +6,8 @@ import {
   PaginateUsersInviteToPartyQueryQuery,
   PaginateUsersInviteToPartyQueryEdges,
   useCreatePartyInvitation,
-  useDeleteManyPartyInvitations
+  PaginateUsersInviteToPartyQueryDocument,
+  useDeletePartyInvitationMutation
 } from '@generated/graphql';
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch } from '@shared/graphqlUtils';
@@ -25,8 +26,35 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
     PartyDashboardContext
   );
 
-  const createPartyInvitation = useCreatePartyInvitation();
-  const deleteManyPartyInvitations = useDeleteManyPartyInvitations();
+  const QUERY_VARIABLES = React.useMemo(
+    () => ({
+      partyInvitationWhere: {
+        party: { id: partyId }
+      },
+      where: {
+        parties_none: { id: partyId }
+      }
+    }),
+    [partyId]
+  );
+
+  const createPartyInvitation = useCreatePartyInvitation({
+    refetchQueries: [
+      {
+        query: PaginateUsersInviteToPartyQueryDocument,
+        variables: QUERY_VARIABLES
+      }
+    ]
+  });
+
+  const deletePartyInvitation = useDeletePartyInvitationMutation({
+    refetchQueries: [
+      {
+        query: PaginateUsersInviteToPartyQueryDocument,
+        variables: QUERY_VARIABLES
+      }
+    ]
+  });
 
   const [toBeInvitedPeople, setToBeInvitedPeople] = React.useState<
     Record<string, boolean>
@@ -150,19 +178,10 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
       await Promise.all(promises);
     }
     if (idsToCancel.length > 0) {
-      await deleteManyPartyInvitations({
-        variables: {
-          where: {
-            id_in: idsToCancel
-          }
-        }
-      });
+      const promises = idsToCancel.map(createDeletePartyInvitationPromise);
+      await Promise.all(promises);
     }
     resetState();
-    try {
-    } catch (e) {
-      console.log('ERRORORORO');
-    }
   }
 
   function resetState() {
@@ -180,6 +199,14 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
           party: { connect: { id: partyId } },
           user: { connect: { id: userToInvite } }
         }
+      }
+    });
+  }
+
+  function createDeletePartyInvitationPromise(idToDelete: string) {
+    return deletePartyInvitation({
+      variables: {
+        where: { id: idToDelete }
       }
     });
   }

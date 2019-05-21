@@ -5,14 +5,13 @@ import { ApolloConsumer } from 'react-apollo';
 import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
 import { MeQueryComponent, useMeQuery } from '@generated/graphql';
-
 import css from '@emotion/css';
 import { WithRouterProps, withRouter } from 'next/router';
 import { handleLogout } from '@components/Authentication/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';
-import PartyInvites from './PartyInvites';
+import AppHeaderPartyInvites from './AppHeaderPartyInvites.tsx/AppHeaderPartyInvites';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -85,7 +84,7 @@ const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
               </Menu.Item>
               {data && data.me && (
                 <Menu.Item>
-                  <PartyInvites userId = {data.me.id}/>
+                  <AppHeaderPartyInvites userId={data.me.id} />
                 </Menu.Item>
               )}
               <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
@@ -156,7 +155,7 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
               >
                 {data && data.me && (
                   <Menu.Item>
-                    <PartyInvites userId = {data.me.id}/>
+                    <AppHeaderPartyInvites userId={data.me.id} />
                   </Menu.Item>
                 )}
                 <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>

@@ -103,3 +103,13 @@ export const DELETE_MANY_PARTY_INVITATIONS_MUTATION = gql`
     }
   }
 `;
+
+export const DELETE_PARTY_INVITATION_MUTATION = gql`
+  mutation DeletePartyInvitationMutation(
+    $where: PartyInvitationWhereUniqueInput!
+  ) {
+    deletePartyInvitation(where: $where) {
+      id
+    }
+  }
+`;
