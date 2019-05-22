@@ -8,10 +8,13 @@ import {
   PartyInvitationSubscriptionSubscription,
   PartyInvitationsConnectionQueryQuery,
   PartyInvitationSubscriptionPartyInvitation,
-  MutationType
+  MutationType,
+  PartyInvitationSubscriptionNode
 } from '@generated/graphql';
-import { Icon } from 'antd';
+import { Icon, notification } from 'antd';
 import AppHeaderPartyInvitesPopup from './AppHeaderPartyInvitesPopup';
+import AppHeaderPartyInvitesModal from './AppHeaderPartyInvitesModal';
+import { compose } from 'ramda';
 
 interface Props {
   userId: string;
@@ -47,46 +50,62 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     [props.userId]
   );
 
-  return (
-    <PartyInvitationsConnectionQueryComponent
-      notifyOnNetworkStatusChange={true}
-      variables={BASE_QUERY_VARIABLES}
-    >
-      {({ data, loading, fetchMore, subscribeToMore }) => {
-        if (
-          !data ||
-          !data.partyInvitationsConnection ||
-          !hasEdges(data.partyInvitationsConnection.edges)
-        )
-          return <Icon type="bell" />;
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false);
 
-        return (
-          <AppHeaderPartyInvitesPopup
-            notificationCount={data.full.aggregate.count}
-            loading={loading}
-            hasMoreResults={
-              data.partyInvitationsConnection.pageInfo.hasNextPage
-            }
-            partyInvites={data.partyInvitationsConnection.edges}
-            onFetchMore={async () =>
-              await fetchMore({
-                variables: {
-                  after: data.partyInvitationsConnection.pageInfo.endCursor
-                },
-                updateQuery: fetchMoreQueryUpdater
-              })
-            }
-            subscribeForMore={() =>
-              subscribeToMore({
-                document: PartyInvitationSubscriptionDocument,
-                variables: SUBSCRIPTION_VARIABLES,
-                updateQuery: subscribeForMoreQueryUpdater
-              })
-            }
-          />
-        );
-      }}
-    </PartyInvitationsConnectionQueryComponent>
+  const [clickedItem, setClickedItem] = React.useState<
+    PartyInvitationsConnectionQueryEdges | undefined
+  >();
+
+  // console.log(clickedItem);
+
+  return (
+    <React.Fragment>
+      <AppHeaderPartyInvitesModal
+        invitation={clickedItem}
+        onCancel={() => setModalVisible(false)}
+        visible={modalVisible}
+      />
+      <PartyInvitationsConnectionQueryComponent
+        notifyOnNetworkStatusChange={true}
+        variables={BASE_QUERY_VARIABLES}
+      >
+        {({ data, loading, fetchMore, subscribeToMore }) => {
+          if (
+            !data ||
+            !data.partyInvitationsConnection ||
+            !hasEdges(data.partyInvitationsConnection.edges)
+          )
+            return <Icon type="bell" />;
+
+          return (
+            <AppHeaderPartyInvitesPopup
+              onItemClick={handleItemClick}
+              notificationCount={data.full.aggregate.count}
+              loading={loading}
+              hasMoreResults={
+                data.partyInvitationsConnection.pageInfo.hasNextPage
+              }
+              partyInvites={data.partyInvitationsConnection.edges}
+              onFetchMore={async () =>
+                await fetchMore({
+                  variables: {
+                    after: data.partyInvitationsConnection.pageInfo.endCursor
+                  },
+                  updateQuery: fetchMoreQueryUpdater
+                })
+              }
+              subscribeForMore={() =>
+                subscribeToMore({
+                  document: PartyInvitationSubscriptionDocument,
+                  variables: SUBSCRIPTION_VARIABLES,
+                  updateQuery: subscriptionCacheUpdater
+                })
+              }
+            />
+          );
+        }}
+      </PartyInvitationsConnectionQueryComponent>
+    </React.Fragment>
   );
 
   function hasEdges(
@@ -113,6 +132,34 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
         ]
       }
     };
+  }
+
+  function subscriptionCacheUpdater(
+    prev: PartyInvitationsConnectionQueryQuery,
+    { subscriptionData }: SubscribeForMoreSubscribeData
+  ) {
+    if (!subscriptionData.data || !subscriptionData.data.partyInvitation)
+      return prev;
+
+    const {
+      data: { partyInvitation }
+    } = subscriptionData;
+
+    let newCache = prev;
+
+    switch (partyInvitation.mutation) {
+      case MutationType.Created:
+        newCache = handleInvitationAdded(prev, partyInvitation);
+        showNewInvitationNotification(partyInvitation.node!);
+        break;
+      case MutationType.Deleted:
+        newCache = hasDeletedMyExistingNotification(partyInvitation)
+          ? handleInvitationDeleted(prev, partyInvitation)
+          : prev;
+        break;
+    }
+
+    return newCache;
   }
 
   function handleInvitationAdded(
@@ -163,35 +210,6 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     };
   }
 
-  function handleDeclineInvitation() {}
-
-  function subscribeForMoreQueryUpdater(
-    prev: PartyInvitationsConnectionQueryQuery,
-    { subscriptionData }: SubscribeForMoreSubscribeData
-  ) {
-    if (!subscriptionData.data || !subscriptionData.data.partyInvitation)
-      return prev;
-
-    const {
-      data: { partyInvitation }
-    } = subscriptionData;
-
-    let newCache = prev;
-
-    switch (partyInvitation.mutation) {
-      case MutationType.Created:
-        newCache = handleInvitationAdded(prev, partyInvitation);
-        break;
-      case MutationType.Deleted:
-        newCache = hasDeletedMyExistingNotification(partyInvitation)
-          ? handleInvitationDeleted(prev, partyInvitation)
-          : prev;
-        break;
-    }
-
-    return newCache;
-  }
-
   // when deleting node returns null so filters supplied to where does not work
   // I added static userId field to diff here so i do not trigger handleInvitationDeleted on notification
   // which is not mine
@@ -202,6 +220,35 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
       partyInvitation.previousValues &&
       partyInvitation.previousValues.userId == props.userId
     );
+  }
+
+  function handleItemClick({
+    edge
+  }: {
+    edge: PartyInvitationsConnectionQueryEdges;
+  }) {
+    setClickedItem(edge);
+    setModalVisible(true);
+  }
+
+  function showNewInvitationNotification(
+    subscriptionNode: PartyInvitationSubscriptionNode
+  ) {
+    const notificationKey = createNotificationKey();
+    notification.info({
+      key: notificationKey,
+      message: 'New party invitation!',
+      onClick: () =>
+        compose(
+          notification.close,
+          () => notificationKey,
+          handleItemClick
+        )({ edge: { node: subscriptionNode } })
+    });
+  }
+
+  function createNotificationKey() {
+    return `open${Date.now()}`;
   }
 };
 

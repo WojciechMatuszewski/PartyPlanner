@@ -1,9 +1,8 @@
 import React from 'react';
 import { PartyInvitationsConnectionQueryEdges } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
-import UserAvatar from '@components/UserDefaultAvatar';
-import { Typography, Button } from 'antd';
-import moment from 'moment';
+
+import AppHeaderPartyInvitationsPartyInvitation from './AppHeaderPartyInvitesPartyInvitation';
 
 interface Props {
   loading: boolean;
@@ -12,6 +11,7 @@ interface Props {
   onFetchMore: () => void;
   hasMoreResults: boolean;
   notificationCount: number;
+  onItemClick: (item: { edge: PartyInvitationsConnectionQueryEdges }) => void;
 }
 const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
   React.useEffect(() => {
@@ -19,52 +19,26 @@ const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
   }, []);
 
   return (
-    <NoticeIcon
-      style={{ background: 'red' }}
-      onLoadMore={props.onFetchMore}
-      count={props.notificationCount}
-    >
-      <NoticeIcon.Tab
-        name="Party Invitations"
-        loading={props.loading}
-        skeletonProps={{}}
-        showClear={false}
-        loadedAll={!props.hasMoreResults}
-        list={props.partyInvites.map(createNotification)}
-      />
-    </NoticeIcon>
+    <React.Fragment>
+      <NoticeIcon
+        // popupVisible={true}
+        onLoadMore={props.onFetchMore}
+        count={props.notificationCount}
+        onItemClick={props.onItemClick as any}
+      >
+        <NoticeIcon.Tab
+          loading={props.loading}
+          title="Party Invitations"
+          skeletonProps={{}}
+          showClear={false}
+          loadedAll={!props.hasMoreResults}
+          list={props.partyInvites.map(
+            AppHeaderPartyInvitationsPartyInvitation
+          )}
+        />
+      </NoticeIcon>
+    </React.Fragment>
   );
-
-  function createNotification(edge: PartyInvitationsConnectionQueryEdges) {
-    const parsedNotificationDate = moment(edge.node.createdAt).calendar();
-
-    return {
-      avatar: <UserAvatar userData={edge.node.invitedBy} />,
-      title: 'New invitation',
-      description: (
-        <React.Fragment>
-          <Typography.Text strong={true}>
-            {edge.node.invitedBy.firstName}{' '}
-          </Typography.Text>
-          <Typography.Text>invited you to a party </Typography.Text>
-          <Typography.Text type="warning">
-            {edge.node.party.title}{' '}
-          </Typography.Text>
-          <Typography.Paragraph type="secondary">
-            {parsedNotificationDate}
-          </Typography.Paragraph>
-          <Button.Group style={{ display: 'block', marginTop: 12 }}>
-            <Button type="primary" size="small">
-              Accept
-            </Button>
-            <Button type="danger" size="small">
-              Decline
-            </Button>
-          </Button.Group>
-        </React.Fragment>
-      )
-    };
-  }
 };
 
 export default AppHeaderPartyInvitesPopup;

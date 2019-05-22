@@ -5335,33 +5335,7 @@ export type PartyInvitationsConnectionQueryEdges = {
   node: PartyInvitationsConnectionQueryNode;
 };
 
-export type PartyInvitationsConnectionQueryNode = {
-  __typename?: 'PartyInvitation';
-
-  id: string;
-
-  createdAt: DateTime;
-
-  invitedBy: PartyInvitationsConnectionQueryInvitedBy;
-
-  party: PartyInvitationsConnectionQueryParty;
-};
-
-export type PartyInvitationsConnectionQueryInvitedBy = {
-  __typename?: 'User';
-
-  firstName: string;
-
-  lastName: string;
-
-  avatar: Maybe<string>;
-};
-
-export type PartyInvitationsConnectionQueryParty = {
-  __typename?: 'Party';
-
-  title: string;
-};
+export type PartyInvitationsConnectionQueryNode = PartyInvitationFragmentFragment;
 
 export type PartyInvitationsConnectionQueryPageInfo = {
   __typename?: 'PageInfo';
@@ -5467,33 +5441,7 @@ export type PartyInvitationSubscriptionPartyInvitation = {
   mutation: MutationType;
 };
 
-export type PartyInvitationSubscriptionNode = {
-  __typename?: 'PartyInvitation';
-
-  id: string;
-
-  createdAt: DateTime;
-
-  invitedBy: PartyInvitationSubscriptionInvitedBy;
-
-  party: PartyInvitationSubscriptionParty;
-};
-
-export type PartyInvitationSubscriptionInvitedBy = {
-  __typename?: 'User';
-
-  firstName: string;
-
-  lastName: string;
-
-  avatar: Maybe<string>;
-};
-
-export type PartyInvitationSubscriptionParty = {
-  __typename?: 'Party';
-
-  title: string;
-};
+export type PartyInvitationSubscriptionNode = PartyInvitationFragmentFragment;
 
 export type PartyInvitationSubscriptionPreviousValues = {
   __typename?: 'PartyInvitationPreviousValues';
@@ -5587,6 +5535,44 @@ export type MessageFragmentAuthor = {
   id: string;
 };
 
+export type PartyInvitationFragmentFragment = {
+  __typename?: 'PartyInvitation';
+
+  id: string;
+
+  createdAt: DateTime;
+
+  invitedBy: PartyInvitationFragmentInvitedBy;
+
+  user: PartyInvitationFragmentUser;
+
+  party: PartyInvitationFragmentParty;
+};
+
+export type PartyInvitationFragmentInvitedBy = {
+  __typename?: 'User';
+
+  firstName: string;
+
+  lastName: string;
+
+  avatar: Maybe<string>;
+};
+
+export type PartyInvitationFragmentUser = {
+  __typename?: 'User';
+
+  id: string;
+};
+
+export type PartyInvitationFragmentParty = {
+  __typename?: 'Party';
+
+  title: string;
+
+  id: string;
+};
+
 export type LastChatMessageFragmentFragment = {
   __typename?: 'Chat';
 
@@ -5663,6 +5649,25 @@ export const MessageFragmentFragmentDoc = gql`
     hasOptimisticError @client
     content
     createdAt
+  }
+`;
+
+export const PartyInvitationFragmentFragmentDoc = gql`
+  fragment PARTY_INVITATION_FRAGMENT on PartyInvitation {
+    id
+    createdAt
+    invitedBy {
+      firstName
+      lastName
+      avatar
+    }
+    user {
+      id
+    }
+    party {
+      title
+      id
+    }
   }
 `;
 
@@ -6484,16 +6489,7 @@ export const PartyInvitationsConnectionQueryDocument = gql`
     ) {
       edges {
         node {
-          id
-          createdAt
-          invitedBy {
-            firstName
-            lastName
-            avatar
-          }
-          party {
-            title
-          }
+          ...PARTY_INVITATION_FRAGMENT
         }
       }
       pageInfo {
@@ -6507,6 +6503,8 @@ export const PartyInvitationsConnectionQueryDocument = gql`
       }
     }
   }
+
+  ${PartyInvitationFragmentFragmentDoc}
 `;
 export class PartyInvitationsConnectionQueryComponent extends React.Component<
   Partial<
@@ -6626,16 +6624,7 @@ export const PartyInvitationSubscriptionDocument = gql`
   ) {
     partyInvitation(where: $where) {
       node {
-        id
-        createdAt
-        invitedBy {
-          firstName
-          lastName
-          avatar
-        }
-        party {
-          title
-        }
+        ...PARTY_INVITATION_FRAGMENT
       }
       previousValues {
         id
@@ -6644,6 +6633,8 @@ export const PartyInvitationSubscriptionDocument = gql`
       mutation
     }
   }
+
+  ${PartyInvitationFragmentFragmentDoc}
 `;
 export class PartyInvitationSubscriptionComponent extends React.Component<
   Partial<

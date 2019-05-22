@@ -1,3 +1,4 @@
+import { PARTY_INVITATION_FRAGMENT } from './fragments';
 import { gql } from 'apollo-boost';
 export const CHAT_MESSAGES_SUBSCRIPTION = gql`
   subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {
@@ -30,16 +31,7 @@ export const PARTY_INVITATION_SUBSCRIPTION = gql`
   ) {
     partyInvitation(where: $where) {
       node {
-        id
-        createdAt
-        invitedBy {
-          firstName
-          lastName
-          avatar
-        }
-        party {
-          title
-        }
+        ...PARTY_INVITATION_FRAGMENT
       }
       previousValues {
         id
@@ -48,4 +40,5 @@ export const PARTY_INVITATION_SUBSCRIPTION = gql`
       mutation
     }
   }
+  ${PARTY_INVITATION_FRAGMENT}
 `;

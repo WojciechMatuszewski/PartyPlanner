@@ -44,6 +44,25 @@ export const MESSAGE_FRAGMENT = gql`
   }
 `;
 
+export const PARTY_INVITATION_FRAGMENT = gql`
+  fragment PARTY_INVITATION_FRAGMENT on PartyInvitation {
+    id
+    createdAt
+    invitedBy {
+      firstName
+      lastName
+      avatar
+    }
+    user {
+      id
+    }
+    party {
+      title
+      id
+    }
+  }
+`;
+
 export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
   fragment LAST_CHAT_MESSAGE_FRAGMENT on Chat {
     messages(last: 1) {
@@ -57,4 +76,3 @@ export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
     hasUnreadMessages @client
   }
 `;
-

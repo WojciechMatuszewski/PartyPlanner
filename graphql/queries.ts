@@ -1,5 +1,9 @@
 import { gql } from 'apollo-boost';
-import { PARTY_FRAGMENT, MESSAGE_FRAGMENT } from './fragments';
+import {
+  PARTY_FRAGMENT,
+  MESSAGE_FRAGMENT,
+  PARTY_INVITATION_FRAGMENT
+} from './fragments';
 
 export const ME_QUERY = gql`
   query MeQuery {
@@ -263,16 +267,7 @@ export const PARTY_INVITATIONS_CONNECTION_QUERY = gql`
     ) {
       edges {
         node {
-          id
-          createdAt
-          invitedBy {
-            firstName
-            lastName
-            avatar
-          }
-          party {
-            title
-          }
+          ...PARTY_INVITATION_FRAGMENT
         }
       }
       pageInfo {
@@ -286,6 +281,7 @@ export const PARTY_INVITATIONS_CONNECTION_QUERY = gql`
       }
     }
   }
+  ${PARTY_INVITATION_FRAGMENT}
 `;
 
 export const HAS_PARTIES_QUERY = gql`
