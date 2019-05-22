@@ -999,6 +999,34 @@ export interface PartyInvitationWhereInput {
   /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
+  userId?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  userId_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  userId_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  userId_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  userId_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  userId_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  userId_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  userId_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  userId_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  userId_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  userId_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  userId_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  userId_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  userId_not_ends_with?: Maybe<string>;
+
   createdAt?: Maybe<DateTime>;
   /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
@@ -1540,6 +1568,10 @@ export interface MessageWhereUniqueInput {
   id?: Maybe<string>;
 }
 
+export interface PartyInvitationWhereUniqueInput {
+  id?: Maybe<string>;
+}
+
 export interface ChatWhereUniqueInput {
   id?: Maybe<string>;
 }
@@ -1569,10 +1601,6 @@ export interface GameWhereUniqueInput {
 }
 
 export interface ArtistWhereUniqueInput {
-  id?: Maybe<string>;
-}
-
-export interface PartyInvitationWhereUniqueInput {
   id?: Maybe<string>;
 }
 
@@ -1639,7 +1667,7 @@ export interface UserCreateInput {
 
   pendingFriendInvitations?: Maybe<UserCreateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
 }
@@ -1714,18 +1742,18 @@ export interface UserCreateManyInput {
   connect?: Maybe<UserWhereUniqueInput[]>;
 }
 
-export interface PartyInvitationCreateManyInput {
-  create?: Maybe<PartyInvitationCreateInput[]>;
+export interface PartyInvitationCreateManyWithoutUserInput {
+  create?: Maybe<PartyInvitationCreateWithoutUserInput[]>;
 
   connect?: Maybe<PartyInvitationWhereUniqueInput[]>;
 }
 
-export interface PartyInvitationCreateInput {
+export interface PartyInvitationCreateWithoutUserInput {
   id?: Maybe<string>;
 
-  invitedBy: UserCreateOneInput;
+  userId: string;
 
-  user: UserCreateOneInput;
+  invitedBy: UserCreateOneInput;
 
   party: PartyCreateOneInput;
 }
@@ -1799,7 +1827,7 @@ export interface UserCreateWithoutPartiesInput {
 
   pendingFriendInvitations?: Maybe<UserCreateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>;
 
   chats?: Maybe<ChatCreateManyWithoutMembersInput>;
 }
@@ -1883,7 +1911,59 @@ export interface UserCreateWithoutChatsInput {
 
   pendingFriendInvitations?: Maybe<UserCreateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>;
+}
+
+export interface PartyInvitationCreateInput {
+  id?: Maybe<string>;
+
+  userId: string;
+
+  invitedBy: UserCreateOneInput;
+
+  user: UserCreateOneWithoutPendingPartyInvitationsInput;
+
+  party: PartyCreateOneInput;
+}
+
+export interface UserCreateOneWithoutPendingPartyInvitationsInput {
+  create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>;
+
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutPendingPartyInvitationsInput {
+  id?: Maybe<string>;
+
+  email: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  password: string;
+
+  lastOnline?: Maybe<DateTime>;
+
+  deleted?: Maybe<boolean>;
+
+  provider?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
+
+  parties?: Maybe<PartyCreateManyWithoutMembersInput>;
+
+  friends?: Maybe<UserCreateManyInput>;
+
+  pendingFriendInvitations?: Maybe<UserCreateManyInput>;
+
+  chats?: Maybe<ChatCreateManyWithoutMembersInput>;
 }
 
 export interface ChatCreateInput {
@@ -2017,7 +2097,7 @@ export interface UserUpdateDataInput {
 
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 }
@@ -2935,8 +3015,8 @@ export interface UserUpsertWithWhereUniqueNestedInput {
   create: UserCreateInput;
 }
 
-export interface PartyInvitationUpdateManyInput {
-  create?: Maybe<PartyInvitationCreateInput[]>;
+export interface PartyInvitationUpdateManyWithoutUserInput {
+  create?: Maybe<PartyInvitationCreateWithoutUserInput[]>;
 
   connect?: Maybe<PartyInvitationWhereUniqueInput[]>;
 
@@ -2946,23 +3026,25 @@ export interface PartyInvitationUpdateManyInput {
 
   delete?: Maybe<PartyInvitationWhereUniqueInput[]>;
 
-  update?: Maybe<PartyInvitationUpdateWithWhereUniqueNestedInput[]>;
+  update?: Maybe<PartyInvitationUpdateWithWhereUniqueWithoutUserInput[]>;
+
+  updateMany?: Maybe<PartyInvitationUpdateManyWithWhereNestedInput[]>;
 
   deleteMany?: Maybe<PartyInvitationScalarWhereInput[]>;
 
-  upsert?: Maybe<PartyInvitationUpsertWithWhereUniqueNestedInput[]>;
+  upsert?: Maybe<PartyInvitationUpsertWithWhereUniqueWithoutUserInput[]>;
 }
 
-export interface PartyInvitationUpdateWithWhereUniqueNestedInput {
+export interface PartyInvitationUpdateWithWhereUniqueWithoutUserInput {
   where: PartyInvitationWhereUniqueInput;
 
-  data: PartyInvitationUpdateDataInput;
+  data: PartyInvitationUpdateWithoutUserDataInput;
 }
 
-export interface PartyInvitationUpdateDataInput {
-  invitedBy?: Maybe<UserUpdateOneRequiredInput>;
+export interface PartyInvitationUpdateWithoutUserDataInput {
+  userId?: Maybe<string>;
 
-  user?: Maybe<UserUpdateOneRequiredInput>;
+  invitedBy?: Maybe<UserUpdateOneRequiredInput>;
 
   party?: Maybe<PartyUpdateOneRequiredInput>;
 }
@@ -3056,7 +3138,7 @@ export interface UserUpdateWithoutPartiesDataInput {
 
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 }
@@ -3329,6 +3411,12 @@ export interface PartyUpsertNestedInput {
   create: PartyCreateInput;
 }
 
+export interface PartyInvitationUpdateManyWithWhereNestedInput {
+  where: PartyInvitationScalarWhereInput;
+
+  data: PartyInvitationUpdateManyDataInput;
+}
+
 export interface PartyInvitationScalarWhereInput {
   /** Logical AND on all given filters. */
   AND?: Maybe<PartyInvitationScalarWhereInput[]>;
@@ -3365,6 +3453,34 @@ export interface PartyInvitationScalarWhereInput {
   /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<string>;
 
+  userId?: Maybe<string>;
+  /** All values that are not equal to given value. */
+  userId_not?: Maybe<string>;
+  /** All values that are contained in given list. */
+  userId_in?: Maybe<string[]>;
+  /** All values that are not contained in given list. */
+  userId_not_in?: Maybe<string[]>;
+  /** All values less than the given value. */
+  userId_lt?: Maybe<string>;
+  /** All values less than or equal the given value. */
+  userId_lte?: Maybe<string>;
+  /** All values greater than the given value. */
+  userId_gt?: Maybe<string>;
+  /** All values greater than or equal the given value. */
+  userId_gte?: Maybe<string>;
+  /** All values containing the given string. */
+  userId_contains?: Maybe<string>;
+  /** All values not containing the given string. */
+  userId_not_contains?: Maybe<string>;
+  /** All values starting with the given string. */
+  userId_starts_with?: Maybe<string>;
+  /** All values not starting with the given string. */
+  userId_not_starts_with?: Maybe<string>;
+  /** All values ending with the given string. */
+  userId_ends_with?: Maybe<string>;
+  /** All values not ending with the given string. */
+  userId_not_ends_with?: Maybe<string>;
+
   createdAt?: Maybe<DateTime>;
   /** All values that are not equal to given value. */
   createdAt_not?: Maybe<DateTime>;
@@ -3382,12 +3498,16 @@ export interface PartyInvitationScalarWhereInput {
   createdAt_gte?: Maybe<DateTime>;
 }
 
-export interface PartyInvitationUpsertWithWhereUniqueNestedInput {
+export interface PartyInvitationUpdateManyDataInput {
+  userId?: Maybe<string>;
+}
+
+export interface PartyInvitationUpsertWithWhereUniqueWithoutUserInput {
   where: PartyInvitationWhereUniqueInput;
 
-  update: PartyInvitationUpdateDataInput;
+  update: PartyInvitationUpdateWithoutUserDataInput;
 
-  create: PartyInvitationCreateInput;
+  create: PartyInvitationCreateWithoutUserInput;
 }
 
 export interface UserUpsertNestedInput {
@@ -3467,7 +3587,7 @@ export interface UserUpdateWithoutChatsDataInput {
 
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutChatsInput {
@@ -3482,6 +3602,64 @@ export interface ChatUpsertWithoutMessagesInput {
   update: ChatUpdateWithoutMessagesDataInput;
 
   create: ChatCreateWithoutMessagesInput;
+}
+
+export interface PartyInvitationUpdateInput {
+  userId?: Maybe<string>;
+
+  invitedBy?: Maybe<UserUpdateOneRequiredInput>;
+
+  user?: Maybe<UserUpdateOneRequiredWithoutPendingPartyInvitationsInput>;
+
+  party?: Maybe<PartyUpdateOneRequiredInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutPendingPartyInvitationsInput {
+  create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>;
+
+  connect?: Maybe<UserWhereUniqueInput>;
+
+  update?: Maybe<UserUpdateWithoutPendingPartyInvitationsDataInput>;
+
+  upsert?: Maybe<UserUpsertWithoutPendingPartyInvitationsInput>;
+}
+
+export interface UserUpdateWithoutPendingPartyInvitationsDataInput {
+  email?: Maybe<string>;
+
+  firstName?: Maybe<string>;
+
+  lastName?: Maybe<string>;
+
+  password?: Maybe<string>;
+
+  lastOnline?: Maybe<DateTime>;
+
+  deleted?: Maybe<boolean>;
+
+  provider?: Maybe<SocialMediaType>;
+
+  avatar?: Maybe<string>;
+
+  thirdPartyId?: Maybe<string>;
+
+  resetToken?: Maybe<string>;
+
+  resetTokenExpiry?: Maybe<DateTime>;
+
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>;
+
+  friends?: Maybe<UserUpdateManyInput>;
+
+  pendingFriendInvitations?: Maybe<UserUpdateManyInput>;
+
+  chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
+}
+
+export interface UserUpsertWithoutPendingPartyInvitationsInput {
+  update: UserUpdateWithoutPendingPartyInvitationsDataInput;
+
+  create: UserCreateWithoutPendingPartyInvitationsInput;
 }
 
 export interface ChatUpdateInput {
@@ -3993,14 +4171,6 @@ export interface ArtistUpdateInput {
   name?: Maybe<string>;
 }
 
-export interface PartyInvitationUpdateInput {
-  invitedBy?: Maybe<UserUpdateOneRequiredInput>;
-
-  user?: Maybe<UserUpdateOneRequiredInput>;
-
-  party?: Maybe<PartyUpdateOneRequiredInput>;
-}
-
 export interface TrackUpdateInput {
   name?: Maybe<string>;
 
@@ -4042,7 +4212,7 @@ export interface UserUpdateInput {
 
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>;
 
-  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyInput>;
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>;
 
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>;
 }
@@ -4075,6 +4245,10 @@ export interface PartyUpdateInput {
 
 export interface MessageUpdateManyMutationInput {
   content?: Maybe<string>;
+}
+
+export interface PartyInvitationUpdateManyMutationInput {
+  userId?: Maybe<string>;
 }
 
 export interface PlaylistUpdateManyMutationInput {
@@ -4180,6 +4354,25 @@ export interface MessageSubscriptionWhereInput {
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<MessageWhereInput>;
+}
+
+export interface PartyInvitationSubscriptionWhereInput {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
+  /** Logical OR on all given filters. */
+  OR?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
+  /** The subscription event gets dispatched when it's listed in mutation_in */
+  mutation_in?: Maybe<MutationType[]>;
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains?: Maybe<string>;
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_every?: Maybe<string[]>;
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  updatedFields_contains_some?: Maybe<string[]>;
+
+  node?: Maybe<PartyInvitationWhereInput>;
 }
 
 export interface ChatSubscriptionWhereInput {
@@ -4313,25 +4506,6 @@ export interface ArtistSubscriptionWhereInput {
   updatedFields_contains_some?: Maybe<string[]>;
 
   node?: Maybe<ArtistWhereInput>;
-}
-
-export interface PartyInvitationSubscriptionWhereInput {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
-  /** Logical OR on all given filters. */
-  OR?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<PartyInvitationSubscriptionWhereInput[]>;
-  /** The subscription event gets dispatched when it's listed in mutation_in */
-  mutation_in?: Maybe<MutationType[]>;
-  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
-  updatedFields_contains?: Maybe<string>;
-  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
-  updatedFields_contains_every?: Maybe<string[]>;
-  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
-  updatedFields_contains_some?: Maybe<string[]>;
-
-  node?: Maybe<PartyInvitationWhereInput>;
 }
 
 export interface TrackSubscriptionWhereInput {
@@ -4488,6 +4662,8 @@ export enum UserOrderByInput {
 export enum PartyInvitationOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  UserIdAsc = 'userId_ASC',
+  UserIdDesc = 'userId_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC'
 }
@@ -5323,6 +5499,8 @@ export type PartyInvitationSubscriptionPreviousValues = {
   __typename?: 'PartyInvitationPreviousValues';
 
   id: string;
+
+  userId: string;
 };
 
 export type PartyFragmentFragment = {
@@ -6461,6 +6639,7 @@ export const PartyInvitationSubscriptionDocument = gql`
       }
       previousValues {
         id
+        userId
       }
       mutation
     }

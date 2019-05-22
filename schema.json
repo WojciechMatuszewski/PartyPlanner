@@ -108,6 +108,97 @@
               "deprecationReason": null
             },
             {
+              "name": "partyInvitations",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationWhereInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "orderBy",
+                  "description": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "PartyInvitationOrderByInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "skip",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "after",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "first",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "last",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "PartyInvitation",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "chats",
               "description": null,
               "args": [
@@ -745,97 +836,6 @@
               "deprecationReason": null
             },
             {
-              "name": "partyInvitations",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationWhereInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "orderBy",
-                  "description": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "PartyInvitationOrderByInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "skip",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "after",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "first",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "last",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "PartyInvitation",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "tracks",
               "description": null,
               "args": [
@@ -1136,6 +1136,33 @@
               "deprecationReason": null
             },
             {
+              "name": "partyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationWhereUniqueInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitation",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "chat",
               "description": null,
               "args": [
@@ -1325,33 +1352,6 @@
               "deprecationReason": null
             },
             {
-              "name": "partyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationWhereUniqueInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitation",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "track",
               "description": null,
               "args": [
@@ -1513,6 +1513,93 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "MessageConnection",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "partyInvitationsConnection",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationWhereInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "orderBy",
+                  "description": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "PartyInvitationOrderByInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "skip",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "after",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "first",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "last",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PartyInvitationConnection",
                   "ofType": null
                 }
               },
@@ -2122,93 +2209,6 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "ArtistConnection",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "partyInvitationsConnection",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationWhereInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "orderBy",
-                  "description": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "PartyInvitationOrderByInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "skip",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "after",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "first",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "last",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PartyInvitationConnection",
                   "ofType": null
                 }
               },
@@ -8435,7 +8435,7 @@
               "defaultValue": null
             },
             {
-              "name": "od",
+              "name": "id",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -8445,7 +8445,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not",
+              "name": "id_not",
               "description": "All values that are not equal to given value.",
               "type": {
                 "kind": "SCALAR",
@@ -8455,7 +8455,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_in",
+              "name": "id_in",
               "description": "All values that are contained in given list.",
               "type": {
                 "kind": "LIST",
@@ -8473,7 +8473,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_in",
+              "name": "id_not_in",
               "description": "All values that are not contained in given list.",
               "type": {
                 "kind": "LIST",
@@ -8491,7 +8491,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_lt",
+              "name": "id_lt",
               "description": "All values less than the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -8501,7 +8501,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_lte",
+              "name": "id_lte",
               "description": "All values less than or equal the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -8511,7 +8511,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_gt",
+              "name": "id_gt",
               "description": "All values greater than the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -8521,7 +8521,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_gte",
+              "name": "id_gte",
               "description": "All values greater than or equal the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -8531,7 +8531,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_contains",
+              "name": "id_contains",
               "description": "All values containing the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -8541,7 +8541,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_contains",
+              "name": "id_not_contains",
               "description": "All values not containing the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -8551,7 +8551,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_starts_with",
+              "name": "id_starts_with",
               "description": "All values starting with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -8561,7 +8561,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_starts_with",
+              "name": "id_not_starts_with",
               "description": "All values not starting with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -8571,7 +8571,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_ends_with",
+              "name": "id_ends_with",
               "description": "All values ending with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -8581,11 +8581,167 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_ends_with",
+              "name": "id_not_ends_with",
               "description": "All values not ending with the given string.",
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not",
+              "description": "All values that are not equal to given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_in",
+              "description": "All values that are contained in given list.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_in",
+              "description": "All values that are not contained in given list.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_lt",
+              "description": "All values less than the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_lte",
+              "description": "All values less than or equal the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_gt",
+              "description": "All values greater than the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_gte",
+              "description": "All values greater than or equal the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_contains",
+              "description": "All values containing the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_contains",
+              "description": "All values not containing the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_starts_with",
+              "description": "All values starting with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_starts_with",
+              "description": "All values not starting with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_ends_with",
+              "description": "All values ending with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_ends_with",
+              "description": "All values not ending with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "defaultValue": null
@@ -9435,6 +9591,11 @@
             {
               "kind": "OBJECT",
               "name": "Game",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "PartyInvitation",
               "ofType": null
             },
             {
@@ -11267,13 +11428,25 @@
           "interfaces": null,
           "enumValues": [
             {
-              "name": "od_ASC",
+              "name": "id_ASC",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "od_DESC",
+              "name": "id_DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userId_ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userId_DESC",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null
@@ -11299,7 +11472,7 @@
           "description": null,
           "fields": [
             {
-              "name": "od",
+              "name": "id",
               "description": null,
               "args": [],
               "type": {
@@ -11324,6 +11497,22 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -11380,7 +11569,13 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Node",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null
         },
@@ -15211,6 +15406,27 @@
         },
         {
           "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationWhereUniqueInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
           "name": "ChatWhereUniqueInput",
           "description": null,
           "fields": null,
@@ -15363,27 +15579,6 @@
           "inputFields": [
             {
               "name": "id",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationWhereUniqueInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "od",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -15656,6 +15851,139 @@
         {
           "kind": "OBJECT",
           "name": "AggregateMessage",
+          "description": null,
+          "fields": [
+            {
+              "name": "count",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PartyInvitationConnection",
+          "description": "A connection to a list of items.",
+          "fields": [
+            {
+              "name": "pageInfo",
+              "description": "Information to aid in pagination.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PageInfo",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "edges",
+              "description": "A list of edges.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "PartyInvitationEdge",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "aggregate",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AggregatePartyInvitation",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PartyInvitationEdge",
+          "description": "An edge in a connection.",
+          "fields": [
+            {
+              "name": "node",
+              "description": "The item at the end of the edge.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PartyInvitation",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "cursor",
+              "description": "A cursor for use in pagination.",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "AggregatePartyInvitation",
           "description": null,
           "fields": [
             {
@@ -16613,139 +16941,6 @@
         },
         {
           "kind": "OBJECT",
-          "name": "PartyInvitationConnection",
-          "description": "A connection to a list of items.",
-          "fields": [
-            {
-              "name": "pageInfo",
-              "description": "Information to aid in pagination.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PageInfo",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "edges",
-              "description": "A list of edges.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "PartyInvitationEdge",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "aggregate",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "AggregatePartyInvitation",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "PartyInvitationEdge",
-          "description": "An edge in a connection.",
-          "fields": [
-            {
-              "name": "node",
-              "description": "The item at the end of the edge.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PartyInvitation",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "cursor",
-              "description": "A cursor for use in pagination.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "AggregatePartyInvitation",
-          "description": null,
-          "fields": [
-            {
-              "name": "count",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
           "name": "TrackConnection",
           "description": "A connection to a list of items.",
           "fields": [
@@ -17180,6 +17375,37 @@
               "deprecationReason": null
             },
             {
+              "name": "createPartyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "data",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationCreateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PartyInvitation",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createChat",
               "description": null,
               "args": [
@@ -17397,37 +17623,6 @@
               "deprecationReason": null
             },
             {
-              "name": "createPartyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "data",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationCreateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PartyInvitation",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createTrack",
               "description": null,
               "args": [
@@ -17556,6 +17751,47 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "Message",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatePartyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "data",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationUpdateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationWhereUniqueInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitation",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -17849,47 +18085,6 @@
               "deprecationReason": null
             },
             {
-              "name": "updatePartyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "data",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationUpdateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationWhereUniqueInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitation",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "updateTrack",
               "description": null,
               "args": [
@@ -18034,6 +18229,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "Message",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "deletePartyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationWhereUniqueInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitation",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -18229,33 +18451,6 @@
               "deprecationReason": null
             },
             {
-              "name": "deletePartyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationWhereUniqueInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitation",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "deleteTrack",
               "description": null,
               "args": [
@@ -18389,6 +18584,65 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "Message",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "upsertPartyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationWhereUniqueInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "create",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationCreateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "update",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationUpdateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PartyInvitation",
                   "ofType": null
                 }
               },
@@ -18809,65 +19063,6 @@
               "deprecationReason": null
             },
             {
-              "name": "upsertPartyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationWhereUniqueInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "create",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationCreateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "update",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PartyInvitationUpdateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PartyInvitation",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "upsertTrack",
               "description": null,
               "args": [
@@ -19068,6 +19263,47 @@
                   "type": {
                     "kind": "INPUT_OBJECT",
                     "name": "MessageWhereInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BatchPayload",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateManyPartyInvitations",
+              "description": null,
+              "args": [
+                {
+                  "name": "data",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PartyInvitationUpdateManyMutationInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationWhereInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -19441,6 +19677,33 @@
               "deprecationReason": null
             },
             {
+              "name": "deleteManyPartyInvitations",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationWhereInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BatchPayload",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "deleteManyChats",
               "description": null,
               "args": [
@@ -19612,33 +19875,6 @@
                   "type": {
                     "kind": "INPUT_OBJECT",
                     "name": "ArtistWhereInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "BatchPayload",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "deleteManyPartyInvitations",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationWhereInput",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -20286,7 +20522,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationCreateManyInput",
+                "name": "PartyInvitationCreateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -20757,7 +20993,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationCreateManyInput",
+          "name": "PartyInvitationCreateManyWithoutUserInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -20772,7 +21008,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationCreateInput",
+                    "name": "PartyInvitationCreateWithoutUserInput",
                     "ofType": null
                   }
                 }
@@ -20804,12 +21040,12 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationCreateInput",
+          "name": "PartyInvitationCreateWithoutUserInput",
           "description": null,
           "fields": null,
           "inputFields": [
             {
-              "name": "od",
+              "name": "id",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -20819,21 +21055,21 @@
               "defaultValue": null
             },
             {
-              "name": "invitedBy",
+              "name": "userId",
               "description": null,
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UserCreateOneInput",
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               },
               "defaultValue": null
             },
             {
-              "name": "user",
+              "name": "invitedBy",
               "description": null,
               "type": {
                 "kind": "NON_NULL",
@@ -21275,7 +21511,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationCreateManyInput",
+                "name": "PartyInvitationCreateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -21783,7 +22019,302 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationCreateManyInput",
+                "name": "PartyInvitationCreateManyWithoutUserInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationCreateInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitedBy",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserCreateOneInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "user",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserCreateOneWithoutPendingPartyInvitationsInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "party",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PartyCreateOneInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UserCreateOneWithoutPendingPartyInvitationsInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "create",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserCreateWithoutPendingPartyInvitationsInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "connect",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserWhereUniqueInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UserCreateWithoutPendingPartyInvitationsInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "email",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "firstName",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "lastName",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "password",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "lastOnline",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "deleted",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "provider",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "SocialMediaType",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "avatar",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "thirdPartyId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "resetToken",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "resetTokenExpiry",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "parties",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "PartyCreateManyWithoutMembersInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserCreateManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "pendingFriendInvitations",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserCreateManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "chats",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ChatCreateManyWithoutMembersInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -22554,7 +23085,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationUpdateManyInput",
+                "name": "PartyInvitationUpdateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -27993,7 +28524,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationUpdateManyInput",
+          "name": "PartyInvitationUpdateManyWithoutUserInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -28008,7 +28539,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationCreateInput",
+                    "name": "PartyInvitationCreateWithoutUserInput",
                     "ofType": null
                   }
                 }
@@ -28098,7 +28629,25 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationUpdateWithWhereUniqueNestedInput",
+                    "name": "PartyInvitationUpdateWithWhereUniqueWithoutUserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "updateMany",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationUpdateManyWithWhereNestedInput",
                     "ofType": null
                   }
                 }
@@ -28134,7 +28683,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationUpsertWithWhereUniqueNestedInput",
+                    "name": "PartyInvitationUpsertWithWhereUniqueWithoutUserInput",
                     "ofType": null
                   }
                 }
@@ -28148,7 +28697,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationUpdateWithWhereUniqueNestedInput",
+          "name": "PartyInvitationUpdateWithWhereUniqueWithoutUserInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -28174,7 +28723,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "PartyInvitationUpdateDataInput",
+                  "name": "PartyInvitationUpdateWithoutUserDataInput",
                   "ofType": null
                 }
               },
@@ -28187,22 +28736,22 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationUpdateDataInput",
+          "name": "PartyInvitationUpdateWithoutUserDataInput",
           "description": null,
           "fields": null,
           "inputFields": [
             {
-              "name": "invitedBy",
+              "name": "userId",
               "description": null,
               "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "UserUpdateOneRequiredInput",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "defaultValue": null
             },
             {
-              "name": "user",
+              "name": "invitedBy",
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
@@ -28761,7 +29310,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationUpdateManyInput",
+                "name": "PartyInvitationUpdateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -30491,6 +31040,45 @@
         },
         {
           "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationUpdateManyWithWhereNestedInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "where",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PartyInvitationScalarWhereInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "data",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PartyInvitationUpdateManyDataInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
           "name": "PartyInvitationScalarWhereInput",
           "description": null,
           "fields": null,
@@ -30550,7 +31138,7 @@
               "defaultValue": null
             },
             {
-              "name": "od",
+              "name": "id",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -30560,7 +31148,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not",
+              "name": "id_not",
               "description": "All values that are not equal to given value.",
               "type": {
                 "kind": "SCALAR",
@@ -30570,7 +31158,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_in",
+              "name": "id_in",
               "description": "All values that are contained in given list.",
               "type": {
                 "kind": "LIST",
@@ -30588,7 +31176,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_in",
+              "name": "id_not_in",
               "description": "All values that are not contained in given list.",
               "type": {
                 "kind": "LIST",
@@ -30606,7 +31194,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_lt",
+              "name": "id_lt",
               "description": "All values less than the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -30616,7 +31204,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_lte",
+              "name": "id_lte",
               "description": "All values less than or equal the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -30626,7 +31214,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_gt",
+              "name": "id_gt",
               "description": "All values greater than the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -30636,7 +31224,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_gte",
+              "name": "id_gte",
               "description": "All values greater than or equal the given value.",
               "type": {
                 "kind": "SCALAR",
@@ -30646,7 +31234,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_contains",
+              "name": "id_contains",
               "description": "All values containing the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -30656,7 +31244,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_contains",
+              "name": "id_not_contains",
               "description": "All values not containing the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -30666,7 +31254,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_starts_with",
+              "name": "id_starts_with",
               "description": "All values starting with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -30676,7 +31264,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_starts_with",
+              "name": "id_not_starts_with",
               "description": "All values not starting with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -30686,7 +31274,7 @@
               "defaultValue": null
             },
             {
-              "name": "od_ends_with",
+              "name": "id_ends_with",
               "description": "All values ending with the given string.",
               "type": {
                 "kind": "SCALAR",
@@ -30696,11 +31284,167 @@
               "defaultValue": null
             },
             {
-              "name": "od_not_ends_with",
+              "name": "id_not_ends_with",
               "description": "All values not ending with the given string.",
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not",
+              "description": "All values that are not equal to given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_in",
+              "description": "All values that are contained in given list.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_in",
+              "description": "All values that are not contained in given list.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_lt",
+              "description": "All values less than the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_lte",
+              "description": "All values less than or equal the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_gt",
+              "description": "All values greater than the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_gte",
+              "description": "All values greater than or equal the given value.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_contains",
+              "description": "All values containing the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_contains",
+              "description": "All values not containing the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_starts_with",
+              "description": "All values starting with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_starts_with",
+              "description": "All values not starting with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_ends_with",
+              "description": "All values ending with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId_not_ends_with",
+              "description": "All values not ending with the given string.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "defaultValue": null
@@ -30808,7 +31552,28 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationUpsertWithWhereUniqueNestedInput",
+          "name": "PartyInvitationUpdateManyDataInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationUpsertWithWhereUniqueWithoutUserInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -30834,7 +31599,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "PartyInvitationUpdateDataInput",
+                  "name": "PartyInvitationUpdateWithoutUserDataInput",
                   "ofType": null
                 }
               },
@@ -30848,7 +31613,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "PartyInvitationCreateInput",
+                  "name": "PartyInvitationCreateWithoutUserInput",
                   "ofType": null
                 }
               },
@@ -31343,7 +32108,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationUpdateManyInput",
+                "name": "PartyInvitationUpdateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -31435,6 +32200,308 @@
                 "ofType": {
                   "kind": "INPUT_OBJECT",
                   "name": "ChatCreateWithoutMessagesInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationUpdateInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitedBy",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpdateOneRequiredInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "user",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpdateOneRequiredWithoutPendingPartyInvitationsInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "party",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "PartyUpdateOneRequiredInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UserUpdateOneRequiredWithoutPendingPartyInvitationsInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "create",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserCreateWithoutPendingPartyInvitationsInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "connect",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserWhereUniqueInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "update",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpdateWithoutPendingPartyInvitationsDataInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpsertWithoutPendingPartyInvitationsInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UserUpdateWithoutPendingPartyInvitationsDataInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "email",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "firstName",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "lastName",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "password",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "lastOnline",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "deleted",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "provider",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "SocialMediaType",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "avatar",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "thirdPartyId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "resetToken",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "resetTokenExpiry",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "parties",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "PartyUpdateManyWithoutMembersInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpdateManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "pendingFriendInvitations",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "UserUpdateManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "chats",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ChatUpdateManyWithoutMembersInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UserUpsertWithoutPendingPartyInvitationsInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "update",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserUpdateWithoutPendingPartyInvitationsDataInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "create",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "UserCreateWithoutPendingPartyInvitationsInput",
                   "ofType": null
                 }
               },
@@ -34548,47 +35615,6 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationUpdateInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "invitedBy",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "UserUpdateOneRequiredInput",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "user",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "UserUpdateOneRequiredInput",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "party",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "PartyUpdateOneRequiredInput",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
           "name": "TrackUpdateInput",
           "description": null,
           "fields": null,
@@ -34799,7 +35825,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationUpdateManyInput",
+                "name": "PartyInvitationUpdateManyWithoutUserInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -35004,6 +36030,27 @@
           "description": "The `Long` scalar type represents non-fractional signed whole numeric values.\nLong can represent values between -(2^63) and 2^63 - 1.",
           "fields": null,
           "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationUpdateManyMutationInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
           "interfaces": null,
           "enumValues": null,
           "possibleTypes": null
@@ -35545,6 +36592,29 @@
               "deprecationReason": null
             },
             {
+              "name": "partyInvitation",
+              "description": null,
+              "args": [
+                {
+                  "name": "where",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationSubscriptionWhereInput",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitationSubscriptionPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "chat",
               "description": null,
               "args": [
@@ -35700,29 +36770,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "ArtistSubscriptionPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "partyInvitation",
-              "description": null,
-              "args": [
-                {
-                  "name": "where",
-                  "description": null,
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationSubscriptionWhereInput",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitationSubscriptionPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -36097,6 +37144,275 @@
             },
             {
               "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PartyInvitationSubscriptionWhereInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "AND",
+              "description": "Logical AND on all given filters.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationSubscriptionWhereInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "OR",
+              "description": "Logical OR on all given filters.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationSubscriptionWhereInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "NOT",
+              "description": "Logical NOT on all given filters combined by AND.",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PartyInvitationSubscriptionWhereInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "mutation_in",
+              "description": "The subscription event gets dispatched when it's listed in mutation_in",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "MutationType",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "updatedFields_contains",
+              "description": "The subscription event gets only dispatched when one of the updated fields names is included in this list",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "updatedFields_contains_every",
+              "description": "The subscription event gets only dispatched when all of the field names included in this list have been updated",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "updatedFields_contains_some",
+              "description": "The subscription event gets only dispatched when some of the field names included in this list have been updated",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "node",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "PartyInvitationWhereInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PartyInvitationSubscriptionPayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "mutation",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MutationType",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "node",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitation",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedFields",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "previousValues",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PartyInvitationPreviousValues",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PartyInvitationPreviousValues",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createdAt",
               "description": null,
               "args": [],
               "type": {
@@ -38056,259 +39372,6 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "PartyInvitationSubscriptionWhereInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "AND",
-              "description": "Logical AND on all given filters.",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationSubscriptionWhereInput",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "OR",
-              "description": "Logical OR on all given filters.",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationSubscriptionWhereInput",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "NOT",
-              "description": "Logical NOT on all given filters combined by AND.",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PartyInvitationSubscriptionWhereInput",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "mutation_in",
-              "description": "The subscription event gets dispatched when it's listed in mutation_in",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "ENUM",
-                    "name": "MutationType",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedFields_contains",
-              "description": "The subscription event gets only dispatched when one of the updated fields names is included in this list",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedFields_contains_every",
-              "description": "The subscription event gets only dispatched when all of the field names included in this list have been updated",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedFields_contains_some",
-              "description": "The subscription event gets only dispatched when some of the field names included in this list have been updated",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "node",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "PartyInvitationWhereInput",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "PartyInvitationSubscriptionPayload",
-          "description": null,
-          "fields": [
-            {
-              "name": "mutation",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "MutationType",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "node",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitation",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedFields",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "previousValues",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "PartyInvitationPreviousValues",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "PartyInvitationPreviousValues",
-          "description": null,
-          "fields": [
-            {
-              "name": "od",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "DateTime",
                   "ofType": null
                 }
               },
@@ -40333,7 +41396,7 @@
   "extensions": {
     "graphql-config": {
       "source": "http://localhost:4000/graphql",
-      "timestamp": "Sun May 19 2019 18:10:50 GMT+0200 (Central European Summer Time)"
+      "timestamp": "Wed May 22 2019 10:12:37 GMT+0200 (Central European Summer Time)"
     }
   }
 }

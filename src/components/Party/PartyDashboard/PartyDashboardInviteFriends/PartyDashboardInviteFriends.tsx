@@ -175,7 +175,8 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
     setConfirmLoading(true);
     if (idsToInvite.length > 0) {
       const promises = idsToInvite.map(createPartyInvitationPromise);
-      await Promise.all(promises);
+      const test = await Promise.all(promises);
+      console.log(test);
     }
     if (idsToCancel.length > 0) {
       const promises = idsToCancel.map(createDeletePartyInvitationPromise);
@@ -197,7 +198,8 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
         data: {
           invitedBy: { connect: { id: currentlyAuthenticatedUserId } },
           party: { connect: { id: partyId } },
-          user: { connect: { id: userToInvite } }
+          user: { connect: { id: userToInvite } },
+          userId: userToInvite
         }
       }
     });

@@ -43,6 +43,7 @@ export const PARTY_INVITATION_SUBSCRIPTION = gql`
       }
       previousValues {
         id
+        userId
       }
       mutation
     }

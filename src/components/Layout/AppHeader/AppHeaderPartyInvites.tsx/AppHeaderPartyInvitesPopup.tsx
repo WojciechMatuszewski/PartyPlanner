@@ -2,7 +2,8 @@ import React from 'react';
 import { PartyInvitationsConnectionQueryEdges } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
 import UserAvatar from '@components/UserDefaultAvatar';
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
+import moment from 'moment';
 
 interface Props {
   loading: boolean;
@@ -18,8 +19,13 @@ const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
   }, []);
 
   return (
-    <NoticeIcon onLoadMore={props.onFetchMore} count={props.notificationCount}>
+    <NoticeIcon
+      style={{ background: 'red' }}
+      onLoadMore={props.onFetchMore}
+      count={props.notificationCount}
+    >
       <NoticeIcon.Tab
+        name="Party Invitations"
         loading={props.loading}
         skeletonProps={{}}
         showClear={false}
@@ -30,8 +36,11 @@ const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
   );
 
   function createNotification(edge: PartyInvitationsConnectionQueryEdges) {
+    const parsedNotificationDate = moment(edge.node.createdAt).calendar();
+
     return {
       avatar: <UserAvatar userData={edge.node.invitedBy} />,
+      title: 'New invitation',
       description: (
         <React.Fragment>
           <Typography.Text strong={true}>
@@ -41,9 +50,17 @@ const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
           <Typography.Text type="warning">
             {edge.node.party.title}{' '}
           </Typography.Text>
-          <Typography.Paragraph strong={true} style={{ color: '#1890ff' }}>
-            Click on the notification to join
+          <Typography.Paragraph type="secondary">
+            {parsedNotificationDate}
           </Typography.Paragraph>
+          <Button.Group style={{ display: 'block', marginTop: 12 }}>
+            <Button type="primary" size="small">
+              Accept
+            </Button>
+            <Button type="danger" size="small">
+              Decline
+            </Button>
+          </Button.Group>
         </React.Fragment>
       )
     };

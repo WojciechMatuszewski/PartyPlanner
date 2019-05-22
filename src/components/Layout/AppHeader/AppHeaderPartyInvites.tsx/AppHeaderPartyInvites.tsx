@@ -59,6 +59,7 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
           !hasEdges(data.partyInvitationsConnection.edges)
         )
           return <Icon type="bell" />;
+
         return (
           <AppHeaderPartyInvitesPopup
             notificationCount={data.full.aggregate.count}
@@ -162,45 +163,46 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     };
   }
 
+  function handleDeclineInvitation() {}
+
   function subscribeForMoreQueryUpdater(
     prev: PartyInvitationsConnectionQueryQuery,
     { subscriptionData }: SubscribeForMoreSubscribeData
-  ): PartyInvitationsConnectionQueryQuery {
+  ) {
     if (!subscriptionData.data || !subscriptionData.data.partyInvitation)
       return prev;
 
+    const {
+      data: { partyInvitation }
+    } = subscriptionData;
+
     let newCache = prev;
 
-    switch (subscriptionData.data.partyInvitation.mutation) {
+    switch (partyInvitation.mutation) {
       case MutationType.Created:
-        newCache = handleInvitationAdded(
-          prev,
-          subscriptionData.data.partyInvitation
-        );
+        newCache = handleInvitationAdded(prev, partyInvitation);
         break;
       case MutationType.Deleted:
-        newCache = handleInvitationDeleted(
-          prev,
-          subscriptionData.data.partyInvitation
-        );
+        newCache = hasDeletedMyExistingNotification(partyInvitation)
+          ? handleInvitationDeleted(prev, partyInvitation)
+          : prev;
         break;
     }
 
     return newCache;
   }
 
-  //   function displayPartyInvitationNotification(
-  //     prev: PartyInvitationsConnectionQueryQuery,
-  //     { subscriptionData }: SubscribeForMoreSubscribeData
-  //   ) {
-  //     notification.info({
-  //       message: 'Something something',
-  //       description: 'Something someong',
-  //       onClick: () => {
-  //         console.log('clicked!');
-  //       }
-  //     });
-  //   }
+  // when deleting node returns null so filters supplied to where does not work
+  // I added static userId field to diff here so i do not trigger handleInvitationDeleted on notification
+  // which is not mine
+  function hasDeletedMyExistingNotification(
+    partyInvitation: PartyInvitationSubscriptionPartyInvitation
+  ) {
+    return (
+      partyInvitation.previousValues &&
+      partyInvitation.previousValues.userId == props.userId
+    );
+  }
 };
 
 export default AppHeaderPartyInvites;
