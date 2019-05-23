@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Icon } from 'antd';
+import { Button, Modal, Icon, message } from 'antd';
 import PartyDashboardInviteFriendsModalContent from './PartyDashboardInviteFriendsModalContent';
 import {
   PaginateUsersInviteToPartyQueryComponent,
@@ -13,6 +13,7 @@ import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 import { PartyDashboardContext } from '@pages/party';
+import { map, concat } from 'ramda';
 
 interface Props {
   isOnMobile: boolean;
@@ -168,20 +169,26 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   async function handleModalClose() {
     const idsToInvite = Object.keys(toBeInvitedPeople);
     const idsToCancel = Object.keys(toHaveInvitationCanceledPeople);
+
     if (idsToInvite.length <= 0 && idsToCancel.length <= 0) {
       setModalVisible(false);
       return;
     }
-    setConfirmLoading(true);
-    if (idsToInvite.length > 0) {
-      const promises = idsToInvite.map(createPartyInvitationPromise);
+
+    const promises = concat(
+      map(createPartyInvitationPromise, idsToInvite),
+      map(createDeletePartyInvitationPromise, idsToCancel)
+    );
+
+    try {
+      setConfirmLoading(true);
       await Promise.all(promises);
+      setConfirmLoading(false);
+      resetState();
+    } catch (e) {
+      setConfirmLoading(false);
+      message.error('An error occurred!');
     }
-    if (idsToCancel.length > 0) {
-      const promises = idsToCancel.map(createDeletePartyInvitationPromise);
-      await Promise.all(promises);
-    }
-    resetState();
   }
 
   function resetState() {

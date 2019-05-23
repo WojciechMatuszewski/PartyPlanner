@@ -4,7 +4,7 @@ import moment from 'moment';
 import UserAvatar from '@components/UserDefaultAvatar';
 import { Typography } from 'antd';
 
-const AppHeaderPartyInvitationsPartyInvitation = (
+const PartyInvitesNoticeInvitation = (
   edge: PartyInvitationsConnectionQueryEdges
 ) => {
   const parsedNotificationDate = moment(edge.node.createdAt).calendar();
@@ -26,10 +26,6 @@ const AppHeaderPartyInvitationsPartyInvitation = (
       </React.Fragment>
     )
   };
-
-  // function handleNotificationDeclineClick() {
-  //   onDeclineClick(edge.node.id);
-  // }
 };
 
-export default AppHeaderPartyInvitationsPartyInvitation;
+export default PartyInvitesNoticeInvitation;

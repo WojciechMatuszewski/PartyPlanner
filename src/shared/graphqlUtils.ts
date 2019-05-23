@@ -1,9 +1,31 @@
-
-import { PartiesQueryVariables } from '@generated/graphql';
+import { PartiesQueryVariables, Maybe } from '@generated/graphql';
 import moment from 'moment';
 import { OperationVariables } from 'react-apollo';
 import { message } from 'antd';
+import { get } from 'lodash';
+import { curryN, compose, map, filter } from 'ramda';
 
+type DeepWithoutMaybeObject<T> = {
+  [K in keyof T]: T[K] extends Maybe<infer E> ? DeepWithoutMaybe<E> : T[K]
+};
+type DeepWithoutMaybe<T> = T extends (Maybe<infer E>)[]
+  ? DeepWithoutMaybeObject<E>[]
+  : T extends object
+  ? DeepWithoutMaybeObject<T>
+  : T;
+
+export function hasGraphqlData<GraphqlDataType extends any>(
+  data: GraphqlDataType | undefined,
+  pathsToCheck: string[]
+): data is DeepWithoutMaybe<GraphqlDataType> {
+  if (data == null) return false;
+
+  return compose(
+    arr => arr.length == pathsToCheck.length,
+    filter<any>(item => item != null),
+    map(curryN(2, get)(data))
+  )(pathsToCheck);
+}
 
 export function getPartiesDateVariables(
   dateToGetVariablesFor: Date,
@@ -50,5 +72,3 @@ export async function handleRefetch<QueryVariables extends OperationVariables>(
     message.error('Could not fetch the data');
   }
 }
-
-

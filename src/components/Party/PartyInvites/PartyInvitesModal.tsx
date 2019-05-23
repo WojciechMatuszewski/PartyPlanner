@@ -23,7 +23,7 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-const AppHeaderPartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
+const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
   const updateUser = useUpdateUser();
   const deletePartyInvitation = useDeletePartyInvitationMutation();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -111,4 +111,4 @@ const AppHeaderPartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
   }
 };
 
-export default withRouter(AppHeaderPartyInvitesModal);
+export default withRouter(PartyInvitesModal);

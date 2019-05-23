@@ -1,5 +1,5 @@
 import React from 'react';
-import PartyMenu from '@components/Party/PartyMenu';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { Row, Col } from 'antd';
 import dynamic from 'next/dynamic';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';

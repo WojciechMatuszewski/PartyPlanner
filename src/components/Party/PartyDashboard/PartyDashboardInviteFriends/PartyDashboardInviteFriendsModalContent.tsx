@@ -21,7 +21,10 @@ const SearchInputStyles = css`
     border: 0;
     border-bottom: 1px solid #e8e8e8;
     border-radius: 0;
+    padding-left: 24px;
+    padding-right: 37px;
   }
+
   margin-bottom: 0;
 `;
 

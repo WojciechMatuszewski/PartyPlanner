@@ -1,8 +1,7 @@
 import React from 'react';
 import { PartyInvitationsConnectionQueryEdges } from '@generated/graphql';
 import { NoticeIcon } from 'ant-design-pro';
-
-import AppHeaderPartyInvitationsPartyInvitation from './AppHeaderPartyInvitesPartyInvitation';
+import PartyInvitesNoticeInvitation from './PartyInvitesNoticeInvitation';
 
 interface Props {
   loading: boolean;
@@ -13,7 +12,7 @@ interface Props {
   notificationCount: number;
   onItemClick: (item: { edge: PartyInvitationsConnectionQueryEdges }) => void;
 }
-const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
+const PartyInvitesNoticesList: React.FC<Props> = props => {
   React.useEffect(() => {
     props.subscribeForMore();
   }, []);
@@ -32,13 +31,11 @@ const AppHeaderPartyInvitesPopup: React.FC<Props> = props => {
           skeletonProps={{}}
           showClear={false}
           loadedAll={!props.hasMoreResults}
-          list={props.partyInvites.map(
-            AppHeaderPartyInvitationsPartyInvitation
-          )}
+          list={props.partyInvites.map(PartyInvitesNoticeInvitation)}
         />
       </NoticeIcon>
     </React.Fragment>
   );
 };
 
-export default AppHeaderPartyInvitesPopup;
+export default PartyInvitesNoticesList;

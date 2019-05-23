@@ -8,13 +8,14 @@ import {
   PartyInvitationSubscriptionSubscription,
   PartyInvitationsConnectionQueryQuery,
   PartyInvitationSubscriptionPartyInvitation,
-  MutationType,
-  PartyInvitationSubscriptionNode
+  MutationType
 } from '@generated/graphql';
-import { Icon, notification } from 'antd';
-import AppHeaderPartyInvitesPopup from './AppHeaderPartyInvitesPopup';
-import AppHeaderPartyInvitesModal from './AppHeaderPartyInvitesModal';
-import { compose } from 'ramda';
+import { Icon } from 'antd';
+
+import { hasGraphqlData } from '@shared/graphqlUtils';
+import openPartyInvitationNotification from '@components/Party/PartyInvites/PartyInvitesNotification';
+import PartyInvitesModal from './PartyInvitesModal';
+import PartyInvitesNoticesList from './PartyInvitesNoticesList';
 
 interface Props {
   userId: string;
@@ -26,7 +27,7 @@ interface SubscribeForMoreSubscribeData {
   };
 }
 
-const AppHeaderPartyInvites: React.FC<Props> = props => {
+const PartyInvitesNoticeIcon: React.FC<Props> = props => {
   const BASE_QUERY_VARIABLES: PartyInvitationsConnectionQueryVariables = React.useMemo(
     () => ({
       first: 2,
@@ -56,11 +57,9 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     PartyInvitationsConnectionQueryEdges | undefined
   >();
 
-  // console.log(clickedItem);
-
   return (
     <React.Fragment>
-      <AppHeaderPartyInvitesModal
+      <PartyInvitesModal
         invitation={clickedItem}
         onCancel={() => setModalVisible(false)}
         visible={modalVisible}
@@ -71,14 +70,15 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
       >
         {({ data, loading, fetchMore, subscribeToMore }) => {
           if (
-            !data ||
-            !data.partyInvitationsConnection ||
-            !hasEdges(data.partyInvitationsConnection.edges)
+            !hasGraphqlData(data, [
+              'partyInvitationsConnection',
+              'partyInvitationsConnection.edges'
+            ])
           )
             return <Icon type="bell" />;
 
           return (
-            <AppHeaderPartyInvitesPopup
+            <PartyInvitesNoticesList
               onItemClick={handleItemClick}
               notificationCount={data.full.aggregate.count}
               loading={loading}
@@ -107,12 +107,6 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
       </PartyInvitationsConnectionQueryComponent>
     </React.Fragment>
   );
-
-  function hasEdges(
-    edges: any
-  ): edges is PartyInvitationsConnectionQueryEdges[] {
-    return edges !== null;
-  }
 
   function fetchMoreQueryUpdater(
     prev: PartyInvitationsConnectionQueryQuery,
@@ -150,7 +144,7 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     switch (partyInvitation.mutation) {
       case MutationType.Created:
         newCache = handleInvitationAdded(prev, partyInvitation);
-        showNewInvitationNotification(partyInvitation.node!);
+        openPartyInvitationNotification(partyInvitation.node!, handleItemClick);
         break;
       case MutationType.Deleted:
         newCache = hasDeletedMyExistingNotification(partyInvitation)
@@ -230,26 +224,6 @@ const AppHeaderPartyInvites: React.FC<Props> = props => {
     setClickedItem(edge);
     setModalVisible(true);
   }
-
-  function showNewInvitationNotification(
-    subscriptionNode: PartyInvitationSubscriptionNode
-  ) {
-    const notificationKey = createNotificationKey();
-    notification.info({
-      key: notificationKey,
-      message: 'New party invitation!',
-      onClick: () =>
-        compose(
-          notification.close,
-          () => notificationKey,
-          handleItemClick
-        )({ edge: { node: subscriptionNode } })
-    });
-  }
-
-  function createNotificationKey() {
-    return `open${Date.now()}`;
-  }
 };
 
-export default AppHeaderPartyInvites;
+export default PartyInvitesNoticeIcon;

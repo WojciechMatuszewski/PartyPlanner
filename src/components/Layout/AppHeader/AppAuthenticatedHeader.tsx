@@ -4,14 +4,13 @@ import useMedia from '@hooks/useMedia';
 import { ApolloConsumer } from 'react-apollo';
 import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
-import { MeQueryComponent, useMeQuery } from '@generated/graphql';
+import { MeQueryMe } from '@generated/graphql';
 import css from '@emotion/css';
-import { WithRouterProps, withRouter } from 'next/router';
 import { handleLogout } from '@components/Authentication/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';
-import AppHeaderPartyInvites from './AppHeaderPartyInvites.tsx/AppHeaderPartyInvites';
+import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -47,66 +46,64 @@ const CustomIconStyles = css`
   color: #8c8c8c !important;
 `;
 
-const DesktopHeader: React.FC<{ currentRouterPath: string }> = ({
-  currentRouterPath
-}) => {
+interface AuthenticatedHeaderVariantProps {
+  userData: MeQueryMe;
+  currentRouterPath: string;
+}
+
+const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
   return (
     <ApolloConsumer>
       {client => (
-        <MeQueryComponent fetchPolicy="cache-first">
-          {({ data }) => (
-            <Menu
-              selectedKeys={[currentRouterPath]}
-              theme="light"
-              mode="horizontal"
-              style={{ lineHeight: '64px', display: 'flex' }}
-            >
-              <Menu.Item key="/dashboard">
-                <Link href="/dashboard">
-                  <a>Dashboard</a>
-                </Link>
-              </Menu.Item>
+        <Menu
+          selectedKeys={[props.currentRouterPath]}
+          theme="light"
+          mode="horizontal"
+          style={{ lineHeight: '64px', display: 'flex' }}
+        >
+          <Menu.Item key="/dashboard">
+            <Link href="/dashboard">
+              <a>Dashboard</a>
+            </Link>
+          </Menu.Item>
 
-              <Menu.Item key="/calendar">
-                <Link href="/calendar">
-                  <a>Calendar</a>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="/chats">
-                <Link href="/chats">
-                  <a>Chats</a>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="/parties">
-                <Link href="/parties">
-                  <a>Your Parties</a>
-                </Link>
-              </Menu.Item>
-              {data && data.me && (
-                <Menu.Item>
-                  <AppHeaderPartyInvites userId={data.me.id} />
-                </Menu.Item>
-              )}
-              <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
-                <Link href="/user-profile">
-                  <a>
-                    <UserAvatar userData={data && data.me ? data.me : {}} />
-                  </a>
-                </Link>
-              </Menu.Item>
-              <Menu.Item onClick={() => handleLogout(client)}>Logout</Menu.Item>
-            </Menu>
-          )}
-        </MeQueryComponent>
+          <Menu.Item key="/calendar">
+            <Link href="/calendar">
+              <a>Calendar</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/chats">
+            <Link href="/chats">
+              <a>Chats</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/parties">
+            <Link href="/parties">
+              <a>Your Parties</a>
+            </Link>
+          </Menu.Item>
+
+          <Menu.Item>
+            <PartyInvitesNoticeIcon userId={props.userData.id} />
+          </Menu.Item>
+
+          <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
+            <Link href="/user-profile">
+              <a>
+                <UserAvatar userData={props.userData} />
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item onClick={() => handleLogout(client)}>Logout</Menu.Item>
+        </Menu>
       )}
     </ApolloConsumer>
   );
 };
 
-const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
-  currentRouterPath
-}) => {
+const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
   const [drawerVisible, setDrawerVisible] = React.useState<boolean>(false);
+
   return (
     <React.Fragment>
       <Drawer
@@ -117,7 +114,11 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
         closable={true}
         title="Navigation"
       >
-        <Menu mode="vertical" theme="light" selectedKeys={[currentRouterPath]}>
+        <Menu
+          mode="vertical"
+          theme="light"
+          selectedKeys={[props.currentRouterPath]}
+        >
           <Menu.Item onClick={() => setDrawerVisible(false)} key="/dashboard">
             <Link href="/dashboard">
               <a>Dashboard</a>
@@ -144,61 +145,59 @@ const MobileHeader: React.FC<{ currentRouterPath: string }> = ({
 
       <ApolloConsumer>
         {client => (
-          <MeQueryComponent fetchPolicy="cache-first">
-            {({ data }) => (
-              <Menu
-                css={[AuthMobileVerySmallStyles]}
-                selectedKeys={[currentRouterPath]}
-                theme="light"
-                mode="horizontal"
-                style={{ lineHeight: '64px', display: 'flex' }}
-              >
-                {data && data.me && (
-                  <Menu.Item>
-                    <AppHeaderPartyInvites userId={data.me.id} />
-                  </Menu.Item>
-                )}
-                <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
-                  <Link href="/user-profile">
-                    <a>
-                      <UserAvatar userData={data && data.me ? data.me : {}} />
-                    </a>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item onClick={() => handleLogout(client)}>
-                  <Icon component={SignOutIcon} css={[CustomIconStyles]} />
-                </Menu.Item>
-                <Menu.Item onClick={() => setDrawerVisible(true)}>
-                  <Icon type="bars" />
-                </Menu.Item>
-              </Menu>
-            )}
-          </MeQueryComponent>
+          <Menu
+            css={[AuthMobileVerySmallStyles]}
+            selectedKeys={[props.currentRouterPath]}
+            theme="light"
+            mode="horizontal"
+            style={{ lineHeight: '64px', display: 'flex' }}
+          >
+            <Menu.Item>
+              <PartyInvitesNoticeIcon userId={props.userData.id} />
+            </Menu.Item>
+
+            <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
+              <Link href="/user-profile">
+                <a>
+                  <UserAvatar userData={props.userData} />
+                </a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item onClick={() => handleLogout(client)}>
+              <Icon component={SignOutIcon} css={[CustomIconStyles]} />
+            </Menu.Item>
+            <Menu.Item onClick={() => setDrawerVisible(true)}>
+              <Icon type="bars" />
+            </Menu.Item>
+          </Menu>
         )}
       </ApolloConsumer>
     </React.Fragment>
   );
 };
 
-const AppAuthenticatedHeader: React.FC<WithRouterProps> = ({ router }) => {
-  const isOnMobile = useMedia('(max-width:800px)');
-  const routerCurrentPath =
-    router && router.pathname ? router.pathname : '/dashboard';
+export interface AuthenticatedHeaderProps
+  extends AuthenticatedHeaderVariantProps {
+  isOnMobile: boolean;
+}
 
-  const { data: meData } = useMeQuery({ fetchPolicy: 'cache-first' });
-
-  if (!meData || !meData.me) return null;
-
+const AppAuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = props => {
   return (
     <React.Fragment>
-      <UserPresenceReporter userId={meData.me.id} />
-      {isOnMobile ? (
-        <MobileHeader currentRouterPath={routerCurrentPath} />
+      <UserPresenceReporter userId={props.userData.id} />
+      {props.isOnMobile ? (
+        <MobileHeader
+          userData={props.userData}
+          currentRouterPath={props.currentRouterPath}
+        />
       ) : (
-        <DesktopHeader currentRouterPath={routerCurrentPath} />
+        <DesktopHeader
+          userData={props.userData}
+          currentRouterPath={props.currentRouterPath}
+        />
       )}
     </React.Fragment>
   );
 };
 
-export default withRouter(AppAuthenticatedHeader);
+export default AppAuthenticatedHeader;
