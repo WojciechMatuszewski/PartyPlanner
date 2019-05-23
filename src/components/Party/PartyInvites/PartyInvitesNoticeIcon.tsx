@@ -212,7 +212,7 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
   ) {
     return (
       partyInvitation.previousValues &&
-      partyInvitation.previousValues.userId == props.userId
+      partyInvitation.previousValues.invitedUserId == props.userId
     );
   }
 

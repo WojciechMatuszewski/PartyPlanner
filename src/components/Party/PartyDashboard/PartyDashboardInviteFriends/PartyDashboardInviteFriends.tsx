@@ -1,19 +1,24 @@
 import React from 'react';
-import { Button, Modal, Icon, message } from 'antd';
-import PartyDashboardInviteFriendsModalContent from './PartyDashboardInviteFriendsModalContent';
+import { Button, Icon, message } from 'antd';
+
 import {
-  PaginateUsersInviteToPartyQueryComponent,
   PaginateUsersInviteToPartyQueryQuery,
   PaginateUsersInviteToPartyQueryEdges,
   useCreatePartyInvitation,
   PaginateUsersInviteToPartyQueryDocument,
-  useDeletePartyInvitationMutation
+  useDeletePartyInvitationMutation,
+  usePaginateUsersInviteToPartyQuery,
+  usePartyInvitationSubscription,
+  MutationType
 } from '@generated/graphql';
 import GraphqlInlineError from '@components/GraphqlInlineError';
-import { handleRefetch } from '@shared/graphqlUtils';
+import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 import { PartyDashboardContext } from '@pages/party';
 import { map, concat } from 'ramda';
+
+import PartyDashboardInviteFriendsSearch from './PartyDashboardInviteFriendsSearch';
+import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal';
 
 interface Props {
   isOnMobile: boolean;
@@ -22,12 +27,44 @@ interface Props {
 const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [confirmLoading, setConfirmLoading] = React.useState<boolean>(false);
-
+  const [searchValue, setSearchValue] = React.useState<string>('');
   const { partyId, currentlyAuthenticatedUserId } = React.useContext(
     PartyDashboardContext
   );
 
-  const QUERY_VARIABLES = React.useMemo(
+  const { data, loading, error, refetch } = usePaginateUsersInviteToPartyQuery({
+    variables: {
+      partyInvitationWhere: {
+        party: { id: partyId }
+      },
+      where: {
+        OR: [
+          { firstName_contains: searchValue },
+          { lastName_contains: searchValue }
+        ],
+        parties_none: { id: partyId }
+      }
+    }
+  });
+
+  // listen to deleted invitation, we should update the list when user declines / accepts an invitation
+  usePartyInvitationSubscription({
+    variables: {
+      where: {
+        mutation_in: [MutationType.Deleted]
+      }
+    },
+    onSubscriptionData: ({ subscriptionData: { data } }) => {
+      if (
+        !hasGraphqlData(data, ['partyInvitation']) ||
+        data.partyInvitation.previousValues.partyId != partyId
+      )
+        return;
+      refetch();
+    }
+  });
+
+  const INVITE_CANCEL_INVITE_VARIABLES = React.useMemo(
     () => ({
       partyInvitationWhere: {
         party: { id: partyId }
@@ -39,20 +76,22 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
     [partyId]
   );
 
+  // Im batching this operation in initApollo.ts
   const createPartyInvitation = useCreatePartyInvitation({
     refetchQueries: [
       {
         query: PaginateUsersInviteToPartyQueryDocument,
-        variables: QUERY_VARIABLES
+        variables: INVITE_CANCEL_INVITE_VARIABLES
       }
     ]
   });
 
+  // Im batching this operation in initApollo.ts
   const deletePartyInvitation = useDeletePartyInvitationMutation({
     refetchQueries: [
       {
         query: PaginateUsersInviteToPartyQueryDocument,
-        variables: QUERY_VARIABLES
+        variables: INVITE_CANCEL_INVITE_VARIABLES
       }
     ]
   });
@@ -68,72 +107,50 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
 
   return (
     <React.Fragment>
-      <Modal
-        width={isOnMobile ? '100%' : undefined}
-        centered={true}
+      <PartyDashboardInviteFriendsModal
         visible={modalVisible}
-        title="Invite your friends!"
-        maskClosable={false}
-        confirmLoading={confirmLoading}
-        onCancel={resetState}
         onOk={handleModalClose}
-        bodyStyle={{ padding: 0 }}
+        onCancel={resetState}
+        isOnMobile={isOnMobile}
+        confirmLoading={confirmLoading}
       >
-        <PartyDashboardInviteFriendsModalContent>
-          {searchValue => (
-            <PaginateUsersInviteToPartyQueryComponent
-              notifyOnNetworkStatusChange={true}
-              variables={{
-                partyInvitationWhere: {
-                  party: { id: partyId }
-                },
-                where: {
-                  OR: [
-                    { firstName_contains: searchValue },
-                    { lastName_contains: searchValue }
-                  ],
-                  parties_none: { id: partyId }
-                }
-              }}
-            >
-              {({ data, loading, error, refetch }) => {
-                if (error)
-                  return (
-                    <GraphqlInlineError style={{ padding: '24px 0px' }}>
-                      <Button
-                        data-testid="chatsMenuRefetchButton"
-                        onClick={async () => await handleRefetch(refetch)}
-                      >
-                        Try again
-                      </Button>
-                    </GraphqlInlineError>
-                  );
-                if (error || !data) return null;
-                return (
-                  <PartyDashboardInviteFriendsModalList
-                    toHaveInvitationCanceledPeople={
-                      toHaveInvitationCanceledPeople
-                    }
-                    onAddToHaveInvitationCanceled={
-                      handleAddToHaveInvitationCanceled
-                    }
-                    onRemoveToHaveInvitationCanceled={
-                      handleRemoveToHaveInvitationCanceled
-                    }
-                    toBeInvitedPeople={toBeInvitedPeople}
-                    onAddToBeInvited={handleAddToBeInvited}
-                    onRemoveToBeInvited={handleRemoveToBeInvited}
-                    loading={loading}
-                    data={getModalListData(data)}
-                  />
-                );
-              }}
-            </PaginateUsersInviteToPartyQueryComponent>
+        <React.Fragment>
+          <PartyDashboardInviteFriendsSearch
+            onSearchValueChange={setSearchValue}
+          />
+          {error ? (
+            <GraphqlInlineError style={{ padding: '24px 0px' }}>
+              <Button
+                data-testid="chatsMenuRefetchButton"
+                onClick={async () => await handleRefetch(refetch)}
+              >
+                Try again
+              </Button>
+            </GraphqlInlineError>
+          ) : (
+            <PartyDashboardInviteFriendsModalList
+              toHaveInvitationCanceledPeople={toHaveInvitationCanceledPeople}
+              onAddToHaveInvitationCanceled={handleAddToHaveInvitationCanceled}
+              onRemoveToHaveInvitationCanceled={
+                handleRemoveToHaveInvitationCanceled
+              }
+              toBeInvitedPeople={toBeInvitedPeople}
+              onAddToBeInvited={handleAddToBeInvited}
+              onRemoveToBeInvited={handleRemoveToBeInvited}
+              loading={loading}
+              data={getModalListData(data)}
+            />
           )}
-        </PartyDashboardInviteFriendsModalContent>
-      </Modal>
+        </React.Fragment>
+      </PartyDashboardInviteFriendsModal>
       <Button type="primary" onClick={() => setModalVisible(true)}>
-        {!isOnMobile ? 'Manage invitations' : <Icon type="usergroup-add" />}
+        {isOnMobile ? (
+          <Icon type="usergroup-add" />
+        ) : (
+          <React.Fragment>
+            <Icon type="usergroup-add" /> Manage invitations
+          </React.Fragment>
+        )}
       </Button>
     </React.Fragment>
   );
@@ -205,7 +222,8 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
           invitedBy: { connect: { id: currentlyAuthenticatedUserId } },
           party: { connect: { id: partyId } },
           user: { connect: { id: userToInvite } },
-          userId: userToInvite
+          invitedUserId: userToInvite,
+          partyId
         }
       }
     });
@@ -219,7 +237,9 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
     });
   }
 
-  function getModalListData(data: PaginateUsersInviteToPartyQueryQuery) {
+  function getModalListData(
+    data: PaginateUsersInviteToPartyQueryQuery | undefined
+  ) {
     return data && data.paginateUsers && data.paginateUsers.edges
       ? (data.paginateUsers.edges as PaginateUsersInviteToPartyQueryEdges[])
       : [];

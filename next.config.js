@@ -1,11 +1,12 @@
 require('dotenv').config();
+const nextEnv = require('next-env');
 const withTypescript = require('@zeit/next-typescript');
 const withCSS = require('@zeit/next-css');
 const composePlugins = require('next-compose-plugins');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-
+const withNextEnv = nextEnv();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
@@ -13,7 +14,7 @@ if (typeof require !== 'undefined') {
   require.extensions['.css'] = file => {};
 }
 
-module.exports = composePlugins([withTypescript, withCSS], {
+module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
   // target: 'serverless',
   webpack: config => {
     config.plugins = config.plugins || [];
@@ -40,16 +41,11 @@ module.exports = composePlugins([withTypescript, withCSS], {
       ]
     });
 
-    config.plugins = [
-      ...config.plugins,
-      new Dotenv({
-        path: path.join(__dirname, '.env'),
-        systemvars: true
-      }),
+    config.plugins.push(
       new FilterWarningsPlugin({
         exclude: /mini-css-extract-plugin[^]*Conflicting order between:/
       })
-    ];
+    );
 
     config.resolve.alias = {
       ...config.resolve.alias,

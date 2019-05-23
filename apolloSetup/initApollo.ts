@@ -8,11 +8,16 @@ import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 import { WebSocketLink } from 'apollo-link-ws';
-import { ApolloLink } from 'apollo-link';
+
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
-
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+import { BatchHttpLink } from 'apollo-link-batch-http';
+
+const BATCHED_APOLLO_OPERATIONS = [
+  'CreatePartyInvitation',
+  'DeletePartyInvitationMutation'
+];
 
 interface Options {
   getToken: () => string | null;
@@ -29,7 +34,12 @@ if (!isBrowser()) {
 
 function create(initialState: any, { getToken }: Options) {
   const httpLink = createHttpLink({
-    uri: 'http://localhost:4000/graphql',
+    uri: process.env.NEXT_STATIC_BACKEND_URL,
+    credentials: 'same-origin'
+  });
+
+  const batchLink = new BatchHttpLink({
+    uri: process.env.NEXT_STATIC_BACKEND_URL,
     credentials: 'same-origin'
   });
 
@@ -43,10 +53,17 @@ function create(initialState: any, { getToken }: Options) {
     };
   });
 
-  let link = ApolloLink.from([authLink, httpLink]);
+  const splitAuthLinkWithBatching = authLink.split(
+    operation => BATCHED_APOLLO_OPERATIONS.includes(operation.operationName),
+    batchLink,
+    httpLink
+  );
+
+  let link = splitAuthLinkWithBatching;
+
   if (isBrowser()) {
     const wsLink = new WebSocketLink({
-      uri: 'ws://localhost:4000/graphql',
+      uri: process.env.NEXT_STATIC_WEBSOCKET_URL as string,
       options: {
         reconnect: true
       }
@@ -58,7 +75,7 @@ function create(initialState: any, { getToken }: Options) {
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
       wsLink,
-      ApolloLink.from([authLink, httpLink])
+      splitAuthLinkWithBatching
     );
   }
 

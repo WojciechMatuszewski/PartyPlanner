@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter, WithRouterProps } from 'next/router';
 import { Menu } from 'antd';
 import Link from 'next/link';
 

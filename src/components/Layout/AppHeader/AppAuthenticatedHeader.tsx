@@ -1,6 +1,5 @@
 import React from 'react';
 import { Menu, Icon, Drawer } from 'antd';
-import useMedia from '@hooks/useMedia';
 import { ApolloConsumer } from 'react-apollo';
 import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';

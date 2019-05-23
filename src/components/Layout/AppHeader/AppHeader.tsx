@@ -24,7 +24,7 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/reset-password'
   ];
 
-  const { data: userData, loading, error } = useMeQuery();
+  const { data: userData, loading } = useMeQuery();
   const isOnMobile = useMedia('(max-width:800px)');
 
   if (!router || loading || !userData) return <HeaderLoadingData />;

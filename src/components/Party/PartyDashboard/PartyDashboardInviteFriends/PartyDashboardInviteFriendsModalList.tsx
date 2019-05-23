@@ -69,6 +69,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
               avatar={<UserAvatar userData={node} />}
               title={node.firstName}
               description={node.lastName}
+              style={{ paddingLeft: 8 }}
             />
           </List.Item>
         )}
