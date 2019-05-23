@@ -34,12 +34,12 @@ if (!isBrowser()) {
 
 function create(initialState: any, { getToken }: Options) {
   const httpLink = createHttpLink({
-    uri: process.env.NEXT_STATIC_BACKEND_URL,
+    uri: process.env.NEXT_STATIC_GRAPHQL_ENDPOINT,
     credentials: 'same-origin'
   });
 
   const batchLink = new BatchHttpLink({
-    uri: process.env.NEXT_STATIC_BACKEND_URL,
+    uri: process.env.NEXT_STATIC_GRAPHQL_ENDPOINT,
     credentials: 'same-origin'
   });
 

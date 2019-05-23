@@ -13,7 +13,7 @@ import { handleLogin } from './AuthService';
 import { WithRouterProps } from 'next/router';
 
 const getSocialProviderUrl = (provider: 'spotify' | 'facebook' | 'twitter') =>
-  `${process.env.BACKEND_URL}/auth/${provider}`;
+  `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/${provider}`;
 
 const ButtonsWrapper = styled.div`
   button {

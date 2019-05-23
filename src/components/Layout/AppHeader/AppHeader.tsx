@@ -6,7 +6,7 @@ import { useMeQuery } from '@generated/graphql';
 import useMedia from '@hooks/useMedia';
 import styled from '@emotion/styled';
 
-const HeaderLoadingData = styled.div`
+export const HeaderLoadingData = styled.div`
   width: 100%;
   height: 66px;
   background: white;
@@ -24,19 +24,16 @@ const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
     '/reset-password'
   ];
 
-  const { data: userData, loading } = useMeQuery();
   const isOnMobile = useMedia('(max-width:800px)');
 
-  if (!router || loading || !userData) return <HeaderLoadingData />;
+  if (!router) return <HeaderLoadingData />;
 
-  return notAuthenticatedRoutes.includes(router.pathname) ||
-    userData.me == null ? (
+  return notAuthenticatedRoutes.includes(router.pathname) ? (
     <AppNotAuthenticatedHeader currentRouterPath={router.pathname} />
   ) : (
     <AppAuthenticatedHeader
       isOnMobile={isOnMobile}
       currentRouterPath={router.pathname}
-      userData={userData.me}
     />
   );
 };

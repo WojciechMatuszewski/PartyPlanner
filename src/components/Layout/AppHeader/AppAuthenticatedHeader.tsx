@@ -3,13 +3,14 @@ import { Menu, Icon, Drawer } from 'antd';
 import { ApolloConsumer } from 'react-apollo';
 import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
-import { MeQueryMe } from '@generated/graphql';
+import { MeQueryMe, useMeQuery } from '@generated/graphql';
 import css from '@emotion/css';
 import { handleLogout } from '@components/Authentication/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';
 import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
+import { HeaderLoadingData } from './AppHeader';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -175,23 +176,25 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
   );
 };
 
-export interface AuthenticatedHeaderProps
-  extends AuthenticatedHeaderVariantProps {
+export interface AuthenticatedHeaderProps {
+  currentRouterPath: string;
   isOnMobile: boolean;
 }
 
 const AppAuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = props => {
+  const { data, loading } = useMeQuery();
+  if (!data || !data.me || loading) return <HeaderLoadingData />;
   return (
     <React.Fragment>
-      <UserPresenceReporter userId={props.userData.id} />
+      <UserPresenceReporter userId={data.me.id} />
       {props.isOnMobile ? (
         <MobileHeader
-          userData={props.userData}
+          userData={data.me}
           currentRouterPath={props.currentRouterPath}
         />
       ) : (
         <DesktopHeader
-          userData={props.userData}
+          userData={data.me}
           currentRouterPath={props.currentRouterPath}
         />
       )}
