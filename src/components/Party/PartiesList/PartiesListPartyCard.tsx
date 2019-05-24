@@ -91,7 +91,6 @@ const PartiesCardInfoWrapper = styled.div`
   }
   h4 {
     margin: 0;
-    /* color: #595959; */
   }
 `;
 

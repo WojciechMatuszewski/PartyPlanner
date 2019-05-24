@@ -16,8 +16,8 @@ function createNotificationBody(
   };
 }
 
-function createNotificationKey() {
-  return `open${Date.now()}`;
+export function closePartyInvitationNotification(key: string) {
+  notification.close(key);
 }
 
 export default function openPartyInvitationNotification(
@@ -26,14 +26,13 @@ export default function openPartyInvitationNotification(
     edge: PartyInvitationsConnectionQueryEdges;
   }) => void
 ) {
-  const notificationKey = createNotificationKey();
   notification.open({
     ...createNotificationBody(subscriptionNode),
-    key: notificationKey,
+    key: subscriptionNode.id,
     onClick: () =>
       compose(
-        notification.close,
-        always(notificationKey),
+        closePartyInvitationNotification,
+        always(subscriptionNode.id),
         onNotificationClick
       )({ edge: { node: subscriptionNode } })
   });

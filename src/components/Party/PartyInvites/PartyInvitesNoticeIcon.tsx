@@ -8,12 +8,15 @@ import {
   PartyInvitationSubscriptionSubscription,
   PartyInvitationsConnectionQueryQuery,
   PartyInvitationSubscriptionPartyInvitation,
-  MutationType
+  MutationType,
+  PartyInvitationOrderByInput
 } from '@generated/graphql';
-import { Icon } from 'antd';
+import { Icon, message } from 'antd';
 
 import { hasGraphqlData } from '@shared/graphqlUtils';
-import openPartyInvitationNotification from '@components/Party/PartyInvites/PartyInvitesNotification';
+import openPartyInvitationNotification, {
+  closePartyInvitationNotification
+} from '@components/Party/PartyInvites/PartyInvitesNotification';
 import PartyInvitesModal from './PartyInvitesModal';
 import PartyInvitesNoticesList from './PartyInvitesNoticesList';
 
@@ -35,7 +38,8 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
         user: {
           id: props.userId
         }
-      }
+      },
+      orderBy: PartyInvitationOrderByInput.CreatedAtDesc
     }),
     [props.userId]
   );
@@ -139,21 +143,19 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
       data: { partyInvitation }
     } = subscriptionData;
 
-    let newCache = prev;
-
     switch (partyInvitation.mutation) {
       case MutationType.Created:
-        newCache = handleInvitationAdded(prev, partyInvitation);
         openPartyInvitationNotification(partyInvitation.node!, handleItemClick);
-        break;
+        return handleInvitationAdded(prev, partyInvitation);
       case MutationType.Deleted:
-        newCache = hasDeletedMyExistingNotification(partyInvitation)
-          ? handleInvitationDeleted(prev, partyInvitation)
-          : prev;
-        break;
+        if (!hasDeletedMyExistingNotification(partyInvitation)) {
+          return prev;
+        }
+        handleOnInvitationDeleted(partyInvitation.previousValues!.id);
+        return handleInvitationDeleted(prev, partyInvitation);
+      default:
+        return prev;
     }
-
-    return newCache;
   }
 
   function handleInvitationAdded(
@@ -204,6 +206,11 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
     };
   }
 
+  function handleOnInvitationDeleted(deletedInvitationId: string) {
+    closePartyInvitationNotification(deletedInvitationId);
+    message.warning(`One of your party invitations was revoked`);
+  }
+
   // when deleting node returns null so filters supplied to where does not work
   // I added static userId field to diff here so i do not trigger handleInvitationDeleted on notification
   // which is not mine
@@ -222,6 +229,7 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
     edge: PartyInvitationsConnectionQueryEdges;
   }) {
     setClickedItem(edge);
+    closePartyInvitationNotification(edge.node.id);
     setModalVisible(true);
   }
 };

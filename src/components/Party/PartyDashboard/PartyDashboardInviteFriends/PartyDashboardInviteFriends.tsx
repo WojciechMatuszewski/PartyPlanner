@@ -201,10 +201,11 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
       setConfirmLoading(true);
       await Promise.all(promises);
       setConfirmLoading(false);
+      message.success('Operation successful');
       resetState();
     } catch (e) {
       setConfirmLoading(false);
-      message.error('An error occurred!');
+      message.error('An error occurred!, try again.');
     }
   }
 

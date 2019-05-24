@@ -20,7 +20,6 @@ const PartyInvitesNoticesList: React.FC<Props> = props => {
   return (
     <React.Fragment>
       <NoticeIcon
-        // popupVisible={true}
         onLoadMore={props.onFetchMore}
         count={props.notificationCount}
         onItemClick={props.onItemClick as any}

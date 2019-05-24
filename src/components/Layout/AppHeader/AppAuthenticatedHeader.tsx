@@ -46,6 +46,16 @@ const CustomIconStyles = css`
   color: #8c8c8c !important;
 `;
 
+const NoticeIconStyles = css`
+  .ant-badge i {
+    margin-right: 0;
+  }
+  padding: 0;
+  & > span {
+    padding: 0 20px;
+  }
+`;
+
 interface AuthenticatedHeaderVariantProps {
   userData: MeQueryMe;
   currentRouterPath: string;
@@ -83,11 +93,11 @@ const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
             </Link>
           </Menu.Item>
 
-          <Menu.Item>
+          <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
             <PartyInvitesNoticeIcon userId={props.userData.id} />
           </Menu.Item>
 
-          <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
+          <Menu.Item key="/user-profile">
             <Link href="/user-profile">
               <a>
                 <UserAvatar userData={props.userData} />
@@ -152,11 +162,11 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
             mode="horizontal"
             style={{ lineHeight: '64px', display: 'flex' }}
           >
-            <Menu.Item>
+            <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
               <PartyInvitesNoticeIcon userId={props.userData.id} />
             </Menu.Item>
 
-            <Menu.Item key="/user-profile" style={{ marginLeft: 'auto' }}>
+            <Menu.Item key="/user-profile">
               <Link href="/user-profile">
                 <a>
                   <UserAvatar userData={props.userData} />

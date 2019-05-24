@@ -11,7 +11,6 @@ const PartyInvitesNoticeInvitation = (
 
   return {
     avatar: <UserAvatar userData={edge.node.invitedBy} />,
-    title: 'New invitation',
     datetime: parsedNotificationDate,
     edge,
     description: (
@@ -19,10 +18,16 @@ const PartyInvitesNoticeInvitation = (
         <Typography.Text strong={true}>
           {edge.node.invitedBy.firstName}{' '}
         </Typography.Text>
-        <Typography.Text>invited you to a party </Typography.Text>
-        <Typography.Text type="warning">
-          {edge.node.party.title}{' '}
+        <Typography.Text>invited you to a party: </Typography.Text>
+        <Typography.Text strong={true}>
+          {edge.node.party.title}.
         </Typography.Text>
+        <Typography.Paragraph
+          style={{ color: '#1890ff', marginBottom: 0 }}
+          type="secondary"
+        >
+          Click on this notification for more actions.
+        </Typography.Paragraph>
       </React.Fragment>
     )
   };

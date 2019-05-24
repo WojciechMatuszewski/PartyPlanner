@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter, WithRouterProps } from 'next/router';
 import AppNotAuthenticatedHeader from './AppNotAuthenticatedHeader';
 import AppAuthenticatedHeader from './AppAuthenticatedHeader';
-import { useMeQuery } from '@generated/graphql';
 import useMedia from '@hooks/useMedia';
 import styled from '@emotion/styled';
 

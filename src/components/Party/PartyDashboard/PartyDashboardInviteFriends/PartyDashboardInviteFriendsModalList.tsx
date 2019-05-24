@@ -7,24 +7,14 @@ import styled from '@emotion/styled';
 import { List, Button, Tag } from 'antd';
 import NoData from '@components/NoData';
 import css from '@emotion/css';
-import UserAvatar from '@components/UserDefaultAvatar';
+
 import { PartyDashboardContext } from '@pages/party';
+import PartyDashboardInviteFriendsModalListItem from './PartyDashboardInviteFriendsModalListItem';
 
 const ListContainer = styled.div`
   max-height: 400px;
   overflow-y: auto;
   padding: 0px 6px;
-`;
-
-const ListItemStyles = css`
-  @media screen and (max-width: 800px) {
-    .hide-on-mobile {
-      display: none;
-    }
-  }
-  .ant-tag {
-    height: 24px;
-  }
 `;
 
 interface InvitesInfo {
@@ -60,18 +50,10 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
         }: {
           node: PaginateUsersInviteToPartyQueryNode;
         }) => (
-          <List.Item
-            css={[ListItemStyles]}
-            key={node.id}
+          <PartyDashboardInviteFriendsModalListItem
+            node={node}
             actions={getListItemActions(node)}
-          >
-            <List.Item.Meta
-              avatar={<UserAvatar userData={node} />}
-              title={node.firstName}
-              description={node.lastName}
-              style={{ paddingLeft: 8 }}
-            />
-          </List.Item>
+          />
         )}
       />
     </ListContainer>
@@ -106,7 +88,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
 
     if (hasInvites && yourInvitationId == null)
       return [
-        <Tag color="green" key={1}>
+        <Tag color="blue" key={1}>
           Already invited
         </Tag>
       ];

@@ -289,3 +289,27 @@ export const HAS_PARTIES_QUERY = gql`
     hasParties
   }
 `;
+
+export const PARTY_INVITATIONS_QUERY = gql`
+  query PartyInvitationsQuery(
+    $where: PartyInvitationWhereInput
+    $orderBy: PartyInvitationOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partyInvitations(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      id
+    }
+  }
+`;
