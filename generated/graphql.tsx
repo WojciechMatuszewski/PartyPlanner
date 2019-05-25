@@ -4405,6 +4405,12 @@ export interface PartyUpdateManyMutationInput {
   inviteSecret?: Maybe<string>;
 }
 
+export interface JoinPartyWhereInput {
+  userId: string;
+
+  partyId: string;
+}
+
 export interface MessageSubscriptionWhereInput {
   /** Logical AND on all given filters. */
   AND?: Maybe<MessageSubscriptionWhereInput[]>;
@@ -5018,6 +5024,16 @@ export type DeletePartyInvitationMutationDeletePartyInvitation = {
   id: string;
 };
 
+export type JoinPartyMutationVariables = {
+  where: JoinPartyWhereInput;
+};
+
+export type JoinPartyMutationMutation = {
+  __typename?: 'Mutation';
+
+  joinParty: Maybe<boolean>;
+};
+
 export type MeQueryVariables = {};
 
 export type MeQueryQuery = {
@@ -5457,6 +5473,18 @@ export type PartyInvitationsQueryPartyInvitations = {
   id: string;
 };
 
+export type CanJoinPartyQueryVariables = {
+  userId: string;
+  inviteSecret: string;
+  partyId: string;
+};
+
+export type CanJoinPartyQueryQuery = {
+  __typename?: 'Query';
+
+  canJoinParty: Maybe<boolean>;
+};
+
 export type ChatMessagesSubscriptionVariables = {
   where?: Maybe<MessageSubscriptionWhereInput>;
 };
@@ -5567,6 +5595,8 @@ export type PartyFragmentFragment = {
   end: DateTime;
 
   isPublic: Maybe<boolean>;
+
+  inviteSecret: Maybe<string>;
 };
 
 export type PartyFragmentLocation = {
@@ -5725,6 +5755,7 @@ export const PartyFragmentFragmentDoc = gql`
     start
     end
     isPublic
+    inviteSecret
   }
 `;
 
@@ -6152,6 +6183,42 @@ export function useDeletePartyInvitationMutation(
     DeletePartyInvitationMutationMutation,
     DeletePartyInvitationMutationVariables
   >(DeletePartyInvitationMutationDocument, baseOptions);
+}
+export const JoinPartyMutationDocument = gql`
+  mutation JoinPartyMutation($where: JoinPartyWhereInput!) {
+    joinParty(where: $where)
+  }
+`;
+export class JoinPartyMutationComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<
+      JoinPartyMutationMutation,
+      JoinPartyMutationVariables
+    >
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<
+        JoinPartyMutationMutation,
+        JoinPartyMutationVariables
+      >
+        mutation={JoinPartyMutationDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useJoinPartyMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    JoinPartyMutationMutation,
+    JoinPartyMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    JoinPartyMutationMutation,
+    JoinPartyMutationVariables
+  >(JoinPartyMutationDocument, baseOptions);
 }
 export const MeQueryDocument = gql`
   query MeQuery {
@@ -6709,6 +6776,41 @@ export function usePartyInvitationsQuery(
     PartyInvitationsQueryQuery,
     PartyInvitationsQueryVariables
   >(PartyInvitationsQueryDocument, baseOptions);
+}
+export const CanJoinPartyQueryDocument = gql`
+  query CanJoinPartyQuery(
+    $userId: String!
+    $inviteSecret: String!
+    $partyId: String!
+  ) {
+    canJoinParty(
+      userId: $userId
+      inviteSecret: $inviteSecret
+      partyId: $partyId
+    )
+  }
+`;
+export class CanJoinPartyQueryComponent extends React.Component<
+  Partial<
+    ReactApollo.QueryProps<CanJoinPartyQueryQuery, CanJoinPartyQueryVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Query<CanJoinPartyQueryQuery, CanJoinPartyQueryVariables>
+        query={CanJoinPartyQueryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function useCanJoinPartyQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<CanJoinPartyQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    CanJoinPartyQueryQuery,
+    CanJoinPartyQueryVariables
+  >(CanJoinPartyQueryDocument, baseOptions);
 }
 export const ChatMessagesSubscriptionDocument = gql`
   subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {

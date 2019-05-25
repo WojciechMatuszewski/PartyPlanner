@@ -23,6 +23,7 @@ export const PARTY_FRAGMENT = gql`
     start
     end
     isPublic
+    inviteSecret
   }
 `;
 

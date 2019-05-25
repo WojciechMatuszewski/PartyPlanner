@@ -313,3 +313,17 @@ export const PARTY_INVITATIONS_QUERY = gql`
     }
   }
 `;
+
+export const CAN_JOIN_PARTY_QUERY = gql`
+  query CanJoinPartyQuery(
+    $userId: String!
+    $inviteSecret: String!
+    $partyId: String!
+  ) {
+    canJoinParty(
+      userId: $userId
+      inviteSecret: $inviteSecret
+      partyId: $partyId
+    )
+  }
+`;

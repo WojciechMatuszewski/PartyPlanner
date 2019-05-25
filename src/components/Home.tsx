@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { Button, Typography } from 'antd';
 import { useSpring, animated } from 'react-spring';
 import { withRouter, WithRouterProps } from 'next/router';
+import { CallToActionButtonStyles } from '@shared/styles';
 
 const HomeHeroImage = styled.div`
   width: 100%;
@@ -41,22 +42,7 @@ const HomeHeroControlsWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   .ant-btn {
-    box-shadow: 0 8px 16px #0554b7;
-    background: linear-gradient(to right, #05cbff, #1e5aff) !important;
-    height: 42px;
-    line-height: 42px;
-    font-size: 14px;
-    border: 0;
-    border-radius: 21px;
-    color: #fff;
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 20px #0554b7;
-    }
-    &:active {
-      transform: translateY(4px);
-      box-shadow: 0 4px 8px #0554b7;
-    }
+    ${CallToActionButtonStyles};
   }
 `;
 

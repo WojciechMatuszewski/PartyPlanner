@@ -113,3 +113,9 @@ export const DELETE_PARTY_INVITATION_MUTATION = gql`
     }
   }
 `;
+
+export const JOIN_PARTY_MUTATION = gql`
+  mutation JoinPartyMutation($where: JoinPartyWhereInput!) {
+    joinParty(where: $where)
+  }
+`;
