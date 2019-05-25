@@ -116,7 +116,7 @@ const ResetPassword: NextFunctionComponent<
 };
 
 ResetPassword.getInitialProps = async function(ctx) {
-  const dataToReturn = ApolloAuthenticator.authenticateRoute({
+  const dataToReturn = await ApolloAuthenticator.authenticateRoute({
     userHasToBe: 'notAuthenticated',
     ctx
   });

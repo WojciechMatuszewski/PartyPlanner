@@ -1,5 +1,9 @@
 import { gql } from 'apollo-boost';
-import { PARTY_FRAGMENT, MESSAGE_FRAGMENT } from './fragments';
+import {
+  PARTY_FRAGMENT,
+  MESSAGE_FRAGMENT,
+  PARTY_INVITATION_FRAGMENT
+} from './fragments';
 
 export const ME_QUERY = gql`
   query MeQuery {
@@ -195,8 +199,131 @@ export const PAGINATE_MESSAGES_QUERY = gql`
   ${MESSAGE_FRAGMENT}
 `;
 
+export const PAGINATE_USERS_INVITE_TO_PARTY_QUERY = gql`
+  query PaginateUsersInviteToPartyQuery(
+    $where: UserWhereInput
+    $orderBy: UserOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $partyInvitationWhere: PartyInvitationWhereInput
+  ) {
+    paginateUsers(
+      where: $where
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      orderBy: $orderBy
+    ) {
+      edges {
+        node {
+          id
+          firstName
+          lastName
+          avatar
+          lastOnline
+          status @client
+          pendingPartyInvitations(where: $partyInvitationWhere) {
+            id
+            invitedBy {
+              id
+            }
+            party {
+              id
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+export const PARTY_INVITATIONS_CONNECTION_QUERY = gql`
+  query PartyInvitationsConnectionQuery(
+    $where: PartyInvitationWhereInput
+    $orderBy: PartyInvitationOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partyInvitationsConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      edges {
+        node {
+          ...PARTY_INVITATION_FRAGMENT
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+    full: partyInvitationsConnection(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${PARTY_INVITATION_FRAGMENT}
+`;
+
 export const HAS_PARTIES_QUERY = gql`
   query HasPartiesQuery {
     hasParties
+  }
+`;
+
+export const PARTY_INVITATIONS_QUERY = gql`
+  query PartyInvitationsQuery(
+    $where: PartyInvitationWhereInput
+    $orderBy: PartyInvitationOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    partyInvitations(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+    ) {
+      id
+    }
+  }
+`;
+
+export const CAN_JOIN_PARTY_QUERY = gql`
+  query CanJoinPartyQuery(
+    $userId: String!
+    $inviteSecret: String!
+    $partyId: String!
+  ) {
+    canJoinParty(
+      userId: $userId
+      inviteSecret: $inviteSecret
+      partyId: $partyId
+    )
   }
 `;

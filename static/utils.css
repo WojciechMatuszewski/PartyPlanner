@@ -7,3 +7,6 @@
     margin-left: 0 !important;
   }
 }
+.antd-pro-header-dropdown-container {
+  z-index: 10;
+}

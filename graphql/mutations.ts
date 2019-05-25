@@ -62,20 +62,60 @@ export const REQUEST_PASSWORD_RESET_MUTATION = gql`
       message
     }
   }
-`
+`;
 
 export const RESET_PASSWORD_MUTATION = gql`
-  mutation ResetPassword($password: String!, $confirmPassword: String!, $resetToken: String!) {
-    resetPassword(password: $password, confirmPassword: $confirmPassword, resetToken: $resetToken) {
+  mutation ResetPassword(
+    $password: String!
+    $confirmPassword: String!
+    $resetToken: String!
+  ) {
+    resetPassword(
+      password: $password
+      confirmPassword: $confirmPassword
+      resetToken: $resetToken
+    ) {
       token
     }
   }
-`
+`;
 
 export const UPDATE_USER_MUTATION = gql`
   mutation UpdateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
     updateUser(data: $data, where: $where) {
       id
     }
+  }
+`;
+
+export const CREATE_PARTY_INVITATION_MUTATION = gql`
+  mutation CreatePartyInvitation($data: PartyInvitationCreateInput!) {
+    createPartyInvitation(data: $data) {
+      id
+    }
+  }
+`;
+
+export const DELETE_MANY_PARTY_INVITATIONS_MUTATION = gql`
+  mutation DeleteManyPartyInvitations($where: PartyInvitationWhereInput) {
+    deleteManyPartyInvitations(where: $where) {
+      count
+    }
+  }
+`;
+
+export const DELETE_PARTY_INVITATION_MUTATION = gql`
+  mutation DeletePartyInvitationMutation(
+    $where: PartyInvitationWhereUniqueInput!
+  ) {
+    deletePartyInvitation(where: $where) {
+      id
+    }
+  }
+`;
+
+export const JOIN_PARTY_MUTATION = gql`
+  mutation JoinPartyMutation($where: JoinPartyWhereInput!) {
+    joinParty(where: $where)
   }
 `;

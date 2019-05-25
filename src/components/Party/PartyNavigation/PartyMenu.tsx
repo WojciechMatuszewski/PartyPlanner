@@ -19,7 +19,7 @@ const AffixStyles = css`
 
 const PartyMenu: React.FC = () => {
   const isOnMobile = useMedia('(max-width:1080px)');
-
+  // return <div style={{ width: 200, height: '100vh' }} />;
   if (isOnMobile)
     return (
       <DrawerNavigation>

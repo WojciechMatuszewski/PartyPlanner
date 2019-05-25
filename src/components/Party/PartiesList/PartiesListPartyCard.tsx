@@ -15,6 +15,7 @@ const PartiesCardWrapper = styled(
 )`
   &:hover {
     cursor: pointer;
+    box-shadow: 0 6px 31px -2px rgba(0, 0, 0, 0.1);
   }
   height: 300px;
   max-height: 300px;
@@ -23,6 +24,7 @@ const PartiesCardWrapper = styled(
   @media screen and (max-width: 680px) {
     border-radius: 0px;
   }
+  border: 1px solid #e8e8e8;
   position: relative;
 `;
 
@@ -89,7 +91,6 @@ const PartiesCardInfoWrapper = styled.div`
   }
   h4 {
     margin: 0;
-    /* color: #595959; */
   }
 `;
 

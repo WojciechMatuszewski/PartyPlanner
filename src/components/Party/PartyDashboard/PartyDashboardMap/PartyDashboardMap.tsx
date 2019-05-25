@@ -15,7 +15,7 @@ import { Button } from 'antd';
 import css from '@emotion/css';
 
 const Map = ReactMapboxGl({
-  accessToken: process.env.MAPBOX_TOKEN as string,
+  accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string,
   logoPosition: 'top-left'
 });
 

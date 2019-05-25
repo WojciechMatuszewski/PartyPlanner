@@ -37,6 +37,7 @@ const fakeParty: PaginatePartiesQueryEdges = {
     start: new Date(),
     end: new Date(),
     isPublic: true,
+    inviteSecret: '',
     __typename: 'Party'
   },
   __typename: 'PartyEdge'

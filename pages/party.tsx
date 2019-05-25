@@ -1,5 +1,5 @@
 import React from 'react';
-import PartyMenu from '@components/Party/PartyMenu';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { Row, Col } from 'antd';
 import dynamic from 'next/dynamic';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
@@ -22,6 +22,7 @@ import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import posed from 'react-pose';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -102,34 +103,6 @@ const PartyDashboardContentWrapper = styled(
 
 type RouteQueryProps = { id?: string };
 
-// const PartyBgContainer = styled(
-//   posed.div({
-//     visible: {
-//       opacity: 1
-//     },
-//     hidden: {
-//       opacity: 0
-//     }
-//   })
-// )`
-//   width: 100%;
-//   height: 500px;
-//   overflow: hidden;
-//   position: absolute;
-//   z-index: 0;
-//   opacity: 0;
-//   border-bottom: 1px solid #e8e8e8;
-//   @media screen and (max-width: 1500px) {
-//     display: none;
-//   }
-// `;
-
-// const PartyBgImage = styled.div`
-//   z-index: 0;
-//   height: 100%;
-//   background: linear-gradient(to right, #00c6ff, #0072ff);
-// `;
-
 const PosedWrapper = styled(
   posed.div({
     visible: {
@@ -138,8 +111,8 @@ const PosedWrapper = styled(
     hidden: {}
   })
 )`
-  width: 100%;
   display: flex;
+  flex: 1;
   position: relative;
   min-height: calc(100vh - 66px);
 `;
@@ -152,6 +125,18 @@ interface InjectedProps {
   userData: MeQueryMe | null;
 }
 
+interface PartyDashboardContextValue {
+  currentlyAuthenticatedUserId: string;
+  partyId: string;
+}
+
+export const PartyDashboardContext = React.createContext<
+  PartyDashboardContextValue
+>({
+  currentlyAuthenticatedUserId: '',
+  partyId: ''
+});
+
 const Party: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
@@ -163,37 +148,51 @@ const Party: NextFunctionComponent<
     );
   if (partyData.responseType == 'error' || !userData) return null;
 
-  const { party } = partyData as { party: PartiesQueryParties };
+  const { party } = partyData as {
+    party: DeepWithoutMaybe<PartiesQueryParties>;
+  };
+
+  const contextValue = React.useMemo<PartyDashboardContextValue>(
+    () => ({
+      currentlyAuthenticatedUserId: userData.id,
+      partyId: partyData.party!.id
+    }),
+    []
+  );
 
   return (
-    <PosedWrapper initialPose="hidden" pose="visible">
+    <React.Fragment>
       <PartyMenu />
-      {/* <PartyBgContainer initialPose="hidden">
-        <PartyBgImage />
-      </PartyBgContainer> */}
-      <PartyDashboardContentWrapper initialPose="hidden">
-        <PartyDashboardTop party={party} />
-        <PartyDashboardTopMenu />
-        <PartyDashboardBasicInfo
-          author={party.author}
-          description={party.description}
-          title={party.title}
-          partyEnd={party.end}
-          partyStart={party.start}
-          placeName={party.location.placeName}
-        />
-        <Row css={[PartyMapRowStyles]}>
-          <Col span={24} css={[PartyMapColumnStyles]}>
-            <PartyDashboardMap location={party.location} />
-          </Col>
-        </Row>
-        <PartyDashboardLocationSecondary
-          placeName={party.location.placeName}
-          title={party.title}
-        />
-        <PartyDashboardCommuteButtons location={party.location} />
-      </PartyDashboardContentWrapper>
-    </PosedWrapper>
+      <PosedWrapper initialPose="hidden" pose="visible">
+        <PartyDashboardContext.Provider value={contextValue}>
+          <PartyDashboardContentWrapper initialPose="hidden">
+            <PartyDashboardTop party={party} />
+            <PartyDashboardTopMenu
+              partyId={party.id}
+              inviteSecret={party.inviteSecret}
+            />
+            <PartyDashboardBasicInfo
+              author={party.author}
+              description={party.description}
+              title={party.title}
+              partyEnd={party.end}
+              partyStart={party.start}
+              placeName={party.location.placeName}
+            />
+            <Row css={[PartyMapRowStyles]}>
+              <Col span={24} css={[PartyMapColumnStyles]}>
+                <PartyDashboardMap location={party.location} />
+              </Col>
+            </Row>
+            <PartyDashboardLocationSecondary
+              placeName={party.location.placeName}
+              title={party.title}
+            />
+            <PartyDashboardCommuteButtons location={party.location} />
+          </PartyDashboardContentWrapper>
+        </PartyDashboardContext.Provider>
+      </PosedWrapper>
+    </React.Fragment>
   );
 };
 

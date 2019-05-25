@@ -1,12 +1,14 @@
 import React from 'react';
-import { withRouter, WithRouterProps } from 'next/router';
 import { Menu } from 'antd';
 import Link from 'next/link';
 
-const AppNotAuthenticatedHeader: React.FC<WithRouterProps> = ({ router }) => {
+interface Props {
+  currentRouterPath: string;
+}
+const AppNotAuthenticatedHeader: React.FC<Props> = ({ currentRouterPath }) => {
   return (
     <Menu
-      selectedKeys={[router && router.pathname ? router.pathname : '/']}
+      selectedKeys={[currentRouterPath]}
       theme="light"
       mode="horizontal"
       style={{ lineHeight: '64px' }}
@@ -30,4 +32,4 @@ const AppNotAuthenticatedHeader: React.FC<WithRouterProps> = ({ router }) => {
   );
 };
 
-export default withRouter(AppNotAuthenticatedHeader);
+export default AppNotAuthenticatedHeader;
