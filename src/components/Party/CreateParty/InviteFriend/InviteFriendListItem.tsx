@@ -1,16 +1,17 @@
 import React from 'react';
-import { PaginateUsersQueryEdges } from '@generated/graphql';
+
 import { List, Badge, Icon, Typography } from 'antd';
 import css from '@emotion/css';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
+import { User } from '@generated/graphql';
 
 interface Props {
   onInvite: (id: string) => void;
   onRemove: (id: string) => void;
   personInvited: boolean;
   shouldUseGrid: boolean;
-  edge: PaginateUsersQueryEdges;
+  edge: { node: User };
 }
 
 const InviteFriendListItem: React.FC<Props> = props => {

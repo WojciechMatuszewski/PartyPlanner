@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaginateUsersInviteToPartyQueryNode } from '@generated/graphql';
+
 import css from '@emotion/css';
 import { List } from 'antd';
 import UserAvatar from '@components/UserDefaultAvatar';

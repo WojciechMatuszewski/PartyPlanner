@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import PartiesListPartyCard from './PartiesListPartyCard';
-import { PaginatePartiesQueryEdges } from '@generated/graphql';
 
 import posed from 'react-pose';
+import { PaginatePartiesQueryQuery } from '@generated/graphql';
 
 const PosedGridOuterWrapper = styled(
   posed.div({
@@ -39,7 +39,7 @@ const GridWrapper = styled.section`
 `;
 
 interface Props {
-  parties: PaginatePartiesQueryEdges[];
+  parties: PaginatePartiesQueryQuery['partiesConnection']['edges'];
   filterInputValue: string;
   children: (hasResults: boolean) => React.ReactNode;
 }
@@ -53,7 +53,7 @@ const PartiesListCardGrid: React.FC<Props> = ({ parties, children }) => {
         pose="enter"
       >
         <GridWrapper data-testid="partiesListGrid">
-          {parties.map((party, index) => (
+          {parties.map((party: any, index) => (
             <PartiesListPartyCard
               party={party}
               key={party.node.id}

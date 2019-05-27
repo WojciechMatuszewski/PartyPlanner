@@ -2,12 +2,12 @@ import React from 'react';
 import { useApolloClient } from 'react-apollo-hooks';
 import useInterval from '@hooks/useInterval';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
-import { UserStatus, DateTime } from '@generated/graphql';
+import { UserStatus } from '@generated/graphql';
 import gql from 'graphql-tag';
 
 interface Props {
   user: {
-    lastOnline: DateTime;
+    lastOnline: string;
     status: UserStatus;
     id: string;
   };

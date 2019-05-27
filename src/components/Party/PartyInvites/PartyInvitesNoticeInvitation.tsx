@@ -5,7 +5,7 @@ import UserAvatar from '@components/UserDefaultAvatar';
 import { Typography } from 'antd';
 
 const PartyInvitesNoticeInvitation = (
-  edge: PartyInvitationsConnectionQueryEdges
+  edge: NonNullable<PartyInvitationsConnectionQueryEdges>
 ) => {
   const parsedNotificationDate = moment(edge.node.createdAt).calendar();
 

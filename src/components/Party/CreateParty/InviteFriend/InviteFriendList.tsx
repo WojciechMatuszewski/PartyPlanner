@@ -1,4 +1,4 @@
-import { PaginateUsersQueryEdges, Maybe } from '@generated/graphql';
+import { PaginateUsersQueryQuery } from '@generated/graphql';
 import { ListProps, ListGridType } from 'antd/lib/list';
 import { List, Empty, Typography } from 'antd';
 import css from '@emotion/css';
@@ -18,7 +18,7 @@ const gridOptions: ListGridType = {
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 interface BaseProps {
-  listItems: Maybe<PaginateUsersQueryEdges>[];
+  listItems: PaginateUsersQueryQuery['paginateUsers']['edges'];
   filterValue: string | undefined;
   shouldUseGrid: boolean;
   canShowLoadMore: boolean;
@@ -33,15 +33,13 @@ const ListStyles = css`
 type Props = BaseProps & Omit<ListProps, 'dataSource'>;
 
 const InviteFriendList: React.FC<Props> = props => {
-  const filteredListItems = useFuzzySearch<PaginateUsersQueryEdges>(
-    props.filterValue || '',
-    props.listItems as PaginateUsersQueryEdges[],
-    {
-      keys: ['node.firstName', 'node.lastName'] as any,
-      shouldSort: true,
-      tokenize: true
-    }
-  );
+  const filteredListItems = useFuzzySearch<
+    PaginateUsersQueryQuery['paginateUsers']['edges']
+  >(props.filterValue || '', props.listItems as any, {
+    keys: ['node.firstName', 'node.lastName'] as any,
+    shouldSort: true,
+    tokenize: true
+  });
 
   const isFilterValueEmpty =
     props.filterValue == undefined || props.filterValue.trim().length <= 0;

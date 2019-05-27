@@ -46,17 +46,16 @@ const PartyDashboardTopMenu: React.FC<Props> = props => {
     </Wrapper>
   );
 
-  function createInvitationLink({ token, id }: InvitationLinkProps): string {
+  function createInvitationLink({ token }: InvitationLinkProps): string {
     return `${
       process.env.NEXT_STATIC_FRONTEND_URL
-    }/${JOIN_PARTY_PAGE}?token=${token}&id=${id}`;
+    }/${JOIN_PARTY_PAGE}?token=${token}`;
   }
 
   function handleCopyInvitationLinkClick() {
     copy(
       createInvitationLink({
-        token: props.inviteSecret,
-        id: props.partyId
+        token: props.inviteSecret
       })
     );
     message.info('Link copied');

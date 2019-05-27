@@ -13,6 +13,8 @@ export type DeepWithoutMaybe<T> = T extends (Maybe<infer E>)[]
   : T extends object
   ? DeepWithoutMaybeObject<T>
   : T;
+type Diff<T, U> = T extends U ? never : T;
+export type NonNullable<T> = Diff<T, null | undefined>;
 
 export function hasGraphqlData<GraphqlDataType extends any>(
   data: GraphqlDataType | undefined,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartiesQueryParties, PartyFragmentMembers } from '@generated/graphql';
+import { PartiesQueryParties, Party_FragmentMembers } from '@generated/graphql';
 
 import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
@@ -72,7 +72,7 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
   const { userId } = React.useContext(CalendarContext);
 
   const PartyMemberAvatar = (
-    partyMember: PartyFragmentMembers,
+    partyMember: Party_FragmentMembers,
     index: number
   ) => (
     <li key={index} className="antd-pro-avatar-list-avatarItem">

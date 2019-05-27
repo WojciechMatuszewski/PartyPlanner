@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  PaginateUsersInviteToPartyQueryEdges,
-  PaginateUsersInviteToPartyQueryNode
-} from '@generated/graphql';
+import { PaginateUsersInviteToPartyQueryQuery, User } from '@generated/graphql';
 import styled from '@emotion/styled';
 import { List, Button, Tag } from 'antd';
 import NoData from '@components/NoData';
@@ -24,7 +21,7 @@ interface InvitesInfo {
 
 interface Props {
   loading: boolean;
-  data: PaginateUsersInviteToPartyQueryEdges[];
+  data: PaginateUsersInviteToPartyQueryQuery['paginateUsers']['edges'];
   toBeInvitedPeople: Record<string, boolean>;
   toHaveInvitationCanceledPeople: Record<string, boolean>;
   onRemoveToBeInvited: (personId: string) => void;
@@ -45,11 +42,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
         loading={props.loading}
         size="small"
         dataSource={props.data}
-        renderItem={({
-          node
-        }: {
-          node: PaginateUsersInviteToPartyQueryNode;
-        }) => (
+        renderItem={({ node }: { node: User }) => (
           <PartyDashboardInviteFriendsModalListItem
             node={node}
             actions={getListItemActions(node)}
@@ -59,7 +52,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
     </ListContainer>
   );
 
-  function getListItemActions(node: PaginateUsersInviteToPartyQueryNode) {
+  function getListItemActions(node: User) {
     const { hasInvites, yourInvitationId } = getInvitationsData(node);
 
     if (!hasInvites && !props.toBeInvitedPeople[node.id])
@@ -128,9 +121,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
       ];
   }
 
-  function getInvitationsData(
-    node: PaginateUsersInviteToPartyQueryNode
-  ): InvitesInfo {
+  function getInvitationsData(node: User): InvitesInfo {
     let invitationsData: InvitesInfo = {
       hasInvites: false,
       yourInvitationId: null

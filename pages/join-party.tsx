@@ -1,9 +1,8 @@
 import React from 'react';
 import { NextFunctionComponent } from 'next';
 import {
-  MeQueryMe,
-  PartiesQueryComponent,
-  JoinPartyMutationComponent
+  JoinPartyMutationComponent,
+  JoinPartyFindComponent
 } from '@generated/graphql';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
@@ -18,15 +17,38 @@ import {
   JoinPartyInnerWrapper,
   JoinPartySection
 } from '@components/Party/JoinParty/styles';
+import { gql } from 'apollo-boost';
 
-export type InvitationLinkProps = { token: string; id: string };
+export const JOIN_PARTY_FIND_QUERY = gql`
+  query JoinPartyFind($inviteSecret: String!, $userId: ID!) {
+    parties(
+      where: { inviteSecret: $inviteSecret, members_none: { id: $userId } }
+    ) {
+      id
+      members(first: 3) {
+        id
+        firstName
+        lastName
+        avatar
+      }
+      title
+    }
+    membersCount: paginateUsers(
+      where: { parties_some: { inviteSecret: $inviteSecret } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
 
+export type InvitationLinkProps = { token: string };
 type RouteQueryProps = Partial<InvitationLinkProps>;
 
 interface InjectedProps {
-  authenticatedUserData: MeQueryMe;
+  userId: string;
   invitationToken: string;
-  partyId: string;
 }
 
 const JoinParty: NextFunctionComponent<
@@ -35,14 +57,11 @@ const JoinParty: NextFunctionComponent<
   NextContextWithApollo<RouteQueryProps>
 > = props => {
   return (
-    <PartiesQueryComponent
+    <JoinPartyFindComponent
       ssr={false}
       variables={{
-        where: {
-          inviteSecret: props.invitationToken,
-          members_none: { id: props.authenticatedUserData.id },
-          id: props.partyId
-        }
+        inviteSecret: props.invitationToken,
+        userId: props.userId
       }}
     >
       {({ loading, data, error, refetch }) => {
@@ -68,19 +87,19 @@ const JoinParty: NextFunctionComponent<
             </JoinPartySection>
           );
 
-        if (data.parties.length == 0)
-          return <JoinPartyCannotJoin onGoBackClick={handleGoBackClick} />;
-
         const {
           parties: [party]
         } = data;
+
+        if (!party)
+          return <JoinPartyCannotJoin onGoBackClick={handleGoBackClick} />;
 
         return (
           <JoinPartyMutationComponent
             variables={{
               where: {
-                partyId: props.partyId,
-                userId: props.authenticatedUserData.id
+                partyId: party.id,
+                userId: props.userId
               }
             }}
           >
@@ -89,14 +108,22 @@ const JoinParty: NextFunctionComponent<
                 error={error}
                 loading={loading}
                 party={party}
-                onJoinClick={async () => void (await joinParty())}
+                membersCount={data.membersCount.aggregate.count}
+                onJoinClick={async () => {
+                  try {
+                    await joinParty();
+                    props.router && props.router.push(`/party?id=${party.id}`);
+                  } catch {
+                    // handled by error passed to the component
+                  }
+                }}
                 onGoBackClick={handleGoBackClick}
               />
             )}
           </JoinPartyMutationComponent>
         );
       }}
-    </PartiesQueryComponent>
+    </JoinPartyFindComponent>
   );
 
   function handleGoBackClick() {
@@ -109,16 +136,16 @@ JoinParty.getInitialProps = async context => {
     userHasToBe: 'authenticated',
     ctx: context
   });
-  if (!data) return {};
 
-  if (!context.query.token && !context.query.id) {
+  if (!data || !hasGraphqlData(data, ['me'])) return {};
+
+  if (!context.query.token) {
     redirect(context, '/dashboard');
   }
 
   return {
-    authenticatedUserData: data.me,
-    invitationToken: context.query.token,
-    partyId: context.query.id
+    userId: data.me.id,
+    invitationToken: context.query.token
   };
 };
 

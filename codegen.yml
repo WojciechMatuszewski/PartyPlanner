@@ -2,7 +2,9 @@ overwrite: true
 schema:
   - 'http://localhost:4000/graphql'
   - graphql/client-schema.graphql
-documents: './graphql/*.ts'
+documents:
+  - './graphql/*.ts'
+  - './pages/*.tsx'
 pluckConfig:
   modules:
     - name: 'apollo-boost'
@@ -12,8 +14,9 @@ generates:
     config:
       noNamespaces: true
     plugins:
-      - 'typescript-common'
-      - 'typescript-client'
+      - typescript
+      - typescript-operations
+      - typescript-compatibility
       - typescript-react-apollo:
           noHOC: true
           noComponent: false

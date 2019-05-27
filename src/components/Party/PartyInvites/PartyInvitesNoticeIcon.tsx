@@ -217,6 +217,7 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
   function hasDeletedMyExistingNotification(
     partyInvitation: PartyInvitationSubscriptionPartyInvitation
   ) {
+    if (!partyInvitation) return false;
     return (
       partyInvitation.previousValues &&
       partyInvitation.previousValues.invitedUserId == props.userId
@@ -226,7 +227,7 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
   function handleItemClick({
     edge
   }: {
-    edge: PartyInvitationsConnectionQueryEdges;
+    edge: NonNullable<PartyInvitationsConnectionQueryEdges>;
   }) {
     setClickedItem(edge);
     closePartyInvitationNotification(edge.node.id);

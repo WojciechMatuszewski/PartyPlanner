@@ -8,3 +8,4 @@ node_modules
 next.config.js
 coverage
 out
+generated

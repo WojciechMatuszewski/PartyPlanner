@@ -3,7 +3,10 @@ import { withRouter, WithRouterProps } from 'next/router';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { Exception } from 'ant-design-pro';
 import css from '@emotion/css';
-import { withApolloAuth } from '@apolloSetup/withApolloAuth';
+import {
+  withApolloAuth,
+  WithApolloAuthInjectedProps
+} from '@apolloSetup/withApolloAuth';
 import { Button } from 'antd';
 
 const ExceptionStyles = css`
@@ -11,7 +14,9 @@ const ExceptionStyles = css`
   height: 100vh;
 `;
 
-const SocialAuth: React.FC<WithRouterProps> = ({ router }) => {
+const SocialAuth: React.FC<WithRouterProps & WithApolloAuthInjectedProps> = ({
+  router
+}) => {
   const routerQuery = router && router.query;
 
   function handleSuccess() {
