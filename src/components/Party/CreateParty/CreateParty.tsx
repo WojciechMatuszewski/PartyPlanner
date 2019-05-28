@@ -66,7 +66,7 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
   function getCreatePartyMutationVariables(
     formValues: CreatePartyFormValues
   ): CreatePartyMutationVariables {
-    const { location, date, ...restOfFormFields } = formValues;
+    const { location, date, invitedFriends, ...restOfFormFields } = formValues;
 
     return {
       data: {

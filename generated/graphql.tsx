@@ -6411,6 +6411,25 @@ export type JoinPartyFindQuery = { __typename?: 'Query' } & {
     aggregate: { __typename?: 'AggregateUser' } & Pick<AggregateUser, 'count'>;
   };
 };
+
+export type Is_Unread_ThreadFragment = { __typename?: 'Chat' } & Pick<
+  Chat,
+  'hasUnreadMessages'
+>;
+
+export type PartyMembersChangedSubscriptionVariables = {
+  partyId: Scalars['ID'];
+};
+
+export type PartyMembersChangedSubscription = {
+  __typename?: 'Subscription';
+} & {
+  party: Maybe<
+    { __typename?: 'PartySubscriptionPayload' } & {
+      node: Maybe<{ __typename?: 'Party' } & Pick<Party, 'id'>>;
+    }
+  >;
+};
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -6554,6 +6573,11 @@ export type JoinPartyFindMembersCount = JoinPartyFindQuery['membersCount'];
 export type JoinPartyFindAggregate = JoinPartyFindQuery['membersCount']['aggregate'];
 export const JoinPartyFindHOC = withJoinPartyFind;
 export const useJoinPartyFind = useJoinPartyFindQuery;
+export type PartyMembersChangedVariables = PartyMembersChangedSubscriptionVariables;
+export type PartyMembersChangedParty = PartyMembersChangedSubscription['party'];
+export type PartyMembersChangedNode = PartyMembersChangedSubscription['party']['node'];
+export const PartyMembersChangedHOC = withPartyMembersChanged;
+export const usePartyMembersChanged = usePartyMembersChangedSubscription;
 export const PARTY_FRAGMENTFragmentDoc = gql`
   fragment PARTY_FRAGMENT on Party {
     id
@@ -6625,6 +6649,11 @@ export const LAST_CHAT_MESSAGE_FRAGMENTFragmentDoc = gql`
         lastName
       }
     }
+    hasUnreadMessages @client
+  }
+`;
+export const IS_UNREAD_THREADFragmentDoc = gql`
+  fragment IS_UNREAD_THREAD on Chat {
     hasUnreadMessages @client
   }
 `;
@@ -8522,4 +8551,73 @@ export function useJoinPartyFindQuery(
     JoinPartyFindQuery,
     JoinPartyFindQueryVariables
   >(JoinPartyFindDocument, baseOptions);
+}
+export const PartyMembersChangedDocument = gql`
+  subscription partyMembersChanged($partyId: ID!) {
+    party(where: { node: { id: $partyId } }) {
+      node {
+        id
+      }
+    }
+  }
+`;
+export type PartyMembersChangedComponentProps = Omit<
+  Omit<
+    ReactApollo.SubscriptionProps<
+      PartyMembersChangedSubscription,
+      PartyMembersChangedSubscriptionVariables
+    >,
+    'subscription'
+  >,
+  'variables'
+> & { variables?: PartyMembersChangedSubscriptionVariables };
+
+export const PartyMembersChangedComponent = (
+  props: PartyMembersChangedComponentProps
+) => (
+  <ReactApollo.Subscription<
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables
+  >
+    subscription={PartyMembersChangedDocument}
+    {...props}
+  />
+);
+
+export type PartyMembersChangedProps<TChildProps = {}> = Partial<
+  ReactApollo.DataProps<
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables
+  >
+> &
+  TChildProps;
+export function withPartyMembersChanged<TProps, TChildProps = {}>(
+  operationOptions?: ReactApollo.OperationOption<
+    TProps,
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables,
+    PartyMembersChangedProps<TChildProps>
+  >
+) {
+  return ReactApollo.withSubscription<
+    TProps,
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables,
+    PartyMembersChangedProps<TChildProps>
+  >(PartyMembersChangedDocument, {
+    alias: 'withPartyMembersChanged',
+    ...operationOptions
+  });
+}
+
+export function usePartyMembersChangedSubscription(
+  baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables
+  >
+) {
+  return ReactApolloHooks.useSubscription<
+    PartyMembersChangedSubscription,
+    PartyMembersChangedSubscriptionVariables
+  >(PartyMembersChangedDocument, baseOptions);
 }

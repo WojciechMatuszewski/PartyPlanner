@@ -79,7 +79,11 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
               'partyInvitationsConnection.edges'
             ])
           )
-            return <Icon type="bell" />;
+            return (
+              <span>
+                <Icon type="bell" />
+              </span>
+            );
 
           return (
             <PartyInvitesNoticesList

@@ -15,7 +15,6 @@ import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 import { PartyDashboardContext } from '@pages/party';
 import { map, concat } from 'ramda';
-
 import PartyDashboardInviteFriendsSearch from './PartyDashboardInviteFriendsSearch';
 import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal';
 
@@ -70,6 +69,18 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
       refetch();
     }
   });
+
+  // listen to userJoined (by invite link)
+  // TODO:
+  // https://www.graph.cool/docs/reference/graphql-api/subscription-api-aip7oojeiv/#relation-subscriptions
+  // usePartyMembersChanged({
+  //   variables: { partyId },
+  //   onSubscriptionData: ({ subscriptionData: { data } }) => {
+  //     console.log('works');
+  //     if (!data) return;
+  //     refetch();
+  //   }
+  // });
 
   const INVITE_CANCEL_INVITE_VARIABLES = React.useMemo(
     () => ({

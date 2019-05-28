@@ -13,7 +13,7 @@ import ResetPasswordForm from '@components/Authentication/ResetPasswordForm';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { ResetPasswordComponent } from '@generated/graphql';
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
 
 interface Props {
@@ -64,7 +64,7 @@ const ResetPassword: NextFunctionComponent<
           <img src="../static/my-password.svg" />
         </AuthImageWrapper>
         <AuthInnerWrapper>
-          <h1>Reset your password</h1>
+          <Typography.Title level={1}>Reset your password</Typography.Title>
           <ResetPasswordComponent>
             {(mutate, { error, loading }) => (
               <Formik

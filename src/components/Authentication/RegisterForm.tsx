@@ -2,7 +2,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { withRouter, WithRouterProps } from 'next/router';
 import { Formik, FastField, Field } from 'formik';
-import { Form, Button } from 'antd';
+import { Form, Button, Icon } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { SignupComponent } from '@generated/graphql';
 
@@ -105,6 +105,9 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
               />
               <Field
                 component={FormikInputField}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 name="password"
                 type="password"
                 size="large"
@@ -113,6 +116,9 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
               />
               <Field
                 component={FormikInputField}
+                prefix={
+                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
                 name="confirmPassword"
                 type="password"
                 size="large"

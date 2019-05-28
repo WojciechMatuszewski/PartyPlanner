@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
-import { Form, Button } from 'antd';
+import { Form, Button, Icon } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { ForgotPasswordFormValues } from '@pages/forgot-password';
 import GraphqlError from '@components/GraphqlError';
@@ -21,6 +21,7 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         type="email"
         aria-label="email"
         size="large"
+        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
         component={FormikInputField}
       />
       <Field
@@ -29,6 +30,7 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         type="email"
         aria-label="confirm-email"
         size="large"
+        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
         component={FormikInputField}
       />
       <Button
