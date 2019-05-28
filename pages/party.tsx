@@ -22,6 +22,7 @@ import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTo
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
+import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -169,7 +170,6 @@ const Party: NextFunctionComponent<
             <PartyDashboardTop party={party} />
             <PartyDashboardTopMenu
               partyId={party.id}
-              // TODO:
               inviteSecret={party.inviteSecret!}
             />
             <PartyDashboardBasicInfo
@@ -190,6 +190,11 @@ const Party: NextFunctionComponent<
               title={party.title}
             />
             <PartyDashboardCommuteButtons location={party.location} />
+            <Row>
+              <Col span={24}>
+                <PartyDashboardParticipants partyId={partyData.party!.id} />
+              </Col>
+            </Row>
           </PartyDashboardContentWrapper>
         </PartyDashboardContext.Provider>
       </PosedWrapper>

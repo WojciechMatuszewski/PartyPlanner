@@ -2621,7 +2621,7 @@ export type Party = Node & {
   members?: Maybe<Array<User>>;
   start: Scalars['DateTime'];
   end: Scalars['DateTime'];
-  inviteSecret?: Maybe<Scalars['String']>;
+  inviteSecret: Scalars['String'];
 };
 
 export type PartyGamesArgs = {
@@ -2663,7 +2663,7 @@ export type PartyCreateInput = {
   isPublic?: Maybe<Scalars['Boolean']>;
   start?: Maybe<Scalars['DateTime']>;
   end?: Maybe<Scalars['DateTime']>;
-  inviteSecret?: Maybe<Scalars['String']>;
+  inviteSecret: Scalars['String'];
   author: UserCreateOneInput;
   location: LocationCreateOneInput;
   games?: Maybe<GameCreateManyInput>;
@@ -2689,7 +2689,7 @@ export type PartyCreateWithoutMembersInput = {
   isPublic?: Maybe<Scalars['Boolean']>;
   start?: Maybe<Scalars['DateTime']>;
   end?: Maybe<Scalars['DateTime']>;
-  inviteSecret?: Maybe<Scalars['String']>;
+  inviteSecret: Scalars['String'];
   author: UserCreateOneInput;
   location: LocationCreateOneInput;
   games?: Maybe<GameCreateManyInput>;
@@ -3108,7 +3108,7 @@ export type PartyPreviousValues = {
   isPublic?: Maybe<Scalars['Boolean']>;
   start: Scalars['DateTime'];
   end: Scalars['DateTime'];
-  inviteSecret?: Maybe<Scalars['String']>;
+  inviteSecret: Scalars['String'];
 };
 
 export type PartyScalarWhereInput = {
@@ -6417,18 +6417,34 @@ export type Is_Unread_ThreadFragment = { __typename?: 'Chat' } & Pick<
   'hasUnreadMessages'
 >;
 
-export type PartyMembersChangedSubscriptionVariables = {
-  partyId: Scalars['ID'];
+export type PartyDashboardParticipantsQueryQueryVariables = {
+  where?: Maybe<UserWhereInput>;
+  orderBy?: Maybe<UserOrderByInput>;
+  skip?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
 };
 
-export type PartyMembersChangedSubscription = {
-  __typename?: 'Subscription';
-} & {
-  party: Maybe<
-    { __typename?: 'PartySubscriptionPayload' } & {
-      node: Maybe<{ __typename?: 'Party' } & Pick<Party, 'id'>>;
-    }
-  >;
+export type PartyDashboardParticipantsQueryQuery = { __typename?: 'Query' } & {
+  usersConnection: { __typename?: 'UserConnection' } & {
+    pageInfo: { __typename?: 'PageInfo' } & Pick<
+      PageInfo,
+      'hasNextPage' | 'endCursor'
+    >;
+    edges: Array<
+      Maybe<
+        { __typename?: 'UserEdge' } & {
+          node: { __typename?: 'User' } & Pick<
+            User,
+            'firstName' | 'lastName' | 'avatar'
+          >;
+        }
+      >
+    >;
+    aggregate: { __typename?: 'AggregateUser' } & Pick<AggregateUser, 'count'>;
+  };
 };
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
@@ -6573,11 +6589,14 @@ export type JoinPartyFindMembersCount = JoinPartyFindQuery['membersCount'];
 export type JoinPartyFindAggregate = JoinPartyFindQuery['membersCount']['aggregate'];
 export const JoinPartyFindHOC = withJoinPartyFind;
 export const useJoinPartyFind = useJoinPartyFindQuery;
-export type PartyMembersChangedVariables = PartyMembersChangedSubscriptionVariables;
-export type PartyMembersChangedParty = PartyMembersChangedSubscription['party'];
-export type PartyMembersChangedNode = PartyMembersChangedSubscription['party']['node'];
-export const PartyMembersChangedHOC = withPartyMembersChanged;
-export const usePartyMembersChanged = usePartyMembersChangedSubscription;
+export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
+export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
+export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
+export type PartyDashboardParticipantsQueryEdges = PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0];
+export type PartyDashboardParticipantsQueryNode = PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0]['node'];
+export type PartyDashboardParticipantsQueryAggregate = PartyDashboardParticipantsQueryQuery['usersConnection']['aggregate'];
+export const PartyDashboardParticipantsQueryHOC = withPartyDashboardParticipantsQuery;
+export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQueryQuery;
 export const PARTY_FRAGMENTFragmentDoc = gql`
   fragment PARTY_FRAGMENT on Party {
     id
@@ -8552,72 +8571,98 @@ export function useJoinPartyFindQuery(
     JoinPartyFindQueryVariables
   >(JoinPartyFindDocument, baseOptions);
 }
-export const PartyMembersChangedDocument = gql`
-  subscription partyMembersChanged($partyId: ID!) {
-    party(where: { node: { id: $partyId } }) {
-      node {
-        id
+export const PartyDashboardParticipantsQueryDocument = gql`
+  query partyDashboardParticipantsQuery(
+    $where: UserWhereInput
+    $orderBy: UserOrderByInput
+    $skip: Int
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+  ) {
+    usersConnection(
+      where: $where
+      orderBy: $orderBy
+      skip: $skip
+      before: $before
+      first: $first
+      last: $last
+      after: $after
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          firstName
+          lastName
+          avatar
+        }
+      }
+      aggregate {
+        count
       }
     }
   }
 `;
-export type PartyMembersChangedComponentProps = Omit<
+export type PartyDashboardParticipantsQueryComponentProps = Omit<
   Omit<
-    ReactApollo.SubscriptionProps<
-      PartyMembersChangedSubscription,
-      PartyMembersChangedSubscriptionVariables
+    ReactApollo.QueryProps<
+      PartyDashboardParticipantsQueryQuery,
+      PartyDashboardParticipantsQueryQueryVariables
     >,
-    'subscription'
+    'query'
   >,
   'variables'
-> & { variables?: PartyMembersChangedSubscriptionVariables };
+> & { variables?: PartyDashboardParticipantsQueryQueryVariables };
 
-export const PartyMembersChangedComponent = (
-  props: PartyMembersChangedComponentProps
+export const PartyDashboardParticipantsQueryComponent = (
+  props: PartyDashboardParticipantsQueryComponentProps
 ) => (
-  <ReactApollo.Subscription<
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables
+  <ReactApollo.Query<
+    PartyDashboardParticipantsQueryQuery,
+    PartyDashboardParticipantsQueryQueryVariables
   >
-    subscription={PartyMembersChangedDocument}
+    query={PartyDashboardParticipantsQueryDocument}
     {...props}
   />
 );
 
-export type PartyMembersChangedProps<TChildProps = {}> = Partial<
+export type PartyDashboardParticipantsQueryProps<TChildProps = {}> = Partial<
   ReactApollo.DataProps<
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables
+    PartyDashboardParticipantsQueryQuery,
+    PartyDashboardParticipantsQueryQueryVariables
   >
 > &
   TChildProps;
-export function withPartyMembersChanged<TProps, TChildProps = {}>(
+export function withPartyDashboardParticipantsQuery<TProps, TChildProps = {}>(
   operationOptions?: ReactApollo.OperationOption<
     TProps,
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables,
-    PartyMembersChangedProps<TChildProps>
+    PartyDashboardParticipantsQueryQuery,
+    PartyDashboardParticipantsQueryQueryVariables,
+    PartyDashboardParticipantsQueryProps<TChildProps>
   >
 ) {
-  return ReactApollo.withSubscription<
+  return ReactApollo.withQuery<
     TProps,
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables,
-    PartyMembersChangedProps<TChildProps>
-  >(PartyMembersChangedDocument, {
-    alias: 'withPartyMembersChanged',
+    PartyDashboardParticipantsQueryQuery,
+    PartyDashboardParticipantsQueryQueryVariables,
+    PartyDashboardParticipantsQueryProps<TChildProps>
+  >(PartyDashboardParticipantsQueryDocument, {
+    alias: 'withPartyDashboardParticipantsQuery',
     ...operationOptions
   });
 }
 
-export function usePartyMembersChangedSubscription(
-  baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables
+export function usePartyDashboardParticipantsQueryQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<
+    PartyDashboardParticipantsQueryQueryVariables
   >
 ) {
-  return ReactApolloHooks.useSubscription<
-    PartyMembersChangedSubscription,
-    PartyMembersChangedSubscriptionVariables
-  >(PartyMembersChangedDocument, baseOptions);
+  return ReactApolloHooks.useQuery<
+    PartyDashboardParticipantsQueryQuery,
+    PartyDashboardParticipantsQueryQueryVariables
+  >(PartyDashboardParticipantsQueryDocument, baseOptions);
 }
