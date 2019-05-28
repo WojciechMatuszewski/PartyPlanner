@@ -1,25 +1,32 @@
 import React from 'react';
-import { List, Avatar, Tag } from 'antd';
-import { PartyDashboardParticipantsQueryNode } from '@generated/graphql';
+import { List, Tag } from 'antd';
+import {
+  PartyDashboardParticipantsQueryNode,
+  PartyDashboardParticipantsQueryQuery
+} from '@generated/graphql';
+import UserAvatar from '@components/UserDefaultAvatar';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 
 interface Props {
-  key: string;
   style: React.CSSProperties;
-  participant: PartyDashboardParticipantsQueryNode;
+  participant: NonNullable<
+    DeepWithoutMaybe<
+      PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0]
+    >
+  >;
 }
 
 export default function PartyDashboardParticipant(props: Props) {
   return (
     <List.Item
-      key={props.key}
       style={{ ...props.style, padding: '0px 24px' }}
       actions={[<a>Manage</a>]}
     >
       <List.Item.Meta
-        avatar={
-          <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-        }
-        title="Wojciech Matuszewski"
+        avatar={<UserAvatar userData={props.participant.node} />}
+        title={`${props.participant.node.firstName} ${
+          props.participant.node.lastName
+        }`}
         description="Joined: 22.05.2019"
       />
       <Tag color="blue">New member</Tag>

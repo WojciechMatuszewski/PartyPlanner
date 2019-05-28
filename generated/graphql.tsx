@@ -2209,13 +2209,13 @@ export type Mutation = {
   deleteManyTracks: BatchPayload;
   deleteManyUsers: BatchPayload;
   deleteManyParties: BatchPayload;
-  joinParty?: Maybe<Scalars['Boolean']>;
   signup: AuthPayload;
   login: AuthPayload;
   updateMe: User;
   inviteToFriends: User;
   requestReset?: Maybe<SuccessMessage>;
   resetPassword?: Maybe<AuthPayload>;
+  joinParty?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCreateMessageArgs = {
@@ -2544,10 +2544,6 @@ export type MutationDeleteManyPartiesArgs = {
   where?: Maybe<PartyWhereInput>;
 };
 
-export type MutationJoinPartyArgs = {
-  where: JoinPartyWhereInput;
-};
-
 export type MutationSignupArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -2577,6 +2573,10 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'];
   password: Scalars['String'];
   confirmPassword: Scalars['String'];
+};
+
+export type MutationJoinPartyArgs = {
+  where: JoinPartyWhereInput;
 };
 
 export enum MutationType {
@@ -3976,10 +3976,10 @@ export type Query = {
   /** Fetches an object given its ID */
   node?: Maybe<Node>;
   hasParties: Scalars['Boolean'];
-  canJoinParty?: Maybe<Scalars['Boolean']>;
   me?: Maybe<User>;
   getUsers: Array<Maybe<User>>;
   paginateUsers: UserConnection;
+  canJoinParty?: Maybe<Scalars['Boolean']>;
   temp__?: Maybe<Scalars['Boolean']>;
 };
 
@@ -4275,12 +4275,6 @@ export type QueryNodeArgs = {
   id: Scalars['ID'];
 };
 
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'];
-  inviteSecret: Scalars['String'];
-  partyId: Scalars['String'];
-};
-
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>;
   orderBy?: Maybe<UserOrderByInput>;
@@ -4299,6 +4293,12 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+};
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'];
+  inviteSecret: Scalars['String'];
+  partyId: Scalars['String'];
 };
 
 export enum SocialMediaType {
@@ -6443,6 +6443,8 @@ export type PartyDashboardParticipantsQueryQuery = { __typename?: 'Query' } & {
         }
       >
     >;
+  };
+  aggregated: { __typename?: 'UserConnection' } & {
     aggregate: { __typename?: 'AggregateUser' } & Pick<AggregateUser, 'count'>;
   };
 };
@@ -6594,7 +6596,8 @@ export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParti
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
 export type PartyDashboardParticipantsQueryEdges = PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0];
 export type PartyDashboardParticipantsQueryNode = PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0]['node'];
-export type PartyDashboardParticipantsQueryAggregate = PartyDashboardParticipantsQueryQuery['usersConnection']['aggregate'];
+export type PartyDashboardParticipantsQueryAggregated = PartyDashboardParticipantsQueryQuery['aggregated'];
+export type PartyDashboardParticipantsQueryAggregate = PartyDashboardParticipantsQueryQuery['aggregated']['aggregate'];
 export const PartyDashboardParticipantsQueryHOC = withPartyDashboardParticipantsQuery;
 export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQueryQuery;
 export const PARTY_FRAGMENTFragmentDoc = gql`
@@ -8601,6 +8604,8 @@ export const PartyDashboardParticipantsQueryDocument = gql`
           avatar
         }
       }
+    }
+    aggregated: usersConnection(where: $where) {
       aggregate {
         count
       }
