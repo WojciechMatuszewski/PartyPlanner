@@ -16,7 +16,7 @@ import {
 import { curry } from 'ramda';
 import CreatePartyColorTintSelect from './CreatePartyColorTintSelect';
 import CreatePartyLocation from './CreatePartyLocation';
-import UserCalendar from '@components/UserCalendar/UserCalendar';
+import UserCalendar from '@components/User/UserCalendar/UserCalendar';
 import InviteFriend from './InviteFriend/InviteFriend';
 import useMedia from '@hooks/useMedia';
 import { CREATE_PARTY_MOBILE_WIDTH } from './CreateParty';

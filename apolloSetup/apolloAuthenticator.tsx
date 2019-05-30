@@ -22,7 +22,7 @@ const ApolloAuthenticator = (function() {
 
     if (!hasRequestToken) {
       if (userHasToBe == 'authenticated')
-        return redirectWithCheck('/login', {}, ctx);
+        return redirectWithCheck({}, ctx, '/auth-login', '/login');
       else return null;
     }
 
@@ -36,7 +36,13 @@ const ApolloAuthenticator = (function() {
 
     if (userData) {
       if (userHasToBe == 'authenticated') return userData;
-      else return redirectWithCheck('/dashboard', userData, ctx);
+      else
+        return redirectWithCheck(
+          userData,
+          ctx,
+          '/user-dashboard',
+          '/user/dashboard'
+        );
     }
     return null;
   }
@@ -63,8 +69,13 @@ const ApolloAuthenticator = (function() {
     return token != null && token.trim().length > 0;
   }
 
-  function redirectWithCheck(route: string, dataToReturn: any, ctx: any) {
-    ctx.pathname != route && redirect(ctx as any, route);
+  function redirectWithCheck(
+    dataToReturn: any,
+    ctx: any,
+    route: string,
+    as?: string
+  ) {
+    ctx.pathname != route && redirect(ctx as any, route, as);
     return dataToReturn;
   }
 

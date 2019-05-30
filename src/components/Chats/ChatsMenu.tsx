@@ -12,7 +12,7 @@ import ChatSideNavigation from './ChatSideNavigation';
 import ChatsListSearch from './ChatsList/ChatsListSearch';
 import ChatsList from './ChatsList/ChatsList';
 import css from '@emotion/css';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';

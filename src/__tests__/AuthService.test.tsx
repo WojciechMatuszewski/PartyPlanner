@@ -23,7 +23,7 @@ describe('AuthService', () => {
   it('Handles login correctly', () => {
     handleLogin(TOKEN);
     expect(redirectMock).toHaveBeenCalled();
-    expect(redirectMock).toHaveBeenCalledWith({}, '/dashboard');
+    expect(redirectMock).toHaveBeenCalledWith({}, '/user/dashboard');
     expect(document.cookie).toBe(`token=${TOKEN}`);
   });
   it('Handles logout correctly', async () => {
@@ -45,7 +45,7 @@ describe('AuthService', () => {
     expect(document.cookie).toBe('');
     await wait(() => expect(mockedApolloClient.cache.reset).toHaveBeenCalled());
     expect(redirectMock).toHaveBeenCalled();
-    expect(redirectMock).toHaveBeenCalledWith({}, '/login');
+    expect(redirectMock).toHaveBeenCalledWith({}, '/auth-login', '/login');
   });
   it('Gets token from cookies correctly', () => {
     saveToken(TOKEN);

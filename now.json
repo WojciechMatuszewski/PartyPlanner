@@ -1,5 +1,59 @@
 {
   "version": 2,
   "name": "party-planner",
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
+  "builds": [{ "src": "next.config.js", "use": "@now/next" }],
+  "routes": [
+    {
+      "src": "/forgot-password",
+      "dest": "auth-forgot-password"
+    },
+    {
+      "src": "/login",
+      "dest": "auth-login"
+    },
+    {
+      "src": "/register",
+      "dest": "auth-register"
+    },
+    {
+      "src": "/reset-password/(?<token>[^/]+)",
+      "dest": "reset-password?token=$token"
+    },
+    {
+      "src": "/party/chats",
+      "dest": "party-chats"
+    },
+    {
+      "src": "/party/chats/(?<chat>[^/]+)",
+      "dest": "party-chats?chat=$chat"
+    },
+    {
+      "src": "/party/create",
+      "dest": "party-create"
+    },
+    {
+      "src": "/party/parties",
+      "dest": "party-parties"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)",
+      "dest": "party-dashboard?id=$id"
+    },
+    {
+      "src": "/party/join/(?<token>[^/]+)",
+      "dest": "party-join?token=$token"
+    },
+    {
+      "src": "/user/calendar",
+      "dest": "user-calendar"
+    },
+    {
+      "src": "/user/dashboard",
+      "dest": "user-dashboard"
+    },
+    {
+      "src": "/user/profile",
+      "dest": "user-profile"
+    }
+  ]
 }

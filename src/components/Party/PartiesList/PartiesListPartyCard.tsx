@@ -226,7 +226,10 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
             </PartyCardLocationWrapper>
           </PartiesCardMoreInfoItemWrapper>
           <PartiesCardMoreInfoItemWrapper>
-            <Link href={`/party?id=${party.node.id}`}>
+            <Link
+              href={`/party-dashboard?id=${party.node.id}`}
+              as={`/party/${party.node.id}`}
+            >
               <a>Go to party dashboard</a>
             </Link>
           </PartiesCardMoreInfoItemWrapper>

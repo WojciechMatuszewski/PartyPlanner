@@ -25,8 +25,8 @@ class MyDocument extends Document {
       <html>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="stylesheet" href="../static/nprogress.css" />
-          <link rel="stylesheet" href="../static/utils.css" />
+          <link rel="stylesheet" href="/static/nprogress.css" />
+          <link rel="stylesheet" href="/static/utils.css" />
           <link
             href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
             rel="stylesheet"

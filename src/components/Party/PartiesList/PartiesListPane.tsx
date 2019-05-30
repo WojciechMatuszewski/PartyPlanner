@@ -87,7 +87,9 @@ const PartiesListPane: React.FC<Props> = props => {
             <Button
               icon="plus"
               type="primary"
-              onClick={() => redirect({} as any, '/create-party')}
+              onClick={() =>
+                redirect({} as any, '/party-create', '/party/create')
+              }
             >
               {shouldButtonsHaveText ? 'Create new party' : null}
             </Button>

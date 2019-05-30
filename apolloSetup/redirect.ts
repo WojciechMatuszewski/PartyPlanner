@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { NextContext } from 'next';
 
-export default (context: NextContext, target: string) => {
+export default (context: NextContext, target: string, as?: string) => {
   if (context.res) {
     // server
     // 303: "See other"
@@ -9,6 +9,6 @@ export default (context: NextContext, target: string) => {
     context.res.end();
   } else {
     // In the browser, we just pretend like this never even happened ;)
-    Router.replace(target);
+    Router.push(target, as);
   }
 };

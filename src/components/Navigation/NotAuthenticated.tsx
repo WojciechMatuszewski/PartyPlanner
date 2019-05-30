@@ -18,13 +18,13 @@ const AppNotAuthenticatedHeader: React.FC<Props> = ({ currentRouterPath }) => {
           <a>Home</a>
         </Link>
       </Menu.Item>
-      <Menu.Item key="/login">
-        <Link href="/login">
+      <Menu.Item key="/auth-login">
+        <Link href="/auth-login" as="/login">
           <a>Login</a>
         </Link>
       </Menu.Item>
-      <Menu.Item key="/register">
-        <Link href="register">
+      <Menu.Item key="/auth-register">
+        <Link href="/auth-register" as="/register">
           <a>Register</a>
         </Link>
       </Menu.Item>

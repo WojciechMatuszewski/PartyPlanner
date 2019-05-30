@@ -77,8 +77,9 @@ const PartyDashboardContentWrapper = styled(
   display: flex;
   flex-direction: column;
   max-width: 1280px;
+  width: 100%;
   align-self: flex-start;
-  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background: white;
   z-index: 1;
   border-top-left-radius: 4px;

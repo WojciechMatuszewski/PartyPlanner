@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, wait } from 'react-testing-library';
-import ResetPassword from '@pages/reset-password';
+import ResetPassword from '@pages/auth-reset-password';
 import { MockedResponse } from 'react-apollo/test-links';
 import { RESET_PASSWORD_MUTATION } from '@graphql/mutations';
 import { MockedProvider } from 'react-apollo/test-utils';

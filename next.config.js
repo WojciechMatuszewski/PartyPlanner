@@ -15,7 +15,7 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
-  // target: 'serverless',
+  target: 'serverless',
   webpack: config => {
     config.plugins = config.plugins || [];
 

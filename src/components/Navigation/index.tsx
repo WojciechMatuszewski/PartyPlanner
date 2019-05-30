@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, WithRouterProps } from 'next/router';
-import AppNotAuthenticatedHeader from './AppNotAuthenticatedHeader';
-import AppAuthenticatedHeader from './AppAuthenticatedHeader';
+import AppNotAuthenticatedHeader from './NotAuthenticated';
+import AppAuthenticatedHeader from './Authenticated';
 import useMedia from '@hooks/useMedia';
 import styled from '@emotion/styled';
 
@@ -15,12 +15,12 @@ export const HeaderLoadingData = styled.div`
 const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
   const notAuthenticatedRoutes = [
     '/',
-    '/login',
-    '/register',
-    '/social-auth',
+    '/auth-login',
+    '/auth-register',
+    '/auth-social',
     '/spotify',
-    '/forgot-password',
-    '/reset-password'
+    '/auth-forgot-password',
+    '/auth-reset-password'
   ];
 
   const isOnMobile = useMedia('(max-width:800px)');

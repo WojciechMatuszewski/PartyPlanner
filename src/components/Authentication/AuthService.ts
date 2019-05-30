@@ -14,16 +14,26 @@ export function getToken(): string | null {
 
 export async function handleLogout(client: ApolloClient<any>) {
   document.cookie = cookie.serialize('token', '', {
-    maxAge: -1
+    maxAge: -1,
+    // NICE MEME, ALMOST 1 HR OF SEARCHING
+    path: '/'
   });
+  document.cookie = cookie.serialize('token', '', {
+    maxAge: -1,
+    // NICE MEME, ALMOST 1 HR OF SEARCHING
+    path: '/user'
+  });
+
   await client.cache.reset();
+  cookie.parse(document.cookie);
   if (isBrowser()) {
     localStorage.removeItem(USER_PRESENCE_CONFIG.localStorageHeartbeatKeyName);
   }
-  redirect({} as any, '/login');
+
+  redirect({} as any, '/auth-login', '/login');
 }
 
 export function handleLogin(token: string) {
   saveToken(token);
-  redirect({} as any, '/dashboard');
+  redirect({} as any, '/user/dashboard');
 }

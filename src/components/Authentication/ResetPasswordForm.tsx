@@ -3,7 +3,7 @@ import { Form, Button, Icon } from 'antd';
 import { Field, FormikProps } from 'formik';
 import FormikInputField from '@shared/formikInputField';
 import { ApolloError } from 'apollo-boost';
-import { ResetPasswordFormValues } from '@pages/reset-password';
+import { ResetPasswordFormValues } from '@pages/auth-reset-password';
 import GraphqlError from '@components/GraphqlError';
 
 interface Props {

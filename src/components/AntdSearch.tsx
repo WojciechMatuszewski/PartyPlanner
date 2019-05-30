@@ -13,7 +13,7 @@ export default function AntdSearch(props: Props) {
   const { onChange, ...restOfProps } = props;
 
   const debouncedOnChangeRef = React.useRef<Props['onChange']>(
-    debounce(props.onChange, 300)
+    debounce(onChange, 300)
   );
 
   return (

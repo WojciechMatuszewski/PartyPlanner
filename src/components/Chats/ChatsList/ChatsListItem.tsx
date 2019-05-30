@@ -105,8 +105,10 @@ const ChatsListItem: React.FC<Props & WithRouterProps> = ({
   }
 
   function changeUrlToCorrectChat() {
-    const url = `/chats?chat=${node.id}`;
-    router && router.push(url, url, { shallow: true });
+    router &&
+      router.push(`/party-chats?chat=${node.id}`, `/party/chats/${node.id}`, {
+        shallow: true
+      });
   }
 
   function markAsReadThread() {

@@ -8,7 +8,7 @@ const routerMock = (RouterDep.default as any) as jest.Mock<
   SingletonRouter<any>
 >;
 
-const TARGET = '/login';
+const TARGET = '/auth-login';
 
 describe('Redirect', () => {
   it('Works correctly when used at server side', () => {
@@ -28,8 +28,8 @@ describe('Redirect', () => {
   });
   it('Works correctly when used inside browser', () => {
     const mockedContext: any = {};
-    redirect(mockedContext, TARGET);
-    expect((routerMock as any).replace).toHaveBeenCalled();
-    expect((routerMock as any).replace).toHaveBeenCalledWith(TARGET);
+    redirect(mockedContext, TARGET, TARGET);
+    expect((routerMock as any).push).toHaveBeenCalled();
+    expect((routerMock as any).push).toHaveBeenCalledWith(TARGET, TARGET);
   });
 });

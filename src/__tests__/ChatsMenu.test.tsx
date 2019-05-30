@@ -10,7 +10,7 @@ import { PAGINATE_CHATS_QUERY } from '@graphql/queries';
 import { render, wait, fireEvent } from 'react-testing-library';
 import { ApolloProvider } from 'react-apollo-hooks';
 import { MockedProvider } from 'react-apollo/test-utils';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import ChatsMenu, {
   CHATS_MENU_PAGE_SIZE,
   CHATS_MENU_ORDER_BY

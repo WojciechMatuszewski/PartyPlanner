@@ -5,7 +5,7 @@ import { List, Button, Tag } from 'antd';
 import NoData from '@components/NoData';
 import css from '@emotion/css';
 
-import { PartyDashboardContext } from '@pages/party';
+import { PartyDashboardContext } from '@pages/party-dashboard';
 import PartyDashboardInviteFriendsModalListItem from './PartyDashboardInviteFriendsModalListItem';
 
 const ListContainer = styled.div`
