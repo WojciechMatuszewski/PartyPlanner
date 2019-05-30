@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography, Input, Divider, Affix } from 'antd';
+import { Row, Col, Typography, Divider, Affix } from 'antd';
 import styled from '@emotion/styled';
 import AntdSearch from '@components/AntdSearch';
 
