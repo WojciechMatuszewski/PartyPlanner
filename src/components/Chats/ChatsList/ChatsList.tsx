@@ -1,7 +1,7 @@
 import React from 'react';
 import { PaginateChatsQueryEdges } from '@generated/graphql';
 import ChatsListItem from './ChatsListItem';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import styled from '@emotion/styled';
 
 interface Props {

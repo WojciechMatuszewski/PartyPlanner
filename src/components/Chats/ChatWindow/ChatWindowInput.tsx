@@ -9,7 +9,7 @@ import {
   CreateMessageMutation,
   CreateMessageCreateMessage
 } from '@generated/graphql';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import { DataProxy } from 'apollo-cache';
 import * as yup from 'yup';
 import { Formik } from 'formik';

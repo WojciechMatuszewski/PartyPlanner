@@ -1,7 +1,7 @@
 import React from 'react';
 import useMedia from '@hooks/useMedia';
 import ChatSideNavigation from './ChatSideNavigation';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import {
   PaginateUsersQueryComponent,
   PaginateUsersQueryEdges,

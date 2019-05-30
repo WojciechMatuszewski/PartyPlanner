@@ -17,7 +17,7 @@ const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
   if (chatUsers.length == 0)
     return (
       <ChatEmptySection
-        image="../static/invite-others.svg"
+        image="/static/invite-others.svg"
         title="No other users"
         description="Invite others to populate this area!"
       />

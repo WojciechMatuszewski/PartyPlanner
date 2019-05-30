@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import ChatInput from './ChatWindowInput';
-import { ChatsContext } from '@pages/chats';
+import { ChatsContext } from '@pages/party-chats';
 import ChatEmptySection from '../ChatEmptySection';
 import {
   PaginateMessagesQueryEdges,
@@ -168,7 +168,7 @@ const ChatWindow: React.FC = () => {
     return (
       <ChatWindowWrapper>
         <ChatEmptySection
-          image={'../static/no-data.svg'}
+          image={'/static/no-data.svg'}
           title="No messages here"
           description="Start a conversation now!"
         />

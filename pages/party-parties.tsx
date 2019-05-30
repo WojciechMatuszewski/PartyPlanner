@@ -15,7 +15,7 @@ import GraphqlException from '@components/GraphqlException';
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartiesList from '@components/Party/PartiesList/PartiesList';
 
-const PartiesPage: NextFunctionComponent<
+const UserParties: NextFunctionComponent<
   WithApolloAuthInjectedProps & WithRouterProps
 > = ({ me, router }) => {
   return (
@@ -50,7 +50,9 @@ const PartiesPage: NextFunctionComponent<
               action={
                 <Button
                   type="primary"
-                  onClick={() => router && router.push('/create-party')}
+                  onClick={() =>
+                    router && router.push('/party-create', '/party/create')
+                  }
                 >
                   Create new party
                 </Button>
@@ -70,5 +72,5 @@ const PartiesPage: NextFunctionComponent<
 };
 
 export default withRouter(
-  withApolloAuth({ userHasToBe: 'authenticated' })(PartiesPage)
+  withApolloAuth({ userHasToBe: 'authenticated' })(UserParties)
 );

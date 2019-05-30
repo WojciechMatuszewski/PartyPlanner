@@ -50,7 +50,7 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
       title: 'Party created!',
       content:
         'Party has been successfully created and your friends has been notified.',
-      onOk: () => redirect({} as any, '/calendar'),
+      onOk: () => redirect({} as any, '/user-calendar', '/user/calendar'),
       okText: 'Go back to calendar'
     });
   }
@@ -120,7 +120,9 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
           }
         ]
       });
+
       if (!createPartyResult) throw Error('something went wrong');
+
       await Promise.all(
         createPartyInvites(
           createPartyResult.data!.createParty.id,

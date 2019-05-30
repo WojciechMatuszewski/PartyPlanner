@@ -10,7 +10,7 @@ import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';
 import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
-import { HeaderLoadingData } from './AppHeader';
+import { HeaderLoadingData } from '.';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -71,24 +71,24 @@ const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
           mode="horizontal"
           style={{ lineHeight: '64px', display: 'flex' }}
         >
-          <Menu.Item key="/dashboard">
-            <Link href="/dashboard">
+          <Menu.Item key="/user-dashboard">
+            <Link href="/user-dashboard" as="/user/dashboard">
               <a>Dashboard</a>
             </Link>
           </Menu.Item>
 
-          <Menu.Item key="/calendar">
-            <Link href="/calendar">
+          <Menu.Item key="/user-calendar">
+            <Link href="/user-calendar" as="/user/calendar">
               <a>Calendar</a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/chats">
-            <Link href="/chats">
+          <Menu.Item key="/party-chats">
+            <Link href="/party-chats" as="/party/chats">
               <a>Chats</a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/parties">
-            <Link href="/parties">
+          <Menu.Item key="/party-parties">
+            <Link href="/party-parties" as="/party/parties">
               <a>Your Parties</a>
             </Link>
           </Menu.Item>
@@ -98,13 +98,15 @@ const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
           </Menu.Item>
 
           <Menu.Item key="/user-profile">
-            <Link href="/user-profile">
+            <Link href="/user-profile" as="/user/profile">
               <a>
                 <UserAvatar userData={props.userData} />
               </a>
             </Link>
           </Menu.Item>
-          <Menu.Item onClick={() => handleLogout(client)}>Logout</Menu.Item>
+          <Menu.Item onClick={async () => await handleLogout(client)}>
+            Logout
+          </Menu.Item>
         </Menu>
       )}
     </ApolloConsumer>
@@ -129,24 +131,29 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
           theme="light"
           selectedKeys={[props.currentRouterPath]}
         >
-          <Menu.Item onClick={() => setDrawerVisible(false)} key="/dashboard">
-            <Link href="/dashboard">
+          <Menu.Item
+            onClick={() => setDrawerVisible(false)}
+            key="/user-dashboard"
+          >
+            <Link href="/user-dashboard" as="/user/dashboard">
               <a>Dashboard</a>
             </Link>
           </Menu.Item>
-          <Menu.Item onClick={() => setDrawerVisible(false)} key="/calendar">
-            <Link href="/calendar">
+          <Menu.Item
+            onClick={() => setDrawerVisible(false)}
+            key="/user-calendar"
+          >
+            <Link href="/user-calendar" as="/user/calendar">
               <a>Calendar</a>
             </Link>
           </Menu.Item>
-          <Menu.Item onClick={() => setDrawerVisible(false)} key="/chats">
-            <Link href="/chats">
+          <Menu.Item onClick={() => setDrawerVisible(false)} key="/party-chats">
+            <Link href="/party-chats" as="/party/chats">
               <a>Chats</a>
             </Link>
           </Menu.Item>
-
-          <Menu.Item key="/parties">
-            <Link href="/parties">
+          <Menu.Item key="/party-parties">
+            <Link href="/party-parties" as="/party/parties">
               <a>Your Parties</a>
             </Link>
           </Menu.Item>
@@ -167,13 +174,13 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
             </Menu.Item>
 
             <Menu.Item key="/user-profile">
-              <Link href="/user-profile">
+              <Link href="/user-profile" as="/user/profile">
                 <a>
                   <UserAvatar userData={props.userData} />
                 </a>
               </Link>
             </Menu.Item>
-            <Menu.Item onClick={() => handleLogout(client)}>
+            <Menu.Item onClick={async () => await handleLogout(client)}>
               <Icon component={SignOutIcon} css={[CustomIconStyles]} />
             </Menu.Item>
             <Menu.Item onClick={() => setDrawerVisible(true)}>

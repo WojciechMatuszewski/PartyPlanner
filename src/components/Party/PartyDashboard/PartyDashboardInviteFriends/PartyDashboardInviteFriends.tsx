@@ -13,10 +13,27 @@ import {
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
-import { PartyDashboardContext } from '@pages/party';
+import { PartyDashboardContext } from '@pages/party-dashboard';
 import { map, concat } from 'ramda';
 import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal';
 import AntdSearch from '@components/AntdSearch';
+import css from '@emotion/css';
+
+const SearchInputStyles = css`
+  input {
+    border: 0;
+    border-bottom: 1px solid #e8e8e8;
+    border-radius: 0;
+    padding-left: 24px;
+    padding-right: 37px !important;
+  }
+
+  .ant-input-suffix {
+    right: 21px;
+  }
+
+  margin-bottom: 0;
+`;
 
 interface Props {
   isOnMobile: boolean;
@@ -26,6 +43,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [confirmLoading, setConfirmLoading] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>('');
+
   const { partyId, currentlyAuthenticatedUserId } = React.useContext(
     PartyDashboardContext
   );
@@ -125,7 +143,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
         confirmLoading={confirmLoading}
       >
         <React.Fragment>
-          <Affix>
+          <Affix css={[SearchInputStyles]}>
             <AntdSearch
               onChange={setSearchValue}
               onSearch={setSearchValue}
@@ -134,10 +152,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
           </Affix>
           {error ? (
             <GraphqlInlineError style={{ padding: '24px 0px' }}>
-              <Button
-                data-testid="chatsMenuRefetchButton"
-                onClick={async () => await handleRefetch(refetch)}
-              >
+              <Button onClick={async () => await handleRefetch(refetch)}>
                 Try again
               </Button>
             </GraphqlInlineError>

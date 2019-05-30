@@ -1,6 +1,6 @@
 module.exports = {
   '*.{ts,tsx}': [
-    'eslint . --fix',
+    'eslint . --fix -c .eslintrc',
     'prettier --write',
     'git add',
     'jest --bail --findRelatedTests'

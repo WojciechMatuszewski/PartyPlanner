@@ -8,9 +8,9 @@ import {
 import LoginForm from '@components/Authentication/LoginForm';
 import LoginSocial from '@components/Authentication/LoginSocial';
 import { LoginComponent } from '@generated/graphql';
-import { withApolloAuth } from '../apolloSetup/withApolloAuth';
 
 import { Typography } from 'antd';
+import { withApolloAuth } from '@apolloSetup/withApolloAuth';
 
 const Login: React.FC = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-testing-library/cleanup-after-each';
 import { render, fireEvent, wait } from 'react-testing-library';
-import ForgotPassword from '@pages/forgot-password';
+import ForgotPassword from '@pages/auth-forgot-password';
 import { MockedProvider, MockedResponse } from 'react-apollo/test-utils';
 import { REQUEST_PASSWORD_RESET_MUTATION } from '@graphql/mutations';
 import 'jest-dom/extend-expect';

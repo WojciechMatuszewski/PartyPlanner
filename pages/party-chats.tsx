@@ -35,7 +35,7 @@ export const ChatsContext = React.createContext<ChatContextProps>({
   currentlyLoggedUserData: {} as any
 });
 
-const Chats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
+const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
   me,
   router
 }) => {
@@ -56,6 +56,7 @@ const Chats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
       isFirstRunRef.current = true;
       return;
     }
+
     let currentlySelectedChatId = getCurrentChatFromUrl();
     if (!currentlySelectedChatId) return;
     setState(prevState => ({ ...prevState, currentlySelectedChatId }));
@@ -124,5 +125,5 @@ const Chats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
 };
 
 export default withRouter(
-  withApolloAuth({ userHasToBe: 'authenticated' })(Chats)
+  withApolloAuth({ userHasToBe: 'authenticated' })(UserChats)
 );

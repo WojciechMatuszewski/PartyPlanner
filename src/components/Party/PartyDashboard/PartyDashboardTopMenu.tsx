@@ -4,10 +4,10 @@ import styled from '@emotion/styled';
 import useMedia from '@hooks/useMedia';
 import PartyDashboardInviteFriends from './PartyDashboardInviteFriends/PartyDashboardInviteFriends';
 import * as copy from 'copy-to-clipboard';
-import { InvitationLinkProps } from '@pages/join-party';
+import { InvitationLinkProps } from '@pages/party-join';
 import { throttle } from 'lodash';
 
-const JOIN_PARTY_PAGE = 'join-party';
+const JOIN_PARTY_PAGE = 'party/join';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,7 +49,7 @@ const PartyDashboardTopMenu: React.FC<Props> = props => {
   function createInvitationLink({ token }: InvitationLinkProps): string {
     return `${
       process.env.NEXT_STATIC_FRONTEND_URL
-    }/${JOIN_PARTY_PAGE}?token=${token}`;
+    }/${JOIN_PARTY_PAGE}/${token}`;
   }
 
   function handleCopyInvitationLinkClick() {

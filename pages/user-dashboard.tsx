@@ -1,11 +1,12 @@
 import React from 'react';
-import UserDashboardTitle from './UserDashboardTitle';
-
 import styled from '@emotion/styled';
-import UserDashboardTile from './UserDashboardTile';
 import { PoseGroup } from 'react-pose';
 import { withRouter, WithRouterProps } from 'next/router';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { withApolloAuth } from '@apolloSetup/withApolloAuth';
+import UserDashboardTitle from '@components/User/UserDashboard/UserDashboardTitle';
+import UserDashboardTile from '@components/User/UserDashboard/UserDashboardTile';
+import { compose } from 'react-apollo';
 
 const UserDashboardWrapper = styled.div`
   padding: 20px;
@@ -95,7 +96,9 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
               <UserDashboardTile
                 key={1}
                 index={1}
-                onClick={() => router && router.push('/parties')}
+                onClick={() =>
+                  router && router.push('/party-parties', '/party/parties')
+                }
               >
                 <UserDashboardTile.Title iconType="experiment" text="Parties" />
                 <UserDashboardTile.Text text="Here you can browse parties you are organizing or taking part of" />
@@ -103,7 +106,9 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
               <UserDashboardTile
                 index={2}
                 key={2}
-                onClick={() => router && router.push('/chats')}
+                onClick={() =>
+                  router && router.push('/party-chats', '/party/chats')
+                }
               >
                 <UserDashboardTile.Title iconType="message" text="Chats" />
                 <UserDashboardTile.Text text="Here you can catch up with your friends about the party you all waiting for" />
@@ -111,7 +116,9 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
               <UserDashboardTile
                 index={3}
                 key={3}
-                onClick={() => router && router.push('/user-profile')}
+                onClick={() =>
+                  router && router.push('/user-profile', '/user/profile')
+                }
               >
                 <UserDashboardTile.Title iconType="user" text="Profile" />
                 <UserDashboardTile.Text text="Here you can edit your profile, make changes to your bio, edit avatars" />
@@ -119,7 +126,9 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
               <UserDashboardTile
                 index={4}
                 key={4}
-                onClick={() => router && router.push('/calendar')}
+                onClick={() =>
+                  router && router.push('/user-calendar', '/user/calendar')
+                }
               >
                 <UserDashboardTile.Title iconType="calendar" text="Calendar" />
                 <UserDashboardTile.Text text="Here you can make plans, create new parties" />
@@ -135,4 +144,7 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
   );
 };
 
-export default withRouter(UserDashboard);
+export default compose(
+  withApolloAuth({ userHasToBe: 'authenticated' }),
+  withRouter
+)(UserDashboard);

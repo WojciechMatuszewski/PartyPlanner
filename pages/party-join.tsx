@@ -112,7 +112,11 @@ const JoinParty: NextFunctionComponent<
                 onJoinClick={async () => {
                   try {
                     await joinParty();
-                    props.router && props.router.push(`/party?id=${party.id}`);
+                    props.router &&
+                      props.router.push(
+                        `/party-dashboard?id=${party.id}`,
+                        `/party/${party.id}`
+                      );
                   } catch {
                     // handled by error passed to the component
                   }

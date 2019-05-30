@@ -11,7 +11,7 @@ import { render, wait, fireEvent } from 'react-testing-library';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
 import '../__mocks__/matchMedia';
 import 'react-testing-library/cleanup-after-each';
-import { ChatContextProps, ChatsContext } from '@pages/chats';
+import { ChatContextProps, ChatsContext } from '@pages/party-chats';
 import { BehaviorSubject } from 'rxjs';
 import { MockedProvider } from 'react-apollo/test-utils';
 import { createMockedApolloClient } from '@shared/testUtils';

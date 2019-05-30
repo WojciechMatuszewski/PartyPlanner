@@ -60,7 +60,7 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
   return (
     <Row css={[RowStyles]}>
       <Col lg={16} sm={24} style={{ height: '100%' }}>
-        <img src="./static/having-fun.svg" />
+        <img src="../static/having-fun.svg" />
       </Col>
       <Col lg={8} sm={24} css={[InfoTileStyles]}>
         <div>

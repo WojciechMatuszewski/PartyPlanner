@@ -1,8 +1,8 @@
 import React from 'react';
 import { MeQueryMe } from '@generated/graphql';
 import styled from '@emotion/styled';
-import UserProfileBanner from '@components/UserProfile/UserProfileBanner';
-import UserProfileTile from '@components/UserProfile/UserProfileTile';
+import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
+import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
 
 const UserProfileWrapper = styled.div`
   width: 900px;

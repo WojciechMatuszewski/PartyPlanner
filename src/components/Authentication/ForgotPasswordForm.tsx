@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, FormikProps } from 'formik';
 import { Form, Button, Icon } from 'antd';
 import FormikInputField from '@shared/formikInputField';
-import { ForgotPasswordFormValues } from '@pages/forgot-password';
+import { ForgotPasswordFormValues } from '@pages/auth-forgot-password';
 import GraphqlError from '@components/GraphqlError';
 import { ApolloError } from 'apollo-boost';
 
