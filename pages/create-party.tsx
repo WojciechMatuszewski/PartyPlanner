@@ -1,9 +1,11 @@
 import React from 'react';
 import CreateParty from '@components/Party/CreateParty/CreateParty';
-import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import { MeQueryMe } from '@generated/graphql';
+import {
+  withApolloAuth,
+  WithApolloAuthInjectedProps
+} from '@apolloSetup/withApolloAuth';
 
-const CreatePartyPage: React.FC<{ me: MeQueryMe }> = ({ me }) => {
+const CreatePartyPage: React.FC<WithApolloAuthInjectedProps> = ({ me }) => {
   return <CreateParty userId={me.id} />;
 };
 

@@ -3,11 +3,7 @@ import {
   ActionType,
   createStandardAction
 } from 'typesafe-actions';
-import {
-  PaginatePartiesQueryEdges,
-  PaginatePartiesQueryVariables,
-  PaginatePartiesQueryPageInfo
-} from '@generated/graphql';
+import {} from '@generated/graphql';
 
 // drawer stuff
 enum drawerActionTypes {
@@ -40,21 +36,19 @@ export const PartiesListFetchActions = {
     boolean
   >(),
   setError: createStandardAction(dataFetchingActionTypes.setError)<boolean>(),
-  setResults: createStandardAction(dataFetchingActionTypes.setResults)<
-    PaginatePartiesQueryEdges[]
-  >(),
+  setResults: createStandardAction(dataFetchingActionTypes.setResults)<any>(),
   appendResults: createStandardAction(dataFetchingActionTypes.appendResults)<
-    PaginatePartiesQueryEdges[]
+    any
   >(),
   setPaginationInfo: createStandardAction(
     dataFetchingActionTypes.setPaginationInfo
-  )<PaginatePartiesQueryPageInfo>(),
+  )<any>(),
   setLoadingInitially: createStandardAction(
     dataFetchingActionTypes.setLoadingInitially
   )<boolean>(),
   setQueryVariables: createStandardAction(
     dataFetchingActionTypes.setQueryVariables
-  )<PaginatePartiesQueryVariables>(),
+  )<any>(),
   setLoadingFilters: createStandardAction(
     dataFetchingActionTypes.setLoadingFilters
   )<boolean>()
@@ -94,7 +88,7 @@ export interface PartiesListFilter<
   // https://github.com/Microsoft/TypeScript/issues/6230
   // sadly til this pull request is not finished i will probably not be able to type this correctly
   K = T extends 'where' ? any : boolean
-  > {
+> {
   id: string;
   variablesType: T;
   variablesName: K;
@@ -113,9 +107,9 @@ export interface PartiesListState {
   initiallyLoading: boolean;
   drawerVisible: boolean;
   loadingMore: boolean;
-  parties: PaginatePartiesQueryEdges[];
-  paginationInfo: PaginatePartiesQueryPageInfo;
-  queryVariables: PaginatePartiesQueryVariables;
+  parties: any[];
+  paginationInfo: any;
+  queryVariables: any;
   filterInputValue: string;
   filters: PartiesListFilters;
   loadingFilters: boolean;
@@ -211,7 +205,6 @@ export function PartiesListReducer(
         filterInputValue: action.payload
       };
     case filterActionTypes.addFilter:
-
       return {
         ...state,
         filters: {

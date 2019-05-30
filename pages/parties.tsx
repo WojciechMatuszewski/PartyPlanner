@@ -1,8 +1,11 @@
 import React from 'react';
-import { withApolloAuth } from '@apolloSetup/withApolloAuth';
+import {
+  withApolloAuth,
+  WithApolloAuthInjectedProps
+} from '@apolloSetup/withApolloAuth';
 
 import { BackTop, Button } from 'antd';
-import { MeQueryMe, HasPartiesQueryComponent } from '@generated/graphql';
+import { HasPartiesQueryComponent } from '@generated/graphql';
 import { NextFunctionComponent } from 'next';
 
 import GraphqlLoading from '@components/GraphqlLoading';
@@ -12,13 +15,9 @@ import GraphqlException from '@components/GraphqlException';
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartiesList from '@components/Party/PartiesList/PartiesList';
 
-interface Props {
-  me: MeQueryMe;
-}
-const PartiesPage: NextFunctionComponent<Props & WithRouterProps> = ({
-  me,
-  router
-}) => {
+const PartiesPage: NextFunctionComponent<
+  WithApolloAuthInjectedProps & WithRouterProps
+> = ({ me, router }) => {
   return (
     <HasPartiesQueryComponent>
       {({ loading, data, error, refetch }) => {

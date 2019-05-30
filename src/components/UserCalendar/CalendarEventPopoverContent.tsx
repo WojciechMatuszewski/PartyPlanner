@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartiesQueryParties, PartyFragmentMembers } from '@generated/graphql';
+import { PartiesQueryParties, Party_FragmentMembers } from '@generated/graphql';
 
 import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
@@ -8,6 +8,7 @@ import { AvatarList } from 'ant-design-pro';
 import UserAvatar from '@components/UserDefaultAvatar';
 import { CalendarContext } from './UserCalendar';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
+import Link from 'next/link';
 
 const CalendarEventPopoverWrapper = styled.div<{ isInModal: boolean }>`
   width: ${props => (props.isInModal ? '100%' : '300px')};
@@ -72,7 +73,7 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
   const { userId } = React.useContext(CalendarContext);
 
   const PartyMemberAvatar = (
-    partyMember: PartyFragmentMembers,
+    partyMember: Party_FragmentMembers,
     index: number
   ) => (
     <li key={index} className="antd-pro-avatar-list-avatarItem">
@@ -127,12 +128,14 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
           maxLength={5}
           excessItemsStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
         >
-          {props.party!.members!.map(PartyMemberAvatar)}
+          {props.party.members!.map(PartyMemberAvatar)}
         </AvatarList>
       </div>
       <div className="item-wrapper">
         <div className="item-icon" />
-        <a>More details</a>
+        <Link href={`/party?id=${props.party.id}`}>
+          <a>Party dashboard</a>
+        </Link>
       </div>
     </CalendarEventPopoverWrapper>
   );

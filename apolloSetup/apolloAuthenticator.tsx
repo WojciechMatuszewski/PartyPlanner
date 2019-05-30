@@ -1,8 +1,10 @@
 import { parseCookies } from './withApollo';
 import redirect from './redirect';
-import { MeQueryQuery, MeQueryDocument, MeQueryMe } from '@generated/graphql';
+import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
 import { handleLogout } from '@components/Authentication/AuthService';
 import { NextContextWithApollo } from '@pages/_app';
+import { WithApolloAuthInjectedProps } from './withApolloAuth';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 
 interface ApolloAuthenticatorProps {
   userHasToBe: 'authenticated' | 'notAuthenticated';
@@ -15,7 +17,7 @@ const ApolloAuthenticator = (function() {
   async function authenticate({
     userHasToBe,
     ctx
-  }: ApolloAuthenticatorProps): Promise<{ me: MeQueryMe } | null> {
+  }: ApolloAuthenticatorProps): Promise<WithApolloAuthInjectedProps | null> {
     const hasRequestToken = doesRequestTokenExists(ctx);
 
     if (!hasRequestToken) {
@@ -46,7 +48,7 @@ const ApolloAuthenticator = (function() {
       });
       if (isServerResponseValid(data)) {
         return {
-          me: data.me as MeQueryMe
+          me: data.me
         };
       } else {
         return null;
@@ -71,7 +73,9 @@ const ApolloAuthenticator = (function() {
     return null;
   }
 
-  function isServerResponseValid(meData: MeQueryQuery) {
+  function isServerResponseValid(
+    meData: MeQueryQuery
+  ): meData is DeepWithoutMaybe<MeQueryQuery> {
     return meData.me != null && Object.keys(meData.me).length > 0;
   }
 })();

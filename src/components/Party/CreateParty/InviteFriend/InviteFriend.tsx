@@ -2,12 +2,10 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import {
-  Maybe,
-  PaginateUsersQueryEdges,
-  useMeQuery,
-  PaginateUsersQueryVariables,
   PaginateUsersQueryQuery,
-  PaginateUsersQueryDocument
+  PaginateUsersQueryDocument,
+  useMeQueryQuery,
+  User
 } from '@generated/graphql';
 import { FormikContext } from 'formik';
 import { useApolloClient } from 'react-apollo-hooks';
@@ -34,7 +32,7 @@ const NUM_OF_USERS_PER_PAGE = 10;
 
 function getQueryConstructor(userId: string) {
   return function(
-    results: Maybe<PaginateUsersQueryEdges>[],
+    results: PaginateUsersQueryQuery['paginateUsers']['edges'],
     searchValue: string | undefined
   ) {
     return {
@@ -67,9 +65,8 @@ const InviteFriend: React.FC<{
     SetLoadingState,
     SetFetchQuery,
     SetResultsState
-    // SetShouldIgnoreTypeaheadCallback
   } = InviteFriendActionCreators;
-  const { loading: meDataLoading, data: meData } = useMeQuery({
+  const { loading: meDataLoading, data: meData } = useMeQueryQuery({
     fetchPolicy: 'cache-first'
   });
 
@@ -119,7 +116,6 @@ const InviteFriend: React.FC<{
     fetchQuery.where.id_not_in.pop();
     const data = await getData(fetchQuery);
     if (!data) return;
-    // TODO:
     dispatch(SetResultsState({ fetchInfo: data.paginateUsers.pageInfo }));
   }
 
@@ -170,7 +166,7 @@ const InviteFriend: React.FC<{
     message.config({ maxCount: 1 });
   }, []);
 
-  async function getData(variables: PaginateUsersQueryVariables) {
+  async function getData(variables: ReturnType<typeof constructFetchQuery>) {
     try {
       const { data } = await apolloClient.query<PaginateUsersQueryQuery>({
         query: PaginateUsersQueryDocument,
@@ -222,7 +218,7 @@ const InviteFriend: React.FC<{
         }
         loading={state.loadingState.initiallyLoading}
         canShowLoadMore={canShowLoadMore}
-        renderItem={(edge: PaginateUsersQueryEdges) => (
+        renderItem={(edge: { node: User }) => (
           <InviteFriendListItem
             key={edge.node.id}
             edge={edge}

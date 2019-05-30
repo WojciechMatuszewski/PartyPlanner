@@ -11,10 +11,8 @@ import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
 import {
-  PartiesQueryParties,
   PartiesQueryQuery,
-  PartiesQueryVariables,
-  MeQueryMe
+  PartiesQueryQueryVariables
 } from '@generated/graphql';
 import { PARTIES_QUERY } from '@graphql/queries';
 import GraphqlException from '@components/GraphqlException';
@@ -23,6 +21,8 @@ import posed from 'react-pose';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
+import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -73,7 +73,7 @@ const PartyDashboardContentWrapper = styled(
   })
 )`
   margin: 24px auto 24px auto;
-  padding-bottom: 24px;
+
   display: flex;
   flex-direction: column;
   max-width: 1280px;
@@ -119,10 +119,10 @@ const PosedWrapper = styled(
 
 interface InjectedProps {
   partyData: {
-    party: PartiesQueryParties | null;
+    party: PartiesQueryQuery['parties'][0] | null;
     responseType: 'error' | 'success' | 'missingOrUnauthorized';
   };
-  userData: MeQueryMe | null;
+  userData: WithApolloAuthInjectedProps['me'] | null;
 }
 
 interface PartyDashboardContextValue {
@@ -146,16 +146,17 @@ const Party: NextFunctionComponent<
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />
     );
+
   if (partyData.responseType == 'error' || !userData) return null;
 
   const { party } = partyData as {
-    party: DeepWithoutMaybe<PartiesQueryParties>;
+    party: NonNullable<DeepWithoutMaybe<PartiesQueryQuery['parties'][0]>>;
   };
 
   const contextValue = React.useMemo<PartyDashboardContextValue>(
     () => ({
       currentlyAuthenticatedUserId: userData.id,
-      partyId: partyData.party!.id
+      partyId: party.id
     }),
     []
   );
@@ -169,7 +170,7 @@ const Party: NextFunctionComponent<
             <PartyDashboardTop party={party} />
             <PartyDashboardTopMenu
               partyId={party.id}
-              inviteSecret={party.inviteSecret}
+              inviteSecret={party.inviteSecret!}
             />
             <PartyDashboardBasicInfo
               author={party.author}
@@ -189,6 +190,11 @@ const Party: NextFunctionComponent<
               title={party.title}
             />
             <PartyDashboardCommuteButtons location={party.location} />
+            <Row>
+              <Col span={24}>
+                <PartyDashboardParticipants partyId={partyData.party!.id} />
+              </Col>
+            </Row>
           </PartyDashboardContentWrapper>
         </PartyDashboardContext.Provider>
       </PosedWrapper>
@@ -205,7 +211,7 @@ async function getParty(
     data: { parties }
   } = await context.apolloClient.query<
     PartiesQueryQuery,
-    PartiesQueryVariables
+    PartiesQueryQueryVariables
   >({
     query: PARTIES_QUERY,
     variables: {
@@ -248,6 +254,8 @@ Party.getInitialProps = async (context): Promise<InjectedProps> => {
       userData: null
     };
   }
+
+  userData.me;
 
   try {
     const partyData = await getParty(partyId, userData.me.id, context);

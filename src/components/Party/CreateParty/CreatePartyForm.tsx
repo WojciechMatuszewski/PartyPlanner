@@ -59,7 +59,7 @@ const BreakableRowStyles = css`
   flex-direction: column;
 `;
 
-const RowsWrapper = styled.div`
+const RowsWrapper = styled.div<{ isBreakingTheGrid: boolean }>`
   display: flex;
   flex-direction: ${(props: { isBreakingTheGrid: boolean }) =>
     props.isBreakingTheGrid ? 'column' : 'row'};

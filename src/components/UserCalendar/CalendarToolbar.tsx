@@ -10,7 +10,7 @@ import useMedia from '@hooks/useMedia';
 import moment from 'moment';
 import { CalendarContext } from './UserCalendar';
 
-const ToolbarWrapper = styled.div`
+const ToolbarWrapper = styled.div<{ controlled?: boolean }>`
   ${FlexBoxVerticallyCenteredStyles};
   width: 100%;
   justify-content: space-between;
@@ -68,7 +68,7 @@ const MobileToolbarView: React.FC<ToolbarProps> = props => {
 const DesktopToolbarView: React.FC<ToolbarProps> = props => {
   return (
     <ToolbarWrapper>
-      <ButtonGroup>
+      <ButtonGroup style={{ display: 'flex' }}>
         <Button onClick={() => props.onNavigate('PREV')}>
           <Icon type="left" />
           Back

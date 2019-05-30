@@ -2,8 +2,11 @@ import React from 'react';
 import { Layout, Button } from 'antd';
 import css from '@emotion/css';
 
-import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import { MeQueryMe, HasPartiesQueryComponent } from '@generated/graphql';
+import {
+  withApolloAuth,
+  WithApolloAuthInjectedProps
+} from '@apolloSetup/withApolloAuth';
+import { HasPartiesQueryComponent } from '@generated/graphql';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
@@ -20,14 +23,10 @@ const LayoutStyles = css`
   display: flex;
 `;
 
-interface Props {
-  me: MeQueryMe;
-}
-
 export interface ChatContextProps {
   currentlySelectedChatId: string | null;
   selectedChatIdStream$: BehaviorSubject<string | null>;
-  currentlyLoggedUserData: MeQueryMe;
+  currentlyLoggedUserData: WithApolloAuthInjectedProps['me'];
 }
 
 export const ChatsContext = React.createContext<ChatContextProps>({
@@ -36,7 +35,10 @@ export const ChatsContext = React.createContext<ChatContextProps>({
   currentlyLoggedUserData: {} as any
 });
 
-const Chats: React.FC<Props & WithRouterProps> = ({ me, router }) => {
+const Chats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
+  me,
+  router
+}) => {
   const isFirstRunRef = React.useRef<boolean>(false);
 
   const routeChangeStreamRef = React.useRef<BehaviorSubject<string | null>>(

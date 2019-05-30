@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button } from 'antd';
+import { Form, Button, Icon } from 'antd';
 import { Field, FormikProps } from 'formik';
 import FormikInputField from '@shared/formikInputField';
 import { ApolloError } from 'apollo-boost';
@@ -21,6 +21,7 @@ const ResetPasswordForm: React.FC<Props> = props => {
         type="password"
         placeholder="Your new password"
         component={FormikInputField}
+        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
         size="large"
       />
       <Field
@@ -29,6 +30,7 @@ const ResetPasswordForm: React.FC<Props> = props => {
         type="password"
         placeholder="Confirm your new password"
         component={FormikInputField}
+        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
         size="large"
       />
       <Button

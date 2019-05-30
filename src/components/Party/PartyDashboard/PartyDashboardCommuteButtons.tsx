@@ -14,6 +14,7 @@ const BASE_GOOGLE_NAV_LINK =
 const ButtonsWrapper = styled.div`
   display: flex;
   margin: 0 auto;
+  padding-bottom: 24px !important;
   button {
     margin: 0 5px;
   }
@@ -28,7 +29,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
 }) => {
   return (
     <ButtonsWrapper className="dashboard-content-item">
-      <Button size="large" shape="round">
+      <Button size="large" shape="round" type="primary">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -38,7 +39,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
         </a>
       </Button>
 
-      <Button size="large" shape="round">
+      <Button size="large" shape="round" type="primary">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -47,7 +48,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
           <Icon component={BusIcon} />
         </a>
       </Button>
-      <Button size="large" shape="round">
+      <Button size="large" shape="round" type="primary">
         <a
           rel="noopener noreferrer"
           target="_blank"
@@ -56,7 +57,7 @@ const PartyDashboardCommuteButtons: React.FC<Props> = ({
           <Icon component={WalkingIcon} />
         </a>
       </Button>
-      <Button size="large" shape="round">
+      <Button size="large" shape="round" type="primary">
         <a
           rel="noopener noreferrer"
           target="_blank"

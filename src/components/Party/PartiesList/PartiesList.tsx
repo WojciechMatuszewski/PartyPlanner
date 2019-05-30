@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   PartyWhereInput,
-  PaginatePartiesQueryVariables,
-  usePaginatePartiesQuery,
-  PaginatePartiesQueryQuery
+  PaginatePartiesQueryQuery,
+  PaginatePartiesQueryQueryVariables,
+  usePaginatePartiesQueryQuery
 } from '@generated/graphql';
 import styled from '@emotion/styled';
 import PartiesListPane from './PartiesListPane';
@@ -69,7 +69,7 @@ export function partiesListVariablesConstructorFactory(userId: string) {
     searchValue: string,
     filters: PartiesListFilters = {},
     first: number = NUM_OF_RESULTS_PER_PAGE
-  ): PaginatePartiesQueryVariables {
+  ): PaginatePartiesQueryQueryVariables {
     return {
       where: {
         members_some: {
@@ -132,7 +132,13 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
 
   React.useEffect(handleFilterChipRemoved, [state.filters]);
 
-  const { data, loading, error, fetchMore, refetch } = usePaginatePartiesQuery({
+  const {
+    data,
+    loading,
+    error,
+    fetchMore,
+    refetch
+  } = usePaginatePartiesQueryQuery({
     variables: variablesConstructor.current(
       state.filterInputValue,
       appliedFilters

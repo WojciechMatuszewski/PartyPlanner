@@ -1,9 +1,4 @@
-import {
-  PaginateUsersQueryEdges,
-  Maybe,
-  PaginateUsersQueryPageInfo,
-  PaginateUsersQueryVariables
-} from '@generated/graphql';
+import {} from '@generated/graphql';
 
 enum ActionTypes {
   SET_LOADING_STATE = 'SET_LOADING_STATE',
@@ -19,13 +14,13 @@ interface LoadingState {
   loadingMore: boolean;
 }
 interface ResultsState {
-  fetchResults: Maybe<PaginateUsersQueryEdges>[];
-  fetchInfo: PaginateUsersQueryPageInfo;
+  fetchResults: any;
+  fetchInfo: any;
 }
 interface State {
   loadingState: LoadingState;
   resultsState: ResultsState;
-  fetchQuery: PaginateUsersQueryVariables;
+  fetchQuery: any;
   shouldIgnoreTypeaheadCallback: boolean;
 }
 
@@ -35,7 +30,7 @@ interface SetResultsStateAction {
 }
 
 interface SetFetchQueryAction {
-  payload: PaginateUsersQueryVariables;
+  payload: any;
   type: ActionTypes.SET_QUERY;
 }
 
@@ -63,9 +58,7 @@ const SetResultsState = (
   type: ActionTypes.SET_RESULTS_STATE
 });
 
-const SetFetchQuery = (
-  payload: PaginateUsersQueryVariables
-): SetFetchQueryAction => ({
+const SetFetchQuery = (payload: any): SetFetchQueryAction => ({
   payload,
   type: ActionTypes.SET_QUERY
 });
