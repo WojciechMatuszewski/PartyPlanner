@@ -3,12 +3,20 @@ import {
   List as VList,
   AutoSizer,
   WindowScroller,
-  InfiniteLoader
+  InfiniteLoader,
+  IndexRange
 } from 'react-virtualized';
 import PartyDashboardParticipant from './PartyDashboardParticipant';
 import { List, Skeleton } from 'antd';
 import { PartyDashboardParticipantsQueryEdges } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import css from '@emotion/css';
+
+const ListStyles = css`
+  .ant-spin-container.ant-spin-blur > div:first-of-type {
+    display: none;
+  }
+`;
 
 interface Props {
   rowCount: number;
@@ -16,7 +24,7 @@ interface Props {
   participants: DeepWithoutMaybe<
     NonNullable<PartyDashboardParticipantsQueryEdges>
   >[];
-  onLoadMore: () => Promise<void>;
+  onLoadMore: (params: IndexRange) => Promise<void>;
 }
 
 export default function PartyDashboardParticipantsList(props: Props) {
@@ -39,36 +47,41 @@ export default function PartyDashboardParticipantsList(props: Props) {
   }, [props.participants]);
 
   return (
-    <List renderItem={null} loading={props.loading}>
+    <List renderItem={null} loading={props.loading} css={[ListStyles]}>
       <WindowScroller serverHeight={400} participants={props.participants}>
         {({ height, isScrolling, onChildScroll, scrollTop }) => (
           <InfiniteLoader
+            minimumBatchSize={20}
             loadMoreRows={props.onLoadMore}
             rowCount={props.rowCount}
             isRowLoaded={({ index }) => {
-              return !!rowsLoadedMap.current[index];
+              return rowsLoadedMap.current[index];
             }}
           >
             {({ registerChild, onRowsRendered }) => (
               <AutoSizer disableHeight={true}>
                 {({ width }) => (
                   <VList
-                    overscanRowCount={2}
+                    overscanColumnCount={10}
                     onRowsRendered={onRowsRendered}
                     ref={registerChild}
                     isScrolling={isScrolling}
                     onScroll={onChildScroll}
                     scrollTop={scrollTop}
                     autoHeight={true}
-                    width={width}
                     height={height}
+                    width={width}
                     rowHeight={73}
                     rowRenderer={({ index, style }) => {
-                      if (
-                        !props.participants[index] ||
-                        !rowsLoadedMap.current[index]
-                      )
-                        return null;
+                      if (isRowLoading(index))
+                        return (
+                          <List.Item
+                            key={index}
+                            style={{ ...style, padding: '0px 24px' }}
+                          >
+                            <Skeleton title={false} avatar={true} />
+                          </List.Item>
+                        );
                       return (
                         <PartyDashboardParticipant
                           key={index}
@@ -87,4 +100,8 @@ export default function PartyDashboardParticipantsList(props: Props) {
       </WindowScroller>
     </List>
   );
+
+  function isRowLoading(index: number) {
+    return !props.participants[index] || !rowsLoadedMap.current[index];
+  }
 }

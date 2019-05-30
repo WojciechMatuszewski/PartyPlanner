@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col, Typography, Input, Divider, Affix } from 'antd';
 import styled from '@emotion/styled';
+import AntdSearch from '@components/AntdSearch';
 
 const TopMenuHeader = styled.header`
   background: white;
@@ -21,11 +22,11 @@ export default function PartyDashboardParticipantsTopMenu(props: Props) {
               Participants
             </Typography.Title>
           </Col>
-          <Col span={16}>
-            <Input.Search
-              onSearch={props.onSearch}
-              onChange={e => props.onSearch(e.currentTarget.value)}
+          <Col lg={{ span: 16 }} sm={{ span: 24 }}>
+            <AntdSearch
               placeholder="Search here..."
+              onSearch={props.onSearch}
+              onChange={props.onSearch}
             />
           </Col>
         </Row>

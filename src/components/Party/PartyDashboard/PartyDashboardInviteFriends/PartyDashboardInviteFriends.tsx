@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, message } from 'antd';
+import { Button, Icon, message, Affix } from 'antd';
 
 import {
   PaginateUsersInviteToPartyQueryQuery,
@@ -15,8 +15,8 @@ import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
 import { PartyDashboardContext } from '@pages/party';
 import { map, concat } from 'ramda';
-import PartyDashboardInviteFriendsSearch from './PartyDashboardInviteFriendsSearch';
 import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal';
+import AntdSearch from '@components/AntdSearch';
 
 interface Props {
   isOnMobile: boolean;
@@ -125,9 +125,13 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
         confirmLoading={confirmLoading}
       >
         <React.Fragment>
-          <PartyDashboardInviteFriendsSearch
-            onSearchValueChange={setSearchValue}
-          />
+          <Affix>
+            <AntdSearch
+              onChange={setSearchValue}
+              onSearch={setSearchValue}
+              placeholder="Search ..."
+            />
+          </Affix>
           {error ? (
             <GraphqlInlineError style={{ padding: '24px 0px' }}>
               <Button

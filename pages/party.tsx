@@ -73,7 +73,7 @@ const PartyDashboardContentWrapper = styled(
   })
 )`
   margin: 24px auto 24px auto;
-  padding-bottom: 24px;
+
   display: flex;
   flex-direction: column;
   max-width: 1280px;
