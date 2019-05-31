@@ -36,6 +36,14 @@
       "dest": "party-parties"
     },
     {
+      "src": "/party/(?<id>[^/]+)/music/discover",
+      "dest": "party-music-discover?id=$id"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)/music/browse",
+      "dest": "party-music-browse?id=$id"
+    },
+    {
       "src": "/party/(?<id>[^/]+)",
       "dest": "party-dashboard?id=$id"
     },

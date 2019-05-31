@@ -73,7 +73,6 @@ const PartyDashboardContentWrapper = styled(
   })
 )`
   margin: 24px auto 24px auto;
-
   display: flex;
   flex-direction: column;
   max-width: 1280px;
@@ -100,6 +99,15 @@ const PartyDashboardContentWrapper = styled(
     width: 100%;
     max-width: 100%;
   }
+`;
+
+const PartyDashboardTopBackground = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 800px;
+  background: url('/static/party-dashboard-background.svg') no-repeat top;
+  background-size: cover;
+  transform: rotate(180deg);
 `;
 
 type RouteQueryProps = { id?: string };
@@ -164,7 +172,8 @@ const Party: NextFunctionComponent<
 
   return (
     <React.Fragment>
-      <PartyMenu />
+      <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
+      <PartyDashboardTopBackground />
       <PosedWrapper initialPose="hidden" pose="visible">
         <PartyDashboardContext.Provider value={contextValue}>
           <PartyDashboardContentWrapper initialPose="hidden">
