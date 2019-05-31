@@ -54,7 +54,14 @@ function MenuContent(props: Props) {
       >
         Navigation
       </Typography.Title>
-      <Menu css={[MenuStyles]} mode="inline" selectedKeys={[props.routerPath]}>
+      <Menu
+        css={[MenuStyles]}
+        mode="inline"
+        defaultOpenKeys={
+          props.routerPath.includes('party-music') ? ['party-music'] : []
+        }
+        selectedKeys={[props.routerPath]}
+      >
         <Menu.Item key="/party-dashboard">
           <Link
             href={`/party-dashboard?id=${props.partyId}`}

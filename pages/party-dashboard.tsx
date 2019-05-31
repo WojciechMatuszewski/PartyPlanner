@@ -23,6 +23,7 @@ import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboa
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
+import { PartyMainContentWrapper } from '@components/Party/shared';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -59,45 +60,6 @@ const PartyMapColumnStyles = css`
 const PartyMapRowStyles = css`
   @media screen and (max-width: ${BREAKPOINT}) {
     box-shadow: none;
-  }
-`;
-
-const PartyDashboardContentWrapper = styled(
-  posed.section({
-    visible: {
-      opacity: 1
-    },
-    hidden: {
-      opacity: 0
-    }
-  })
-)`
-  margin: 24px auto 24px auto;
-  display: flex;
-  flex-direction: column;
-  max-width: 1280px;
-  width: 100%;
-  align-self: flex-start;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background: white;
-  z-index: 1;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  overflow: hidden;
-  .dashboard-content-item {
-    padding: 12px 24px;
-  }
-  .no-padding-mobile {
-    @media screen and (max-width: ${BREAKPOINT}) {
-      padding: 12px 0;
-    }
-  }
-  @media screen and (max-width: 1500px) {
-    margin-top: auto;
-    margin-bottom: auto;
-    border-radius: 0;
-    width: 100%;
-    max-width: 100%;
   }
 `;
 
@@ -176,7 +138,7 @@ const Party: NextFunctionComponent<
       <PartyDashboardTopBackground />
       <PosedWrapper initialPose="hidden" pose="visible">
         <PartyDashboardContext.Provider value={contextValue}>
-          <PartyDashboardContentWrapper initialPose="hidden">
+          <PartyMainContentWrapper initialPose="hidden">
             <PartyDashboardTop party={party} />
             <PartyDashboardTopMenu
               partyId={party.id}
@@ -205,7 +167,7 @@ const Party: NextFunctionComponent<
                 <PartyDashboardParticipants partyId={partyData.party!.id} />
               </Col>
             </Row>
-          </PartyDashboardContentWrapper>
+          </PartyMainContentWrapper>
         </PartyDashboardContext.Provider>
       </PosedWrapper>
     </React.Fragment>

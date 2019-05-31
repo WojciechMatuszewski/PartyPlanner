@@ -1,19 +1,21 @@
 import React from 'react';
 import { getCurrentUserTopTracks, Page, Track } from 'spotify-web-sdk';
-import { UserTopWrapper } from '../shared';
 import UserTopHeading from '../UserTopHeading';
 import UserTopTracksList from './UserTopTracksList';
+import GraphqlLoading from '@components/GraphqlLoading';
+import posed from 'react-pose';
 
 interface State {
   loading: boolean;
   data: Page<Track> | null;
 }
 
-interface Props {
-  onResourceLoaded: () => void;
-}
+const PosedWrapper = posed.div({
+  loading: {},
+  loaded: { staggerChildren: 300 }
+});
 
-const UserTopTracks: React.FC<Props> = props => {
+const UserTopTracks: React.FC = () => {
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
@@ -21,20 +23,30 @@ const UserTopTracks: React.FC<Props> = props => {
 
   React.useEffect(() => {
     async function handleDataFetch() {
-      const data = await getCurrentUserTopTracks();
+      const data = await getCurrentUserTopTracks({ limit: 50 });
       setState({ loading: false, data });
-      props.onResourceLoaded();
     }
     handleDataFetch();
   }, []);
 
-  if (state.loading || !state.data) return null;
+  if (state.loading || !state.data)
+    return (
+      <GraphqlLoading
+        isLoadingInitially={false}
+        loading={true}
+        textToDisplay=""
+        height="100%"
+      />
+    );
 
   return (
-    <UserTopWrapper>
+    <PosedWrapper
+      pose={state.loading ? 'loading' : 'loaded'}
+      initialPose="loading"
+    >
       <UserTopHeading headingText="Your top tracks" onMoreClick={() => {}} />
       <UserTopTracksList tracks={state.data} />
-    </UserTopWrapper>
+    </PosedWrapper>
   );
 };
 

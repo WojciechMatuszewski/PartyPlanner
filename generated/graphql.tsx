@@ -3975,10 +3975,11 @@ export type Query = {
   partiesConnection: PartyConnection;
   /** Fetches an object given its ID */
   node?: Maybe<Node>;
-  hasParties: Scalars['Boolean'];
+  hasChats: Scalars['Boolean'];
   me?: Maybe<User>;
   getUsers: Array<Maybe<User>>;
   paginateUsers: UserConnection;
+  hasParties: Scalars['Boolean'];
   canJoinParty?: Maybe<Scalars['Boolean']>;
   temp__?: Maybe<Scalars['Boolean']>;
 };
@@ -4275,6 +4276,10 @@ export type QueryNodeArgs = {
   id: Scalars['ID'];
 };
 
+export type QueryHasChatsArgs = {
+  where?: Maybe<ChatWhereInput>;
+};
+
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>;
   orderBy?: Maybe<UserOrderByInput>;
@@ -4293,6 +4298,10 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+};
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>;
 };
 
 export type QueryCanJoinPartyArgs = {
@@ -6297,7 +6306,18 @@ export type PartyInvitationsConnectionQueryQuery = { __typename?: 'Query' } & {
   };
 };
 
-export type HasPartiesQueryQueryVariables = {};
+export type HasChatsQueryQueryVariables = {
+  where?: Maybe<ChatWhereInput>;
+};
+
+export type HasChatsQueryQuery = { __typename?: 'Query' } & Pick<
+  Query,
+  'hasChats'
+>;
+
+export type HasPartiesQueryQueryVariables = {
+  where?: Maybe<PartyWhereInput>;
+};
 
 export type HasPartiesQueryQuery = { __typename?: 'Query' } & Pick<
   Query,
@@ -6561,6 +6581,9 @@ export type PartyInvitationsConnectionQueryFull = PartyInvitationsConnectionQuer
 export type PartyInvitationsConnectionQueryAggregate = PartyInvitationsConnectionQueryQuery['full']['aggregate'];
 export const PartyInvitationsConnectionQueryHOC = withPartyInvitationsConnectionQuery;
 export const usePartyInvitationsConnectionQuery = usePartyInvitationsConnectionQueryQuery;
+export type HasChatsQueryVariables = HasChatsQueryQueryVariables;
+export const HasChatsQueryHOC = withHasChatsQuery;
+export const useHasChatsQuery = useHasChatsQueryQuery;
 export type HasPartiesQueryVariables = HasPartiesQueryQueryVariables;
 export const HasPartiesQueryHOC = withHasPartiesQuery;
 export const useHasPartiesQuery = useHasPartiesQueryQuery;
@@ -8142,9 +8165,60 @@ export function usePartyInvitationsConnectionQueryQuery(
     PartyInvitationsConnectionQueryQueryVariables
   >(PartyInvitationsConnectionQueryDocument, baseOptions);
 }
+export const HasChatsQueryDocument = gql`
+  query hasChatsQuery($where: ChatWhereInput) {
+    hasChats(where: $where)
+  }
+`;
+export type HasChatsQueryComponentProps = Omit<
+  Omit<
+    ReactApollo.QueryProps<HasChatsQueryQuery, HasChatsQueryQueryVariables>,
+    'query'
+  >,
+  'variables'
+> & { variables?: HasChatsQueryQueryVariables };
+
+export const HasChatsQueryComponent = (props: HasChatsQueryComponentProps) => (
+  <ReactApollo.Query<HasChatsQueryQuery, HasChatsQueryQueryVariables>
+    query={HasChatsQueryDocument}
+    {...props}
+  />
+);
+
+export type HasChatsQueryProps<TChildProps = {}> = Partial<
+  ReactApollo.DataProps<HasChatsQueryQuery, HasChatsQueryQueryVariables>
+> &
+  TChildProps;
+export function withHasChatsQuery<TProps, TChildProps = {}>(
+  operationOptions?: ReactApollo.OperationOption<
+    TProps,
+    HasChatsQueryQuery,
+    HasChatsQueryQueryVariables,
+    HasChatsQueryProps<TChildProps>
+  >
+) {
+  return ReactApollo.withQuery<
+    TProps,
+    HasChatsQueryQuery,
+    HasChatsQueryQueryVariables,
+    HasChatsQueryProps<TChildProps>
+  >(HasChatsQueryDocument, {
+    alias: 'withHasChatsQuery',
+    ...operationOptions
+  });
+}
+
+export function useHasChatsQueryQuery(
+  baseOptions?: ReactApolloHooks.QueryHookOptions<HasChatsQueryQueryVariables>
+) {
+  return ReactApolloHooks.useQuery<
+    HasChatsQueryQuery,
+    HasChatsQueryQueryVariables
+  >(HasChatsQueryDocument, baseOptions);
+}
 export const HasPartiesQueryDocument = gql`
-  query HasPartiesQuery {
-    hasParties
+  query hasPartiesQuery($where: PartyWhereInput) {
+    hasParties(where: $where)
   }
 `;
 export type HasPartiesQueryComponentProps = Omit<

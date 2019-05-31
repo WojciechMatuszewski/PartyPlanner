@@ -16,7 +16,8 @@ const TopTracksGrid = styled(
     }
   })
 )`
-  max-width: 1440px;
+  max-width: 1280px;
+  padding-top: 22px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-row-gap: 20px;

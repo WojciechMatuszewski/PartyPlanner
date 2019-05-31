@@ -6,7 +6,7 @@ import {
   withApolloAuth,
   WithApolloAuthInjectedProps
 } from '@apolloSetup/withApolloAuth';
-import { HasPartiesQueryComponent } from '@generated/graphql';
+
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
@@ -17,6 +17,7 @@ import GraphqlException from '@components/GraphqlException';
 import { BehaviorSubject } from 'rxjs';
 import NoData from '@components/NoData';
 import { handleRefetch } from '@shared/graphqlUtils';
+import { HasChatsQueryComponent } from '@generated/graphql';
 
 const LayoutStyles = css`
   height: calc(100vh - 66px);
@@ -64,7 +65,7 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
   }, [router!.query]);
 
   return (
-    <HasPartiesQueryComponent notifyOnNetworkStatusChange={true}>
+    <HasChatsQueryComponent notifyOnNetworkStatusChange={true}>
       {({ data, loading, error, refetch }) => {
         if (error)
           return (
@@ -86,7 +87,7 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
             />
           );
 
-        if (!data.hasParties)
+        if (!data.hasChats)
           return (
             <NoData
               style={{ height: 'auto' }}
@@ -94,7 +95,9 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
               action={
                 <Button
                   type="primary"
-                  onClick={() => router && router.push('/create-party')}
+                  onClick={() =>
+                    router && router.push('/party-create', '/party/create')
+                  }
                 >
                   Create a party!
                 </Button>
@@ -114,7 +117,7 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
           </Layout>
         );
       }}
-    </HasPartiesQueryComponent>
+    </HasChatsQueryComponent>
   );
 
   function getCurrentChatFromUrl() {

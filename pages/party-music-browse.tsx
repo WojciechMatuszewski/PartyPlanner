@@ -10,7 +10,10 @@ const PartyMusicBrowsePage: NextFunctionComponent<
 > = () => {
   return (
     <React.Fragment>
-      <PartyMenu partyId={'123'} routerPath="/party-music-browse" />
+      <PartyMenu
+        partyId={'cjwaxz720vf2j0b6176ynrb3e'}
+        routerPath="/party-music-browse"
+      />
     </React.Fragment>
   );
 };

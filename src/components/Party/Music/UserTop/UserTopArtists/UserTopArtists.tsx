@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { Artist, getCurrentUserTopArtists, Page } from 'spotify-web-sdk';
-import { UserTopWrapper } from '../shared';
 import UserTopHeading from '../UserTopHeading';
 import UserTopArtistsList from './UserTopArtistsList';
 
@@ -32,10 +30,10 @@ const UserTopArtists: React.FC<Props> = props => {
   if (state.loading || !state.data) return null;
 
   return (
-    <UserTopWrapper>
+    <React.Fragment>
       <UserTopHeading headingText="Your top artists" onMoreClick={() => {}} />
       <UserTopArtistsList artists={state.data} />
-    </UserTopWrapper>
+    </React.Fragment>
   );
 };
 

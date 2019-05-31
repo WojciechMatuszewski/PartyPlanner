@@ -3,19 +3,19 @@ import { Affix, Typography } from 'antd';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 
-export const UserTopTitleInnerWrapper = styled(
-  posed.div({
-    fixed: {
-      borderBottom: '0px dashed #e8e8e8'
-    },
-    notFixed: {
-      borderBottom: '1px dashed #e8e8e8'
-    }
-  })
-)`
+export const UserTopTitleInnerWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 100%;
+
+  &.fixed {
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  &.not-fixed {
+    border-bottom: 1px dashed #e8e8e8;
+  }
 `;
 
 export const UserTopTitleWrapper = styled(
@@ -35,14 +35,14 @@ export const UserTopTitleWrapper = styled(
   })
 )`
   h3 {
-    margin-bottom: 12px;
+    margin: 0;
   }
   button {
     margin-bottom: 12px;
   }
-  margin-bottom: 20px;
   z-index: 10;
-  padding-top: 12px;
+
+  height: 53px;
 `;
 
 interface Props {
@@ -61,7 +61,7 @@ const UserTopHeading: React.FC<Props> = props => {
         className="title-wrapper"
         pose={isFixed ? 'fixed' : 'notFixed'}
       >
-        <UserTopTitleInnerWrapper>
+        <UserTopTitleInnerWrapper className={isFixed ? 'fixed' : 'not-fixed'}>
           <Typography.Title level={3}>{props.headingText}</Typography.Title>
         </UserTopTitleInnerWrapper>
       </UserTopTitleWrapper>
