@@ -109,7 +109,8 @@ function useBetterTypeahead<
   }
 
   return {
-    onChange
+    onChange,
+    typeaheadOperator
   };
 }
 

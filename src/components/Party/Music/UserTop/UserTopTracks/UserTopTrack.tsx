@@ -1,41 +1,66 @@
 import React from 'react';
 import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
-import posed from 'react-pose';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { Button, Typography } from 'antd';
-import useMedia from '@hooks/useMedia';
 
-const TopTrackTile = styled(
-  posed.div({
-    hoverable: true,
-    playing: {
-      scale: (props: { isOnMobile: boolean }) => (props.isOnMobile ? 1 : 1.2)
-    },
-    notPlaying: {
-      scale: 1.0
-    }
-  })
-)`
+import { Typography, Icon } from 'antd';
+import TrackControls from '../../TrackControls';
+
+const MOBILE_BREAKPOINT = '1080px';
+
+const TopTrackTile = styled.li`
   display: flex;
   position: relative;
   height: 64px;
   border-radius: 4px;
   margin: 0 auto;
   width: 100%;
+  transition: transform 0.2s ease;
+
   &:hover,
+  &:active,
   &.playing-audio {
     cursor: pointer;
     background: #e6f7ff;
   }
+
   &.playing-audio {
-    z-index: 2;
+    @media screen and (min-width: ${MOBILE_BREAKPOINT}) {
+      transform: scale(1.2);
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
   }
-  &.first-column {
-    transform-origin: center left;
+
+  &:hover,
+  &:active {
+    .controls {
+      opacity: 1;
+    }
   }
-  &.last-column {
-    transform-origin: center-right;
+
+  &.playing-audio:not(:hover) {
+    .playing-indicator {
+      opacity: 1;
+    }
+  }
+
+  .playing-indicator {
+    transition: opacity 0.2s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    font-size: 26px;
+    transform: translateY(-50%);
+    right: 0;
+    left: 0;
+    margin: auto;
+    z-index: -1;
+  }
+
+  .controls {
+    @media screen and (min-width: ${MOBILE_BREAKPOINT}) {
+      opacity: 0;
+    }
   }
 `;
 
@@ -73,34 +98,11 @@ const TrackTileInfoWrapper = styled.div`
     margin-bottom: 0;
   }
 `;
-const TrackTileControlsWrapper = styled(
-  posed.div({
-    init: {
-      opacity: (props: { shouldIgnoreHover: boolean }) =>
-        props.shouldIgnoreHover ? 1 : 0
-    },
-    hover: {
-      opacity: 1
-    }
-  })
-)`
-  ${FlexBoxFullCenteredStyles};
-  padding-left: 12px;
-  padding-right: 8px;
-  margin-left: auto;
-  flex-direction: column;
 
-  button {
-    width: 22px !important;
-    height: 22px !important;
-    border: 1px solid rgba(0, 0, 0, 0.65);
-    .anticon {
-      ${FlexBoxFullCenteredStyles};
-    }
-  }
-  button:first-of-type {
-    margin-bottom: 4px;
-  }
+const ControlsWithPlayingIndicatorWrapper = styled.div`
+  margin-left: auto;
+  height: 100%;
+  position: relative;
 `;
 
 interface Props {
@@ -108,57 +110,46 @@ interface Props {
   trackPlaying: boolean;
   onPlayClick: (track: Track) => void;
   onMoreInfoClick: (track: Track) => void;
+  style?: React.CSSProperties;
 }
 
 const UserTopTrack: React.FC<Props> = props => {
-  const isOnMobile = useMedia('(max-width:971px)');
-
   return (
     <TopTrackTile
-      key={isOnMobile ? 1 : 0}
+      style={props.style}
       className={
-        props.trackPlaying
-          ? ['playing-audio', 'user-top-track-grid-item'].join(' ')
-          : 'user-top-track-grid-item'
+        props.trackPlaying ? 'playing-audio user-top-track' : 'user-top-track'
       }
-      isOnMobile={isOnMobile}
-      pose={props.trackPlaying ? 'playing' : 'notPlaying'}
     >
       <TrackTileImageWrapper>
-        <img src={props.track.album.images[1].url} />
+        <img
+          src={
+            props.track.album.images[props.track.album.images.length - 1].url
+          }
+        />
       </TrackTileImageWrapper>
       <TrackTileInfoWrapper>
+        <Typography.Paragraph ellipsis={true} strong={true}>
+          {props.track.name}
+        </Typography.Paragraph>
         <Typography.Paragraph ellipsis={true}>
-          <p>{props.track.name}</p>
+          {props.track.artists[0].name}
         </Typography.Paragraph>
         <Typography.Paragraph type="secondary" ellipsis={true}>
-          <p>{props.track.artists[0].name}</p>
-        </Typography.Paragraph>
-        <Typography.Paragraph type="secondary" ellipsis={true}>
-          <p>{props.track.length}</p>
+          {formatTrackDuration(props.track.durationMs)}
         </Typography.Paragraph>
       </TrackTileInfoWrapper>
 
-      <TrackTileControlsWrapper
-        style={{ opacity: isOnMobile ? 1 : 0 }}
-        shouldIgnoreHover={isOnMobile}
-      >
-        <Button
-          icon={props.trackPlaying ? 'pause' : 'caret-right'}
-          type="ghost"
-          shape="circle-outline"
-          size="small"
-          disabled={!hasPreviewUrl()}
-          onClick={() => props.onPlayClick(props.track)}
+      <ControlsWithPlayingIndicatorWrapper>
+        <TrackControls
+          className="controls"
+          trackPlaying={props.trackPlaying}
+          onMoreInfoClick={() => props.onMoreInfoClick(props.track)}
+          onTogglePlayClick={() => props.onPlayClick(props.track)}
+          hasPreviewUrl={hasPreviewUrl()}
         />
-        <Button
-          onClick={() => props.onMoreInfoClick(props.track)}
-          icon="ellipsis"
-          type="ghost"
-          size="small"
-          shape="circle-outline"
-        />
-      </TrackTileControlsWrapper>
+        <Icon type="sound" className="playing-indicator" theme="twoTone" />
+      </ControlsWithPlayingIndicatorWrapper>
     </TopTrackTile>
   );
 
@@ -166,6 +157,12 @@ const UserTopTrack: React.FC<Props> = props => {
     return (
       props.track.previewUrl != null && props.track.previewUrl.trim().length > 0
     );
+  }
+
+  function formatTrackDuration(msDuration: number) {
+    const minutes = Math.floor(msDuration / 60000);
+    const seconds = Math.floor((msDuration % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 };
 

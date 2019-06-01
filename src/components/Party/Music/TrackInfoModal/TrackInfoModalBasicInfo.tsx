@@ -61,11 +61,11 @@ interface Props {
 const TrackInfoModalBasicInfo: React.FC<Props> = ({ track }) => {
   return (
     <TrackImageInfoWrapper>
-      <img src={track.album.imageUrl} />
+      <img src={track.album.images[0].url} />
       <TitleAuthorsWrapper>
         <Typography.Title level={1}>{track.name}</Typography.Title>
         <Typography.Title level={3}>
-          By : {track.stringArtists}
+          By : {track.artists.map(artist => artist.name).join(', ')}
         </Typography.Title>
       </TitleAuthorsWrapper>
     </TrackImageInfoWrapper>

@@ -21,6 +21,7 @@ import BigMusicPlayerStickedToBottom, {
   BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT
 } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
+import DiscoverTrackList from '@components/Party/Music/Discover/DiscoverTrackList';
 
 const ContentWrapper = styled.div`
   min-height: calc(100vh - 66px);
@@ -34,6 +35,7 @@ const InnerContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex: 1;
+  margin: 0 auto;
 `;
 
 const SearchWrapper = styled.div`
@@ -58,7 +60,7 @@ interface InjectedProps {
 
 init({
   token:
-    'BQB_ECPXQVdhTrWW9_nKJvIPIZupSmlYcdyPNj3wD58b4QSskTttPobLZp32cpl74cdia0S4miUPmzZkPaDOqgIdzpUlktcHwdXeUyN-ZY0H6Sl0rfy3l2uZpBQLKDBfWu-bofs8Sett26A93GMOjLZXYINzaongtz6tukC1wjP51uF-joTWbjBPLbMBGWqFDLqjmpm65JgSur9essRnMm1EaPNnU-SCSISGGT4z40iDk0p6bGQuLQq2bN_PeJiiavbrRx1lOecthqE170qGm8kLoH_sGQ5G39sDOig'
+    'BQAi6tciOim_-3SJukcWNQuI7Riipv0HcKj70weY6AXd0pfXPBaH2HzxiZhV64IGqxh-660pNQnknzMWwzKvEXIr2NMn_zVSdmq2u0gwBoWwlQBrhdMaokEWUOHvaX2SkIwhM224yQ8FAwz9beo20QCyQnQT4HVIL9-mW0uILoeGbV10t4IDNukdYczinBbNI1JnG9wtKN3z91mB0f73OnjhHVYWuX_vYpvmrYmDFopByzdTN7YsQhQkGpK6xXChZYILymHibKcJpd5PFuZBrjvjPyn-UM1jvAWhj4g'
 });
 
 type RouterQuery = { id?: string };
@@ -75,13 +77,18 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
 
   const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
+
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-discover" />
       <ContentWrapper>
         <Affix>
           <SearchWrapper>
-            <AntdSearch onChange={() => {}} placeholder="Track name ..." />
+            <AntdSearch
+              onChange={setSearchQuery}
+              placeholder="Track name ..."
+            />
           </SearchWrapper>
         </Affix>
         <BigMusicPlayerProvider>
@@ -92,7 +99,11 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
                 paddingBottom: getInnerContainerPadding()
               }}
             >
-              <UserTopTracks />
+              {searchQuery.length == 0 ? (
+                <UserTopTracks />
+              ) : (
+                <DiscoverTrackList searchQuery={searchQuery} />
+              )}
               <BigMusicPlayerStickedToBottom
                 onTrackChanged={handleTrackChanged}
                 onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
