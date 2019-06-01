@@ -1,6 +1,5 @@
 import React from 'react';
 import { useBigMusicPlayer } from './BigMusicPlayerProvider';
-
 import { Button, Icon } from 'antd';
 import BigMusicPlayer from './BigMusicPlayer';
 import { Track } from 'spotify-web-sdk';
@@ -52,5 +51,5 @@ const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
     </SlidableWithTrigger>
   );
 };
-
+export const BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT = 100;
 export default BigMusicPlayerStickedToBottom;

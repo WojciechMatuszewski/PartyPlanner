@@ -2,7 +2,6 @@ import React from 'react';
 import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-
 import { HAS_PARTIES_QUERY } from '@graphql/queries';
 import {
   HasPartiesQueryQuery,
@@ -18,7 +17,9 @@ import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTop
 import { init } from 'spotify-web-sdk';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
-import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import BigMusicPlayerStickedToBottom, {
+  BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT
+} from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 
 const ContentWrapper = styled.div`
@@ -87,7 +88,9 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
           <TrackInfoModalProvider>
             <TrackInfoModal />
             <InnerContentWrapper
-              style={{ paddingBottom: playerVisible ? 112 : 12 }}
+              style={{
+                paddingBottom: getInnerContainerPadding()
+              }}
             >
               <UserTopTracks />
               <BigMusicPlayerStickedToBottom
@@ -110,6 +113,10 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
 
   function handleMusicPlayerVisibilityChange() {
     setPlayerVisible(!playerVisible);
+  }
+
+  function getInnerContainerPadding() {
+    return playerVisible ? BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT + 12 : 12;
   }
 };
 
