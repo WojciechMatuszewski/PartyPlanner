@@ -1,19 +1,16 @@
 import React from 'react';
 import { Layout, Button } from 'antd';
 import css from '@emotion/css';
-
 import {
   withApolloAuth,
   WithApolloAuthInjectedProps
 } from '@apolloSetup/withApolloAuth';
-
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
 import GraphqlLoading from '@components/GraphqlLoading';
 import ChatWindow from '@components/Chats/ChatWindow/ChatWindow';
 import GraphqlException from '@components/GraphqlException';
-
 import { BehaviorSubject } from 'rxjs';
 import NoData from '@components/NoData';
 import { handleRefetch } from '@shared/graphqlUtils';

@@ -4,8 +4,10 @@ import UserTopHeading from '../UserTopHeading';
 import UserTopTracksList from './UserTopTracksList';
 import GraphqlLoading from '@components/GraphqlLoading';
 import posed from 'react-pose';
-import useLocalStorage from '@hooks/useLocalStorage';
 
+interface Props {
+  visible: boolean;
+}
 interface State {
   loading: boolean;
   data: Track[] | null;
@@ -16,9 +18,7 @@ const PosedWrapper = posed.div({
   loaded: { staggerChildren: 300 }
 });
 
-const UserTopTracks: React.FC = () => {
-  const { saveToStorage, retrieveFromStorage } = useLocalStorage('topTracks');
-
+const UserTopTracks: React.FC<Props> = props => {
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
@@ -27,15 +27,10 @@ const UserTopTracks: React.FC = () => {
   React.useEffect(() => {
     async function handleDataFetch() {
       const data = await getCurrentUserTopTracks({ limit: 50 });
-      saveToStorage(JSON.stringify(data.items));
+
       setState({ loading: false, data: data.items });
     }
-    const songsInCache = retrieveFromStorage();
-    if (!songsInCache) {
-      handleDataFetch();
-    }
-    const parsedSongsFromCache = JSON.parse(songsInCache);
-    setState({ loading: false, data: parsedSongsFromCache });
+    handleDataFetch();
   }, []);
 
   if (state.loading || !state.data)
@@ -50,6 +45,7 @@ const UserTopTracks: React.FC = () => {
 
   return (
     <PosedWrapper
+      style={{ display: props.visible ? 'block' : 'none' }}
       pose={state.loading ? 'loading' : 'loaded'}
       initialPose="loading"
     >

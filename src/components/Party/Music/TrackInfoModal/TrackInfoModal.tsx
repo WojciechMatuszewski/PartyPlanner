@@ -104,7 +104,7 @@ const TrackInfoModal: React.FC = () => {
   return (
     <Modal
       width={650}
-      zIndex={1}
+      zIndex={20}
       visible={modalVisible}
       css={[ModalStyles]}
       title={false}

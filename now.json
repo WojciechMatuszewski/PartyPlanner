@@ -44,6 +44,10 @@
       "dest": "party-music-browse?id=$id"
     },
     {
+      "src": "/party/(?<id>[^/]+)/music/top",
+      "dest": "party-music-top?id=$id"
+    },
+    {
       "src": "/party/(?<id>[^/]+)",
       "dest": "party-dashboard?id=$id"
     },

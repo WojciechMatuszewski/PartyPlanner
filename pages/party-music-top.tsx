@@ -1,27 +1,28 @@
 import React from 'react';
 import { NextFunctionComponent } from 'next';
-import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import { HAS_PARTIES_QUERY } from '@graphql/queries';
+import { NextContextWithApollo } from './_app';
 import {
   HasPartiesQueryQuery,
   HasPartiesQueryVariables
 } from '@generated/graphql';
+import { HAS_PARTIES_QUERY } from '@graphql/queries';
 import GraphqlException from '@components/GraphqlException';
-import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import styled from '@emotion/styled';
-import AntdSearch from '@components/AntdSearch';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { Affix } from 'antd';
-
-import { init } from 'spotify-web-sdk';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
+import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
+import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
+import { init } from 'spotify-web-sdk';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
-import BigMusicPlayerStickedToBottom, {
-  BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT
-} from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
-import DiscoverTrackList from '@components/Party/Music/Discover/DiscoverTrackList';
+
+type RouterQuery = { id?: string };
+interface InjectedProps {
+  isInParty: boolean;
+  partyId: string;
+}
 
 const ContentWrapper = styled.div`
   min-height: calc(100vh - 66px);
@@ -29,82 +30,37 @@ const ContentWrapper = styled.div`
   flex: 1;
 `;
 
-const InnerContentWrapper = styled.div`
-  max-width: 1280px;
-  padding: 0 12px;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  margin: 0 auto;
-`;
-
-const SearchWrapper = styled.div`
-  width: 100%;
-  background: white;
-  ${FlexBoxFullCenteredStyles};
-  padding: 12px;
-  border-bottom: 1px solid rgb(232, 232, 232);
-
-  height: 53px;
-
-  & > span {
-    max-width: calc(1280px - 24px);
-  }
-`;
-
-interface InjectedProps {
-  isInParty: boolean;
-  partyId: string;
-}
-
 init({
   token:
     'BQAYskzUvIZxy09HmVDyaz21rkjh21p3RsbqxsWeMqEclJMnd5809Lt0ZpRF_4jqXvUNHk1CXz3WcAQKancbntK9qTH9IXQS9Ma8fVj8jAgdVT0UzBMbLw5iC_6x5narpwxazchJ3ojUVzvtcXK8oiq64WwdbxG3U7SNT7fgSw6-AWOg_utyhAJiltPpVyx2RUEjYMw29T2kKMopzu4Aa7t8ezYr34046Vc-P8cbKEXoDokaUDoEyyhIHkIul3qxfcDyFalw7N7_UvjmxUbippC528QB_I-bpEaF3BA'
 });
 
-type RouterQuery = { id?: string };
-
-const PartyMusicDiscoverPage: NextFunctionComponent<
+const PartyMusicTopPage: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
   NextContextWithApollo<RouterQuery>
-> = ({ isInParty, partyId }) => {
-  if (!isInParty)
+> = props => {
+  if (!props.isInParty)
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />
     );
 
   const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = React.useState<string>('');
-
   return (
     <React.Fragment>
-      <PartyMenu partyId={partyId} routerPath="/party-music-discover" />
+      <PartyMenu routerPath={'/party-music-top'} partyId={props.partyId} />
       <ContentWrapper>
-        <Affix>
-          <SearchWrapper>
-            <AntdSearch
-              onChange={setSearchQuery}
-              placeholder="Track name ..."
-            />
-          </SearchWrapper>
-        </Affix>
         <BigMusicPlayerProvider>
           <TrackInfoModalProvider>
+            <UserTopTracks visible={true} />
+            <UserTopArtists onResourceLoaded={() => {}} />
+            <BigMusicPlayerStickedToBottom
+              onTrackChanged={handleTrackChanged}
+              onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+              visible={playerVisible}
+            />
             <TrackInfoModal />
-            <InnerContentWrapper
-              style={{
-                paddingBottom: getInnerContainerPadding()
-              }}
-            >
-              <DiscoverTrackList searchQuery={searchQuery} />
-              <BigMusicPlayerStickedToBottom
-                onTrackChanged={handleTrackChanged}
-                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                visible={playerVisible}
-              />
-            </InnerContentWrapper>
           </TrackInfoModalProvider>
         </BigMusicPlayerProvider>
       </ContentWrapper>
@@ -120,13 +76,9 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
   function handleMusicPlayerVisibilityChange() {
     setPlayerVisible(!playerVisible);
   }
-
-  function getInnerContainerPadding() {
-    return playerVisible ? BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT + 12 : 12;
-  }
 };
 
-PartyMusicDiscoverPage.getInitialProps = async function(context) {
+PartyMusicTopPage.getInitialProps = async function(context) {
   const userData = await ApolloAuthenticator.authenticateRoute({
     userHasToBe: 'authenticated',
     ctx: context
@@ -160,4 +112,4 @@ PartyMusicDiscoverPage.getInitialProps = async function(context) {
   };
 };
 
-export default PartyMusicDiscoverPage;
+export default PartyMusicTopPage;

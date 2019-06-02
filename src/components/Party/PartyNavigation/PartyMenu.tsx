@@ -82,12 +82,20 @@ function MenuContent(props: Props) {
             </div>
           }
         >
+          <Menu.Item key="/party-music-top">
+            <Link
+              href={`/party-music-top?id=${props.partyId}`}
+              as={`/party/${props.partyId}/music/top`}
+            >
+              <a>Your Top</a>
+            </Link>
+          </Menu.Item>
           <Menu.Item key="/party-music-discover">
             <Link
               href={`/party-music-discover?id=${props.partyId}`}
               as={`/party/${props.partyId}/music/discover`}
             >
-              <a>Discover</a>
+              <a>Search on Spotify</a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/party-music-browse">
@@ -122,7 +130,7 @@ function SiderNavigation({ children }: { children: React.ReactNode }) {
 
 function DrawerNavigation({ children }: { children: React.ReactNode }) {
   return (
-    <RCDrawer width={200} style={{ height: '100vh' }} get>
+    <RCDrawer width={200} style={{ height: '100vh', zIndex: 10 }} get>
       {children}
     </RCDrawer>
   );
