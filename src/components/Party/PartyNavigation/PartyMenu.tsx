@@ -8,9 +8,9 @@ import useMedia from '@hooks/useMedia';
 import Link from 'next/link';
 
 const MenuStyles = css`
-  height: 100%;
   width: 100%;
-  border: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
 `;
 
 const AffixStyles = css`

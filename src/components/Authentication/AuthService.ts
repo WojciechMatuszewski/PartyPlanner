@@ -23,11 +23,12 @@ export async function handleLogout(client: ApolloClient<any>) {
     // NICE MEME, ALMOST 1 HR OF SEARCHING
     path: '/user'
   });
-
   await client.cache.reset();
-  cookie.parse(document.cookie);
   if (isBrowser()) {
     localStorage.removeItem(USER_PRESENCE_CONFIG.localStorageHeartbeatKeyName);
+    localStorage.removeItem('provider-refresh-token');
+    localStorage.removeItem('provider-token');
+    localStorage.removeItem('social-provider');
   }
 
   redirect({} as any, '/auth-login', '/login');

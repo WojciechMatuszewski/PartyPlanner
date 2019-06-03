@@ -2,7 +2,7 @@ import React from 'react';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { ifElse, always } from 'ramda';
 
-function useLocalStorage(key: string) {
+function useLocalStorage(key: string = '') {
   function _getItem(key: string) {
     return localStorage.getItem(key);
   }

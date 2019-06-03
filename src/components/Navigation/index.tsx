@@ -4,6 +4,7 @@ import AppNotAuthenticatedHeader from './NotAuthenticated';
 import AppAuthenticatedHeader from './Authenticated';
 import useMedia from '@hooks/useMedia';
 import styled from '@emotion/styled';
+import { NOT_AUTHENTICATED_ROUTES } from '@pages/_app';
 
 export const HeaderLoadingData = styled.div`
   width: 100%;
@@ -13,21 +14,11 @@ export const HeaderLoadingData = styled.div`
 `;
 
 const AppHeader: React.FC<WithRouterProps> = ({ router }) => {
-  const notAuthenticatedRoutes = [
-    '/',
-    '/auth-login',
-    '/auth-register',
-    '/auth-social',
-    '/spotify',
-    '/auth-forgot-password',
-    '/auth-reset-password'
-  ];
-
   const isOnMobile = useMedia('(max-width:800px)');
 
   if (!router) return <HeaderLoadingData />;
 
-  return notAuthenticatedRoutes.includes(router.pathname) ? (
+  return NOT_AUTHENTICATED_ROUTES.includes(router.pathname) ? (
     <AppNotAuthenticatedHeader currentRouterPath={router.pathname} />
   ) : (
     <AppAuthenticatedHeader

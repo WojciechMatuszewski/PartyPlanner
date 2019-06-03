@@ -63,14 +63,14 @@ const PartyMapRowStyles = css`
   }
 `;
 
-const PartyDashboardTopBackground = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 800px;
-  background: url('/static/party-dashboard-background.svg') no-repeat top;
-  background-size: cover;
-  transform: rotate(180deg);
-`;
+// const PartyDashboardTopBackground = styled.div`
+//   position: absolute;
+//   width: 100%;
+//   height: 800px;
+//   background: url('/static/party-dashboard-background.svg') no-repeat top;
+//   background-size: cover;
+//   transform: rotate(180deg);
+// `;
 
 type RouteQueryProps = { id?: string };
 
@@ -135,7 +135,7 @@ const Party: NextFunctionComponent<
   return (
     <React.Fragment>
       <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
-      <PartyDashboardTopBackground />
+      {/* <PartyDashboardTopBackground /> */}
       <PosedWrapper initialPose="hidden" pose="visible">
         <PartyDashboardContext.Provider value={contextValue}>
           <PartyMainContentWrapper initialPose="hidden">

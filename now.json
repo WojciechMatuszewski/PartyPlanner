@@ -16,6 +16,14 @@
       "dest": "auth-register"
     },
     {
+      "src": "/auth/social/success",
+      "dest": "auth-social-success"
+    },
+    {
+      "src": "/auth/social/error",
+      "dest": "auth-social-error"
+    },
+    {
       "src": "/reset-password/(?<token>[^/]+)",
       "dest": "reset-password?token=$token"
     },

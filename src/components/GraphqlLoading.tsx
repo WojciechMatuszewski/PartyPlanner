@@ -45,7 +45,7 @@ const GraphqlLoading: React.FC<Props> = ({
         <LoaderWrapper
           isLoadingInitially={isLoadingInitially}
           key={1}
-          style={{ height: height ? height : 'calc(100vh-66ox)' }}
+          style={{ height: height ? height : 'calc(100vh-66px)' }}
         >
           <Spin size="large" />
           {isLoadingInitially && (
