@@ -16,16 +16,17 @@ const TopTracksGrid = styled(
     }
   })
 )`
-  padding-left: 0;
+  padding-left: 12px;
+  padding-right: 12px;
   max-width: 1280px;
   margin: 0 auto;
   padding-top: 22px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-row-gap: 20px;
+  grid-row-gap: 14px;
   grid-column-gap: 12px;
   margin-bottom: 40px;
-
+  box-sizing: border-box;
   @media screen and (max-width: 400px) {
     grid-template-columns: repeat(1fr);
   }

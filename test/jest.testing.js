@@ -23,7 +23,9 @@ module.exports = {
     '@hooks/(.*)': '<rootDir>/src/hooks/$1',
     '@apolloSetup/(.*)': '<rootDir>/apolloSetup/$1',
     '@axios/(.*)': '<rootDir>/axios/$1',
-    '@graphql/(.*)': '<rootDir>/graphql/$1'
+    '@graphql/(.*)': '<rootDir>/graphql/$1',
+    '@hoc/(.*)': '<rootDir>/src/hoc/$1',
+    '@services/(.*)': '<rootDir>/src/services/$1'
   },
 
   transformIgnorePatterns: ['<rootDir>/node_modules/', 'jest.*']

@@ -10,11 +10,15 @@ const MOBILE_BREAKPOINT = '1080px';
 const TopTrackTile = styled.li`
   display: flex;
   position: relative;
-  height: 64px;
+  height: 70px;
   border-radius: 4px;
   margin: 0 auto;
   width: 100%;
   transition: transform 0.2s ease;
+  background: white;
+  border: 1px solid #e8e8e8;
+  padding-top: 4px;
+  padding-bottom: 4px;
 
   &:hover,
   &:active,

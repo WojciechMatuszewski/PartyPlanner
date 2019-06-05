@@ -4,6 +4,9 @@ import UserTopHeading from '../UserTopHeading';
 import UserTopTracksList from './UserTopTracksList';
 import GraphqlLoading from '@components/GraphqlLoading';
 import posed from 'react-pose';
+import useSpotifyWebSdk, {
+  SpotifyAuthenticationError$
+} from '@hooks/useSpotifyWebSdk';
 
 interface Props {
   visible: boolean;
@@ -19,6 +22,7 @@ const PosedWrapper = posed.div({
 });
 
 const UserTopTracks: React.FC<Props> = props => {
+  useSpotifyWebSdk();
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
@@ -26,9 +30,12 @@ const UserTopTracks: React.FC<Props> = props => {
 
   React.useEffect(() => {
     async function handleDataFetch() {
-      const data = await getCurrentUserTopTracks({ limit: 50 });
-
-      setState({ loading: false, data: data.items });
+      try {
+        const data = await getCurrentUserTopTracks({ limit: 50 });
+        setState({ loading: false, data: data.items });
+      } catch (e) {
+        SpotifyAuthenticationError$.next();
+      }
     }
     handleDataFetch();
   }, []);

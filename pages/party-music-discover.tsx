@@ -13,8 +13,6 @@ import styled from '@emotion/styled';
 import AntdSearch from '@components/AntdSearch';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Affix } from 'antd';
-
-import { init } from 'spotify-web-sdk';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import BigMusicPlayerStickedToBottom, {
@@ -22,6 +20,7 @@ import BigMusicPlayerStickedToBottom, {
 } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import DiscoverTrackList from '@components/Party/Music/Discover/DiscoverTrackList';
+import useSpotifyWebSdk from '@hooks/useSpotifyWebSdk';
 
 const ContentWrapper = styled.div`
   min-height: calc(100vh - 66px);
@@ -57,11 +56,6 @@ interface InjectedProps {
   partyId: string;
 }
 
-init({
-  token:
-    'BQAYskzUvIZxy09HmVDyaz21rkjh21p3RsbqxsWeMqEclJMnd5809Lt0ZpRF_4jqXvUNHk1CXz3WcAQKancbntK9qTH9IXQS9Ma8fVj8jAgdVT0UzBMbLw5iC_6x5narpwxazchJ3ojUVzvtcXK8oiq64WwdbxG3U7SNT7fgSw6-AWOg_utyhAJiltPpVyx2RUEjYMw29T2kKMopzu4Aa7t8ezYr34046Vc-P8cbKEXoDokaUDoEyyhIHkIul3qxfcDyFalw7N7_UvjmxUbippC528QB_I-bpEaF3BA'
-});
-
 type RouterQuery = { id?: string };
 
 const PartyMusicDiscoverPage: NextFunctionComponent<
@@ -69,6 +63,8 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
   InjectedProps,
   NextContextWithApollo<RouterQuery>
 > = ({ isInParty, partyId }) => {
+  useSpotifyWebSdk();
+
   if (!isInParty)
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />

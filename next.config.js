@@ -57,7 +57,9 @@ module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
       '@apolloSetup': path.resolve(__dirname, 'apolloSetup'),
       '@axios': path.resolve(__dirname, 'axios'),
       '@customIcons': path.resolve(__dirname, 'custom-icons'),
-      '@graphql': path.resolve(__dirname, 'graphql')
+      '@graphql': path.resolve(__dirname, 'graphql'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@hoc': path.resolve(__dirname, 'src/hoc')
     };
     return config;
   }

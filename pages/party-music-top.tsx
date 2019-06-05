@@ -13,10 +13,10 @@ import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
-import { init } from 'spotify-web-sdk';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
+import useSpotifyWebSdk from '@hooks/useSpotifyWebSdk';
 
 type RouterQuery = { id?: string };
 interface InjectedProps {
@@ -30,22 +30,21 @@ const ContentWrapper = styled.div`
   flex: 1;
 `;
 
-init({
-  token:
-    'BQAYskzUvIZxy09HmVDyaz21rkjh21p3RsbqxsWeMqEclJMnd5809Lt0ZpRF_4jqXvUNHk1CXz3WcAQKancbntK9qTH9IXQS9Ma8fVj8jAgdVT0UzBMbLw5iC_6x5narpwxazchJ3ojUVzvtcXK8oiq64WwdbxG3U7SNT7fgSw6-AWOg_utyhAJiltPpVyx2RUEjYMw29T2kKMopzu4Aa7t8ezYr34046Vc-P8cbKEXoDokaUDoEyyhIHkIul3qxfcDyFalw7N7_UvjmxUbippC528QB_I-bpEaF3BA'
-});
-
 const PartyMusicTopPage: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
   NextContextWithApollo<RouterQuery>
 > = props => {
+  const { shouldAskForNewToken } = useSpotifyWebSdk();
+  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
+
+  if (shouldAskForNewToken) {
+    return <div>new token please</div>;
+  }
   if (!props.isInParty)
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />
     );
-
-  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
   return (
     <React.Fragment>

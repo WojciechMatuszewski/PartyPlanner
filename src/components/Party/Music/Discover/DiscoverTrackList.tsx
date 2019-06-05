@@ -1,5 +1,4 @@
 import React from 'react';
-import { Track, Page, search } from 'spotify-web-sdk';
 import { WindowScroller, List as VList, AutoSizer } from 'react-virtualized';
 import { List, Typography, Button, message } from 'antd';
 import DiscoverTrack from './DiscoverTrack';
@@ -8,6 +7,9 @@ import css from '@emotion/css';
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 import GraphqlInlineError from '@components/GraphqlInlineError';
+import { Page, Track, search } from 'spotify-web-sdk';
+import EmptySection from '@components/UI/EmptySection';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 const ListStyles = css`
   .ant-spin-container.ant-spin-blur > div:first-of-type {
@@ -16,7 +18,6 @@ const ListStyles = css`
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   margin-top: 12px;
-
   @media screen and (max-width: 1080px) {
     border-radius: 0;
   }
@@ -26,7 +27,6 @@ const LoadMoreButtonStyles = css`
   display: block;
   margin: 0 auto;
   margin-top: 12px;
-
   @media screen and (max-width: 530px) {
     margin-right: auto;
     margin-left: 12px;
@@ -145,6 +145,29 @@ export default function DiscoverTrackList(props: Props) {
       </GraphqlInlineError>
     );
 
+  if (state.currentTracks.length === 0)
+    return (
+      <EmptySection
+        image="/static/music.svg"
+        title={
+          props.searchQuery.length == 0
+            ? 'Search for a song'
+            : 'Could not find any songs'
+        }
+        emotionCSS={css`
+          width: 100%;
+          height: 100%;
+          ${FlexBoxFullCenteredStyles};
+          img {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: block;
+          }
+        `}
+      />
+    );
+
   return (
     <WindowScroller serverHeight={400}>
       {({ height, onChildScroll, isScrolling, scrollTop }) => (
@@ -198,12 +221,13 @@ export default function DiscoverTrackList(props: Props) {
           </List>
           {canLoadMore() && (
             <Button
+              size="large"
               onClick={async () => await handleOnLoadMoreClick()}
               loading={state.loadingMore}
               css={[LoadMoreButtonStyles]}
               type="primary"
             >
-              Load More
+              Load More Songs
             </Button>
           )}
         </React.Fragment>
@@ -221,9 +245,10 @@ export default function DiscoverTrackList(props: Props) {
   }
 
   async function handleOnLoadMoreClick() {
+    if (!state.lastFetchedPage) return;
     dispatch(actions.setLoading({ loadingMore: true }));
     try {
-      const page = await state.lastFetchedPage!.getNextPage();
+      const page = await state.lastFetchedPage;
       dispatch(actions.appendResults({ page }));
     } catch (e) {
       handleError();
@@ -233,7 +258,7 @@ export default function DiscoverTrackList(props: Props) {
   async function handleTracksFetch() {
     dispatch(actions.setLoading({ loading: true }));
     try {
-      const data = await search(props.searchQuery, 'track', {});
+      const data = await search(props.searchQuery, 'track');
       if (data.tracks) dispatch(actions.setResults({ page: data.tracks }));
     } catch (e) {
       handleError();

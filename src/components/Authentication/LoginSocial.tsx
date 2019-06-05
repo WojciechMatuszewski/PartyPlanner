@@ -9,11 +9,12 @@ import {
   WhiteSpotifyButtonStyles
 } from '@shared/styles';
 import socialLoginPopup from '@shared/socialLoginPopup';
-import { handleLogin } from './AuthService';
+import { handleLogin } from '@services/AuthService';
 import { WithRouterProps } from 'next/router';
 
-const getSocialProviderUrl = (provider: 'spotify' | 'facebook' | 'twitter') =>
-  `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/${provider}`;
+export const getSocialProviderUrl = (
+  provider: 'spotify' | 'facebook' | 'twitter'
+) => `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/${provider}`;
 
 const ButtonsWrapper = styled.div`
   button {

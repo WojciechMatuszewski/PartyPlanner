@@ -15,12 +15,12 @@ const LayoutStyles = css`
   }
 `;
 
-// const HeaderStyles = css`
-//   padding: 0;
-//   height: auto;
-//   /* box-shadow: 0 2px 8px #f0f1f2; */
-//   z-index: 2;
-// `;
+const HeaderStyles = css`
+  padding: 0;
+  height: auto;
+  /* box-shadow: 0 2px 8px #f0f1f2; */
+  z-index: 2;
+`;
 
 const AppLayout: React.FC<{
   children: React.ReactNode;
@@ -29,8 +29,11 @@ const AppLayout: React.FC<{
 }> = ({ children, withHeader, hasSider }) => {
   return (
     <Layout className="global-layout-wrapper" css={LayoutStyles}>
-      {/* <Layout.Header css={[HeaderStyles]}> */}
-      {withHeader && <AppHeader />}
+      {withHeader && (
+        <header css={[HeaderStyles]}>
+          <AppHeader />
+        </header>
+      )}
       <Layout hasSider={hasSider}>
         <Layout.Content>{children}</Layout.Content>
       </Layout>

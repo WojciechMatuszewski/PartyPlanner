@@ -1,12 +1,13 @@
 import * as redirectDep from '@apolloSetup/redirect';
+
+import React from 'react';
+import { render, fireEvent, wait } from 'react-testing-library';
 import {
   handleLogin,
   handleLogout,
   saveToken,
   getToken
-} from '@components/Authentication/AuthService';
-import React from 'react';
-import { render, fireEvent, wait } from 'react-testing-library';
+} from '@services/AuthService';
 
 jest.mock('@apolloSetup/redirect');
 

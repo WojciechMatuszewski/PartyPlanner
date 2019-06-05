@@ -8,9 +8,8 @@ export const UserTopTitleInnerWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  max-width: 1280px;
+  max-width: calc(1280px - 24px);
   margin: 0 auto;
-
   &.not-fixed {
     border-bottom: 1px dashed #e8e8e8;
   }
@@ -44,6 +43,8 @@ export const UserTopTitleWrapper = styled(
   &.fixed {
     border-bottom: 1px solid #e8e8e8;
   }
+  padding-left: 12px;
+  padding-right: 12px;
 `;
 
 interface Props {
@@ -56,7 +57,11 @@ const UserTopHeading: React.FC<Props> = props => {
     <Affix
       offsetTop={0}
       onChange={isFixed => setIsFixed(isFixed ? isFixed : false)}
-      style={{ width: '100%' }}
+      style={{
+        width: '100%',
+        margin: '0 auto',
+        display: 'block'
+      }}
     >
       <UserTopTitleWrapper
         className={`title-wrapper ${isFixed ? 'fixed' : ''}`}

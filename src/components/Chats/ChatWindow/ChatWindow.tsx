@@ -25,7 +25,7 @@ const LOADER_OFFSET = 49;
 const ChatWindowWrapper = styled.div`
   flex: 1;
   display: flex;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 66px);
   flex-direction: column;
   position: relative;
   background: white;

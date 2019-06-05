@@ -6,7 +6,7 @@ import { Form, Button, Icon } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { SignupComponent } from '@generated/graphql';
 
-import { handleLogin } from './AuthService';
+import { handleLogin } from '@services/AuthService';
 import GraphqlError from '@components/GraphqlError';
 
 interface FormValues {

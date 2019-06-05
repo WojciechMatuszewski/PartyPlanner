@@ -2,6 +2,9 @@ import React from 'react';
 import { Artist, getCurrentUserTopArtists, Page } from 'spotify-web-sdk';
 import UserTopHeading from '../UserTopHeading';
 import UserTopArtistsList from './UserTopArtistsList';
+import useSpotifyWebSdk, {
+  SpotifyAuthenticationError$
+} from '@hooks/useSpotifyWebSdk';
 
 interface State {
   loading: boolean;
@@ -13,6 +16,7 @@ interface Props {
 }
 
 const UserTopArtists: React.FC<Props> = props => {
+  useSpotifyWebSdk();
   const [state, setState] = React.useState<State>({
     loading: true,
     data: null
@@ -20,8 +24,13 @@ const UserTopArtists: React.FC<Props> = props => {
 
   React.useEffect(() => {
     async function handleDataFetch() {
-      const data = await getCurrentUserTopArtists();
-      setState({ loading: false, data });
+      try {
+        const data = await getCurrentUserTopArtists();
+        setState({ loading: false, data });
+      } catch (e) {
+        SpotifyAuthenticationError$.next();
+      }
+
       props.onResourceLoaded();
     }
     handleDataFetch();

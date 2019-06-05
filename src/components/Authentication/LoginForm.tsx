@@ -8,8 +8,9 @@ import { LoginMutation, LoginVariables } from '@generated/graphql';
 import { MutationFn, MutationResult } from 'react-apollo';
 
 import GraphqlError from '@components/GraphqlError';
-import { handleLogin } from './AuthService';
+
 import Link from 'next/link';
+import { handleLogin } from '@services/AuthService';
 interface FormValues {
   email: string;
   password: string;

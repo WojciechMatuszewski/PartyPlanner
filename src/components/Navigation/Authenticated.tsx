@@ -5,7 +5,7 @@ import SignOutIcon from '@customIcons/sign-out-alt.svg';
 import Link from 'next/link';
 import { MeQueryMe, useMeQuery } from '@generated/graphql';
 import css from '@emotion/css';
-import { handleLogout } from '@components/Authentication/AuthService';
+import { handleLogout } from '@services/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import UserAvatar from '@components/UserDefaultAvatar';
 import UserPresenceReporter from '@components/UserPresenceReporter';

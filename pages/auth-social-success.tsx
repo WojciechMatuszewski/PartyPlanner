@@ -49,9 +49,13 @@ const AuthSocialSuccessPage: NextFunctionComponent<
       providerToken,
       jwt
     } = props.socialLoginProps;
+
     saveToStorage(provider, 'social-provider');
-    saveToStorage(providerToken, 'provider-token');
-    saveToStorage(providerRefreshToken, 'provider-refresh-token');
+    if (provider == SocialMediaType.Spotify) {
+      saveToStorage(providerToken, 'spotify-token');
+      saveToStorage(providerRefreshToken, 'spotify-refresh-token');
+    }
+
     window.opener.postMessage(jwt, process.env.NEXT_STATIC_FRONTEND_URL);
   }, []);
 

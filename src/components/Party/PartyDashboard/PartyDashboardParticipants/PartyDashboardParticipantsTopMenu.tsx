@@ -7,6 +7,7 @@ const TopMenuHeader = styled.header`
   background: white;
   border-top: 1px solid #e8e8e8;
   border-bottom: 1px solid #e8e8e8;
+  height: 53px;
   .first-col {
     @media screen and (max-width: 991px) {
       display: none;
