@@ -92,7 +92,7 @@ const LoginForm: React.FC<{
               <a>Forgot password ? </a>
             </Link>
           </LoginControlsWrapper>
-          <div style={{ marginTop: 24 }}>
+          <div style={{ marginTop: 24, marginBottom: 24 }}>
             <GraphqlError error={error} />
           </div>
         </Form>

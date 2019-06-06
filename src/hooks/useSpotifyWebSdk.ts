@@ -1,3 +1,7 @@
+import {
+  LOCAL_STORAGE_SPOTIFY_TOKEN,
+  LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN
+} from '@services/AuthService';
 import React from 'react';
 import useLocalStorage from './useLocalStorage';
 import { isBrowser } from '@apolloSetup/initApollo';
@@ -15,9 +19,11 @@ function useSpotifyWebSdk() {
 
   React.useEffect(() => {
     if (!isBrowser()) return;
-    const token = retrieveFromStorage('spotify-token');
-    const refreshToken = retrieveFromStorage('spotify-refresh-token');
-    if (!token) return setShouldAskForANewToken(true);
+    const token = retrieveFromStorage(LOCAL_STORAGE_SPOTIFY_TOKEN);
+    const refreshToken = retrieveFromStorage(
+      LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN
+    );
+    if (!token || !refreshToken) return setShouldAskForANewToken(true);
     init({
       token,
       refreshToken
@@ -32,13 +38,14 @@ function useSpotifyWebSdk() {
     return () => subscription.unsubscribe();
   }, []);
 
-  function saveNewToken(token: string, refreshToken?: string) {
+  function initWithNewTokens(token: string, refreshToken: string) {
     init({ token, refreshToken });
+    setShouldAskForANewToken(false);
   }
 
   return {
     shouldAskForNewToken,
-    saveNewToken
+    initWithNewTokens
   };
 }
 

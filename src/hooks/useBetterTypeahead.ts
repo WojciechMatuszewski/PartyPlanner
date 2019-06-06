@@ -9,6 +9,7 @@ import {
   distinctUntilChanged
 } from 'rxjs/operators';
 import { AxiosPromise } from 'axios';
+import { ifElse, identity, always } from 'ramda';
 
 export interface TypeaheadProps<
   FetchResponsePreFormat,
@@ -16,7 +17,7 @@ export interface TypeaheadProps<
   EventType
 > {
   fetchFunction: (value: string) => Promise<any> | AxiosPromise<any>;
-  responseTransformFunction: (
+  responseTransformFunction?: (
     fetchResponse: FetchResponsePreFormat
   ) => FetchResult;
   onResult: (result: FetchResult) => void;
@@ -51,7 +52,13 @@ function useBetterTypeahead<
     source.pipe(
       switchMap(inputValue =>
         from(fetchFunctionRef.current(inputValue)).pipe(
-          map(responseTransformFunction),
+          map(
+            ifElse(
+              shouldMapFetchResponse,
+              always(responseTransformFunction),
+              identity
+            )
+          ),
           catchError(() => {
             onError();
             return of('' as any);
@@ -93,6 +100,10 @@ function useBetterTypeahead<
     inputStream$.current.next(value);
   }
 
+  function shouldMapFetchResponse() {
+    return responseTransformFunction != null;
+  }
+
   function typeaheadFunction() {
     inputStream$.current
       .pipe(
@@ -109,8 +120,7 @@ function useBetterTypeahead<
   }
 
   return {
-    onChange,
-    typeaheadOperator
+    onChange
   };
 }
 

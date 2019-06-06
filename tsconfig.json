@@ -29,7 +29,8 @@
       "@axios/*": ["axios/*"],
       "@customIcons/*": ["custom-icons/*"],
       "@graphql/*": ["./graphql/*"],
-      "@hoc/*": ["./src/hoc/*"]
+      "@hoc/*": ["./src/hoc/*"],
+      "@guards/*": ["./src/guards/*"]
     }
   }
 }

@@ -59,7 +59,7 @@ module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
       '@customIcons': path.resolve(__dirname, 'custom-icons'),
       '@graphql': path.resolve(__dirname, 'graphql'),
       '@services': path.resolve(__dirname, 'src/services'),
-      '@hoc': path.resolve(__dirname, 'src/hoc')
+      '@guards': path.resolve(__dirname, 'src/guards')
     };
     return config;
   }

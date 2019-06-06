@@ -146,7 +146,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
               >
                 Already have account? Login
               </Button>
-              <div style={{ marginTop: 24 }}>
+              <div style={{ marginTop: 24, marginBottom: 24 }}>
                 <GraphqlError error={error} />
               </div>
             </Form>

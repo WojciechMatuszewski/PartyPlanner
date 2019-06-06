@@ -16,7 +16,7 @@ import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/B
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
-import useSpotifyWebSdk from '@hooks/useSpotifyWebSdk';
+import SpotifyGuard from '@guards/SpotifyGuard';
 
 type RouterQuery = { id?: string };
 interface InjectedProps {
@@ -35,12 +35,8 @@ const PartyMusicTopPage: NextFunctionComponent<
   InjectedProps,
   NextContextWithApollo<RouterQuery>
 > = props => {
-  const { shouldAskForNewToken } = useSpotifyWebSdk();
   const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
-  if (shouldAskForNewToken) {
-    return <div>new token please</div>;
-  }
   if (!props.isInParty)
     return (
       <GraphqlException desc="Party either does not exist or you are not invited" />
@@ -50,18 +46,20 @@ const PartyMusicTopPage: NextFunctionComponent<
     <React.Fragment>
       <PartyMenu routerPath={'/party-music-top'} partyId={props.partyId} />
       <ContentWrapper>
-        <BigMusicPlayerProvider>
-          <TrackInfoModalProvider>
-            <UserTopTracks visible={true} />
-            <UserTopArtists onResourceLoaded={() => {}} />
-            <BigMusicPlayerStickedToBottom
-              onTrackChanged={handleTrackChanged}
-              onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-              visible={playerVisible}
-            />
-            <TrackInfoModal />
-          </TrackInfoModalProvider>
-        </BigMusicPlayerProvider>
+        <SpotifyGuard>
+          <BigMusicPlayerProvider>
+            <TrackInfoModalProvider>
+              <UserTopTracks visible={true} />
+              <UserTopArtists onResourceLoaded={() => {}} />
+              <BigMusicPlayerStickedToBottom
+                onTrackChanged={handleTrackChanged}
+                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+                visible={playerVisible}
+              />
+              <TrackInfoModal />
+            </TrackInfoModalProvider>
+          </BigMusicPlayerProvider>
+        </SpotifyGuard>
       </ContentWrapper>
     </React.Fragment>
   );

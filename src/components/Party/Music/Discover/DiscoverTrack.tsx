@@ -14,15 +14,12 @@ interface Props {
 
 const ListItemStyles = css`
   transition: transform 0.2s ease;
-  &.track-playing {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transform: scale(0.99) translateY(5px);
-    border-radius: 4px;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+  &.track-playing,
+  &:hover {
     background: #e6f7ff;
-
-    .ant-list-item-meta {
-      transform: translateX(12px);
-    }
   }
   height: 72px;
   .ant-list-item-meta {

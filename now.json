@@ -20,6 +20,10 @@
       "dest": "auth-social-success"
     },
     {
+      "src": "/auth/social/reauth/success",
+      "dest": "auth-social-reauth-success"
+    },
+    {
       "src": "/auth/social/error",
       "dest": "auth-social-error"
     },

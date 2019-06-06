@@ -1,45 +1,34 @@
 import React from 'react';
 import { NextFunctionComponent } from 'next';
+import { SocialMediaType } from '@generated/graphql';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import { SocialMediaType } from '@generated/graphql';
-import redirect from '@apolloSetup/redirect';
-import css from '@emotion/css';
-import { Spin } from 'antd';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { Exception } from 'ant-design-pro';
 import useLocalStorage from '@hooks/useLocalStorage';
 import {
-  LOCAL_STORAGE_SPOTIFY_TOKEN,
   LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN,
-  LOCAL_STORAGE_PROVIDER_NAME
+  LOCAL_STORAGE_SPOTIFY_TOKEN
 } from '@services/AuthService';
-
-const SocialAuthWrapperStyles = css`
-  width: 100%;
-  height: 100vh;
-`;
+import { Spin } from 'antd';
+import { Exception } from 'ant-design-pro';
 
 type RouterQueryProps = {
   provider: SocialMediaType;
-  jwt: string;
   providerToken: string;
   providerRefreshToken: string;
 };
 
+interface InjectedProps {
+  shouldBeHere: boolean;
+  reAuthProps: RouterQueryProps;
+}
+
 const checkAgainstObj: RouterQueryProps = {
   provider: SocialMediaType.Spotify,
-  jwt: '',
   providerToken: '',
   providerRefreshToken: ''
 };
 
-interface InjectedProps {
-  shouldBeHere: boolean;
-  socialLoginProps: RouterQueryProps;
-}
-
-const AuthSocialSuccessPage: NextFunctionComponent<
+const AuthSocialReAuthSuccessPage: NextFunctionComponent<
   InjectedProps,
   InjectedProps,
   NextContextWithApollo<RouterQueryProps>
@@ -49,63 +38,60 @@ const AuthSocialSuccessPage: NextFunctionComponent<
   React.useEffect(() => {
     if (!props.shouldBeHere) return;
     const {
-      provider,
-      providerRefreshToken,
-      providerToken,
-      jwt
-    } = props.socialLoginProps;
-
-    saveToStorage(provider, LOCAL_STORAGE_PROVIDER_NAME);
+      reAuthProps: { provider, providerRefreshToken, providerToken }
+    } = props;
+    // edit here for different providers
     if (provider == SocialMediaType.Spotify) {
-      saveToStorage(providerToken, LOCAL_STORAGE_SPOTIFY_TOKEN);
       saveToStorage(providerRefreshToken, LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN);
+      saveToStorage(providerToken, LOCAL_STORAGE_SPOTIFY_TOKEN);
     }
-
-    window.opener.postMessage(jwt, process.env.NEXT_STATIC_FRONTEND_URL);
+    window.opener.postMessage(
+      { providerToken, providerRefreshToken },
+      process.env.NEXT_STATIC_FRONTEND_URL
+    );
   }, []);
 
-  if (!props.shouldBeHere)
+  if (!props.shouldBeHere) {
     return (
       <Exception
         type="403"
         img="../static/security.svg"
-        css={[SocialAuthWrapperStyles]}
+        // css={[SocialAuthWrapperStyles]}
         backText="Back to home"
         desc="Not authorized"
       />
     );
-
-  return (
-    <div css={[SocialAuthWrapperStyles, FlexBoxFullCenteredStyles]}>
-      <Spin />
-    </div>
-  );
+  }
+  return <Spin />;
 };
 
-AuthSocialSuccessPage.getInitialProps = async function(
+AuthSocialReAuthSuccessPage.getInitialProps = async function(
   context
 ): Promise<InjectedProps> {
-  await ApolloAuthenticator.authenticateRoute({
-    userHasToBe: 'notAuthenticated',
+  const userData = await ApolloAuthenticator.authenticateRoute({
+    userHasToBe: 'authenticated',
     ctx: context
   });
-
-  const { query } = context;
-
-  if (isMissingKeys(query, checkAgainstObj)) {
-    redirect(context, 'auth-login', '/login');
+  if (!userData) {
     return {
       shouldBeHere: false,
-      socialLoginProps: query
+      reAuthProps: context.query
+    };
+  }
+  const missingKeys = isMissingKeys(context.query, checkAgainstObj);
+  if (missingKeys) {
+    return {
+      shouldBeHere: false,
+      reAuthProps: context.query
     };
   }
   return {
     shouldBeHere: true,
-    socialLoginProps: query
+    reAuthProps: context.query
   };
 };
 
-export default AuthSocialSuccessPage;
+export default AuthSocialReAuthSuccessPage;
 
 function isMissingKeys(
   objToCheck: RouterQueryProps,

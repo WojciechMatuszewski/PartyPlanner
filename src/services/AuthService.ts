@@ -28,8 +28,8 @@ export async function handleLogout(client: ApolloClient<any>) {
   if (isBrowser()) {
     localStorage.removeItem(USER_PRESENCE_CONFIG.localStorageHeartbeatKeyName);
     localStorage.removeItem(LOCAL_STORAGE_SPOTIFY_TOKEN);
-    localStorage.removeItem(LOCAL_STORAGE_SPOTIFY_TOKEN);
     localStorage.removeItem(LOCAL_STORAGE_PROVIDER_NAME);
+    localStorage.removeItem(LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN);
   }
 
   redirect({} as any, '/auth-login', '/login');
@@ -37,5 +37,5 @@ export async function handleLogout(client: ApolloClient<any>) {
 
 export function handleLogin(token: string) {
   saveToken(token);
-  redirect({} as any, '/user/dashboard');
+  redirect({} as any, '/user-dashboard', '/user/dashboard');
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import ChatInput from './ChatWindowInput';
 import { ChatsContext } from '@pages/party-chats';
-import ChatEmptySection from '../ChatEmptySection';
+
 import {
   PaginateMessagesQueryEdges,
   PaginateMessagesQueryVariables,
@@ -19,6 +19,9 @@ import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
 } from '../shared';
+import EmptySection from '@components/UI/EmptySection';
+import css from '@emotion/css';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 const LOADER_OFFSET = 49;
 
@@ -157,7 +160,19 @@ const ChatWindow: React.FC = () => {
   }, [isWithinBottomScrollLockZone, unreadCount]);
 
   if (currentlySelectedChatId == null)
-    return <ChatEmptySection image={'../static/group-chat.svg'} />;
+    return (
+      <EmptySection
+        image={'../static/group-chat.svg'}
+        title="No chat selected!"
+        description="Select chat"
+        emotionCSS={css`
+          ${FlexBoxFullCenteredStyles};
+          img {
+            max-width: 600px;
+          }
+        `}
+      />
+    );
 
   // TODO: error here, wait for hooks pull request
 
@@ -167,10 +182,17 @@ const ChatWindow: React.FC = () => {
   if (data.messagesConnection.edges.length === 0)
     return (
       <ChatWindowWrapper>
-        <ChatEmptySection
+        <EmptySection
           image={'/static/no-data.svg'}
           title="No messages here"
           description="Start a conversation now!"
+          emotionCSS={css`
+            ${FlexBoxFullCenteredStyles};
+            flex: 1;
+            img {
+              max-width: 600px;
+            }
+          `}
         />
         <ChatInput currentQueryVariables={queryVariables} />
       </ChatWindowWrapper>
