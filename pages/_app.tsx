@@ -14,7 +14,22 @@ Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
-const PAGES_WITHOUT_HEADER = ['/social-auth', '/join-party'];
+const PAGES_WITHOUT_HEADER = [
+  '/auth-social-success',
+  '/auth-social-error',
+  '/join-party'
+];
+
+export const NOT_AUTHENTICATED_ROUTES = [
+  '/',
+  '/auth-login',
+  '/auth-register',
+  '/auth-social-success',
+  '/auth-social-error',
+  '/auth-forgot-password',
+  '/auth-reset-password'
+];
+
 const PAGES_WITH_SIDER = ['/party'];
 
 export interface NextContextWithApollo<

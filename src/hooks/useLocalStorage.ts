@@ -2,7 +2,7 @@ import React from 'react';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { ifElse, always } from 'ramda';
 
-function useLocalStorage(key: string) {
+function useLocalStorage(key: string = '') {
   function _getItem(key: string) {
     return localStorage.getItem(key);
   }
@@ -11,9 +11,14 @@ function useLocalStorage(key: string) {
     return localStorage.setItem(key, value);
   }
 
-  const retrieveFromStorage = React.useCallback(() => {
-    return ifElse(isBrowser, _getItem, always(null))(key);
-  }, [key]);
+  const retrieveFromStorage = React.useCallback(
+    (localKey?: string) => {
+      return ifElse(isBrowser, _getItem, always(null))(
+        localKey ? localKey : key
+      );
+    },
+    [key]
+  );
 
   const saveToStorage = React.useCallback(
     (value: any, passedKey: string = key) => {

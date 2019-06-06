@@ -1,5 +1,5 @@
 import React from 'react';
-import { Track, Page } from 'spotify-web-sdk';
+import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 import UserTopTrack from './UserTopTrack';
@@ -7,7 +7,7 @@ import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../../TrackInfoModal/TrackInfoModalProvider';
 
 const TopTracksGrid = styled(
-  posed.div({
+  posed.ul({
     loading: {
       opacity: 0
     },
@@ -16,36 +16,50 @@ const TopTracksGrid = styled(
     }
   })
 )`
-  max-width: 1440px;
+  padding-left: 12px;
+  padding-right: 12px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 22px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-row-gap: 20px;
+  grid-row-gap: 14px;
   grid-column-gap: 12px;
+  margin-bottom: 40px;
+  box-sizing: border-box;
   @media screen and (max-width: 400px) {
     grid-template-columns: repeat(1fr);
   }
 
-  @media screen and (min-width: 1284px) {
-    .user-top-track-grid-item:nth-child(4n) {
+  @media screen and (max-width: 1570px) {
+    .user-top-track:nth-of-type(4n) {
       transform-origin: center right;
     }
-    .user-top-track-grid-item:nth-child(4n-3) {
+    .user-top-track:nth-of-type(4n-3) {
       transform-origin: center left;
     }
   }
 
-  @media screen and (max-width: 1283px) {
-    .user-top-track-grid-item:nth-child(3n) {
+  @media screen and (max-width: 1496px) {
+    .user-top-track:nth-of-type(3n) {
       transform-origin: center right;
     }
-    .user-top-track-grid-item:nth-child(3n-2) {
+    .user-top-track:nth-of-type(3n-2) {
+      transform-origin: center left;
+    }
+  }
+  @media screen and (max-width: 1186px) {
+    .user-top-track:nth-of-type(2n) {
+      transform-origin: center right;
+    }
+    .user-top-track:nth-of-type(2n-1) {
       transform-origin: center left;
     }
   }
 `;
 
 interface Props {
-  tracks: Page<Track>;
+  tracks: Track[];
 }
 const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
   const {
@@ -68,7 +82,7 @@ const UserTopTracksList: React.FC<Props> = ({ tracks }) => {
 
   return (
     <TopTracksGrid className="grid-wrapper">
-      {tracks.items.map(topTrack => (
+      {tracks.map(topTrack => (
         <UserTopTrack
           onMoreInfoClick={handleMoreInfoClick}
           onPlayClick={handleOnPlayClick}

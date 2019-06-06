@@ -6,7 +6,7 @@ import { Form, Button, Icon } from 'antd';
 import FormikInputField from '@shared/formikInputField';
 import { SignupComponent } from '@generated/graphql';
 
-import { handleLogin } from './AuthService';
+import { handleLogin } from '@services/AuthService';
 import GraphqlError from '@components/GraphqlError';
 
 interface FormValues {
@@ -146,7 +146,7 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
               >
                 Already have account? Login
               </Button>
-              <div style={{ marginTop: 24 }}>
+              <div style={{ marginTop: 24, marginBottom: 24 }}>
                 <GraphqlError error={error} />
               </div>
             </Form>

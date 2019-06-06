@@ -3,19 +3,16 @@ import { Affix, Typography } from 'antd';
 import styled from '@emotion/styled';
 import posed from 'react-pose';
 
-export const UserTopTitleInnerWrapper = styled(
-  posed.div({
-    fixed: {
-      borderBottom: '0px dashed #e8e8e8'
-    },
-    notFixed: {
-      borderBottom: '1px dashed #e8e8e8'
-    }
-  })
-)`
+export const UserTopTitleInnerWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 100%;
+  max-width: calc(1280px - 24px);
+  margin: 0 auto;
+  &.not-fixed {
+    border-bottom: 1px dashed #e8e8e8;
+  }
 `;
 
 export const UserTopTitleWrapper = styled(
@@ -35,14 +32,19 @@ export const UserTopTitleWrapper = styled(
   })
 )`
   h3 {
-    margin-bottom: 12px;
+    margin: 0;
   }
   button {
     margin-bottom: 12px;
   }
-  margin-bottom: 20px;
   z-index: 10;
-  padding-top: 12px;
+  height: 53px;
+  display: block;
+  &.fixed {
+    border-bottom: 1px solid #e8e8e8;
+  }
+  padding-left: 12px;
+  padding-right: 12px;
 `;
 
 interface Props {
@@ -55,13 +57,17 @@ const UserTopHeading: React.FC<Props> = props => {
     <Affix
       offsetTop={0}
       onChange={isFixed => setIsFixed(isFixed ? isFixed : false)}
-      style={{ width: '100%' }}
+      style={{
+        width: '100%',
+        margin: '0 auto',
+        display: 'block'
+      }}
     >
       <UserTopTitleWrapper
-        className="title-wrapper"
+        className={`title-wrapper ${isFixed ? 'fixed' : ''}`}
         pose={isFixed ? 'fixed' : 'notFixed'}
       >
-        <UserTopTitleInnerWrapper>
+        <UserTopTitleInnerWrapper className={isFixed ? 'fixed' : 'not-fixed'}>
           <Typography.Title level={3}>{props.headingText}</Typography.Title>
         </UserTopTitleInnerWrapper>
       </UserTopTitleWrapper>

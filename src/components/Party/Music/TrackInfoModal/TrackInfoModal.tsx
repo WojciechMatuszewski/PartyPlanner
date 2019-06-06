@@ -1,22 +1,15 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Modal, Button, Icon } from 'antd';
+import { Modal } from 'antd';
 import { Global } from '@emotion/core';
 import styled from '@emotion/styled';
 import { Track } from 'spotify-web-sdk';
-import {
-  SpotifyButtonStyles,
-  SpotifyIconStyles
-} from '@components/Authentication/LoginSocial';
-import SpotifyIcon from '@customIcons/spotify.svg';
 import TrackInfoModalBasicInfo from './TrackInfoModalBasicInfo';
 import TrackInfoModalDetailedInformation from './TrackInfoModalDetailedInformation';
 import { useTrackInfoModal } from './TrackInfoModalProvider';
-import {
-  GreenSpotifyButtonStyles,
-  FlexBoxFullCenteredStyles
-} from '@shared/styles';
+
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
+import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
 
 const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
 
@@ -52,10 +45,6 @@ const TrackInfoModalBodyWrapper = styled.div`
   h4 {
     color: white;
   }
-
-  .spotify-button .anticon {
-    color: white;
-  }
   .spotify-button {
     margin-top: 24px;
   }
@@ -74,19 +63,13 @@ const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
     <TrackInfoModalBodyWrapper>
       <TrackInfoModalBasicInfo track={track} />
       <TrackInfoModalDetailedInformation track={track} />
-      <Button
+      <GreenSpotifyButton
         className="spotify-button"
-        css={[
-          SpotifyButtonStyles,
-          GreenSpotifyButtonStyles,
-          FlexBoxFullCenteredStyles
-        ]}
         size="large"
         onClick={handleOnSpotifyButtonClick}
       >
-        <Icon component={SpotifyIcon} css={[SpotifyIconStyles]} />
         Listen on Spotify!
-      </Button>
+      </GreenSpotifyButton>
     </TrackInfoModalBodyWrapper>
   );
 
@@ -104,7 +87,7 @@ const TrackInfoModal: React.FC = () => {
   return (
     <Modal
       width={650}
-      zIndex={1}
+      zIndex={20}
       visible={modalVisible}
       css={[ModalStyles]}
       title={false}

@@ -7,6 +7,7 @@ import useMedia from '@hooks/useMedia';
 import { PaginatePartiesQueryEdges } from '@generated/graphql';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 import Link from 'next/link';
+import { withRouter, WithRouterProps } from 'next/router';
 
 const PartiesCardWrapper = styled(
   posed.div({
@@ -143,10 +144,14 @@ const PartyCardLocationWrapper = styled.div`
 `;
 
 interface Props {
-  party: PaginatePartiesQueryEdges;
+  party: NonNullable<PaginatePartiesQueryEdges>;
   delayIndex: number;
 }
-const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
+const PartiesListPartyCard: React.FC<Props & WithRouterProps> = ({
+  party,
+  delayIndex,
+  router
+}) => {
   const shouldUseHover = useMedia('(min-width:992px)');
   const [mobileVisible, setMobileVisible] = React.useState<boolean>(false);
 
@@ -156,14 +161,24 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
   );
 
   // handles mobile interaction (indicator click)
-  const handleIndicatorClick = React.useCallback(() => {
-    if (!shouldUseHover) {
-      setMobileVisible(!mobileVisible);
-    }
-  }, [mobileVisible, shouldUseHover]);
+  const handleIndicatorClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!shouldUseHover) {
+        setMobileVisible(!mobileVisible);
+      }
+    },
+    [mobileVisible, shouldUseHover]
+  );
 
   return (
-    <PartiesCardWrapper initialPose="exit" pose="enter" delayIndex={delayIndex}>
+    <PartiesCardWrapper
+      initialPose="exit"
+      pose="enter"
+      delayIndex={delayIndex}
+      onClick={handleCardClick}
+    >
       <PartiesCardImageWrapper>
         <img src="../static/having-fun.svg" />
       </PartiesCardImageWrapper>
@@ -237,6 +252,14 @@ const PartiesListPartyCard: React.FC<Props> = ({ party, delayIndex }) => {
       </PartiesCardInfoWrapper>
     </PartiesCardWrapper>
   );
+
+  function handleCardClick() {
+    router &&
+      router.push(
+        `/party-dashboard?id=${party.node.id}`,
+        `/party/${party.node.id}`
+      );
+  }
 };
 
-export default PartiesListPartyCard;
+export default withRouter(PartiesListPartyCard);

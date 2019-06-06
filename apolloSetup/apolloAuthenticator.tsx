@@ -1,10 +1,11 @@
 import { parseCookies } from './withApollo';
 import redirect from './redirect';
 import { MeQueryQuery, MeQueryDocument } from '@generated/graphql';
-import { handleLogout } from '@components/Authentication/AuthService';
+
 import { NextContextWithApollo } from '@pages/_app';
 import { WithApolloAuthInjectedProps } from './withApolloAuth';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import { handleLogout } from '@services/AuthService';
 
 interface ApolloAuthenticatorProps {
   userHasToBe: 'authenticated' | 'notAuthenticated';

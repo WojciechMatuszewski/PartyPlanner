@@ -15,7 +15,6 @@ const TrackInfoWrapper = styled.div`
   display: flex;
   max-width: 250px;
   .track-info-text {
-    /* max-width: 186px; */
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
     text-align: left;
@@ -68,7 +67,12 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
       ) : (
         <React.Fragment>
           {props.track ? (
-            <img src={props.track.album.imageUrl} />
+            <img
+              src={
+                props.track.album.images[props.track.album.images.length - 1]
+                  .url
+              }
+            />
           ) : (
             <DefaultImageWrapper>
               <Icon type="question" />

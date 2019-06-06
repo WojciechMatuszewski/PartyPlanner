@@ -22,12 +22,13 @@ interface Props {
   party: DeepWithoutMaybe<NonNullable<JoinPartyFindQuery['parties'][0]>>;
   membersCount: number;
 }
+
 const JoinPartyCanJoin: React.FC<Props> = props => {
   return (
     <JoinPartySection>
       <JoinPartyInnerWrapper>
         <JoinPartyImageWrapper>
-          <img src="./static/fans.svg" />
+          <img src="/static/fans.svg" />
         </JoinPartyImageWrapper>
         <div>
           <Typography.Title level={1} style={{ marginBottom: 0 }}>

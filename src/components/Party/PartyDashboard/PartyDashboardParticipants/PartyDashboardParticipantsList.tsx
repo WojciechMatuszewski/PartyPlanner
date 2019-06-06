@@ -47,7 +47,7 @@ export default function PartyDashboardParticipantsList(props: Props) {
   }, [props.participants]);
 
   return (
-    <List renderItem={null} loading={props.loading} css={[ListStyles]}>
+    <List renderItem={undefined} loading={props.loading} css={[ListStyles]}>
       <WindowScroller serverHeight={400} participants={props.participants}>
         {({ height, isScrolling, onChildScroll, scrollTop }) => (
           <InfiniteLoader

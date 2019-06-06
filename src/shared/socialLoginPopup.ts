@@ -29,7 +29,9 @@ function calculateCorrectWindowArea(): WindowArea {
   return windowArea;
 }
 
-export const socialLoginPopup = (myUrl: string): Promise<string> => {
+export const socialLoginPopup = <ReturnDataType>(
+  myUrl: string
+): Promise<ReturnDataType> => {
   const calculatedWindowArea = calculateCorrectWindowArea();
   const sep = myUrl.indexOf('?') !== -1 ? '&' : '?';
   const url = `${myUrl}${sep}`;
@@ -45,27 +47,29 @@ export const socialLoginPopup = (myUrl: string): Promise<string> => {
   const messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message';
   const eventer = (window as any)[eventMethod];
 
-  const authorizationPromise = new Promise<string>((resolve, reject) => {
-    eventer(messageEvent, (event: MessageEvent) => {
-      if (!authWindow) {
-        return reject('Window not present');
-      }
-      if (event.origin !== ALLOWED_WINDOW_ORIGIN) {
-        authWindow.close();
-        return reject('Origin not allowed!');
-      }
-      if (event.data === 'close') {
-        authWindow.close();
-        return reject();
-      } else if (event.data !== 'close') {
-        authWindow.close();
-        return resolve(event.data);
-      } else if (!event.data) {
-        authWindow.close();
-        return reject('Data not found');
-      }
-    });
-  });
+  const authorizationPromise = new Promise<ReturnDataType>(
+    (resolve, reject) => {
+      eventer(messageEvent, (event: MessageEvent) => {
+        if (!authWindow) {
+          return reject('Window not present');
+        }
+        if (event.origin !== ALLOWED_WINDOW_ORIGIN) {
+          authWindow.close();
+          return reject('Origin not allowed!');
+        }
+        if (event.data === 'close') {
+          authWindow.close();
+          return reject();
+        } else if (event.data !== 'close') {
+          authWindow.close();
+          return resolve(event.data);
+        } else if (!event.data) {
+          authWindow.close();
+          return reject('Data not found');
+        }
+      });
+    }
+  );
 
   return authorizationPromise;
 };

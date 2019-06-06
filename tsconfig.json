@@ -22,12 +22,15 @@
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./pages/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@services/*": ["./src/services/*"],
       "@shared/*": ["./src/shared/*"],
       "@generated/*": ["./generated/*"],
       "@apolloSetup/*": ["./apolloSetup/*"],
       "@axios/*": ["axios/*"],
       "@customIcons/*": ["custom-icons/*"],
-      "@graphql/*": ["./graphql/*"]
+      "@graphql/*": ["./graphql/*"],
+      "@hoc/*": ["./src/hoc/*"],
+      "@guards/*": ["./src/guards/*"]
     }
   }
 }

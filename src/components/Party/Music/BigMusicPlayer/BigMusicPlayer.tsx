@@ -208,7 +208,7 @@ const BigMusicPlayer: React.FC = () => {
         </ControlButtonsWrapper>
         {isOnMobile && track && (
           <Typography.Text style={{ order: 1 }} ellipsis={true}>
-            {track.name} by <strong>{track.mainArtists[0].name}</strong>
+            {track.name} by <strong>{track.artists[0].name}</strong>
           </Typography.Text>
         )}
         <SliderWrapper>

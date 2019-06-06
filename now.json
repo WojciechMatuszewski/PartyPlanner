@@ -16,6 +16,18 @@
       "dest": "auth-register"
     },
     {
+      "src": "/auth/social/success",
+      "dest": "auth-social-success"
+    },
+    {
+      "src": "/auth/social/reauth/success",
+      "dest": "auth-social-reauth-success"
+    },
+    {
+      "src": "/auth/social/error",
+      "dest": "auth-social-error"
+    },
+    {
       "src": "/reset-password/(?<token>[^/]+)",
       "dest": "reset-password?token=$token"
     },
@@ -34,6 +46,18 @@
     {
       "src": "/party/parties",
       "dest": "party-parties"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)/music/discover",
+      "dest": "party-music-discover?id=$id"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)/music/browse",
+      "dest": "party-music-browse?id=$id"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)/music/top",
+      "dest": "party-music-top?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)",

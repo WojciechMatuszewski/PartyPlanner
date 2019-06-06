@@ -2,7 +2,9 @@ import React from 'react';
 import { PaginateUsersQueryEdges, UserStatus } from '@generated/graphql';
 import ChatUser from './ChatUser';
 import styled from '@emotion/styled';
-import ChatEmptySection from '../ChatEmptySection';
+import EmptySection from '@components/UI/EmptySection';
+import css from '@emotion/css';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 
 interface Props {
   chatUsers: PaginateUsersQueryEdges[];
@@ -16,10 +18,19 @@ const ChatUsersWrapper = styled.ul`
 const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
   if (chatUsers.length == 0)
     return (
-      <ChatEmptySection
+      <EmptySection
         image="/static/invite-others.svg"
         title="No other users"
         description="Invite others to populate this area!"
+        emotionCSS={css`
+          ${FlexBoxFullCenteredStyles};
+          margin-top: auto;
+          margin-bottom: auto;
+          img {
+            max-width: 100%;
+            margin-bottom: 12px;
+          }
+        `}
       />
     );
 

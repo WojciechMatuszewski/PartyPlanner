@@ -133,7 +133,10 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
       </div>
       <div className="item-wrapper">
         <div className="item-icon" />
-        <Link href={`/party?id=${props.party.id}`}>
+        <Link
+          href={`/party-dashboard?id=${props.party.id}`}
+          as={`/party/${props.party.id}`}
+        >
           <a>Party dashboard</a>
         </Link>
       </div>

@@ -15,10 +15,13 @@ const TopArtistsGrid = styled(
   })
 )`
   display: grid;
+  padding-top: 22px;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(203px, 1fr));
   grid-gap: 12px;
   box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
 `;
 
 interface Props {

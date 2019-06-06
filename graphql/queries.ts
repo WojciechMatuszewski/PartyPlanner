@@ -284,9 +284,15 @@ export const PARTY_INVITATIONS_CONNECTION_QUERY = gql`
   ${PARTY_INVITATION_FRAGMENT}
 `;
 
+export const HAS_CHATS_QUERY = gql`
+  query hasChatsQuery($where: ChatWhereInput) {
+    hasChats(where: $where)
+  }
+`;
+
 export const HAS_PARTIES_QUERY = gql`
-  query HasPartiesQuery {
-    hasParties
+  query hasPartiesQuery($where: PartyWhereInput) {
+    hasParties(where: $where)
   }
 `;
 

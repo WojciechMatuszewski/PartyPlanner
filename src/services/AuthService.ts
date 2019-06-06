@@ -4,8 +4,14 @@ import redirect from '@apolloSetup/redirect';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
 
+export const LOCAL_STORAGE_SPOTIFY_TOKEN = 'SPOTIFY_TOKEN';
+export const LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN = 'SPOTIFY_REFRESH_TOKEN';
+export const LOCAL_STORAGE_PROVIDER_NAME = 'SOCIAL_PROVIDER_NAME';
+
 export function saveToken(token: string) {
-  document.cookie = cookie.serialize('token', token);
+  document.cookie = cookie.serialize('token', token, {
+    path: '/'
+  });
 }
 
 export function getToken(): string | null {
@@ -15,19 +21,15 @@ export function getToken(): string | null {
 export async function handleLogout(client: ApolloClient<any>) {
   document.cookie = cookie.serialize('token', '', {
     maxAge: -1,
-    // NICE MEME, ALMOST 1 HR OF SEARCHING
     path: '/'
-  });
-  document.cookie = cookie.serialize('token', '', {
-    maxAge: -1,
-    // NICE MEME, ALMOST 1 HR OF SEARCHING
-    path: '/user'
   });
 
   await client.cache.reset();
-  cookie.parse(document.cookie);
   if (isBrowser()) {
     localStorage.removeItem(USER_PRESENCE_CONFIG.localStorageHeartbeatKeyName);
+    localStorage.removeItem(LOCAL_STORAGE_SPOTIFY_TOKEN);
+    localStorage.removeItem(LOCAL_STORAGE_PROVIDER_NAME);
+    localStorage.removeItem(LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN);
   }
 
   redirect({} as any, '/auth-login', '/login');
@@ -35,5 +37,5 @@ export async function handleLogout(client: ApolloClient<any>) {
 
 export function handleLogin(token: string) {
   saveToken(token);
-  redirect({} as any, '/user/dashboard');
+  redirect({} as any, '/user-dashboard', '/user/dashboard');
 }

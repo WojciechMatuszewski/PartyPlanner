@@ -1,16 +1,16 @@
 import React from 'react';
 import { debounce } from 'lodash';
 import { compose } from 'ramda';
-
 import Input, { SearchProps } from 'antd/lib/input';
 import { Omit } from 'ts-essentials';
 
-interface Props extends Omit<SearchProps, 'onChange'> {
-  onChange: (value: string) => any;
-}
+type Props = Omit<SearchProps, 'onChange'> &
+  typeof defaultProps & { onChange: (value: string) => any };
+
+const defaultProps = { debounceOnChange: false as boolean };
 
 export default function AntdSearch(props: Props) {
-  const { onChange, ...restOfProps } = props;
+  const { onChange, debounceOnChange, ...restOfProps } = props;
 
   const debouncedOnChangeRef = React.useRef<Props['onChange']>(
     debounce(onChange, 300)
@@ -19,7 +19,7 @@ export default function AntdSearch(props: Props) {
   return (
     <Input.Search
       onChange={compose(
-        debouncedOnChangeRef.current,
+        debounceOnChange ? debouncedOnChangeRef.current : props.onChange,
         onChangeTransformFunction
       )}
       {...restOfProps}
@@ -30,3 +30,5 @@ export default function AntdSearch(props: Props) {
     return e.currentTarget.value;
   }
 }
+
+AntdSearch.defaultProps = defaultProps;
