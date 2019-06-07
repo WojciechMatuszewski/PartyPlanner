@@ -25,7 +25,7 @@ export default function PartyDashboardParticipantsTopMenu(props: Props) {
       <TopMenuHeader>
         <Row className="dashboard-content-item">
           <Col span={8} className="first-col">
-            <Typography.Title level={3} style={{ margin: 0 }}>
+            <Typography.Title level={4} style={{ margin: 0 }}>
               Participants
             </Typography.Title>
           </Col>

@@ -172,6 +172,7 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     <PartiesListContext.Provider value={contextState}>
       <PartiesListWrapper>
         <PartiesListPane
+          loading={loading}
           onDrawerOpen={() => dispatch(PartiesListDrawerActions.toggleDrawer())}
           onChange={value =>
             dispatch(PartiesListFilterActions.setInputFilterValue(value))

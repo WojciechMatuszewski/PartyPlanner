@@ -17,6 +17,7 @@ Router.onRouteChangeError = () => NProgress.done();
 const PAGES_WITHOUT_HEADER = [
   '/auth-social-success',
   '/auth-social-error',
+  '/auth-social-reauth-success',
   '/join-party'
 ];
 

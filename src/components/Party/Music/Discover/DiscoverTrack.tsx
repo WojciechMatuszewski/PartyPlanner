@@ -1,8 +1,12 @@
 import React from 'react';
 import { Track } from 'spotify-web-sdk';
 import { List, Avatar, Badge, Tag, Typography } from 'antd';
-import TrackControls from '../TrackControls';
 import css from '@emotion/css';
+import {
+  AddToQueueTrackButton,
+  PlayPauseTrackButton,
+  MoreInfoTrackButton
+} from '../TrackControls';
 
 interface Props {
   track: Track;
@@ -35,22 +39,32 @@ const ListItemStyles = css`
       overflow: hidden;
     }
   }
+
+  .ant-list-item-meta-description {
+    line-height: 1;
+  }
+
+  @media screen and (max-width: 680px) {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
 `;
 
-export default function DiscoverTrack(props: Props) {
+function DiscoverTrack(props: Props) {
   return (
     <List.Item
       style={props.style}
       css={[ListItemStyles]}
       className={props.trackPlaying ? 'track-playing' : undefined}
       actions={[
-        <TrackControls
-          key={1}
-          onMoreInfoClick={handleMoreInfoClick}
+        <PlayPauseTrackButton
           onTogglePlayClick={handleTogglePlayClick}
+          key={1}
           trackPlaying={props.trackPlaying}
           hasPreviewUrl={props.track.previewUrl != null}
-        />
+        />,
+        <MoreInfoTrackButton onMoreInfoClick={handleMoreInfoClick} key={2} />,
+        <AddToQueueTrackButton key={3} />
       ]}
     >
       <List.Item.Meta
@@ -85,3 +99,5 @@ export default function DiscoverTrack(props: Props) {
     props.onMoreInfoClick(props.track);
   }
 }
+
+export default React.memo(DiscoverTrack);

@@ -20,7 +20,7 @@ const BATCHED_APOLLO_OPERATIONS = [
 ];
 
 interface Options {
-  getToken: () => string | null;
+  getAuthToken: () => string | null;
 }
 
 export function isBrowser() {
@@ -32,7 +32,7 @@ if (!isBrowser()) {
   (global as any).fetch = fetch;
 }
 
-function create(initialState: any, { getToken }: Options) {
+function create(initialState: any, { getAuthToken }: Options) {
   const httpLink = createHttpLink({
     uri: process.env.NEXT_STATIC_GRAPHQL_ENDPOINT,
     credentials: 'same-origin'
@@ -44,7 +44,7 @@ function create(initialState: any, { getToken }: Options) {
   });
 
   const authLink = setContext((_, { headers }) => {
-    const token = getToken();
+    const token = getAuthToken();
     return {
       headers: {
         ...headers,

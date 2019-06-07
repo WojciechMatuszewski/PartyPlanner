@@ -64,7 +64,6 @@ export const JoinPartyInnerWrapper = styled.div`
     width: 100%;
     min-height: 100%;
     background: white;
-    border: 1px solid #d9d9d9;
     border-radius: 4px;
   }
 `;

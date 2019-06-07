@@ -1,4 +1,5 @@
 import css from '@emotion/css';
+import styled from '@emotion/styled';
 
 export const NotWrappingTextStyles = css`
   max-width: 100%;
@@ -76,4 +77,20 @@ export const FlexBoxVerticallyCenteredStyles = css`
 export const FlexBoxHorizontallyCenteredStyles = css`
   display: flex;
   justify-content: center;
+`;
+
+export const UISectionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 12px;
+    display: block;
+    width: 100%;
+  }
+  h4 {
+    margin-bottom: 0;
+  }
 `;

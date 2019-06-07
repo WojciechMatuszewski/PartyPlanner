@@ -29,3 +29,16 @@ export function areObjectsEqual<ObjectsShape extends Record<any, any>>(
 
   return areEqualOnKeyToKeyBasis;
 }
+
+export function isObjectMissingKeys<ObjectShape extends object>(
+  objectToCheck: ObjectShape,
+  objectToCheckAgainst: ObjectShape
+) {
+  let hasMissingKeys = false;
+  Object.keys(objectToCheckAgainst).forEach(key => {
+    if (!(`${key}` in objectToCheck)) {
+      hasMissingKeys = true;
+    }
+  });
+  return hasMissingKeys;
+}

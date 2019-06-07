@@ -10,6 +10,8 @@ import {
 } from '@services/AuthService';
 import { Spin } from 'antd';
 import { Exception } from 'ant-design-pro';
+import { isObjectMissingKeys } from '@shared/functionUtils';
+import redirect from '@apolloSetup/redirect';
 
 type RouterQueryProps = {
   provider: SocialMediaType;
@@ -78,13 +80,15 @@ AuthSocialReAuthSuccessPage.getInitialProps = async function(
       reAuthProps: context.query
     };
   }
-  const missingKeys = isMissingKeys(context.query, checkAgainstObj);
-  if (missingKeys) {
+
+  if (isObjectMissingKeys(context.query, checkAgainstObj)) {
+    redirect(context, '/user-dashboard', 'user/dashboard');
     return {
       shouldBeHere: false,
       reAuthProps: context.query
     };
   }
+
   return {
     shouldBeHere: true,
     reAuthProps: context.query
@@ -92,16 +96,3 @@ AuthSocialReAuthSuccessPage.getInitialProps = async function(
 };
 
 export default AuthSocialReAuthSuccessPage;
-
-function isMissingKeys(
-  objToCheck: RouterQueryProps,
-  objectToCheckAgainst: RouterQueryProps
-) {
-  let hasMissingKeys = false;
-  Object.keys(objectToCheckAgainst).forEach(key => {
-    if (!(`${key}` in objToCheck)) {
-      hasMissingKeys = true;
-    }
-  });
-  return hasMissingKeys;
-}

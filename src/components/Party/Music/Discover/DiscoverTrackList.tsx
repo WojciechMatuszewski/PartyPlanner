@@ -14,6 +14,12 @@ const ListStyles = css`
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   margin-top: 12px;
+  h4 {
+    margin-bottom: 0;
+  }
+  .ant-list-item-meta {
+    align-items: center;
+  }
 `;
 
 const LoadMoreButtonStyles = css`
@@ -59,7 +65,6 @@ export default function DiscoverTrackList(props: Props) {
       {({ height, onChildScroll, isScrolling, scrollTop }) => (
         <React.Fragment>
           <List
-            split={false}
             bordered={true}
             renderItem={undefined}
             loading={props.loading}
@@ -103,11 +108,10 @@ export default function DiscoverTrackList(props: Props) {
           </List>
           {props.canLoadMore && (
             <Button
-              size="large"
+              size="default"
               onClick={props.onLoadMoreClick}
               loading={props.loadingMore}
               css={[LoadMoreButtonStyles]}
-              type="primary"
             >
               Load More Songs
             </Button>

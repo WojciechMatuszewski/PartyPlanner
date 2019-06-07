@@ -71,23 +71,6 @@ const ChatWindow: React.FC = () => {
     isWithinBottomScrollLockZone
   } = useBottomScrollLock(250);
 
-  // const scrollToBottom = React.useCallback(() => {
-  //   if (!data || !data.messagesConnection) return;
-  //   scrolledInitially.current = true;
-  //   setScrollToIndex(data.messagesConnection.edges.length);
-  // }, [data, scrollToIndex]);
-
-  // const handleSubscriptionMessage = React.useCallback(() => {
-  //   if (!isWithinBottomScrollLockZone) {
-  //     setUnreadCount(prevUnread => prevUnread + 1);
-  //   } else scrollToParticularIndex(getLengthOfCurrentMessages());
-  // }, [isWithinBottomScrollLockZone]);
-
-  // const getLengthOfCurrentMessages = React.useCallback(() => {
-  //   if (!data || !data.messagesConnection.edges) return 0;
-  //   return data.messagesConnection.edges.length;
-  // }, [data]);
-
   const getStartCursor = React.useCallback(() => {
     return data!.messagesConnection.pageInfo.startCursor;
   }, [data]);
@@ -167,6 +150,7 @@ const ChatWindow: React.FC = () => {
         description="Select chat"
         emotionCSS={css`
           ${FlexBoxFullCenteredStyles};
+          margin: 0 auto;
           img {
             max-width: 600px;
           }

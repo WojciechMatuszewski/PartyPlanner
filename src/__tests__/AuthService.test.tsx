@@ -6,7 +6,7 @@ import {
   handleLogin,
   handleLogout,
   saveToken,
-  getToken
+  getAuthToken
 } from '@services/AuthService';
 
 jest.mock('@apolloSetup/redirect');
@@ -50,6 +50,6 @@ describe('AuthService', () => {
   });
   it('Gets token from cookies correctly', () => {
     saveToken(TOKEN);
-    expect(getToken()).toBe(TOKEN);
+    expect(getAuthToken()).toBe(TOKEN);
   });
 });
