@@ -24,6 +24,7 @@ import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
 import { PartyMainContentWrapper } from '@components/Party/shared';
+import Head from 'next/head';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -134,6 +135,12 @@ const Party: NextFunctionComponent<
 
   return (
     <React.Fragment>
+      <Head>
+        <link
+          href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
+          rel="stylesheet"
+        />
+      </Head>
       <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
       {/* <PartyDashboardTopBackground /> */}
       <PosedWrapper initialPose="hidden" pose="visible">

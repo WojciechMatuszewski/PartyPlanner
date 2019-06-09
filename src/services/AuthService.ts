@@ -14,7 +14,7 @@ export function saveToken(token: string) {
   });
 }
 
-export function getToken(): string | null {
+export function getAuthToken(): string | null {
   return cookie.parse(document.cookie).token;
 }
 

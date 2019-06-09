@@ -14,12 +14,11 @@ const JoinPartyCannotJoin: React.FC<Props> = props => {
     <JoinPartySection style={{ textAlign: 'left' }}>
       <JoinPartyInnerWrapper>
         <JoinPartyImageWrapper>
-          <img src="./static/lost.svg" />
+          <img src="/static/lost.svg" />
         </JoinPartyImageWrapper>
         <div>
           <Typography.Title
             style={{
-              color: '#1890ff',
               marginBottom: 0,
               marginTop: 0,
               textAlign: 'left'
@@ -31,7 +30,7 @@ const JoinPartyCannotJoin: React.FC<Props> = props => {
           <Typography.Paragraph style={{ fontSize: 18 }}>
             Your invitation link is invalid or you already are in that party.
           </Typography.Paragraph>
-          <Button size="large" onClick={props.onGoBackClick}>
+          <Button size="large" type="primary" onClick={props.onGoBackClick}>
             Go back
           </Button>
         </div>

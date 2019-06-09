@@ -22,7 +22,7 @@ export interface TypeaheadProps<
   ) => FetchResult;
   onResult: (result: FetchResult) => void;
   onChangeTransformFunction?: (e: EventType) => string;
-  onError: () => void;
+  onError: (inputValueWhenErrorOccurred?: string, e?: Error) => void;
 }
 
 type InitialStreamType<K, EventType> = K extends (e: EventType) => string
@@ -59,8 +59,8 @@ function useBetterTypeahead<
               identity
             )
           ),
-          catchError(() => {
-            onError();
+          catchError(e => {
+            onError(inputValue, e);
             return of('' as any);
           })
         )

@@ -14,6 +14,7 @@ import {
   LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN,
   LOCAL_STORAGE_PROVIDER_NAME
 } from '@services/AuthService';
+import { isObjectMissingKeys } from '@shared/functionUtils';
 
 const SocialAuthWrapperStyles = css`
   width: 100%;
@@ -60,7 +61,6 @@ const AuthSocialSuccessPage: NextFunctionComponent<
       saveToStorage(providerToken, LOCAL_STORAGE_SPOTIFY_TOKEN);
       saveToStorage(providerRefreshToken, LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN);
     }
-
     window.opener.postMessage(jwt, process.env.NEXT_STATIC_FRONTEND_URL);
   }, []);
 
@@ -92,7 +92,7 @@ AuthSocialSuccessPage.getInitialProps = async function(
 
   const { query } = context;
 
-  if (isMissingKeys(query, checkAgainstObj)) {
+  if (isObjectMissingKeys(query, checkAgainstObj)) {
     redirect(context, 'auth-login', '/login');
     return {
       shouldBeHere: false,
@@ -106,16 +106,3 @@ AuthSocialSuccessPage.getInitialProps = async function(
 };
 
 export default AuthSocialSuccessPage;
-
-function isMissingKeys(
-  objToCheck: RouterQueryProps,
-  objectToCheckAgainst: RouterQueryProps
-) {
-  let hasMissingKeys = false;
-  Object.keys(objectToCheckAgainst).forEach(key => {
-    if (!(`${key}` in objToCheck)) {
-      hasMissingKeys = true;
-    }
-  });
-  return hasMissingKeys;
-}

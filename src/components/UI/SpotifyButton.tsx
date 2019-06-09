@@ -5,6 +5,13 @@ import css from '@emotion/css';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import SpotifyIcon from '@customIcons/spotify.svg';
 
+const BaseSpotifyButtonStyles = css`
+  .anticon + span,
+  span + .anticon {
+    margin-bottom: 3px;
+  }
+`;
+
 const BaseSpotifyIconStyles = css`
   svg {
     width: 24px;
@@ -31,6 +38,7 @@ const SpotifyIconStyles = css`
 `;
 
 const WhiteSpotifyButtonStyles = css`
+  ${BaseSpotifyButtonStyles};
   ${FlexBoxFullCenteredStyles};
   &:hover,
   &:focus,
@@ -42,6 +50,7 @@ const WhiteSpotifyButtonStyles = css`
 
 const GreenSpotifyButtonStyles = css`
   ${FlexBoxFullCenteredStyles};
+  ${BaseSpotifyButtonStyles};
   background: #1db954;
   border-color: #1db954;
   color: white;

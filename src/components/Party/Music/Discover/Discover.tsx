@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page, Track, searchTracks } from 'spotify-web-sdk';
 import { createStandardAction, ActionType } from 'typesafe-actions';
-import { Affix, message } from 'antd';
+import { Affix, message, Button } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import AntdSearch from '@components/AntdSearch';
@@ -9,6 +9,7 @@ import useBetterTypeahead from '@hooks/useBetterTypeahead';
 import EmptySection from '@components/UI/EmptySection';
 import css from '@emotion/css';
 import DiscoverTrackList from './DiscoverTrackList';
+import ErrorSection from '@components/UI/ErrorSection';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -19,8 +20,9 @@ const SearchWrapper = styled.div`
   padding: 12px;
   border-bottom: 1px solid rgb(232, 232, 232);
   height: 53px;
-  & > span {
+  & > form {
     max-width: calc(1280px - 24px);
+    width: 1000%;
   }
 `;
 
@@ -116,29 +118,41 @@ function reducer(state: State, action: DiscoverTracksActions): State {
 export default function PartyMusicDiscover(props: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
+  const lastInputValueOnError = React.useRef<string | undefined>(undefined);
+
   const { onChange } = useBetterTypeahead({
     fetchFunction: handleTrackSearch,
     onResult: handleSearchResult,
     onError: handleError
   });
 
-  // if (state.error)
-  // return (
-  //   <GraphqlInlineError>
-  //     <Button
-  //       loading={state.loading}
-  //       onClick={async () => await handleTracksFetch()}
-  //     >
-  //       Try again
-  //     </Button>
-  //   </GraphqlInlineError>
-  // );
+  if (state.error)
+    return (
+      <ErrorSection
+        emotionCSS={css`
+          height: 100%;
+          ${FlexBoxFullCenteredStyles};
+          button {
+            margin-top: 12px;
+          }
+          img {
+            max-width: 600px;
+          }
+        `}
+      >
+        <Button loading={state.loading} onClick={handleOnErrorRetry}>
+          Try Again
+        </Button>
+      </ErrorSection>
+    );
 
   return (
     <React.Fragment>
       <Affix>
         <SearchWrapper>
           <AntdSearch
+            defaultValue={lastInputValueOnError.current}
+            loading={state.loading}
             onChange={onChange}
             debounceOnChange={false}
             placeholder="Track name ..."
@@ -183,6 +197,17 @@ export default function PartyMusicDiscover(props: Props) {
     dispatch(actions.setResults({ page }));
   }
 
+  async function handleOnErrorRetry() {
+    dispatch(actions.setLoading({ loading: true }));
+    try {
+      const page = await searchTracks(lastInputValueOnError.current || '');
+      dispatch(actions.setResults({ page }));
+    } catch (e) {
+      handleError();
+    }
+    lastInputValueOnError.current = undefined;
+  }
+
   function canLoadMore() {
     return (
       !state.loading &&
@@ -203,7 +228,10 @@ export default function PartyMusicDiscover(props: Props) {
     }
   }
 
-  function handleError() {
+  function handleError(inputValueWhenErrorOcurred?: string) {
+    if (inputValueWhenErrorOcurred) {
+      lastInputValueOnError.current = inputValueWhenErrorOcurred;
+    }
     dispatch(actions.setError(true));
     message.error('Some error occurred!');
   }

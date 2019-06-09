@@ -1,5 +1,5 @@
 import React from 'react';
-import { Anchor, Typography, Input, Button } from 'antd';
+import { Anchor, Typography, Input, Button, Form } from 'antd';
 import styled from '@emotion/styled';
 import css from '@emotion/css';
 import redirect from '@apolloSetup/redirect';
@@ -62,6 +62,7 @@ const PaneTitleStyles = css`
 interface Props {
   onChange: (value: string) => void;
   onDrawerOpen: () => void;
+  loading: boolean;
 }
 const PartiesListPane: React.FC<Props> = props => {
   const debouncedOnChangeRef = React.useRef<any>(debounce(props.onChange, 300));
@@ -75,14 +76,22 @@ const PartiesListPane: React.FC<Props> = props => {
           <Typography.Title css={[PaneTitleStyles]} level={3}>
             Your Parties
           </Typography.Title>
-          <Input.Search
-            data-testid="paneInput"
-            placeholder="Type here..."
-            onChange={compose(
-              debouncedOnChangeRef.current,
-              onChangeTransformFunction
-            )}
-          />
+          <Form style={{ width: '100%', marginBottom: 0 }}>
+            <Form.Item
+              style={{ marginBottom: 0 }}
+              hasFeedback={true}
+              validateStatus={props.loading ? 'validating' : undefined}
+            >
+              <Input.Search
+                data-testid="paneInput"
+                placeholder="Type here..."
+                onChange={compose(
+                  debouncedOnChangeRef.current,
+                  onChangeTransformFunction
+                )}
+              />
+            </Form.Item>
+          </Form>
           <ButtonsWrapper>
             <Button
               icon="plus"
