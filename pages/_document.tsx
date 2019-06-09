@@ -24,11 +24,26 @@ class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="manifest" href="/static/manifest.json" />
           <link rel="stylesheet" href="/static/nprogress.css" />
           <link rel="stylesheet" href="/static/utils.css" />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="application-name" content="PP" />
+          <meta name="apple-mobile-web-app-title" content="PP" />
+          <meta name="theme-color" content="#1890ff" />
+          <meta name="msapplication-navbutton-color" content="#1890ff" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+          />
+          <meta name="msapplication-starturl" content="/" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
         </Head>
-        <body className="custom_class">
+        <body>
           <Main />
           <NextScript />
         </body>

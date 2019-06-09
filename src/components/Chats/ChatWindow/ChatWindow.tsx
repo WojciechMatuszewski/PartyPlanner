@@ -149,8 +149,7 @@ const ChatWindow: React.FC = () => {
         title="No chat selected!"
         description="Select chat"
         emotionCSS={css`
-          ${FlexBoxFullCenteredStyles};
-          margin: 0 auto;
+          margin: auto;
           img {
             max-width: 600px;
           }

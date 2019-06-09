@@ -13,7 +13,7 @@ import ChatsListSearch from './ChatsList/ChatsListSearch';
 import ChatsList from './ChatsList/ChatsList';
 import css from '@emotion/css';
 import { ChatsContext } from '@pages/party-chats';
-import ChatsListFilteredEmpty from './ChatsList/ChatsListFilteredEmpty';
+
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
 import { ApolloClient } from 'apollo-boost';
@@ -25,6 +25,7 @@ import {
 import { Button } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
 import GraphqlInlineError from '@components/GraphqlInlineError';
+import EmptySection from '@components/UI/EmptySection';
 
 export const CHATS_MENU_PAGE_SIZE = 10;
 export const CHATS_MENU_ORDER_BY = ChatOrderByInput.CreatedAtAsc;
@@ -117,14 +118,18 @@ const ChatsMenu: React.FC = () => {
             return <ChatSectionLoading />;
 
           if (!loading && data && data.chatsConnection.edges.length === 0)
-            return <ChatsListFilteredEmpty filterQuery={filterQuery} />;
+            return (
+              <EmptySection
+                style={{ margin: 'auto' }}
+                title="No chats found"
+                description={`Could not find chats named: ${filterQuery}`}
+              />
+            );
 
           return (
-            <React.Fragment>
-              <ChatsList
-                chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
-              />
-            </React.Fragment>
+            <ChatsList
+              chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
+            />
           );
         }}
       </PaginateChatsQueryComponent>

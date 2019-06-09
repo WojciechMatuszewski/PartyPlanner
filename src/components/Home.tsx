@@ -7,7 +7,7 @@ import { CallToActionButtonStyles } from '@shared/styles';
 
 const HomeHeroImage = styled.div`
   width: 100%;
-  background: url('../../static/people-banner.svg') no-repeat bottom;
+  background: url('/static/people-banner.svg') no-repeat bottom;
   background-size: cover;
   background-size: 100%;
   position: relative;

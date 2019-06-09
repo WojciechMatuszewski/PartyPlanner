@@ -7,8 +7,6 @@ import {
   HasPartiesQueryVariables
 } from '@generated/graphql';
 import { HAS_PARTIES_QUERY } from '@graphql/queries';
-import GraphqlException from '@components/GraphqlException';
-import styled from '@emotion/styled';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
@@ -17,18 +15,14 @@ import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/T
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import SpotifyGuard from '@guards/SpotifyGuard';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import PageException from '@components/UI/PageException';
 
 type RouterQuery = { id?: string };
 interface InjectedProps {
   isInParty: boolean;
   partyId: string;
 }
-
-const ContentWrapper = styled.div`
-  min-height: calc(100vh - 66px);
-  width: 100%;
-  flex: 1;
-`;
 
 const PartyMusicTopPage: NextFunctionComponent<
   InjectedProps,
@@ -39,13 +33,20 @@ const PartyMusicTopPage: NextFunctionComponent<
 
   if (!props.isInParty)
     return (
-      <GraphqlException desc="Party either does not exist or you are not invited" />
+      <PageException
+        desc="Party either does not exist or you are not invited"
+        backText="Back to dashboard"
+        redirectPath="/user/dashboard"
+      />
     );
 
   return (
     <React.Fragment>
       <PartyMenu routerPath={'/party-music-top'} partyId={props.partyId} />
-      <ContentWrapper>
+      <div
+        css={[FlexWrapperFullHeightMinusHeaderStyles]}
+        style={{ flexDirection: 'column' }}
+      >
         <SpotifyGuard>
           <BigMusicPlayerProvider>
             <TrackInfoModalProvider>
@@ -60,7 +61,7 @@ const PartyMusicTopPage: NextFunctionComponent<
             </TrackInfoModalProvider>
           </BigMusicPlayerProvider>
         </SpotifyGuard>
-      </ContentWrapper>
+      </div>
     </React.Fragment>
   );
 

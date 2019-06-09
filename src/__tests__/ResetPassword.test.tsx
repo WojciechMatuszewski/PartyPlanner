@@ -44,8 +44,8 @@ const MOCKED_ERROR_MUTATION: MockedResponse = {
 describe('ResetPassword', () => {
   it('Handles a case when there is no token in url', () => {
     const { getByTestId } = render(<ResetPassword hasTokenQuery={false} />);
-    expect(getByTestId('graphqlException')).not.toBeNull();
-    expect(getByTestId('graphqlException').textContent).toContain(
+    expect(getByTestId('page-exception')).not.toBeNull();
+    expect(getByTestId('page-exception').textContent).toContain(
       'Page address is malformed'
     );
   });

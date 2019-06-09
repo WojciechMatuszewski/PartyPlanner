@@ -2,7 +2,6 @@ import React from 'react';
 import { NextFunctionComponent, NextContext } from 'next';
 import { ApolloClient } from 'apollo-boost';
 import { withRouter, WithRouterProps } from 'next/router';
-import GraphqlException from '@components/GraphqlException';
 import { PoseGroup } from 'react-pose';
 import {
   AuthWrapper,
@@ -15,6 +14,7 @@ import { Formik } from 'formik';
 import { ResetPasswordComponent } from '@generated/graphql';
 import { Modal, Typography } from 'antd';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
+import PageException from '@components/UI/PageException';
 
 interface Props {
   hasTokenQuery: boolean;
@@ -49,13 +49,7 @@ const ResetPassword: NextFunctionComponent<
   NextContext & { apolloClient: ApolloClient<any> }
 > = ({ hasTokenQuery, router }) => {
   if (!hasTokenQuery)
-    return (
-      <GraphqlException
-        title="Hey!"
-        desc="Page address is malformed"
-        backText="Back to home"
-      />
-    );
+    return <PageException title="Hey!" desc="Page address is malformed" />;
 
   return (
     <PoseGroup>

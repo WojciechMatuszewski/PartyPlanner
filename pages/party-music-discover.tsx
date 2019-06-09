@@ -7,9 +7,7 @@ import {
   HasPartiesQueryQuery,
   HasPartiesQueryVariables
 } from '@generated/graphql';
-import GraphqlException from '@components/GraphqlException';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import styled from '@emotion/styled';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import BigMusicPlayerStickedToBottom, {
@@ -17,13 +15,9 @@ import BigMusicPlayerStickedToBottom, {
 } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import SpotifyGuard from '@guards/SpotifyGuard';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import PartyMusicDiscover from '@components/Party/Music/Discover/Discover';
-
-const ContentWrapper = styled.div`
-  min-height: calc(100vh - 66px);
-  width: 100%;
-  flex: 1;
-`;
+import PageException from '@components/UI/PageException';
 
 interface InjectedProps {
   isInParty: boolean;
@@ -41,13 +35,20 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
 
   if (!isInParty)
     return (
-      <GraphqlException desc="Party either does not exist or you are not invited" />
+      <PageException
+        desc="Party either does not exist or you are not invited"
+        backText="Back to dashboard"
+        redirectPath="/user/dashboard"
+      />
     );
 
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-discover" />
-      <ContentWrapper>
+      <div
+        css={[FlexWrapperFullHeightMinusHeaderStyles]}
+        style={{ flexDirection: 'column' }}
+      >
         <SpotifyGuard>
           <BigMusicPlayerProvider>
             <TrackInfoModalProvider>
@@ -61,7 +62,7 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
             </TrackInfoModalProvider>
           </BigMusicPlayerProvider>
         </SpotifyGuard>
-      </ContentWrapper>
+      </div>
     </React.Fragment>
   );
 

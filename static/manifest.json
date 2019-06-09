@@ -1,0 +1,9 @@
+{
+  "name": "PartyPlanner",
+  "short_name": "PP",
+  "description": "Organize Parties",
+  "lang": "en",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1890ff"
+}

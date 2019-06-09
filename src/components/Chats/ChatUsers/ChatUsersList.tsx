@@ -23,13 +23,9 @@ const ChatUsersList: React.FC<Props> = ({ chatUsers }) => {
         title="No other users"
         description="Invite others to populate this area!"
         emotionCSS={css`
+          margin: auto;
+          height: 100%;
           ${FlexBoxFullCenteredStyles};
-          margin-top: auto;
-          margin-bottom: auto;
-          img {
-            max-width: 100%;
-            margin-bottom: 12px;
-          }
         `}
       />
     );

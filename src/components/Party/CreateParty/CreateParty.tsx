@@ -18,6 +18,7 @@ import { curry } from 'ramda';
 import redirect from '@apolloSetup/redirect';
 import uuid from 'uuid/v4';
 import { partiesListVariablesConstructorFactory } from '../PartiesList/PartiesList';
+
 export const CREATE_PARTY_MOBILE_WIDTH = '992px';
 
 const CreatePartyFormWrapper = styled.div`

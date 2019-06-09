@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { Typography } from 'antd';
-import { UISectionWrapper } from '@shared/styles';
 
 import { SerializedStyles } from '@emotion/css';
+import { UISectionWrapper } from './styles';
 
 const defaultProps = Object.freeze({
   image: '/static/error.svg',

@@ -3,17 +3,16 @@ import {
   withApolloAuth,
   WithApolloAuthInjectedProps
 } from '@apolloSetup/withApolloAuth';
-
 import { BackTop, Button } from 'antd';
 import { HasPartiesQueryComponent } from '@generated/graphql';
 import { NextFunctionComponent } from 'next';
-
 import GraphqlLoading from '@components/GraphqlLoading';
-import NoData from '@components/NoData';
 import { withRouter, WithRouterProps } from 'next/router';
-import GraphqlException from '@components/GraphqlException';
+
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartiesList from '@components/Party/PartiesList/PartiesList';
+import EmptyPage from '@components/UI/EmptyPage';
+import PageException from '@components/UI/PageException';
 
 const UserParties: NextFunctionComponent<
   WithApolloAuthInjectedProps & WithRouterProps
@@ -23,10 +22,13 @@ const UserParties: NextFunctionComponent<
       {({ loading, data, error, refetch }) => {
         if (error)
           return (
-            <GraphqlException
-              style={{ height: 'calc(100vh - 66px)' }}
+            <PageException
+              desc="Could not fetch the data"
               actions={
-                <Button onClick={async () => await handleRefetch(refetch)}>
+                <Button
+                  loading={loading}
+                  onClick={async () => await handleRefetch(refetch)}
+                >
                   Try again
                 </Button>
               }
@@ -44,11 +46,12 @@ const UserParties: NextFunctionComponent<
 
         if (!data.hasParties)
           return (
-            <NoData
-              style={{ height: 'auto' }}
+            <EmptyPage
               message="You currently do not have any parties"
               action={
                 <Button
+                  icon="plus"
+                  size="large"
                   type="primary"
                   onClick={() =>
                     router && router.push('/party-create', '/party/create')

@@ -1,5 +1,4 @@
 import css from '@emotion/css';
-import styled from '@emotion/styled';
 
 export const NotWrappingTextStyles = css`
   max-width: 100%;
@@ -34,34 +33,6 @@ export const FlexBoxFullCenteredStyles = css`
   justify-content: center;
 `;
 
-export const WhiteSpotifyButtonStyles = css`
-  &:hover,
-  &:focus,
-  &:active {
-    color: rgba(0, 0, 0, 0.65);
-    border-color: white;
-  }
-`;
-
-export const GreenSpotifyButtonStyles = css`
-  background: #1db954;
-  border-color: #1db954;
-  color: white;
-  &:hover,
-  &:focus,
-  &:active {
-    background: #1db954;
-    color: white;
-  }
-  &:disabled,
-  &:disabled:hover {
-    background: #1db954;
-    .anticon {
-      color: rgba(0, 0, 0, 0.25);
-    }
-  }
-`;
-
 export const TransparentButtonStyles = css`
   background: transparent;
   border: 0;
@@ -79,18 +50,9 @@ export const FlexBoxHorizontallyCenteredStyles = css`
   justify-content: center;
 `;
 
-export const UISectionWrapper = styled.div`
+export const FlexWrapperFullHeightMinusHeaderStyles = css`
+  min-height: calc(100vh - 66px);
+  width: 100%;
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  padding: 12px;
-  img {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 12px;
-    display: block;
-    width: 100%;
-  }
-  h4 {
-    margin-bottom: 0;
-  }
 `;

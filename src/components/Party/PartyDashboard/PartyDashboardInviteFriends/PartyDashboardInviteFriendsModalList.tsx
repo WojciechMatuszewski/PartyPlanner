@@ -2,7 +2,7 @@ import React from 'react';
 import { PaginateUsersInviteToPartyQueryQuery, User } from '@generated/graphql';
 import styled from '@emotion/styled';
 import { List, Button, Tag } from 'antd';
-import NoData from '@components/NoData';
+import NoData from '@components/UI/EmptyPage';
 import css from '@emotion/css';
 
 import { PartyDashboardContext } from '@pages/party-dashboard';

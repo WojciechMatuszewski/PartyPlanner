@@ -102,8 +102,8 @@ describe('PartiesList', () => {
       </ApolloProvider>
     );
     await wait(() => expect(queryByTestId('loadMoreSpinner')).toBeNull);
-    expect(getByTestId('graphqlException')).toBeDefined();
-    fireEvent.click(getByTestId('graphqlException').querySelector(
+    expect(getByTestId('page-exception')).toBeDefined();
+    fireEvent.click(getByTestId('page-exception').querySelector(
       'button'
     ) as HTMLButtonElement);
     expect(graphqlUtils.handleRefetch).toHaveBeenCalled();

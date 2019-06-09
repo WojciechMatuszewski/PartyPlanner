@@ -20,9 +20,9 @@ import PartiesListFilterChips from './PartiesListFilterChips';
 import PartiesListCardGrid from './PartiesListCardGrid';
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListNoResults from './PartiesListNoResults';
-import GraphqlException from '@components/GraphqlException';
 import { Button, message } from 'antd';
 import { handleRefetch } from '@shared/graphqlUtils';
+import PageException from '@components/UI/PageException';
 
 const NUM_OF_RESULTS_PER_PAGE = 10;
 
@@ -148,7 +148,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
 
   if (error)
     return (
-      <GraphqlException
+      <PageException
+        desc="Could not fetch the data"
         actions={
           <Button
             type="primary"
