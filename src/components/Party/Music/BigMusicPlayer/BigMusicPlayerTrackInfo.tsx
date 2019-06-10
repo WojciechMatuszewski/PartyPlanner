@@ -13,12 +13,13 @@ import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 const TrackInfoWrapper = styled.div`
   height: 64px;
   display: flex;
-  max-width: 250px;
-  .track-info-text {
+  min-width: 1px;
+  s .track-info-text {
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
     text-align: left;
     flex-direction: column;
+    width: 100%;
     h4 {
       margin: 0;
     }

@@ -27,9 +27,9 @@ const UserAvatarWrapper = styled.div`
       margin-left: 6px;
     }
   }
-  @media screen and (max-width: 992px) {
+  /* @media screen and (max-width: 992px) {
     margin-bottom: 12px;
-  }
+  } */
 `;
 
 const BasicInfoList = styled.ul`
@@ -61,7 +61,7 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
 
   return (
     <Row gutter={24} className="dashboard-content-item">
-      <Col sm={24} lg={16}>
+      <Col lg={16}>
         <Typography.Title level={3}>Description</Typography.Title>
         <Typography.Paragraph
           ellipsis={{ rows: 4, expandable: true }}
@@ -78,7 +78,7 @@ const PartyDashboardBasicInfo: React.FC<Props> = props => {
           </div>
         </UserAvatarWrapper>
       </Col>
-      <Col sm={24} lg={8} style={{ paddingLeft: 24, paddingRight: 24 }}>
+      <Col lg={8}>
         <Typography.Title level={3}>Date and time</Typography.Title>
         <BasicInfoList>
           <li>

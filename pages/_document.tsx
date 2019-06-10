@@ -37,7 +37,10 @@ class MyDocument extends Document {
             name="apple-mobile-web-app-status-bar-style"
             content="black-translucent"
           />
-          <meta name="msapplication-starturl" content="/" />
+          <meta
+            name="msapplication-starturl"
+            content="https://party-planner.wmmatuszewski.now.sh/"
+          />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"

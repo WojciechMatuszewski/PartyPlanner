@@ -40,6 +40,7 @@ const BigMusicPlayerInnerWrapper = styled.div`
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
+  min-width: 400px;
 
   @media screen and (max-width: ${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px) {
     padding: 0;
@@ -48,6 +49,7 @@ const BigMusicPlayerInnerWrapper = styled.div`
     max-width: 100%;
     height: 100%;
     justify-content: center;
+    min-width: 100px;
   }
 `;
 
