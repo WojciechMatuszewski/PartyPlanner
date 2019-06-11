@@ -1,5 +1,3 @@
-const ALLOWED_WINDOW_ORIGIN = 'http://localhost:3000';
-
 interface WindowArea {
   width: number;
   height: number;
@@ -53,7 +51,7 @@ export const socialLoginPopup = <ReturnDataType>(
         if (!authWindow) {
           return reject('Window not present');
         }
-        if (event.origin !== ALLOWED_WINDOW_ORIGIN) {
+        if (event.origin !== process.env.NEXT_STATIC_FRONTEND_URL) {
           authWindow.close();
           return reject('Origin not allowed!');
         }

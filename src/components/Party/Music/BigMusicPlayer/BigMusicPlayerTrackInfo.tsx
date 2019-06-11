@@ -14,12 +14,14 @@ const TrackInfoWrapper = styled.div`
   height: 64px;
   display: flex;
   min-width: 1px;
-  s .track-info-text {
+
+  .track-info-text {
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
     text-align: left;
     flex-direction: column;
     width: 100%;
+    min-width: 1px;
     h4 {
       margin: 0;
     }
