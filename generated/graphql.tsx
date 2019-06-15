@@ -1548,11 +1548,6 @@ export type ImageWhereUniqueInput = {
   id?: Maybe<Scalars['ID']>;
 };
 
-export type JoinPartyWhereInput = {
-  userId: Scalars['String'];
-  partyId: Scalars['String'];
-};
-
 export type Location = Node & {
   __typename?: 'Location';
   id: Scalars['ID'];
@@ -2209,13 +2204,13 @@ export type Mutation = {
   deleteManyTracks: BatchPayload;
   deleteManyUsers: BatchPayload;
   deleteManyParties: BatchPayload;
+  joinParty?: Maybe<Scalars['Boolean']>;
   signup: AuthPayload;
   login: AuthPayload;
   updateMe: User;
   inviteToFriends: User;
   requestReset?: Maybe<SuccessMessage>;
   resetPassword?: Maybe<AuthPayload>;
-  joinParty?: Maybe<Scalars['Boolean']>;
 };
 
 export type MutationCreateMessageArgs = {
@@ -2544,6 +2539,10 @@ export type MutationDeleteManyPartiesArgs = {
   where?: Maybe<PartyWhereInput>;
 };
 
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID'];
+};
+
 export type MutationSignupArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -2573,10 +2572,6 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'];
   password: Scalars['String'];
   confirmPassword: Scalars['String'];
-};
-
-export type MutationJoinPartyArgs = {
-  where: JoinPartyWhereInput;
 };
 
 export enum MutationType {
@@ -3976,11 +3971,11 @@ export type Query = {
   /** Fetches an object given its ID */
   node?: Maybe<Node>;
   hasChats: Scalars['Boolean'];
+  hasParties: Scalars['Boolean'];
+  canJoinParty?: Maybe<Scalars['Boolean']>;
   me?: Maybe<User>;
   getUsers: Array<Maybe<User>>;
   paginateUsers: UserConnection;
-  hasParties: Scalars['Boolean'];
-  canJoinParty?: Maybe<Scalars['Boolean']>;
   temp__?: Maybe<Scalars['Boolean']>;
 };
 
@@ -4280,6 +4275,16 @@ export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>;
 };
 
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>;
+};
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'];
+  inviteSecret: Scalars['String'];
+  partyId: Scalars['String'];
+};
+
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>;
   orderBy?: Maybe<UserOrderByInput>;
@@ -4298,16 +4303,6 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
-};
-
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>;
-};
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'];
-  inviteSecret: Scalars['String'];
-  partyId: Scalars['String'];
 };
 
 export enum SocialMediaType {
@@ -6055,7 +6050,7 @@ export type DeletePartyInvitationMutationMutation = {
 };
 
 export type JoinPartyMutationMutationVariables = {
-  where: JoinPartyWhereInput;
+  partyId: Scalars['ID'];
 };
 
 export type JoinPartyMutationMutation = { __typename?: 'Mutation' } & Pick<
@@ -7389,8 +7384,8 @@ export function useDeletePartyInvitationMutationMutation(
   >(DeletePartyInvitationMutationDocument, baseOptions);
 }
 export const JoinPartyMutationDocument = gql`
-  mutation JoinPartyMutation($where: JoinPartyWhereInput!) {
-    joinParty(where: $where)
+  mutation JoinPartyMutation($partyId: ID!) {
+    joinParty(partyId: $partyId)
   }
 `;
 export type JoinPartyMutationMutationFn = ReactApollo.MutationFn<

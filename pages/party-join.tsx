@@ -2,7 +2,9 @@ import React from 'react';
 import { NextFunctionComponent } from 'next';
 import {
   JoinPartyMutationComponent,
-  JoinPartyFindComponent
+  JoinPartyFindComponent,
+  PaginatePartiesQueryDocument,
+  PaginateUsersQueryDocument
 } from '@generated/graphql';
 import { NextContextWithApollo } from './_app';
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
@@ -97,10 +99,7 @@ const JoinParty: NextFunctionComponent<
         return (
           <JoinPartyMutationComponent
             variables={{
-              where: {
-                partyId: party.id,
-                userId: props.userId
-              }
+              partyId: party.id
             }}
           >
             {(joinParty, { loading, error }) => (
@@ -111,7 +110,16 @@ const JoinParty: NextFunctionComponent<
                 membersCount={data.membersCount.aggregate.count}
                 onJoinClick={async () => {
                   try {
-                    await joinParty();
+                    await joinParty({
+                      refetchQueries: [
+                        {
+                          query: PaginatePartiesQueryDocument
+                        },
+                        {
+                          query: PaginateUsersQueryDocument
+                        }
+                      ]
+                    });
                     props.router &&
                       props.router.push(
                         `/party-dashboard?id=${party.id}`,

@@ -36,7 +36,6 @@ const ChatsMenu: React.FC = () => {
   );
   const [filterQuery, setFilterQuery] = React.useState<string>('');
   const shouldDisplayDrawer = useMedia('(max-width: 992px)');
-
   const getQueryVariables = React.useCallback((): PaginateChatsQueryVariables => {
     return {
       where: {

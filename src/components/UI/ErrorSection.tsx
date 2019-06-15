@@ -14,7 +14,7 @@ const defaultProps = Object.freeze({
 type Props = typeof defaultProps & {
   emotionCSS?: SerializedStyles;
   style?: React.CSSProperties;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 function ErrorSection(props: Props) {
