@@ -47,8 +47,8 @@ const PartyMusicTopPage: NextFunctionComponent<
         <SpotifyGuard>
           <BigMusicPlayerProvider>
             <TrackInfoModalProvider>
-              <UserTopTracks visible={true} />
-              <UserTopArtists onResourceLoaded={() => {}} />
+              <UserTopTracks />
+              <UserTopArtists />
               <BigMusicPlayerStickedToBottom
                 onTrackChanged={handleTrackChanged}
                 onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}

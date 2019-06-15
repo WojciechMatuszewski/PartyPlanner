@@ -52,13 +52,23 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
     }
 
     let currentlySelectedChatId = getCurrentChatFromUrl();
+
     if (!currentlySelectedChatId) return;
     setState(prevState => ({ ...prevState, currentlySelectedChatId }));
     routeChangeStreamRef.current.next(currentlySelectedChatId);
   }, [router!.query]);
 
   return (
-    <HasChatsQueryComponent notifyOnNetworkStatusChange={true}>
+    <HasChatsQueryComponent
+      notifyOnNetworkStatusChange={true}
+      variables={{
+        where: {
+          id: state.currentlySelectedChatId
+            ? state.currentlySelectedChatId
+            : undefined
+        }
+      }}
+    >
       {({ data, loading, error, refetch }) => {
         if (error)
           return (
@@ -83,23 +93,30 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
             />
           );
 
-        if (!data.hasChats)
-          return (
-            <EmptyPage
-              message="You currently do not have any chats"
-              action={
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick={() =>
-                    router && router.push('/party-create', '/party/create')
-                  }
-                >
-                  Create new party
-                </Button>
-              }
-            />
-          );
+        if (!data.hasChats) {
+          if (state.currentlySelectedChatId != null) {
+            return (
+              <PageException desc="That chat does not exist or you are not a member of it" />
+            );
+          } else {
+            return (
+              <EmptyPage
+                message="You currently do not have any chats"
+                action={
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() =>
+                      router && router.push('/party-create', '/party/create')
+                    }
+                  >
+                    Create new party
+                  </Button>
+                }
+              />
+            );
+          }
+        }
 
         return (
           <Layout css={[FlexWrapperFullHeightMinusHeaderStyles]}>

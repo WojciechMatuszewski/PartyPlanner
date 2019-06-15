@@ -221,7 +221,7 @@ export default function PartyMusicDiscover(props: Props) {
     if (!state.lastFetchedPage) return;
     dispatch(actions.setLoading({ loadingMore: true }));
     try {
-      const page = await state.lastFetchedPage;
+      const page = await state.lastFetchedPage.getNextPage();
       dispatch(actions.appendResults({ page }));
     } catch (e) {
       handleError();

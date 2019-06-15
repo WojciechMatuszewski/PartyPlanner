@@ -10,7 +10,12 @@ import {
   useCreatePartyInvitation
 } from '@generated/graphql';
 import { MutationUpdaterFn } from 'apollo-boost';
-import { PARTIES_QUERY, PAGINATE_PARTIES_QUERY } from '@graphql/queries';
+import {
+  PARTIES_QUERY,
+  PAGINATE_PARTIES_QUERY,
+  HAS_CHATS_QUERY,
+  HAS_PARTIES_QUERY
+} from '@graphql/queries';
 import { getPartiesDateVariables } from '@shared/graphqlUtils';
 import CreatePartyForm, { CreatePartyFormValues } from './CreatePartyForm';
 import { MutationFn } from 'react-apollo';
@@ -109,20 +114,17 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         variables: getCreatePartyMutationVariables(formValues),
         refetchQueries: [
           {
-            query: PaginateChatsQueryDocument,
-            variables: {
-              where: {
-                members_some: { id: userId },
-                OR: [
-                  { party: { isPublic: true } },
-                  { party: { isPublic: false } }
-                ]
-              }
-            }
+            query: PaginateChatsQueryDocument
           },
           {
             query: PAGINATE_PARTIES_QUERY,
             variables: partiesListVariablesConstructorFactory(userId)('')
+          },
+          {
+            query: HAS_CHATS_QUERY
+          },
+          {
+            query: HAS_PARTIES_QUERY
           }
         ]
       });

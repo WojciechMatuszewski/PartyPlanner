@@ -33,7 +33,7 @@ interface Props {
 
 const PartyDashboardTop: React.FC<Props> = ({ party }) => {
   const [startMonth, startDay] = moment(party.start)
-    .format('MMMM d')
+    .format('MMMM Do')
     .split(' ');
 
   return (
@@ -41,7 +41,6 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
       css={css`
         display: flex;
         border-bottom: 1px solid #e8e8e8;
-
         .img-wrapper {
           height: 300px;
           width: 60%;

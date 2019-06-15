@@ -29,6 +29,7 @@ function useSpotifyWebSdk() {
       LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN
     );
     if (!token || !refreshToken) return setShouldAskForANewToken(true);
+
     init({
       token,
       refreshToken,

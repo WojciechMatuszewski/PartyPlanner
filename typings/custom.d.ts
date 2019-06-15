@@ -5,6 +5,8 @@ declare module '*.svg' {
   export default content;
 }
 
+declare module 'can-autoplay';
+
 declare module 'hex-rgb';
 
 declare module 'rc-drawer';

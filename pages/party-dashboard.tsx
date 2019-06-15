@@ -179,7 +179,10 @@ const Party: NextFunctionComponent<
           <PartyDashboardCommuteButtons location={party.location} />
           <Row>
             <Col span={24}>
-              <PartyDashboardParticipants partyId={partyData.party!.id} />
+              <PartyDashboardParticipants
+                userId={userData.id}
+                partyId={partyData.party!.id}
+              />
             </Col>
           </Row>
         </PartyDashboardContentWrapper>

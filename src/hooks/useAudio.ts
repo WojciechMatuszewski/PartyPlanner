@@ -160,8 +160,9 @@ export function useAudio(
     if (hasReachedTheEndOfTrack()) {
       audioRef.current.currentTime = 0;
     }
-    audioRef.current.play();
-    setState(prevState => ({ ...prevState, playing: true }));
+    audioRef.current
+      .play()
+      .then(() => setState(prevState => ({ ...prevState, playing: true })));
   }
 
   function callIfNotDisabled(fnToCall: any) {

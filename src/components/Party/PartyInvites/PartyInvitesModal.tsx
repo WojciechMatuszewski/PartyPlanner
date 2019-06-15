@@ -203,7 +203,10 @@ const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
   function handleAcceptSuccess() {
     setLoading(false);
     props.onCancel();
-    props.router!.push(`/party?id=${props.invitation!.node.party.id}`);
+    props.router!.push(
+      `/party-dashboard?id=${props.invitation!.node.party.id}`,
+      `/party/${props.invitation!.node.party.id}`
+    );
   }
 };
 

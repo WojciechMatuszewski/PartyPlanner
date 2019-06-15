@@ -49,7 +49,6 @@ export const UserTopTitleWrapper = styled(
 
 interface Props {
   headingText: string;
-  onMoreClick: () => void;
 }
 const UserTopHeading: React.FC<Props> = props => {
   const [isFixed, setIsFixed] = React.useState<boolean>(false);
