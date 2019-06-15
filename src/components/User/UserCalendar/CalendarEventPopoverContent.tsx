@@ -91,7 +91,7 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
   return (
     <CalendarEventPopoverWrapper isInModal={props.isInModal}>
       <CalendarEventPopoverToolbar>
-        {props.party.author.id === userId && (
+        {props.party.author.id == userId && (
           <React.Fragment>
             <Icon type="edit" />
             <Icon type="delete" />

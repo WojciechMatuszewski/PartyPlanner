@@ -46,13 +46,18 @@ interface Props {
 const CreateParty: React.FC<Props> = ({ userId }) => {
   const createPartyInvitation = useCreatePartyInvitation();
 
-  function onCreatePartySuccess() {
+  function onCreatePartySuccess(partyId: string) {
     Modal.success({
       title: 'Party created!',
       content:
         'Party has been successfully created and your friends has been notified.',
-      onOk: () => redirect({} as any, '/user-calendar', '/user/calendar'),
-      okText: 'Go back to calendar'
+      onOk: () =>
+        redirect(
+          {} as any,
+          `/party-dashboard?id=${partyId}`,
+          `/party/${partyId}`
+        ),
+      okText: 'Go to party dashboard'
     });
   }
 
@@ -122,15 +127,16 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         ]
       });
 
-      if (!createPartyResult) throw Error('something went wrong');
+      if (!createPartyResult || !createPartyResult.data)
+        throw Error('something went wrong');
 
       await Promise.all(
         createPartyInvites(
-          createPartyResult.data!.createParty.id,
+          createPartyResult.data.createParty.id,
           formValues.invitedFriends
         )
       );
-      onCreatePartySuccess();
+      onCreatePartySuccess(createPartyResult.data.createParty.id);
     } catch (e) {
       onCreatePartyError();
     }

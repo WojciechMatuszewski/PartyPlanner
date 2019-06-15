@@ -6,7 +6,6 @@ import BigCalendar, { View } from 'react-big-calendar';
 import CalendarToolbar from './CalendarToolbar';
 import CalendarEventWrapper from './CalendarEventWrapper';
 import useMedia from '@hooks/useMedia';
-import CalendarCreateEventModal from './CalendarCreateEventModal';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { usePartiesQuery } from '@generated/graphql';
@@ -87,6 +86,7 @@ const UserCalendar: React.FC<Props> = props => {
       ? 'day'
       : 'month'
   );
+
   const [contextState] = React.useState<CalendarContext>({
     onMonthEventClicked: onMonthEventClickHandler,
     controlled: props.controlled,
@@ -179,7 +179,7 @@ const UserCalendar: React.FC<Props> = props => {
             box-sizing: content-box;
           }
         `}
-        selectable={!props.controlled ? !isOnMobile : props.selectable}
+        selectable={false}
         localizer={localizer}
         onNavigate={handleDateChange}
         events={parsedParties}
@@ -188,14 +188,6 @@ const UserCalendar: React.FC<Props> = props => {
         view={calendarView}
         step={15}
         timeslots={3}
-        onSelectSlot={({ start, end }) => {
-          // this is a hack!!!!
-          if (!canShowCreateModal.current) {
-            canShowCreateModal.current = true;
-            return;
-          }
-          CalendarCreateEventModal(start, end);
-        }}
         components={{
           toolbar: CalendarToolbar,
           eventWrapper: (eventWrapperProps: any) => (
