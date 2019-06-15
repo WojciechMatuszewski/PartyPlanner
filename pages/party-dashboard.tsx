@@ -37,7 +37,7 @@ const PartyDashboardMap = dynamic(
 
 const MOBILE_BREAKPOINT = '992px';
 
-export const PartyMainContentWrapper = styled.div`
+const PartyDashboardContentWrapper = styled.div`
   margin: 24px auto 24px auto;
   display: flex;
   flex-direction: column;
@@ -47,6 +47,7 @@ export const PartyMainContentWrapper = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background: white;
   z-index: 1;
+  flex: 1;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   overflow: hidden;
@@ -152,7 +153,7 @@ const Party: NextFunctionComponent<
       </Head>
       <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
       <PartyDashboardContext.Provider value={contextValue}>
-        <PartyMainContentWrapper>
+        <PartyDashboardContentWrapper>
           <PartyDashboardTop party={party} />
           <PartyDashboardTopMenu
             partyId={party.id}
@@ -181,7 +182,7 @@ const Party: NextFunctionComponent<
               <PartyDashboardParticipants partyId={partyData.party!.id} />
             </Col>
           </Row>
-        </PartyMainContentWrapper>
+        </PartyDashboardContentWrapper>
       </PartyDashboardContext.Provider>
     </React.Fragment>
   );

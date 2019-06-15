@@ -15,8 +15,8 @@ import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/T
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import SpotifyGuard from '@guards/SpotifyGuard';
-import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import PageException from '@components/UI/PageException';
+import { PartyContentWrapper } from '@components/Party/styles';
 
 type RouterQuery = { id?: string };
 interface InjectedProps {
@@ -43,10 +43,7 @@ const PartyMusicTopPage: NextFunctionComponent<
   return (
     <React.Fragment>
       <PartyMenu routerPath={'/party-music-top'} partyId={props.partyId} />
-      <div
-        css={[FlexWrapperFullHeightMinusHeaderStyles]}
-        style={{ flexDirection: 'column' }}
-      >
+      <PartyContentWrapper>
         <SpotifyGuard>
           <BigMusicPlayerProvider>
             <TrackInfoModalProvider>
@@ -61,7 +58,7 @@ const PartyMusicTopPage: NextFunctionComponent<
             </TrackInfoModalProvider>
           </BigMusicPlayerProvider>
         </SpotifyGuard>
-      </div>
+      </PartyContentWrapper>
     </React.Fragment>
   );
 

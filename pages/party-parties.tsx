@@ -51,7 +51,6 @@ const UserParties: NextFunctionComponent<
               action={
                 <Button
                   icon="plus"
-                  size="large"
                   type="primary"
                   onClick={() =>
                     router && router.push('/party-create', '/party/create')

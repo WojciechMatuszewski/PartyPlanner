@@ -90,7 +90,6 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
               action={
                 <Button
                   icon="plus"
-                  size="large"
                   type="primary"
                   onClick={() =>
                     router && router.push('/party-create', '/party/create')

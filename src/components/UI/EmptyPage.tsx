@@ -6,7 +6,6 @@ import { SerializedStyles } from '@emotion/css';
 import { UISectionWrapper } from './styles';
 
 const NoDataInnerWrapper = styled.div`
-  padding: 24px;
   margin: auto;
   img {
     max-width: 600px;

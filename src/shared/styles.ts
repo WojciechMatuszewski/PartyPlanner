@@ -53,6 +53,5 @@ export const FlexBoxHorizontallyCenteredStyles = css`
 export const FlexWrapperFullHeightMinusHeaderStyles = css`
   min-height: calc(100vh - 66px);
   width: 100%;
-  flex: 1;
   display: flex;
 `;

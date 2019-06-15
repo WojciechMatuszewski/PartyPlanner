@@ -15,9 +15,9 @@ import BigMusicPlayerStickedToBottom, {
 } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import SpotifyGuard from '@guards/SpotifyGuard';
-import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import PartyMusicDiscover from '@components/Party/Music/Discover/Discover';
 import PageException from '@components/UI/PageException';
+import { PartyContentWrapper } from '@components/Party/styles';
 
 interface InjectedProps {
   isInParty: boolean;
@@ -45,10 +45,7 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-discover" />
-      <div
-        css={[FlexWrapperFullHeightMinusHeaderStyles]}
-        style={{ flexDirection: 'column' }}
-      >
+      <PartyContentWrapper>
         <SpotifyGuard>
           <BigMusicPlayerProvider>
             <TrackInfoModalProvider>
@@ -62,7 +59,7 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
             </TrackInfoModalProvider>
           </BigMusicPlayerProvider>
         </SpotifyGuard>
-      </div>
+      </PartyContentWrapper>
     </React.Fragment>
   );
 
