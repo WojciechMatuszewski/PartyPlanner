@@ -21,6 +21,8 @@ import InviteFriend from './InviteFriend/InviteFriend';
 import useMedia from '@hooks/useMedia';
 import { CREATE_PARTY_MOBILE_WIDTH } from './CreateParty';
 
+const MAX_PARTY_DAYS = 20;
+
 const ShouldBePublicStyles = css`
   .ant-typography {
     margin-right: 24px;
@@ -136,6 +138,9 @@ const CreatePartyForm: React.FC<Props> = props => {
   const isBreakingTheGrid = useMedia(
     `(max-width:${CREATE_PARTY_MOBILE_WIDTH})`
   );
+
+  const [firstPickedDate, setFirstPickedDate] = React.useState<moment.Moment>();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -167,6 +172,8 @@ const CreatePartyForm: React.FC<Props> = props => {
                 <DatePicker.RangePicker
                   onChange={dates => setFieldValue('date', dates)}
                   name="date"
+                  disabledDate={shouldDateBeDisabled}
+                  onCalendarChange={handleDatePickerCalendarChange}
                   showTime={{ format: 'hh:mm', use12Hours: false }}
                   format="YYYY-MM-DD HH:mm"
                   style={{ width: '100%' }}
@@ -236,6 +243,19 @@ const CreatePartyForm: React.FC<Props> = props => {
       )}
     </Formik>
   );
+
+  function shouldDateBeDisabled(
+    dateToDecideTo: moment.Moment | undefined
+  ): boolean {
+    if (!dateToDecideTo || !firstPickedDate) return false;
+    return (
+      Math.abs(dateToDecideTo.diff(firstPickedDate, 'days')) > MAX_PARTY_DAYS
+    );
+  }
+
+  function handleDatePickerCalendarChange([firstDate]: RangePickerValue) {
+    setFirstPickedDate(firstDate);
+  }
 };
 
 export default CreatePartyForm;
