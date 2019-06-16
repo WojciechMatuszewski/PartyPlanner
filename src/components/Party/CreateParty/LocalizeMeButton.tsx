@@ -18,6 +18,7 @@ const LocalizeMeButton: React.FC<Props> = ({
   async function handleButtonClick() {
     setLoading(true);
     const { error, data } = await getUserAddress();
+
     if (error) {
       notification.error({
         message: 'An error occured',
