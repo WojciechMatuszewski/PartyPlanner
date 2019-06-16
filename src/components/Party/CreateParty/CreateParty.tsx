@@ -81,6 +81,7 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
 
     return {
       data: {
+        ...restOfFormFields,
         members: {
           connect: [{ id: userId }]
         },
@@ -98,8 +99,9 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         start: date[0],
         end: date[1],
         inviteSecret: uuid(),
-        normalizedTitle: restOfFormFields.title.toLowerCase(),
-        ...restOfFormFields
+        normalizedTitle: restOfFormFields.title
+          .toLowerCase()
+          .replace(/[ -.,]/g, '')
       }
     };
   }

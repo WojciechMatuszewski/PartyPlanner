@@ -5,11 +5,13 @@ import uuid from 'uuid/v4';
 import { compose } from 'ramda';
 import { PartiesListFilterPayload } from '../PartiesListReducer';
 import { PartiesListFilterDrawerFilterProps } from './PartiesListFilterDrawer';
+import { PartiesListContext } from '../PartiesList';
 
 interface Props
   extends PartiesListFilterDrawerFilterProps<string[] | undefined> {}
 
 const PartiesListFilterDrawerPartyType: React.FC<Props> = props => {
+  const { userId } = React.useContext(PartiesListContext);
   return (
     <Checkbox.Group
       value={props.filterValue}
@@ -31,11 +33,14 @@ const PartiesListFilterDrawerPartyType: React.FC<Props> = props => {
     return {
       keyName: 'isPublic',
       filter: {
-        variablesName: 'OR',
+        variablesName: checkboxValue == 'also_public' ? 'OR' : 'AND',
         variablesType: 'where',
         variablesValue:
           checkboxValue === 'also_public'
-            ? [{ isPublic: false }, { isPublic: true }]
+            ? [
+                { members_some: { id: userId } },
+                { AND: [{ members_none: { id: userId } }, { isPublic: true }] }
+              ]
             : [{ isPublic: true }],
         displayText:
           checkboxValue === 'also_public'
@@ -55,10 +60,7 @@ const PartiesListFilterDrawerPartyType: React.FC<Props> = props => {
     )(values);
   }
 
-  function getCorrectCheckboxItemValue(
-    values: CheckboxValueType[]
-    // some weird typing issue here
-  ): any {
+  function getCorrectCheckboxItemValue(values: CheckboxValueType[]): any {
     return values.slice(-1)[0];
   }
 };

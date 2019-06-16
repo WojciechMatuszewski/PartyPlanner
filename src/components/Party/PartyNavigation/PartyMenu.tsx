@@ -98,15 +98,13 @@ function MenuContent(props: Props) {
               <a>Search on Spotify</a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/party-music-browse">
-            <Link
-              href={`/party-music-browse?id=${props.partyId}`}
-              as={`/party/${props.partyId}/music/browse`}
-            >
-              <a>Browse</a>
-            </Link>
-          </Menu.Item>
         </Menu.SubMenu>
+        <Menu.Item>
+          <a>
+            <Icon type="message" />
+            Party Chat
+          </a>
+        </Menu.Item>
       </Menu>
     </React.Fragment>
   );

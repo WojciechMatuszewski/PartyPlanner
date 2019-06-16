@@ -6,14 +6,14 @@ import {
   FlexBoxVerticallyCenteredStyles
 } from '@shared/styles';
 
-import { Typography, Icon } from 'antd';
+import { Typography, Icon, Button } from 'antd';
 import { Track } from 'spotify-web-sdk';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
   display: flex;
-  min-width: 140px;
+
   .track-info-text {
     padding-left: 12px;
     ${FlexBoxHorizontallyCenteredStyles};
@@ -25,17 +25,22 @@ const TrackInfoWrapper = styled.div`
       margin: 0;
     }
   }
+
   img {
     height: 64px;
     width: 64px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
+
   @media screen and (max-width: 800px) {
     align-items: center;
     height: auto;
     display: block;
     margin-right: auto;
-    margin-left: -6px;
+  }
+
+  @media screen and (min-width: 801px) {
+    min-width: 140px;
   }
 `;
 
@@ -63,9 +68,14 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   return (
     <TrackInfoWrapper>
       {props.isOnMobile ? (
-        <button css={[TransparentButtonStyles]} onClick={handleMoreInfoClick}>
+        <Button
+          size="small"
+          shape="circle"
+          css={[TransparentButtonStyles]}
+          onClick={handleMoreInfoClick}
+        >
           <Icon type="info" />
-        </button>
+        </Button>
       ) : (
         <React.Fragment>
           {props.track ? (
