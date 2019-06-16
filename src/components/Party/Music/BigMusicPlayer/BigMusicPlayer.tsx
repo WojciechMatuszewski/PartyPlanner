@@ -72,6 +72,7 @@ const ControlButtonsWrapper = styled.div`
       margin-right: 4px;
     }
     padding-bottom: 0;
+    padding-top: 4px;
     button {
       margin-top: 0;
     }

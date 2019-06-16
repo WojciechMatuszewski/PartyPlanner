@@ -36,17 +36,19 @@ const PartiesListWrapper = styled.div`
   flex-direction: column;
 `;
 
-function mapFiltersToWhereVariables(filters: PartiesListFilters) {
-  const newFilters = { ...filters };
-  if (!Object.keys(newFilters).includes('isPublic')) {
-    newFilters['isPublic'] = {
-      variablesName: 'OR',
-      variablesType: 'where',
-      variablesValue: { isPublic: false },
-      id: Math.random().toString()
-    } as any;
+function mapFiltersToWhereVariables(
+  filters: PartiesListFilters,
+  userId: string
+) {
+  const { ...restOfFilters } = filters;
+
+  let additionalFilters = {};
+
+  if (!restOfFilters.isPublic) {
+    additionalFilters = { members_some: { id: userId } };
   }
-  return Object.entries(newFilters).reduce(
+
+  const mappedFilters = Object.entries(restOfFilters).reduce(
     (acc: PartyWhereInput, [, filterObject]) => {
       if (filterObject.variablesType === 'where') {
         acc[filterObject.variablesName as keyof PartyWhereInput] = acc[
@@ -62,6 +64,7 @@ function mapFiltersToWhereVariables(filters: PartiesListFilters) {
     },
     {}
   );
+  return { ...mappedFilters, ...additionalFilters };
 }
 
 export function partiesListVariablesConstructorFactory(userId: string) {
@@ -72,11 +75,10 @@ export function partiesListVariablesConstructorFactory(userId: string) {
   ): PaginatePartiesQueryQueryVariables {
     return {
       where: {
-        members_some: {
-          id: userId
-        },
-        normalizedTitle_contains: searchValue.toLowerCase(),
-        ...mapFiltersToWhereVariables(filters)
+        normalizedTitle_contains: searchValue
+          .toLowerCase()
+          .replace(/[ -.,]/g, ''),
+        ...mapFiltersToWhereVariables(filters, userId)
       },
       orderBy: filters['orderBy']
         ? filters['orderBy'].variablesValue
@@ -89,9 +91,11 @@ export function partiesListVariablesConstructorFactory(userId: string) {
 export const PartiesListContext = React.createContext<{
   state: PartiesListState;
   dispatch: React.Dispatch<any>;
+  userId: string;
 }>({
   state: initialPartiesListState,
-  dispatch: () => {}
+  dispatch: () => {},
+  userId: ''
 });
 
 const PartiesList: React.FC<Props> = ({ userId }) => {
@@ -112,9 +116,11 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   const [contextState] = React.useState<{
     state: PartiesListState;
     dispatch: React.Dispatch<any>;
+    userId: string;
   }>({
     state,
-    dispatch
+    dispatch,
+    userId
   });
 
   const isDrawerOpen = React.useCallback(() => state.drawerVisible, [

@@ -12,16 +12,11 @@ const ControlsWrapper = styled.div`
     grid-template-columns: min-content min-content;
     margin-left: auto;
     grid-gap: 0;
-    button {
-    }
   }
 `;
 
 interface Props {
   isOnMobile: boolean;
-  // disabled: boolean;
-  // spotifyTrackId: string;
-  // spotifyExternalLink: string;
 }
 
 const BigMusicPlayerUserControls: React.FC<Props> = props => {
