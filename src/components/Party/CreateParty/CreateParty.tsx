@@ -101,7 +101,15 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         inviteSecret: uuid(),
         normalizedTitle: restOfFormFields.title
           .toLowerCase()
-          .replace(/[ -.,]/g, '')
+          .replace(/[ -.,]/g, ''),
+        playlist: {
+          create: {
+            name: uuid(),
+            user: {
+              connect: { id: userId }
+            }
+          }
+        }
       }
     };
   }

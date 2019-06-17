@@ -177,7 +177,7 @@ const Party: NextFunctionComponent<
             title={party.title}
           />
           <PartyDashboardCommuteButtons location={party.location} />
-          <Row>
+          <Row style={{ marginTop: 12 }}>
             <Col span={24}>
               <PartyDashboardParticipants
                 userId={userData.id}

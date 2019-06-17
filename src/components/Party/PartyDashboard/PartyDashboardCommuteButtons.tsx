@@ -14,7 +14,7 @@ const BASE_GOOGLE_NAV_LINK =
 const ButtonsWrapper = styled.div`
   display: flex;
   margin: 0 auto;
-  padding-bottom: 24px !important;
+
   button {
     margin: 0 5px;
   }

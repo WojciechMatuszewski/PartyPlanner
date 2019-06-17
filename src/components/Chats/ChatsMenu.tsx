@@ -41,7 +41,9 @@ const ChatsMenu: React.FC = () => {
       where: {
         party: {
           members_some: { id: currentlyLoggedUserData.id },
-          normalizedTitle_contains: filterQuery.toLocaleLowerCase()
+          normalizedTitle_contains: filterQuery
+            .toLocaleLowerCase()
+            .replace(/[ -.,]/g, '')
         }
       },
       first: CHATS_MENU_PAGE_SIZE,

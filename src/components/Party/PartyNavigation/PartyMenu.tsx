@@ -99,12 +99,6 @@ function MenuContent(props: Props) {
             </Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item>
-          <a>
-            <Icon type="message" />
-            Party Chat
-          </a>
-        </Menu.Item>
       </Menu>
     </React.Fragment>
   );
