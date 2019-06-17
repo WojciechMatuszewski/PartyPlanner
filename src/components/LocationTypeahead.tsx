@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { callAll } from '@shared/functionUtils';
 import useCancelableAxiosGet from '@hooks/useCancelableAxiosGet';
+import { always } from 'ramda';
 
 const SpinnerWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
@@ -54,6 +55,7 @@ type Props = {
   ) => void;
 } & typeof optionalProps;
 // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30695#issuecomment-440933780
+
 const LocationTypeahead = (props: Props) => {
   const { cancelableGet } = useCancelableAxiosGet(axiosMapBoxInstance, {
     autoCancel: true
@@ -71,6 +73,7 @@ const LocationTypeahead = (props: Props) => {
 
   React.useEffect(() => {
     if (props.results.length <= 0) return;
+
     setResults(props.results);
   }, [props.results]);
 
@@ -81,6 +84,8 @@ const LocationTypeahead = (props: Props) => {
       allowClear={true}
       showSearch={true}
       onSearch={handleOnSearch}
+      labelInValue={false}
+      filterOption={always(true)}
       value={value ? value : undefined}
       onChange={handleOnChange}
       dropdownMatchSelectWidth={true}
@@ -93,7 +98,7 @@ const LocationTypeahead = (props: Props) => {
             <Spin />
           </SpinnerWrapper>
         ) : state.results.length <= 0 ? (
-          <Empty />
+          <Empty description="No location found" />
         ) : null
       }
     >
@@ -120,7 +125,8 @@ const LocationTypeahead = (props: Props) => {
     callAll(typeaheadOnChange, props.onChange)(value);
   }
 
-  function handleOnSelect(value: string) {
+  function handleOnSelect(value: string | undefined) {
+    if (!value) return;
     props.onSelect(value, state.results);
   }
 

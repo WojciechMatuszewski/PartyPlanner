@@ -1,15 +1,15 @@
 import React from 'react';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import GraphqlException from '@components/GraphqlException';
 import { Button } from 'antd';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { compose } from 'react-apollo';
 import { withRouter, WithRouterProps } from 'next/router';
+import PageException from '@components/UI/PageException';
 
 function AuthSocialErrorPage(props: WithRouterProps) {
   return (
-    <GraphqlException
-      desc="Something went bad!"
+    <PageException
+      desc="Could not authorize you"
       actions={
         <Button type="primary" onClick={handleOnErrorLick}>
           {hasWindowOpener() ? 'Close this window' : 'Go back!'}

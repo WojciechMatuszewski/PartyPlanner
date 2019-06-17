@@ -12,7 +12,12 @@ import { Spin } from 'antd';
 import { Exception } from 'ant-design-pro';
 import { isObjectMissingKeys } from '@shared/functionUtils';
 import redirect from '@apolloSetup/redirect';
-
+import css from '@emotion/css';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+const SocialAuthWrapperStyles = css`
+  width: 100%;
+  height: 100vh;
+`;
 type RouterQueryProps = {
   provider: SocialMediaType;
   providerToken: string;
@@ -64,7 +69,11 @@ const AuthSocialReAuthSuccessPage: NextFunctionComponent<
       />
     );
   }
-  return <Spin />;
+  return (
+    <div css={[SocialAuthWrapperStyles, FlexBoxFullCenteredStyles]}>
+      <Spin />
+    </div>
+  );
 };
 
 AuthSocialReAuthSuccessPage.getInitialProps = async function(

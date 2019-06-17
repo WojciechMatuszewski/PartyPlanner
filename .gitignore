@@ -7,3 +7,4 @@ node_modules/
 coverage
 build
 out
+deploy.json

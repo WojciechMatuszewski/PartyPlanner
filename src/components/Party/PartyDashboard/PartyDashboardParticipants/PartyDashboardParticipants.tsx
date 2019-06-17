@@ -14,6 +14,7 @@ const PAGE_SIZE = 20;
 
 interface Props {
   partyId: string;
+  userId: string;
 }
 
 export const PARTY_DASHBOARD_PARTICIPANTS_QUERY = gql`
@@ -57,7 +58,6 @@ export const PARTY_DASHBOARD_PARTICIPANTS_QUERY = gql`
 
 export default function PartyDashboardParticipants(props: Props) {
   const [searchQuery, setSearchQuery] = React.useState<string>('');
-
   return (
     <React.Fragment>
       <PartyDashboardParticipantsTopMenu onSearch={setSearchQuery} />
@@ -71,7 +71,8 @@ export default function PartyDashboardParticipants(props: Props) {
             OR: [
               { firstName_contains: searchQuery.replace(/ /g, '') },
               { lastName_contains: searchQuery.replace(/ /g, '') }
-            ]
+            ],
+            id_not: props.userId
           },
           first: PAGE_SIZE
         }}

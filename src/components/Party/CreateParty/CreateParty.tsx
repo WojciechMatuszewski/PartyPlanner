@@ -10,7 +10,12 @@ import {
   useCreatePartyInvitation
 } from '@generated/graphql';
 import { MutationUpdaterFn } from 'apollo-boost';
-import { PARTIES_QUERY, PAGINATE_PARTIES_QUERY } from '@graphql/queries';
+import {
+  PARTIES_QUERY,
+  PAGINATE_PARTIES_QUERY,
+  HAS_CHATS_QUERY,
+  HAS_PARTIES_QUERY
+} from '@graphql/queries';
 import { getPartiesDateVariables } from '@shared/graphqlUtils';
 import CreatePartyForm, { CreatePartyFormValues } from './CreatePartyForm';
 import { MutationFn } from 'react-apollo';
@@ -18,6 +23,7 @@ import { curry } from 'ramda';
 import redirect from '@apolloSetup/redirect';
 import uuid from 'uuid/v4';
 import { partiesListVariablesConstructorFactory } from '../PartiesList/PartiesList';
+
 export const CREATE_PARTY_MOBILE_WIDTH = '992px';
 
 const CreatePartyFormWrapper = styled.div`
@@ -45,13 +51,18 @@ interface Props {
 const CreateParty: React.FC<Props> = ({ userId }) => {
   const createPartyInvitation = useCreatePartyInvitation();
 
-  function onCreatePartySuccess() {
+  function onCreatePartySuccess(partyId: string) {
     Modal.success({
       title: 'Party created!',
       content:
         'Party has been successfully created and your friends has been notified.',
-      onOk: () => redirect({} as any, '/user-calendar', '/user/calendar'),
-      okText: 'Go back to calendar'
+      onOk: () =>
+        redirect(
+          {} as any,
+          `/party-dashboard?id=${partyId}`,
+          `/party/${partyId}`
+        ),
+      okText: 'Go to party dashboard'
     });
   }
 
@@ -70,6 +81,7 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
 
     return {
       data: {
+        ...restOfFormFields,
         members: {
           connect: [{ id: userId }]
         },
@@ -87,8 +99,9 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         start: date[0],
         end: date[1],
         inviteSecret: uuid(),
-        normalizedTitle: restOfFormFields.title.toLowerCase(),
-        ...restOfFormFields
+        normalizedTitle: restOfFormFields.title
+          .toLowerCase()
+          .replace(/[ -.,]/g, '')
       }
     };
   }
@@ -103,33 +116,31 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         variables: getCreatePartyMutationVariables(formValues),
         refetchQueries: [
           {
-            query: PaginateChatsQueryDocument,
-            variables: {
-              where: {
-                members_some: { id: userId },
-                OR: [
-                  { party: { isPublic: true } },
-                  { party: { isPublic: false } }
-                ]
-              }
-            }
+            query: PaginateChatsQueryDocument
           },
           {
             query: PAGINATE_PARTIES_QUERY,
             variables: partiesListVariablesConstructorFactory(userId)('')
+          },
+          {
+            query: HAS_CHATS_QUERY
+          },
+          {
+            query: HAS_PARTIES_QUERY
           }
         ]
       });
 
-      if (!createPartyResult) throw Error('something went wrong');
+      if (!createPartyResult || !createPartyResult.data)
+        throw Error('something went wrong');
 
       await Promise.all(
         createPartyInvites(
-          createPartyResult.data!.createParty.id,
+          createPartyResult.data.createParty.id,
           formValues.invitedFriends
         )
       );
-      onCreatePartySuccess();
+      onCreatePartySuccess(createPartyResult.data.createParty.id);
     } catch (e) {
       onCreatePartyError();
     }

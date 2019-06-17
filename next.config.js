@@ -1,21 +1,42 @@
 require('dotenv').config();
+const path = require('path');
 const nextEnv = require('next-env');
 const withTypescript = require('@zeit/next-typescript');
 const withCSS = require('@zeit/next-css');
-const composePlugins = require('next-compose-plugins');
 const Dotenv = require('dotenv-webpack');
-const path = require('path');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withNextEnv = nextEnv();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
+const compose = require('lodash/fp/compose');
+
+const withOffline = moduleExists('next-offline')
+  ? require('next-offline')
+  : config => config;
 
 if (typeof require !== 'undefined') {
   require.extensions['.css'] = file => {};
 }
 
-module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
+const IMAGE_CACHE_CONFIG = {
+  urlPattern: /^https:\/\/party-planner\.wmmatuszewski\.now\.sh\/static\/.*\.(?:png|jpg|jpeg|svg)$/,
+  handler: 'CacheFirst',
+  options: {
+    cacheName: 'pp-images',
+    expiration: {
+      maxEntries: 20
+    }
+  }
+};
+
+const BASE_CONFIG = {
   target: 'serverless',
+  generateInDevMode: false,
+  workboxOpts: {
+    skipWaiting: true,
+    swDest: 'static/service-worker.js',
+    runtimeCaching: [IMAGE_CACHE_CONFIG]
+  },
   webpack: config => {
     config.plugins = config.plugins || [];
 
@@ -63,4 +84,19 @@ module.exports = composePlugins([withNextEnv, withTypescript, withCSS], {
     };
     return config;
   }
-});
+};
+
+module.exports = compose(
+  withNextEnv,
+  withTypescript,
+  withCSS,
+  withOffline
+)(BASE_CONFIG);
+
+function moduleExists(name) {
+  try {
+    return require.resolve(name);
+  } catch (error) {
+    return false;
+  }
+}

@@ -33,13 +33,12 @@ function useGeolocation() {
           setState({ isAvailable: true, coords: { latitude, longitude } });
           resolve({ latitude, longitude });
         },
-        async ({ code }: PositionError) => {
-          if (code === 1) reject('User rejected');
+        async () => {
           try {
             const {
-              data: { lat, lon }
-            } = await axios.get('http://ip-api.com/json');
-            resolve({ latitude: lat, longitude: lon });
+              data: { latitude, longitude }
+            } = await axios.get('https://ipapi.co/json/');
+            resolve({ latitude, longitude });
           } catch (e) {
             reject('Could not get the coords');
           }

@@ -209,6 +209,8 @@ export default function PartyMusicDiscover(props: Props) {
   }
 
   function canLoadMore() {
+    // console.log(state);
+    // console.log(state.lastFetchedPage.hasNext());
     return (
       !state.loading &&
       state.lastFetchedPage != null &&
@@ -221,7 +223,8 @@ export default function PartyMusicDiscover(props: Props) {
     if (!state.lastFetchedPage) return;
     dispatch(actions.setLoading({ loadingMore: true }));
     try {
-      const page = await state.lastFetchedPage;
+      const page = await state.lastFetchedPage.getNextPage();
+
       dispatch(actions.appendResults({ page }));
     } catch (e) {
       handleError();

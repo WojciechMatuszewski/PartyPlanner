@@ -1,25 +1,28 @@
 import React from 'react';
 import { Layout, Button } from 'antd';
-import css from '@emotion/css';
-import {
-  withApolloAuth,
-  WithApolloAuthInjectedProps
-} from '@apolloSetup/withApolloAuth';
+
+import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import { withRouter, WithRouterProps } from 'next/router';
 import ChatsMenu from '@components/Chats/ChatsMenu';
 import ChatUsersMenu from '@components/Chats/ChatUsersMenu';
 import GraphqlLoading from '@components/GraphqlLoading';
 import ChatWindow from '@components/Chats/ChatWindow/ChatWindow';
-import GraphqlException from '@components/GraphqlException';
 import { BehaviorSubject } from 'rxjs';
-import NoData from '@components/NoData';
 import { handleRefetch } from '@shared/graphqlUtils';
-import { HasChatsQueryComponent } from '@generated/graphql';
-
-const LayoutStyles = css`
-  height: calc(100vh - 66px);
-  display: flex;
-`;
+import {
+  HasChatsQueryComponent,
+  MeQueryMe,
+  HasChatsQueryDocument,
+  HasChatsQueryQuery,
+  HasChatsQueryVariables
+} from '@generated/graphql';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import EmptyPage from '@components/UI/EmptyPage';
+import PageException from '@components/UI/PageException';
+import { NextFunctionComponent } from 'next';
+import { NextContextWithApollo } from './_app';
+import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
+import ErrorSection from '@components/UI/ErrorSection';
 
 export interface ChatContextProps {
   currentlySelectedChatId: string | null;
@@ -33,10 +36,22 @@ export const ChatsContext = React.createContext<ChatContextProps>({
   currentlyLoggedUserData: {} as any
 });
 
-const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
-  me,
-  router
-}) => {
+interface InjectedProps {
+  me: MeQueryMe;
+  error: boolean;
+  isAuthorizedToView: boolean;
+}
+
+type Props = InjectedProps & WithRouterProps;
+type RouterProps = {
+  chat?: string;
+};
+
+const UserChats: NextFunctionComponent<
+  Props,
+  InjectedProps,
+  NextContextWithApollo<RouterProps>
+> = ({ me, router, error, isAuthorizedToView }) => {
   const isFirstRunRef = React.useRef<boolean>(false);
 
   const routeChangeStreamRef = React.useRef<BehaviorSubject<string | null>>(
@@ -46,7 +61,7 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
   const [state, setState] = React.useState<ChatContextProps>({
     currentlySelectedChatId: getCurrentChatFromUrl(),
     selectedChatIdStream$: routeChangeStreamRef.current,
-    currentlyLoggedUserData: me
+    currentlyLoggedUserData: me as WithApolloAuthInjectedProps['me']
   });
 
   React.useEffect(() => {
@@ -54,22 +69,34 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
       isFirstRunRef.current = true;
       return;
     }
-
     let currentlySelectedChatId = getCurrentChatFromUrl();
     if (!currentlySelectedChatId) return;
     setState(prevState => ({ ...prevState, currentlySelectedChatId }));
     routeChangeStreamRef.current.next(currentlySelectedChatId);
   }, [router!.query]);
 
+  if (error) {
+    <ErrorSection />;
+  }
+
+  if (!isAuthorizedToView) {
+    return (
+      <PageException desc="That chat does not exist or you are not a member of it" />
+    );
+  }
+
   return (
     <HasChatsQueryComponent notifyOnNetworkStatusChange={true}>
       {({ data, loading, error, refetch }) => {
         if (error)
           return (
-            <GraphqlException
-              style={{ height: 'calc(100vh - 66px)' }}
+            <PageException
+              desc="Could not fetch the data"
               actions={
-                <Button onClick={async () => await handleRefetch(refetch)}>
+                <Button
+                  loading={loading}
+                  onClick={async () => await handleRefetch(refetch)}
+                >
                   Try again
                 </Button>
               }
@@ -84,26 +111,27 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
             />
           );
 
-        if (!data.hasChats)
+        if (!data.hasChats) {
           return (
-            <NoData
-              style={{ height: 'auto' }}
+            <EmptyPage
               message="You currently do not have any chats"
               action={
                 <Button
+                  icon="plus"
                   type="primary"
                   onClick={() =>
                     router && router.push('/party-create', '/party/create')
                   }
                 >
-                  Create a party!
+                  Create new party
                 </Button>
               }
             />
           );
+        }
 
         return (
-          <Layout css={[LayoutStyles]}>
+          <Layout css={[FlexWrapperFullHeightMinusHeaderStyles]}>
             <Layout.Content>
               <ChatsContext.Provider value={state}>
                 <ChatsMenu />
@@ -124,6 +152,49 @@ const UserChats: React.FC<WithApolloAuthInjectedProps & WithRouterProps> = ({
   }
 };
 
-export default withRouter(
-  withApolloAuth({ userHasToBe: 'authenticated' })(UserChats)
-);
+UserChats.getInitialProps = async function(context): Promise<InjectedProps> {
+  const userData = await ApolloAuthenticator.authenticateRoute({
+    userHasToBe: 'authenticated',
+    ctx: context
+  });
+  if (!userData || !userData.me) {
+    return {
+      me: null,
+      isAuthorizedToView: false,
+      error: false
+    };
+  }
+
+  if (context.query.chat == null) {
+    return {
+      me: userData.me,
+      isAuthorizedToView: true,
+      error: false
+    };
+  }
+
+  try {
+    const {
+      data: { hasChats }
+    } = await context.apolloClient.query<
+      HasChatsQueryQuery,
+      HasChatsQueryVariables
+    >({
+      query: HasChatsQueryDocument,
+      variables: { where: { id: context.query.chat } }
+    });
+    return {
+      me: userData.me,
+      isAuthorizedToView: hasChats,
+      error: false
+    };
+  } catch (e) {
+    return {
+      me: userData.me,
+      isAuthorizedToView: false,
+      error: true
+    };
+  }
+};
+
+export default withRouter(UserChats);

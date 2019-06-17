@@ -7,7 +7,6 @@ import {
   PartiesListFilterPayload
 } from '../PartiesListReducer';
 
-import { PartyWhereInput } from '@generated/graphql';
 import moment from 'moment';
 import PartiesListFilterDrawerPartyType from './PartiesListFilterDrawerPartyType';
 import PartiesListFilterDrawerHappensAt from './PartiesListFilterDrawerHappensAt';
@@ -120,20 +119,11 @@ const PartiesListFilterDrawerContent: React.FC<Props> = props => {
 
   function isAlsoShowPublicChecked(filters: PartiesListFilters) {
     if (!filters.isPublic) return false;
-    return (
-      filters.isPublic.variablesValue.filter(
-        (value: PartyWhereInput) =>
-          value.isPublic === true || value.isPublic === false
-      ).length === 2
-    );
+    return filters.isPublic.displayText.includes('Also');
   }
   function isOnlyShowPublicChecked(filters: PartiesListFilters) {
     if (!filters.isPublic) return false;
-    return (
-      filters.isPublic.variablesValue.filter(
-        (value: PartyWhereInput) => value.isPublic === true
-      ).length === 1
-    );
+    return filters.isPublic.displayText.includes('only');
   }
 
   function handleOnFilterChange(filterPayload: PartiesListFilterPayload) {

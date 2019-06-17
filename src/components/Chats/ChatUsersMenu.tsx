@@ -67,7 +67,6 @@ const ChatUsersMenu: React.FC = () => {
             );
 
           if (loading || !data) return <ChatSectionLoading />;
-
           return (
             <ChatUsersList
               chatUsers={data.paginateUsers.edges as PaginateUsersQueryEdges[]}

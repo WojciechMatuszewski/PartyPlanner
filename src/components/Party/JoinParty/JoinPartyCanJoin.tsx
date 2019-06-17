@@ -30,7 +30,7 @@ const JoinPartyCanJoin: React.FC<Props> = props => {
         <JoinPartyImageWrapper>
           <img src="/static/fans.svg" />
         </JoinPartyImageWrapper>
-        <div>
+        <div className="join-party-info">
           <Typography.Title level={1} style={{ marginBottom: 0 }}>
             {props.party.title}
           </Typography.Title>

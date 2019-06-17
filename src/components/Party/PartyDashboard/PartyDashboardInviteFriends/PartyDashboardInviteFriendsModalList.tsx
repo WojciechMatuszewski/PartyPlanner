@@ -2,11 +2,10 @@ import React from 'react';
 import { PaginateUsersInviteToPartyQueryQuery, User } from '@generated/graphql';
 import styled from '@emotion/styled';
 import { List, Button, Tag } from 'antd';
-import NoData from '@components/NoData';
 import css from '@emotion/css';
-
 import { PartyDashboardContext } from '@pages/party-dashboard';
 import PartyDashboardInviteFriendsModalListItem from './PartyDashboardInviteFriendsModalListItem';
+import EmptySection from '@components/UI/EmptySection';
 
 const ListContainer = styled.div`
   max-height: 400px;
@@ -139,14 +138,13 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
 
 const ListLocale = {
   emptyText: (
-    <NoData
-      cssStyles={css`
+    <EmptySection
+      emotionCSS={css`
         img {
-          height: 200px;
+          max-height: 200px;
+          width: auto;
         }
       `}
-      message="No results found"
-      action={null}
     />
   ) as any
 };

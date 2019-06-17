@@ -16,7 +16,7 @@ const JoinPartyCannotJoin: React.FC<Props> = props => {
         <JoinPartyImageWrapper>
           <img src="/static/lost.svg" />
         </JoinPartyImageWrapper>
-        <div>
+        <div className="join-party-info">
           <Typography.Title
             style={{
               marginBottom: 0,

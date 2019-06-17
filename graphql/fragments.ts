@@ -19,6 +19,7 @@ export const PARTY_FRAGMENT = gql`
       lastName
       id
     }
+
     colorTint
     start
     end

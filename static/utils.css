@@ -10,3 +10,7 @@
 .antd-pro-header-dropdown-container {
   z-index: 10;
 }
+
+input {
+  font-size: 16px !important;
+}

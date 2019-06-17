@@ -3,9 +3,9 @@ import { Modal, Typography, Button, message } from 'antd';
 import { ModalProps } from 'antd/lib/modal';
 import {
   PartyInvitationsConnectionQueryEdges,
-  useUpdateUser,
   useDeletePartyInvitationMutation,
-  PartyInvitationsQueryComponent
+  PartyInvitationsQueryComponent,
+  useJoinPartyMutation
 } from '@generated/graphql';
 import UserAvatar from '@components/UserDefaultAvatar';
 import styled from '@emotion/styled';
@@ -29,7 +29,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
-  const updateUser = useUpdateUser();
+  const joinParty = useJoinPartyMutation();
   const deletePartyInvitation = useDeletePartyInvitationMutation();
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -147,25 +147,11 @@ const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
     }
   }
 
-  async function handleOnAcceptClick(additionalIds: string[]) {
-    const updateUserPromise = updateUser({
-      variables: {
-        data: {
-          parties: {
-            connect: [{ id: props.invitation!.node.party.id }]
-          }
-        },
-        where: {
-          id: props.invitation!.node.user.id
-        }
-      }
-    });
-    const toDeletePromises = makeDeletePromises(
-      additionalIds.concat([props.invitation!.node.id])
-    );
+  async function handleOnAcceptClick() {
     try {
-      setLoading(true);
-      await Promise.all([updateUserPromise, ...toDeletePromises]);
+      await joinParty({
+        variables: { partyId: props.invitation!.node.party.id }
+      });
       handleAcceptSuccess();
     } catch (e) {
       handleError();
@@ -203,7 +189,10 @@ const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
   function handleAcceptSuccess() {
     setLoading(false);
     props.onCancel();
-    props.router!.push(`/party?id=${props.invitation!.node.party.id}`);
+    props.router!.push(
+      `/party-dashboard?id=${props.invitation!.node.party.id}`,
+      `/party/${props.invitation!.node.party.id}`
+    );
   }
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Popover, Modal } from 'antd';
+import { Popover, Modal, Button } from 'antd';
 import useMedia from '@hooks/useMedia';
 import { CalendarContext } from './UserCalendar';
 import { PartiesQueryParties } from '@generated/graphql';
@@ -31,21 +31,22 @@ const CalendarEventPopover: React.FC<{
     return null;
   }
 
-  function handleMobileClick() {
-    Modal.info({
-      className: 'user-calendar-modal',
-      icon: <div />,
-      centered: true,
-      okText: 'Close',
-      maskClosable: true,
-      content: <CalendarEventPopoverContent isInModal={true} party={party} />
-    });
-  }
-
   return calendarContext.controlled || isOnMobile ? (
-    <ModalClickContainer onClick={handleMobileClick}>
-      {children}
-    </ModalClickContainer>
+    <React.Fragment>
+      <Modal
+        className="user-calendar-modal"
+        visible={popoverVisible}
+        maskClosable={true}
+        centered={true}
+        closable={false}
+        footer={<Button onClick={() => setPopoverVisible(false)}>Close</Button>}
+      >
+        <CalendarEventPopoverContent isInModal={true} party={party} />
+      </Modal>
+      <ModalClickContainer onClick={() => setPopoverVisible(true)}>
+        {children}
+      </ModalClickContainer>
+    </React.Fragment>
   ) : (
     <Popover
       content={

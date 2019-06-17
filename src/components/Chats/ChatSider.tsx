@@ -15,7 +15,7 @@ const ChatSider: React.FC<
       collapsible={false}
       {...restOfProps}
       css={css`
-        height: 100%;
+        height: calc(100vh - 66px);
         overflow-y: auto;
         border-right: ${placement === 'left' ? '1px solid #e8e8e8' : '0'};
         border-left: ${placement === 'right' ? '1px solid #e8e8e8' : '0'};

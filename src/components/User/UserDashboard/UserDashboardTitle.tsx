@@ -29,6 +29,11 @@ const PosedTileWrapper = styled(
     font-weight: bold;
     margin-right: 8px;
   }
+
+  @media screen and (max-width: 780px) {
+    padding: 24px 12px;
+    margin: 0;
+  }
 `;
 
 const UserDashboardTitle: React.FC = () => {

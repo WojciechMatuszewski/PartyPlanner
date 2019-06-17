@@ -20,6 +20,15 @@ const ChatUserWrapper = styled.li`
   img {
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .ant-avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
 `;
 

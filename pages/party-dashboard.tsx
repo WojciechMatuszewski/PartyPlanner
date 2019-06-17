@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
 import css from '@emotion/css';
 import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
-import styled from '@emotion/styled';
 import PartyDashboardLocationSecondary from '@components/Party/PartyDashboard/PartyDashboardLocationSecondary';
 import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
@@ -15,16 +14,15 @@ import {
   PartiesQueryQueryVariables
 } from '@generated/graphql';
 import { PARTIES_QUERY } from '@graphql/queries';
-import GraphqlException from '@components/GraphqlException';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
-import posed from 'react-pose';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
-import { PartyMainContentWrapper } from '@components/Party/shared';
 import Head from 'next/head';
+import styled from '@emotion/styled';
+import PageException from '@components/UI/PageException';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -37,7 +35,38 @@ const PartyDashboardMap = dynamic(
   }
 );
 
-const BREAKPOINT = '992px';
+const MOBILE_BREAKPOINT = '992px';
+
+const PartyDashboardContentWrapper = styled.div`
+  margin: 24px auto 24px auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 1280px;
+  width: 100%;
+  align-self: flex-start;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: white;
+  z-index: 1;
+  flex: 1;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  overflow: hidden;
+  .dashboard-content-item {
+    padding: 12px 24px;
+  }
+  .no-padding-mobile {
+    @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
+      padding: 12px 0;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+`;
 
 const PartyMapColumnStyles = css`
   position: relative;
@@ -45,7 +74,7 @@ const PartyMapColumnStyles = css`
   height: 400px;
   background: #e8e8e8;
   border-radius: 4px;
-  @media screen and (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
     box-shadow: none;
   }
   .map-wrapper {
@@ -59,35 +88,12 @@ const PartyMapColumnStyles = css`
 `;
 
 const PartyMapRowStyles = css`
-  @media screen and (max-width: ${BREAKPOINT}) {
+  @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
     box-shadow: none;
   }
 `;
 
-// const PartyDashboardTopBackground = styled.div`
-//   position: absolute;
-//   width: 100%;
-//   height: 800px;
-//   background: url('/static/party-dashboard-background.svg') no-repeat top;
-//   background-size: cover;
-//   transform: rotate(180deg);
-// `;
-
 type RouteQueryProps = { id?: string };
-
-const PosedWrapper = styled(
-  posed.div({
-    visible: {
-      staggerChildren: 200
-    },
-    hidden: {}
-  })
-)`
-  display: flex;
-  flex: 1;
-  position: relative;
-  min-height: calc(100vh - 66px);
-`;
 
 interface InjectedProps {
   partyData: {
@@ -116,7 +122,11 @@ const Party: NextFunctionComponent<
 > = ({ partyData, userData }) => {
   if (partyData.responseType == 'missingOrUnauthorized')
     return (
-      <GraphqlException desc="Party either does not exist or you are not invited" />
+      <PageException
+        desc="That party does not exists or you are not invited"
+        redirectPath="/user/dashboard"
+        backText="Back to dashboard"
+      />
     );
 
   if (partyData.responseType == 'error' || !userData) return null;
@@ -142,41 +152,41 @@ const Party: NextFunctionComponent<
         />
       </Head>
       <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
-      {/* <PartyDashboardTopBackground /> */}
-      <PosedWrapper initialPose="hidden" pose="visible">
-        <PartyDashboardContext.Provider value={contextValue}>
-          <PartyMainContentWrapper initialPose="hidden">
-            <PartyDashboardTop party={party} />
-            <PartyDashboardTopMenu
-              partyId={party.id}
-              inviteSecret={party.inviteSecret!}
-            />
-            <PartyDashboardBasicInfo
-              author={party.author}
-              description={party.description}
-              title={party.title}
-              partyEnd={party.end}
-              partyStart={party.start}
-              placeName={party.location.placeName}
-            />
-            <Row css={[PartyMapRowStyles]}>
-              <Col span={24} css={[PartyMapColumnStyles]}>
-                <PartyDashboardMap location={party.location} />
-              </Col>
-            </Row>
-            <PartyDashboardLocationSecondary
-              placeName={party.location.placeName}
-              title={party.title}
-            />
-            <PartyDashboardCommuteButtons location={party.location} />
-            <Row>
-              <Col span={24}>
-                <PartyDashboardParticipants partyId={partyData.party!.id} />
-              </Col>
-            </Row>
-          </PartyMainContentWrapper>
-        </PartyDashboardContext.Provider>
-      </PosedWrapper>
+      <PartyDashboardContext.Provider value={contextValue}>
+        <PartyDashboardContentWrapper>
+          <PartyDashboardTop party={party} />
+          <PartyDashboardTopMenu
+            partyId={party.id}
+            inviteSecret={party.inviteSecret!}
+          />
+          <PartyDashboardBasicInfo
+            author={party.author}
+            description={party.description}
+            title={party.title}
+            partyEnd={party.end}
+            partyStart={party.start}
+            placeName={party.location.placeName}
+          />
+          <Row css={[PartyMapRowStyles]}>
+            <Col span={24} css={[PartyMapColumnStyles]}>
+              <PartyDashboardMap location={party.location} />
+            </Col>
+          </Row>
+          <PartyDashboardLocationSecondary
+            placeName={party.location.placeName}
+            title={party.title}
+          />
+          <PartyDashboardCommuteButtons location={party.location} />
+          <Row>
+            <Col span={24}>
+              <PartyDashboardParticipants
+                userId={userData.id}
+                partyId={partyData.party!.id}
+              />
+            </Col>
+          </Row>
+        </PartyDashboardContentWrapper>
+      </PartyDashboardContext.Provider>
     </React.Fragment>
   );
 };

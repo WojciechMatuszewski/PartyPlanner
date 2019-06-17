@@ -1,6 +1,6 @@
 import React from 'react';
 import { UseAudioApi } from '@hooks/useAudio';
-import { Tooltip, Icon, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import { TransparentButtonStyles } from '@shared/styles';
 import styled from '@emotion/styled';
 
@@ -24,14 +24,13 @@ interface Props {
 const BigMusicPlayerControlButtons: React.FC<Props> = props => {
   return (
     <React.Fragment>
-      <Tooltip title="Fast backwards by 5 seconds">
-        <TransparentButton
-          disabled={props.disabled}
-          onClick={handleBackwardsSkip}
-        >
-          <Icon type="fast-backward" />
-        </TransparentButton>
-      </Tooltip>
+      <TransparentButton
+        disabled={props.disabled}
+        onClick={handleBackwardsSkip}
+      >
+        <Icon type="fast-backward" />
+      </TransparentButton>
+
       <Button
         onClick={props.toggle}
         disabled={props.disabled}
@@ -40,14 +39,10 @@ const BigMusicPlayerControlButtons: React.FC<Props> = props => {
         size={!props.isOnMobile ? 'large' : 'default'}
         className="play-pause-button"
       />
-      <Tooltip trigger="hover" title="Fast forward by 5 seconds">
-        <TransparentButton
-          onClick={handleForwardSkip}
-          disabled={props.disabled}
-        >
-          <Icon type="fast-forward" />
-        </TransparentButton>
-      </Tooltip>
+
+      <TransparentButton onClick={handleForwardSkip} disabled={props.disabled}>
+        <Icon type="fast-forward" />
+      </TransparentButton>
     </React.Fragment>
   );
 

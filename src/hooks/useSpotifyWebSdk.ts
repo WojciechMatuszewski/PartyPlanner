@@ -20,7 +20,7 @@ function useSpotifyWebSdk() {
   const [shouldAskForNewToken, setShouldAskForANewToken] = React.useState<
     boolean
   >(false);
-  const { retrieveFromStorage } = useLocalStorage();
+  const { retrieveFromStorage, saveToStorage } = useLocalStorage();
 
   React.useEffect(() => {
     if (!isBrowser()) return;
@@ -29,6 +29,7 @@ function useSpotifyWebSdk() {
       LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN
     );
     if (!token || !refreshToken) return setShouldAskForANewToken(true);
+
     init({
       token,
       refreshToken,
@@ -68,10 +69,10 @@ function useSpotifyWebSdk() {
       {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`
-        },
-        withCredentials: true
+        }
       }
     );
+    saveToStorage(access_token, LOCAL_STORAGE_SPOTIFY_TOKEN);
     return access_token;
   }
 }

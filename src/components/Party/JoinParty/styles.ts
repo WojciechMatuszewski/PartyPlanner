@@ -20,6 +20,12 @@ export const JoinPartySection = styled.section`
     h1 {
       max-width: 100%;
     }
+    justify-content: flex-start;
+
+    .join-party-info {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
   }
 `;
 
@@ -38,19 +44,28 @@ export const JoinPartyImageWrapper = styled.div`
   }
 
   @media screen and (max-width: 1000px) {
-    width: 100%;
+    /* width: 100%; */
     height: auto;
     box-shadow: none;
     border-radius: 0;
     border: 0;
     margin-right: 24px;
+    border-right: 2px dashed #d9d9d9;
   }
 
   @media screen and (max-width: 800px) {
-    max-width: 450px;
+    border: 0;
+    width: 100%;
     max-height: 450px;
     margin-right: 0;
     margin-bottom: 24px;
+    background: rgba(24, 144, 255, 0.1);
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      height: auto;
+    }
   }
 `;
 
@@ -60,10 +75,11 @@ export const JoinPartyInnerWrapper = styled.div`
 
   @media screen and (max-width: 800px) {
     flex-direction: column;
-    padding: 12px;
     width: 100%;
-    min-height: 100%;
+    /* min-height: 100%; */
+    padding-bottom: 24px;
     background: white;
     border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 `;
