@@ -16,7 +16,7 @@ import { ChatsContext } from '@pages/party-chats';
 
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloClient, NetworkStatus } from 'apollo-boost';
 import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables
@@ -99,8 +99,11 @@ const ChatsMenu: React.FC = () => {
       siderProps={{ width: 340 }}
     >
       <ChatsListSearch onChange={handleOnInputChange} />
-      <PaginateChatsQueryComponent variables={getQueryVariables()}>
-        {({ data, loading, error, refetch }) => {
+      <PaginateChatsQueryComponent
+        variables={getQueryVariables()}
+        notifyOnNetworkStatusChange={true}
+      >
+        {({ data, error, refetch, fetchMore, networkStatus }) => {
           if (error)
             return (
               <GraphqlInlineError>
@@ -115,10 +118,19 @@ const ChatsMenu: React.FC = () => {
               </GraphqlInlineError>
             );
 
-          if (loading || !data || !data.chatsConnection)
+          if (
+            networkStatus == NetworkStatus.loading ||
+            !data ||
+            !data.chatsConnection
+          )
             return <ChatSectionLoading />;
 
-          if (!loading && data && data.chatsConnection.edges.length === 0)
+          if (
+            //@ts-ignore
+            networkStatus != NetworkStatus.loading &&
+            data &&
+            data.chatsConnection.edges.length === 0
+          )
             return (
               <EmptySection
                 style={{ margin: 'auto' }}
@@ -128,9 +140,49 @@ const ChatsMenu: React.FC = () => {
             );
 
           return (
-            <ChatsList
-              chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
-            />
+            <React.Fragment>
+              <ChatsList
+                chats={data.chatsConnection.edges as PaginateChatsQueryEdges[]}
+              />
+              {data.chatsConnection.pageInfo.hasNextPage && (
+                <Button
+                  style={{
+                    display: 'block',
+                    margin: '0 auto',
+                    marginBottom: 12
+                  }}
+                  loading={networkStatus == NetworkStatus.fetchMore}
+                  onClick={async () =>
+                    await fetchMore({
+                      variables: {
+                        after: data.chatsConnection.pageInfo.endCursor
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        if (
+                          !fetchMoreResult ||
+                          !fetchMoreResult.chatsConnection
+                        )
+                          return prev;
+
+                        return {
+                          __typename: 'Query',
+                          chatsConnection: {
+                            ...prev.chatsConnection,
+                            pageInfo: fetchMoreResult.chatsConnection.pageInfo,
+                            edges: [
+                              ...prev.chatsConnection.edges,
+                              ...fetchMoreResult.chatsConnection.edges
+                            ]
+                          }
+                        };
+                      }
+                    })
+                  }
+                >
+                  Load more
+                </Button>
+              )}
+            </React.Fragment>
           );
         }}
       </PaginateChatsQueryComponent>

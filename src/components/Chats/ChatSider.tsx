@@ -19,10 +19,6 @@ const ChatSider: React.FC<
         overflow-y: auto;
         border-right: ${placement === 'left' ? '1px solid #e8e8e8' : '0'};
         border-left: ${placement === 'right' ? '1px solid #e8e8e8' : '0'};
-        .ant-layout-sider-children {
-          display: flex;
-          flex-direction: column;
-        }
       `}
     >
       {children}

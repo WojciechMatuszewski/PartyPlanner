@@ -45,7 +45,7 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
         },
         { title: 'Explicit', content: track.explicit ? 'Yes' : 'No' },
         { title: 'Album name', content: track.albumName },
-        { title: 'Album type', content: track.album.releaseDate }
+        { title: 'Album release date', content: track.album.releaseDate }
       ] as ListDataEntry[],
     [track]
   );
