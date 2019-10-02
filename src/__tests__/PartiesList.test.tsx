@@ -10,7 +10,7 @@ import PartiesList, {
 } from '@components/Party/PartiesList/PartiesList';
 import { PAGINATE_PARTIES_QUERY } from '@graphql/queries';
 import { createMockedApolloClient } from '@shared/testUtils';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import '../__mocks__/matchMedia';
 import { MockedResponse, MockLink } from 'react-apollo/test-utils';
 import * as graphqlUtils from '@shared/graphqlUtils';

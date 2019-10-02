@@ -6,7 +6,7 @@ import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
 import AppLayout from '@components/Layout';
 import Router, { DefaultQuery } from 'next/router';
 import NProgress from 'nprogress';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 import { NextContext } from 'next';
 import withApollo from '@apolloSetup/withApollo';
 

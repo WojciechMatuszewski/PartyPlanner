@@ -8,7 +8,7 @@ import {
   User
 } from '@generated/graphql';
 import { FormikContext } from 'formik';
-import { useApolloClient } from 'react-apollo-hooks';
+import { useApolloClient } from '@apollo/react-hooks';
 import useMedia from '@hooks/useMedia';
 import {
   inviteFriendReducer,

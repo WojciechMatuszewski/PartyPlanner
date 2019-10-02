@@ -6,7 +6,7 @@
   "Scope": "/",
   "lang": "en",
   "name": "PartyPlanner",
-  "start_url": "https://party-planner.wmmatuszewski.now.sh/",
+  "start_url": "http:localhost:3000/",
   "icons": [
     {
       "src": "./icons/icon-72x72.png",

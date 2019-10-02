@@ -9,7 +9,7 @@ import {
   FlexBoxHorizontallyCenteredStyles
 } from '@shared/styles';
 import { WithRouterProps, withRouter } from 'next/router';
-import { useApolloClient } from 'react-apollo-hooks';
+import { useApolloClient } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { cond } from 'ramda';
 

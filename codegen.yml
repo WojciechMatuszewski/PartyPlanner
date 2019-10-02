@@ -19,6 +19,6 @@ generates:
       - typescript-operations
       - typescript-compatibility
       - typescript-react-apollo:
-          noHOC: true
-          noComponent: false
+          withHOC: false
+          withComponent: true
           withHooks: true
