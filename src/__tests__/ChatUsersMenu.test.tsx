@@ -15,7 +15,7 @@ import { ChatContextProps, ChatsContext } from '@pages/party-chats';
 import { BehaviorSubject } from 'rxjs';
 import { MockedProvider } from 'react-apollo/test-utils';
 import { createMockedApolloClient } from '@shared/testUtils';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import { MockLink } from 'apollo-link-mock';
 
 const CURRENT_USER_ID = '123';

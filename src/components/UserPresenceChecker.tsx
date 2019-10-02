@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApolloClient } from 'react-apollo-hooks';
+import { useApolloClient } from '@apollo/react-hooks';
 import useInterval from '@hooks/useInterval';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';
 import { UserStatus } from '@generated/graphql';

@@ -8,7 +8,7 @@ import {
 } from 'apollo-link-mock';
 import { PAGINATE_CHATS_QUERY } from '@graphql/queries';
 import { render, wait, fireEvent } from 'react-testing-library';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import { MockedProvider } from 'react-apollo/test-utils';
 import { ChatsContext } from '@pages/party-chats';
 import ChatsMenu, {
