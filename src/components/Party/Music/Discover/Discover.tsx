@@ -10,6 +10,7 @@ import EmptySection from '@components/UI/EmptySection';
 import css from '@emotion/css';
 import DiscoverTrackList from './DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
+import DiscoverFilters from './DiscoverFilters';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -157,6 +158,7 @@ export default function PartyMusicDiscover(props: Props) {
             debounceOnChange={false}
             placeholder="Track name ..."
           />
+          <DiscoverFilters />
         </SearchWrapper>
       </Affix>
       <ContentWrapper style={{ paddingBottom: props.paddingBottom }}>
@@ -209,8 +211,6 @@ export default function PartyMusicDiscover(props: Props) {
   }
 
   function canLoadMore() {
-    // console.log(state);
-    // console.log(state.lastFetchedPage.hasNext());
     return (
       !state.loading &&
       state.lastFetchedPage != null &&
