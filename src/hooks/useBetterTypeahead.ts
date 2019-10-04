@@ -10,7 +10,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { AxiosPromise } from 'axios';
-import { ifElse, identity } from 'ramda';
+import { identity } from 'ramda';
 
 export interface TypeaheadProps<
   FetchResponsePreFormat,
@@ -73,7 +73,7 @@ function useBetterTypeahead<
   E = React.ChangeEvent
 >({
   fetchFunction,
-  responseTransformFunction,
+  responseTransformFunction = identity as any,
   onResult,
   onChangeTransformFunction,
   onError = () => {},
@@ -112,15 +112,7 @@ function useBetterTypeahead<
       tap(() => dispatch(setStateAction({ loading: true }))),
       switchMap(inputValue =>
         from(fetchFunctionRef.current(inputValue)).pipe(
-          map(
-            ifElse(
-              shouldMapFetchResponse,
-              responseTransformFunction as NonNullable<
-                TypeaheadPropsType['responseTransformFunction']
-              >,
-              identity
-            )
-          ),
+          map(responseTransformFunction),
           tap(data =>
             dispatch(setStateAction({ loading: false, error: false, data }))
           ),
@@ -164,10 +156,6 @@ function useBetterTypeahead<
 
   function onChange(value: StreamType) {
     inputStream$.current.next(value);
-  }
-
-  function shouldMapFetchResponse() {
-    return responseTransformFunction != null;
   }
 
   function typeaheadFunction() {

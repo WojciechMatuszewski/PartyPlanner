@@ -2,11 +2,13 @@ import React from 'react';
 import { Button, Drawer, Typography, Select, Icon, Spin } from 'antd';
 import styled from '@emotion/styled';
 import { Colors } from '@shared/styles';
-import { unary, compose, prop, pick, map } from 'ramda';
+import { unary, compose, prop, pick, map, isNil } from 'ramda';
 import useMedia from '@hooks/useMedia';
 import useBetterTypeahead from '@hooks/useBetterTypeahead';
 import { searchArtists, Page, Artist } from 'spotify-web-sdk';
 import { musicGenres } from '../Genres';
+import usePrevious from '@hooks/usePrevious';
+import css from '@emotion/css';
 
 const FiltersHeading = styled.div`
   h4 {
@@ -21,6 +23,7 @@ const FiltersHeading = styled.div`
 
 const DrawerButtons = styled.div`
   display: flex;
+  flex: 1;
   button {
     flex: 1;
   }
@@ -33,22 +36,75 @@ const FiltersBody = styled.div`
   margin-bottom: 24px;
 `;
 
-function DiscoverFilters() {
-  const [genres, setGenres] = React.useState<string[]>([]);
-  const [artists, setArtists] = React.useState<string[]>([]);
+const DrawerStyles = css`
+  .ant-drawer-wrapper-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .ant-drawer-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
+  button {
+    margin-top: auto;
+  }
+`;
+
+type FilterKeys = 'genre' | 'artist';
+type FilterValue = string | undefined;
+
+export type Filters = Record<FilterKeys, FilterValue>;
+
+type Props = {
+  onFiltersChange: (filters: Filters) => void;
+};
+function DiscoverFilters(props: Props) {
+  const [genre, setGenre] = React.useState<FilterValue>(undefined);
+  const [artist, setArtist] = React.useState<FilterValue>(undefined);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const prevOpenState = usePrevious(drawerOpen);
 
   const isOnMobile = useMedia('(max-width:630px)');
 
-  function clearButtonDisabled() {
-    return genres.concat(artists).length == 0;
+  function notifyAboutFilters() {
+    props.onFiltersChange({ genre, artist });
   }
+
+  function clearButtonDisabled() {
+    return [genre, artist].every(isNil);
+  }
+
+  function hasFiltersApplied() {
+    return [genre, artist].some(Boolean);
+  }
+
+  function onClearFilters() {
+    setGenre(undefined);
+    setArtist(undefined);
+    setDrawerOpen(false);
+  }
+
+  React.useEffect(() => {
+    if (prevOpenState == true && drawerOpen == false) notifyAboutFilters();
+  }, [drawerOpen]);
 
   return (
     <React.Fragment>
-      <Button onClick={() => setDrawerOpen(true)}>Filters</Button>
+      <Button
+        type={hasFiltersApplied() ? 'primary' : 'default'}
+        style={{ marginLeft: 8 }}
+        onClick={() => setDrawerOpen(true)}
+      >
+        <Icon type="filter" />
+        Filters
+      </Button>
       <Drawer
+        css={DrawerStyles}
+        wrapClassName="filters--wrapper"
+        className="something"
         onClose={() => setDrawerOpen(false)}
         mask={true}
         maskClosable={true}
@@ -61,11 +117,17 @@ function DiscoverFilters() {
           </Typography.Title>
         }
       >
-        <SelectGenres onChange={setGenres} />
-        <SelectArtists onChange={setArtists} />
+        <SelectGenres onChange={setGenre} currentGenre={genre} />
+        <SelectArtists onChange={setArtist} currentArtist={artist} />
         <DrawerButtons>
-          <Button type="primary">Save</Button>
-          <Button type="danger" disabled={clearButtonDisabled()}>
+          <Button type="primary" onClick={() => setDrawerOpen(false)}>
+            Save
+          </Button>
+          <Button
+            type="danger"
+            disabled={clearButtonDisabled()}
+            onClick={onClearFilters}
+          >
             Clear all
           </Button>
         </DrawerButtons>
@@ -75,9 +137,10 @@ function DiscoverFilters() {
 }
 
 type SelectGenresProps = {
-  onChange: (genres: string[]) => void;
+  onChange: (genres: string) => void;
+  currentGenre: FilterValue;
 };
-function SelectGenres({ onChange }: SelectGenresProps) {
+function SelectGenres(props: SelectGenresProps) {
   return (
     <React.Fragment>
       <FiltersHeading>
@@ -85,12 +148,13 @@ function SelectGenres({ onChange }: SelectGenresProps) {
           <Icon type="customer-service" className="icon" />
           Genre
         </Typography.Title>
-        <Typography.Text type="secondary">Choose a song genres</Typography.Text>
+        <Typography.Text type="secondary">Choose a song genre</Typography.Text>
       </FiltersHeading>
       <FiltersBody>
         <Select
-          onChange={unary(onChange)}
-          mode="multiple"
+          onChange={unary(props.onChange)}
+          showSearch={true}
+          value={props.currentGenre}
           allowClear={true}
           style={{ width: '100%' }}
           placeholder="Search through genres"
@@ -105,19 +169,24 @@ function SelectGenres({ onChange }: SelectGenresProps) {
 }
 
 type SelectArtistProps = {
-  onChange: (artists: string[]) => void;
+  onChange: (artists: string) => void;
+  currentArtist: FilterValue;
 };
 type FetchedArtist = { id: string; name: string };
-function SelectArtists({ onChange }: SelectArtistProps) {
+function SelectArtists(props: SelectArtistProps) {
+  function transformResponse(response: Page<Artist>): FetchedArtist[] {
+    return compose(
+      map(pick(['id', 'name'])),
+      prop('items')
+    )(response);
+  }
+
   const {
     onChange: onSearch,
     state: { loading, data }
   } = useBetterTypeahead<Page<Artist>, FetchedArtist[], string>({
     fetchFunction: searchArtists,
-    responseTransformFunction: compose<Page<Artist>, FetchedArtist[]>(
-      map(pick(['id', 'name'])) as any,
-      prop('items') as any
-    )
+    responseTransformFunction: transformResponse
   });
 
   return (
@@ -129,14 +198,15 @@ function SelectArtists({ onChange }: SelectArtistProps) {
         </Typography.Title>
 
         <Typography.Text type="secondary">
-          Pick a specific artists
+          Pick a specific artist
         </Typography.Text>
       </FiltersHeading>
       <FiltersBody>
         <Select
-          onChange={unary(onChange)}
+          onChange={unary(props.onChange)}
           onSearch={onSearch}
-          mode="multiple"
+          showSearch={true}
+          value={props.currentArtist}
           allowClear={true}
           filterOption={false}
           notFoundContent={loading ? <Spin size="small" /> : null}
@@ -144,7 +214,9 @@ function SelectArtists({ onChange }: SelectArtistProps) {
           style={{ width: '100%' }}
         >
           {data.map(artist => (
-            <Select.Option key={artist.id}>{artist.name}</Select.Option>
+            <Select.Option key={artist.id} value={artist.name}>
+              {artist.name}
+            </Select.Option>
           ))}
         </Select>
       </FiltersBody>

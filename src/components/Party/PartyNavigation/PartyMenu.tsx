@@ -122,7 +122,7 @@ function SiderNavigation({ children }: { children: React.ReactNode }) {
 
 function DrawerNavigation({ children }: { children: React.ReactNode }) {
   return (
-    <RCDrawer width={200} style={{ height: '100vh', zIndex: 10 }} get>
+    <RCDrawer width={200} style={{ height: '100vh', zIndex: 10 }}>
       {children}
     </RCDrawer>
   );
