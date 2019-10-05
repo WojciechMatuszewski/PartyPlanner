@@ -1,4 +1,4 @@
-export const musicGenres = [
+const genres = [
   'acoustic',
   'afrobeat',
   'alt-rock',
@@ -126,3 +126,8 @@ export const musicGenres = [
   'work-out',
   'world-music'
 ];
+
+export const musicGenres = genres.map((genre, index) => ({
+  name: genre,
+  id: index
+}));

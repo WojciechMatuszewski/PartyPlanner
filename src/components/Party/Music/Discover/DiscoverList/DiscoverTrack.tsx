@@ -6,7 +6,7 @@ import {
   AddToQueueTrackButton,
   PlayPauseTrackButton,
   MoreInfoTrackButton
-} from '../TrackControls';
+} from '../../TrackControls';
 
 interface Props {
   track: Track;

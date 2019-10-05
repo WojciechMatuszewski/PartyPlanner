@@ -10,8 +10,8 @@ import css from '@emotion/css';
 import { Drawer } from 'antd';
 import PartiesListFilterDrawerContent from './PartiesListFilterDrawerContent';
 import PartiesListFilterDrawerButtons from './PartiesListFilterDrawerButtons';
-import { areObjectsEqual } from '@shared/functionUtils';
 import { PartiesListContext } from '../PartiesList';
+import { isEqual } from 'lodash';
 
 const DrawerStyles = css`
   .ant-drawer-body {
@@ -45,6 +45,34 @@ const DrawerStyles = css`
   }
 `;
 
+export function areFiltersEqual<ObjectsShape extends Record<any, any>>(
+  source: ObjectsShape,
+  target: ObjectsShape
+) {
+  // different amount of keys objects are sure different
+  if (Object.keys(source).length !== Object.keys(target).length) return false;
+
+  // check on key by key basis,
+  // there are not much keys to check so we can afford doing it this way :)
+  const areEqualOnKeyToKeyBasis = Object.entries(source).reduce(
+    (acc: boolean, [key, filterObj]) => {
+      // kinda legacy DO NOT TOUCH
+      const areKeysTheSame = isEqual(
+        target[key].variablesValue,
+        filterObj.variablesValue
+      );
+      if (!areKeysTheSame) {
+        acc = false;
+        return acc;
+      }
+      return acc;
+    },
+    true
+  );
+
+  return areEqualOnKeyToKeyBasis;
+}
+
 export interface PartiesListFilterDrawerFilterProps<FilterValue = any> {
   onChange: (filterDispatchPayload: PartiesListFilterPayload) => void;
   onRemoveFilter: (filterKeyName: string) => void;
@@ -71,7 +99,7 @@ const PartiesListFilterDrawer: React.FC<Props> = props => {
   );
 
   const filtersEqualToLastOpen = React.useCallback(() => {
-    return areObjectsEqual(props.filters, lastFiltersRef.current);
+    return areFiltersEqual(props.filters, lastFiltersRef.current);
   }, [props.filters]);
 
   // user can delete filters without having the drawer open

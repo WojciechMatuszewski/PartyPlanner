@@ -32,6 +32,7 @@ type InitialStreamType<K, EventType> = K extends (e: EventType) => string
   : string;
 
 type ReducerState<FetchResult = any> = {
+  inputValue: string | undefined;
   data: FetchResult;
   loading: boolean;
   error: boolean;
@@ -63,7 +64,8 @@ function createInitialReducerState<FetchResult = any>(
   return {
     data,
     loading: false,
-    error: false
+    error: false,
+    inputValue: undefined
   };
 }
 
@@ -127,6 +129,7 @@ function useBetterTypeahead<
 
   const typeaheadOperator = (source: Observable<string>): Observable<string> =>
     source.pipe(
+      tap(inputValue => dispatch(setStateAction({ inputValue }))),
       filter(str => !!str.trim()),
       debounceTime(300),
       inputValidateOperator,

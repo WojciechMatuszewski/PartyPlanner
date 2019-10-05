@@ -8,10 +8,10 @@ import AntdSearch from '@components/AntdSearch';
 import useBetterTypeahead from '@hooks/useBetterTypeahead';
 import EmptySection from '@components/UI/EmptySection';
 import css from '@emotion/css';
-import DiscoverTrackList from './DiscoverTrackList';
+import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
-import DiscoverFilters, { Filters } from './DiscoverFilters';
-import { isNil } from 'ramda';
+import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
+import { Filters } from './DiscoverFilters/shared';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -155,33 +155,34 @@ export default function PartyMusicDiscover(props: Props) {
     }, searchQuery);
   }
 
-  function areFiltersEmpty(filters: Filters) {
-    return Object.values(filters).every(isNil);
-  }
+  const {
+    onChange,
+    state: { inputValue }
+  } = useBetterTypeahead({
+    fetchFunction: handleTrackSearch,
+    onResult: handleSearchResult,
+    onError: handleError
+  });
 
   React.useEffect(() => {
     if (isFirstMount.current) {
       isFirstMount.current = false;
       return;
     }
-    if (areFiltersEmpty(filters)) return;
+
+    if (!inputValue) return;
 
     async function handle() {
       try {
-        const res = await handleTrackSearch('');
+        const res = await handleTrackSearch(inputValue!);
         handleSearchResult(res);
       } catch {
         handleError(undefined);
       }
     }
+
     handle();
   }, [filters]);
-
-  const { onChange } = useBetterTypeahead({
-    fetchFunction: handleTrackSearch,
-    onResult: handleSearchResult,
-    onError: handleError
-  });
 
   if (state.error)
     return (
@@ -200,6 +201,7 @@ export default function PartyMusicDiscover(props: Props) {
             defaultValue={lastInputValueOnError.current}
             loading={state.loading}
             onChange={onChange}
+            value={inputValue}
             debounceOnChange={false}
             placeholder="Track name ..."
           />
