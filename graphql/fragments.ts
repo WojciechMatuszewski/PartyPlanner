@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export const PARTY_FRAGMENT = gql`
   fragment PARTY_FRAGMENT on Party {

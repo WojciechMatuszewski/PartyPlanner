@@ -1,9 +1,6 @@
 import { LocalResolvers } from './../graphql/resolvers';
-import {
-  ApolloClient,
-  InMemoryCache,
-  NormalizedCacheObject
-} from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';

@@ -1,6 +1,6 @@
 import React from 'react';
 import PartyDashboardParticipantsTopMenu from './PartyDashboardParticipantsTopMenu';
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import PartyDashboardParticipantsList from './PartyDashboardParticipantsList';
 import {
   PartyDashboardParticipantsQueryComponent,

@@ -10,7 +10,7 @@ import {
 } from '@shared/styles';
 import { WithRouterProps, withRouter } from 'next/router';
 import { useApolloClient } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { cond } from 'ramda';
 
 interface Props {

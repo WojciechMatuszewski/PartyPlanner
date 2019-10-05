@@ -1,5 +1,5 @@
 import { PARTY_INVITATION_FRAGMENT } from './fragments';
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 export const CHAT_MESSAGES_SUBSCRIPTION = gql`
   subscription ChatMessagesSubscription($where: MessageSubscriptionWhereInput) {
     message(where: $where) {
