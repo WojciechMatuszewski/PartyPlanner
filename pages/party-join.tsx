@@ -19,7 +19,7 @@ import {
   JoinPartyInnerWrapper,
   JoinPartySection
 } from '@components/Party/JoinParty/styles';
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export const JOIN_PARTY_FIND_QUERY = gql`
   query JoinPartyFind($inviteSecret: String!, $userId: ID!) {

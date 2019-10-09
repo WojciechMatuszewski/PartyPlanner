@@ -1,5 +1,5 @@
 import { PARTY_FRAGMENT } from './fragments';
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export const SIGNUP_MUTATION = gql`
   mutation Signup(

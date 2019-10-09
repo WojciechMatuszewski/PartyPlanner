@@ -3,8 +3,8 @@ import { WindowScroller, List as VList, AutoSizer } from 'react-virtualized';
 import { List, Button } from 'antd';
 import DiscoverTrack from './DiscoverTrack';
 import css from '@emotion/css';
-import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
-import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
+import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
+import { useTrackInfoModal } from '../../TrackInfoModal/TrackInfoModalProvider';
 import { Track } from 'spotify-web-sdk';
 
 const ListStyles = css`

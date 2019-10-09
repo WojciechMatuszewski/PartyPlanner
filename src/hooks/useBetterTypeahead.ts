@@ -6,10 +6,11 @@ import {
   map,
   filter,
   debounceTime,
-  distinctUntilChanged
+  distinctUntilChanged,
+  tap
 } from 'rxjs/operators';
 import { AxiosPromise } from 'axios';
-import { ifElse, identity, always } from 'ramda';
+import { identity } from 'ramda';
 
 export interface TypeaheadProps<
   FetchResponsePreFormat,
@@ -20,46 +21,105 @@ export interface TypeaheadProps<
   responseTransformFunction?: (
     fetchResponse: FetchResponsePreFormat
   ) => FetchResult;
-  onResult: (result: FetchResult) => void;
+  onResult?: (result: FetchResult) => void;
   onChangeTransformFunction?: (e: EventType) => string;
-  onError: (inputValueWhenErrorOccurred?: string, e?: Error) => void;
+  onError?: (inputValueWhenErrorOccurred?: string, e?: Error) => void;
+  initialState?: ReducerState<FetchResult>;
 }
 
 type InitialStreamType<K, EventType> = K extends (e: EventType) => string
   ? EventType
   : string;
 
+type ReducerState<FetchResult = any> = {
+  inputValue: string | undefined;
+  data: FetchResult;
+  loading: boolean;
+  error: boolean;
+};
+
+const setStateAction = (payload: Partial<ReducerState>) => ({
+  type: 'SET_STATE',
+  payload
+});
+
+function Reducer<S extends ReducerState>(
+  state: S,
+  action: ReturnType<typeof setStateAction>
+) {
+  switch (action.type) {
+    case 'SET_STATE':
+      return {
+        ...state,
+        ...action.payload
+      };
+    default:
+      return state;
+  }
+}
+
+function createInitialReducerState<FetchResult = any>(
+  data: FetchResult
+): ReducerState<FetchResult> {
+  return {
+    data,
+    loading: false,
+    error: false,
+    inputValue: undefined
+  };
+}
+
 function useBetterTypeahead<
   FetchResponsePreFormat,
   FetchResult,
-  E extends React.ChangeEvent
+  E = React.ChangeEvent
 >({
   fetchFunction,
-  responseTransformFunction,
+  responseTransformFunction = identity as any,
   onResult,
   onChangeTransformFunction,
-  onError
-}: TypeaheadProps<any, FetchResult, E>) {
+  onError = () => {},
+  initialState
+}: TypeaheadProps<FetchResponsePreFormat, FetchResult, E>) {
   type StreamType = InitialStreamType<typeof onChangeTransformFunction, E>;
 
-  const fetchFunctionRef = React.useRef<
-    TypeaheadProps<FetchResponsePreFormat, FetchResult, E>['fetchFunction']
-  >(fetchFunction);
+  type TypeaheadPropsType = TypeaheadProps<
+    FetchResponsePreFormat,
+    FetchResult,
+    E
+  >;
+
+  type UseTypeaheadReducer = React.Reducer<
+    ReducerState<FetchResult>,
+    ReturnType<typeof setStateAction>
+  >;
+
+  const initialReducerState: ReducerState<FetchResult> = initialState
+    ? initialState
+    : createInitialReducerState([] as any);
+
+  const [state, dispatch] = React.useReducer<UseTypeaheadReducer>(
+    Reducer,
+    initialReducerState
+  );
+
+  const fetchFunctionRef = React.useRef<TypeaheadPropsType['fetchFunction']>(
+    fetchFunction
+  );
 
   const inputStream$ = React.useRef<Subject<StreamType>>(new Subject());
 
   const fetchOperator = (source: Observable<string>): Observable<FetchResult> =>
     source.pipe(
+      tap(() => dispatch(setStateAction({ loading: true }))),
       switchMap(inputValue =>
         from(fetchFunctionRef.current(inputValue)).pipe(
-          map(
-            ifElse(
-              shouldMapFetchResponse,
-              always(responseTransformFunction),
-              identity
-            )
+          map(responseTransformFunction),
+          tap(data =>
+            dispatch(setStateAction({ loading: false, error: false, data }))
           ),
           catchError(e => {
+            dispatch(setStateAction({ error: true, loading: false }));
             onError(inputValue, e);
             return of('' as any);
           })
@@ -69,6 +129,7 @@ function useBetterTypeahead<
 
   const typeaheadOperator = (source: Observable<string>): Observable<string> =>
     source.pipe(
+      tap(inputValue => dispatch(setStateAction({ inputValue }))),
       filter(str => !!str.trim()),
       debounceTime(300),
       inputValidateOperator,
@@ -100,10 +161,6 @@ function useBetterTypeahead<
     inputStream$.current.next(value);
   }
 
-  function shouldMapFetchResponse() {
-    return responseTransformFunction != null;
-  }
-
   function typeaheadFunction() {
     inputStream$.current
       .pipe(
@@ -120,7 +177,8 @@ function useBetterTypeahead<
   }
 
   return {
-    onChange
+    onChange,
+    state
   };
 }
 

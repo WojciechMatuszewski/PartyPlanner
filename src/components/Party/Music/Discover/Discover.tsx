@@ -8,8 +8,10 @@ import AntdSearch from '@components/AntdSearch';
 import useBetterTypeahead from '@hooks/useBetterTypeahead';
 import EmptySection from '@components/UI/EmptySection';
 import css from '@emotion/css';
-import DiscoverTrackList from './DiscoverTrackList';
+import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
+import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
+import { Filters } from './DiscoverFilters/shared';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -41,6 +43,27 @@ const ContentWrapper = styled.div`
       border-left: 0;
       border-right: 0;
     }
+  }
+`;
+
+const ErrorSectionStyles = css`
+  height: 100%;
+  ${FlexBoxFullCenteredStyles};
+  button {
+    margin-top: 12px;
+  }
+  img {
+    max-width: 600px;
+  }
+`;
+
+const EmptySectionStyles = css`
+  width: 100%;
+  height: 100%;
+
+  ${FlexBoxFullCenteredStyles};
+  img {
+    max-width: 600px;
   }
 `;
 
@@ -117,29 +140,53 @@ function reducer(state: State, action: DiscoverTracksActions): State {
 
 export default function PartyMusicDiscover(props: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-
   const lastInputValueOnError = React.useRef<string | undefined>(undefined);
+  const isFirstMount = React.useRef(true);
 
-  const { onChange } = useBetterTypeahead({
+  const [filters, setFilters] = React.useState<Filters>({
+    artist: undefined,
+    genre: undefined
+  });
+
+  function appendFilters(searchQuery: string) {
+    return Object.entries(filters).reduce((acc, [filterKey, filterValue]) => {
+      if (!filterValue) return acc;
+      return acc.concat(` ${filterKey}:${filterValue}`);
+    }, searchQuery);
+  }
+
+  const {
+    onChange,
+    state: { inputValue }
+  } = useBetterTypeahead({
     fetchFunction: handleTrackSearch,
     onResult: handleSearchResult,
     onError: handleError
   });
 
+  React.useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
+    if (!inputValue) return;
+
+    async function handle() {
+      try {
+        const res = await handleTrackSearch(inputValue!);
+        handleSearchResult(res);
+      } catch {
+        handleError(undefined);
+      }
+    }
+
+    handle();
+  }, [filters]);
+
   if (state.error)
     return (
-      <ErrorSection
-        emotionCSS={css`
-          height: 100%;
-          ${FlexBoxFullCenteredStyles};
-          button {
-            margin-top: 12px;
-          }
-          img {
-            max-width: 600px;
-          }
-        `}
-      >
+      <ErrorSection emotionCSS={ErrorSectionStyles}>
         <Button loading={state.loading} onClick={handleOnErrorRetry}>
           Try Again
         </Button>
@@ -154,9 +201,11 @@ export default function PartyMusicDiscover(props: Props) {
             defaultValue={lastInputValueOnError.current}
             loading={state.loading}
             onChange={onChange}
+            value={inputValue}
             debounceOnChange={false}
             placeholder="Track name ..."
           />
+          <DiscoverFilters onFiltersChange={setFilters} />
         </SearchWrapper>
       </Affix>
       <ContentWrapper style={{ paddingBottom: props.paddingBottom }}>
@@ -164,15 +213,7 @@ export default function PartyMusicDiscover(props: Props) {
           <EmptySection
             image="/static/music.svg"
             title="No tracks to display"
-            emotionCSS={css`
-              width: 100%;
-              height: 100%;
-
-              ${FlexBoxFullCenteredStyles};
-              img {
-                max-width: 600px;
-              }
-            `}
+            emotionCSS={EmptySectionStyles}
           />
         ) : (
           <DiscoverTrackList
@@ -190,7 +231,7 @@ export default function PartyMusicDiscover(props: Props) {
 
   async function handleTrackSearch(searchQuery: string) {
     dispatch(actions.setLoading({ loading: true }));
-    return searchTracks(searchQuery);
+    return searchTracks(appendFilters(searchQuery));
   }
 
   function handleSearchResult(page: Page<Track>) {
@@ -209,8 +250,6 @@ export default function PartyMusicDiscover(props: Props) {
   }
 
   function canLoadMore() {
-    // console.log(state);
-    // console.log(state.lastFetchedPage.hasNext());
     return (
       !state.loading &&
       state.lastFetchedPage != null &&

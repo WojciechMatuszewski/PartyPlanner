@@ -55,3 +55,7 @@ export const FlexWrapperFullHeightMinusHeaderStyles = css`
   width: 100%;
   display: flex;
 `;
+
+export const Colors = {
+  AntdBlue: '#1890ff'
+};
