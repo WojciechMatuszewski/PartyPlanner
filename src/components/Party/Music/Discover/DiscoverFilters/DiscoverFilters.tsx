@@ -156,4 +156,4 @@ function DiscoverFilters(props: Props) {
   );
 }
 
-export default DiscoverFilters;
+export default React.memo(DiscoverFilters);
