@@ -1,12 +1,6 @@
 import React from 'react';
 import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
-import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import { HAS_PARTIES_QUERY } from '@graphql/queries';
-import {
-  HasPartiesQueryQuery,
-  HasPartiesQueryVariables
-} from '@generated/graphql';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
@@ -18,6 +12,7 @@ import SpotifyGuard from '@guards/SpotifyGuard';
 import PartyMusicDiscover from '@components/Party/Music/Discover/Discover';
 import PageException from '@components/UI/PageException';
 import { PartyContentWrapper } from '@components/Party/styles';
+import PartyAuthenticator from '@auth/party-auth';
 
 interface InjectedProps {
   isInParty: boolean;
@@ -78,38 +73,6 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
   }
 };
 
-PartyMusicDiscoverPage.getInitialProps = async function(context) {
-  const userData = await ApolloAuthenticator.authenticateRoute({
-    userHasToBe: 'authenticated',
-    ctx: context
-  });
-  // redirected to /login
-  if (!userData) return { isInParty: false, partyId: '' };
-
-  if (!context.query.id)
-    return {
-      isInParty: false,
-      partyId: ''
-    };
-
-  const {
-    data: { hasParties }
-  } = await context.apolloClient.query<
-    HasPartiesQueryQuery,
-    HasPartiesQueryVariables
-  >({
-    query: HAS_PARTIES_QUERY,
-    variables: {
-      where: {
-        id: context.query.id
-      }
-    }
-  });
-
-  return {
-    isInParty: hasParties,
-    partyId: context.query.id
-  };
-};
+PartyMusicDiscoverPage.getInitialProps = PartyAuthenticator.isUserInParty;
 
 export default PartyMusicDiscoverPage;

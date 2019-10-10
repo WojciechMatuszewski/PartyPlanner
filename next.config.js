@@ -80,7 +80,8 @@ const BASE_CONFIG = {
       '@customIcons': path.resolve(__dirname, 'custom-icons'),
       '@graphql': path.resolve(__dirname, 'graphql'),
       '@services': path.resolve(__dirname, 'src/services'),
-      '@guards': path.resolve(__dirname, 'src/guards')
+      '@guards': path.resolve(__dirname, 'src/guards'),
+      '@auth': path.resolve(__dirname, 'src/auth')
     };
     return config;
   }

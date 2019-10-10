@@ -9,8 +9,15 @@ export const WithSideMenuPartyContentStyles = css`
   }
 `;
 
-export const PartyContentWrapper = styled.div`
+export const PartyContentWrapper = styled.section`
   ${FlexWrapperFullHeightMinusHeaderStyles};
   ${WithSideMenuPartyContentStyles};
   flex-direction: column;
+`;
+
+export const PartyContentInnerWrapper = styled.div`
+  max-width: 1280px;
+  padding: 0 12px;
+  width: 100%;
+  height: 100%;
 `;

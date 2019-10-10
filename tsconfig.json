@@ -30,7 +30,8 @@
       "@customIcons/*": ["custom-icons/*"],
       "@graphql/*": ["./graphql/*"],
       "@hoc/*": ["./src/hoc/*"],
-      "@guards/*": ["./src/guards/*"]
+      "@guards/*": ["./src/guards/*"],
+      "@auth/*": ["./src/auth/*"]
     }
   }
 }

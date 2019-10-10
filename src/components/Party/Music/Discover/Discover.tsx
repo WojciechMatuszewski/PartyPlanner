@@ -12,6 +12,7 @@ import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
 import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
 import { Filters } from './DiscoverFilters/shared';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -28,11 +29,7 @@ const SearchWrapper = styled.div`
   }
 `;
 
-const ContentWrapper = styled.div`
-  max-width: 1280px;
-  padding: 0 12px;
-  width: 100%;
-  height: 100%;
+const ContentWrapper = styled(PartyContentInnerWrapper)`
   flex: 1;
   margin: 0 auto;
   @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
