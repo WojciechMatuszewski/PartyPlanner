@@ -83,7 +83,6 @@ export default function DiscoverTrackList(props: Props) {
                   rowHeight={72}
                   width={width}
                   scrollTop={scrollTop}
-                  // data={state.currentTracks}
                   rowRenderer={({ index, style }) => {
                     const track = props.tracks[index];
                     return (

@@ -1,18 +1,18 @@
-import React from 'react';
-import { Page, Track, searchTracks } from 'spotify-web-sdk';
-import { createStandardAction, ActionType } from 'typesafe-actions';
-import { Affix, message, Button } from 'antd';
-import styled from '@emotion/styled';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import AntdSearch from '@components/AntdSearch';
-import useBetterTypeahead from '@hooks/useBetterTypeahead';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
-import css from '@emotion/css';
-import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
+import styled from '@emotion/styled';
+import useBetterTypeahead from '@hooks/useBetterTypeahead';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { Affix, Button, message } from 'antd';
+import React from 'react';
+import { Page, searchTracks, Track } from 'spotify-web-sdk';
+import { ActionType, createStandardAction } from 'typesafe-actions';
+
 import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
 import { Filters } from './DiscoverFilters/shared';
-import { PartyContentInnerWrapper } from '@components/Party/styles';
+import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 
 const MOBILE_BREAKPOINT = '800px';
 
@@ -40,27 +40,6 @@ const ContentWrapper = styled(PartyContentInnerWrapper)`
       border-left: 0;
       border-right: 0;
     }
-  }
-`;
-
-const ErrorSectionStyles = css`
-  height: 100%;
-  ${FlexBoxFullCenteredStyles};
-  button {
-    margin-top: 12px;
-  }
-  img {
-    max-width: 600px;
-  }
-`;
-
-const EmptySectionStyles = css`
-  width: 100%;
-  height: 100%;
-
-  ${FlexBoxFullCenteredStyles};
-  img {
-    max-width: 600px;
   }
 `;
 
@@ -183,7 +162,7 @@ export default function PartyMusicDiscover(props: Props) {
 
   if (state.error)
     return (
-      <ErrorSection emotionCSS={ErrorSectionStyles}>
+      <ErrorSection>
         <Button loading={state.loading} onClick={handleOnErrorRetry}>
           Try Again
         </Button>
@@ -210,7 +189,6 @@ export default function PartyMusicDiscover(props: Props) {
           <EmptySection
             image="/static/music.svg"
             title="No tracks to display"
-            emotionCSS={EmptySectionStyles}
           />
         ) : (
           <DiscoverTrackList

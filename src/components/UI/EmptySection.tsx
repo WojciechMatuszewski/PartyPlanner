@@ -19,10 +19,8 @@ function EmptySection(props: Props) {
     <UISectionWrapper css={props.emotionCSS} style={props.style}>
       <img src={props.image} />
       <div style={{ textAlign: 'center' }}>
-        <Typography.Title level={4}>{props.title}</Typography.Title>
-        <Typography.Paragraph type="secondary">
-          {props.description}
-        </Typography.Paragraph>
+        <Typography.Title level={3}>{props.title}</Typography.Title>
+        <Typography.Paragraph>{props.description}</Typography.Paragraph>
       </div>
     </UISectionWrapper>
   );

@@ -1,5 +1,5 @@
 import cookie from 'cookie';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
 import redirect from '@apolloSetup/redirect';
 import { isBrowser } from '@apolloSetup/initApollo';
 import { USER_PRESENCE_CONFIG } from '@graphql/resolvers';

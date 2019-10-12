@@ -45,11 +45,16 @@ const GraphqlLoading: React.FC<Props> = ({
         <LoaderWrapper
           isLoadingInitially={isLoadingInitially}
           key={1}
-          style={{ height: height ? height : 'calc(100vh-66px)' }}
+          style={{ height: height ? height : 'calc(100vh - 66px)' }}
         >
           <Spin size="large" />
           {isLoadingInitially && (
-            <Typography.Text>{textToDisplay}</Typography.Text>
+            <Typography.Title
+              level={4}
+              style={{ marginBottom: 0, marginTop: 12 }}
+            >
+              {textToDisplay}
+            </Typography.Title>
           )}
         </LoaderWrapper>
       )}

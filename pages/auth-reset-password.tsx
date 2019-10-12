@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextFunctionComponent, NextContext } from 'next';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
 import { withRouter, WithRouterProps } from 'next/router';
 import { PoseGroup } from 'react-pose';
 import {

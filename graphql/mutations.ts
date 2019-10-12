@@ -119,3 +119,11 @@ export const JOIN_PARTY_MUTATION = gql`
     joinParty(partyId: $partyId)
   }
 `;
+
+export const ADD_TRACK_TO_PARTY_MUTATION = gql`
+  mutation AddTrackToParty($data: PartySavedTrackCreateInput!) {
+    createPartySavedTrack(data: $data) {
+      id
+    }
+  }
+`;

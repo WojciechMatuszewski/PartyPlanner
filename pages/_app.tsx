@@ -2,7 +2,7 @@ import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
 import 'ant-design-pro/dist/ant-design-pro.css';
 import { ApolloProvider } from 'react-apollo';
-import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
+import { ApolloClient, NormalizedCacheObject } from 'apollo-client';
 import AppLayout from '@components/Layout';
 import Router, { DefaultQuery } from 'next/router';
 import NProgress from 'nprogress';

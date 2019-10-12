@@ -6,7 +6,7 @@ import Head from 'next/head';
 import initApollo, { isBrowser } from './initApollo';
 import { NextAppContext, AppComponentType } from 'next/app';
 import { IncomingMessage } from 'http';
-import { ApolloClient, NormalizedCacheObject } from 'apollo-boost';
+import { ApolloClient, NormalizedCacheObject } from 'apollo-client';
 
 export function parseCookies(req?: IncomingMessage, options = {}) {
   return cookie.parse(

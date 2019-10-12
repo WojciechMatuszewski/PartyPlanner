@@ -9,7 +9,7 @@ import {
   CreatePartyMutationVariables,
   useCreatePartyInvitation
 } from '@generated/graphql';
-import { MutationUpdaterFn } from 'apollo-boost';
+import { MutationUpdaterFn } from 'apollo-client';
 import {
   PARTIES_QUERY,
   PAGINATE_PARTIES_QUERY,

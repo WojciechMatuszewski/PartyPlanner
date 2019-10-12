@@ -13,6 +13,7 @@ import PartyMusicDiscover from '@components/Party/Music/Discover/Discover';
 import PageException from '@components/UI/PageException';
 import { PartyContentWrapper } from '@components/Party/styles';
 import PartyAuthenticator from '@auth/party-auth';
+import { PartyProvider } from '@components/Party/PartyProvider';
 
 interface InjectedProps {
   isInParty: boolean;
@@ -40,21 +41,23 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-discover" />
-      <PartyContentWrapper>
-        <SpotifyGuard>
-          <BigMusicPlayerProvider>
-            <TrackInfoModalProvider>
-              <PartyMusicDiscover paddingBottom={getContentPadding()} />
-              <TrackInfoModal />
-              <BigMusicPlayerStickedToBottom
-                onTrackChanged={handleTrackChanged}
-                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                visible={playerVisible}
-              />
-            </TrackInfoModalProvider>
-          </BigMusicPlayerProvider>
-        </SpotifyGuard>
-      </PartyContentWrapper>
+      <PartyProvider partyId={partyId}>
+        <PartyContentWrapper>
+          <SpotifyGuard>
+            <BigMusicPlayerProvider>
+              <TrackInfoModalProvider>
+                <PartyMusicDiscover paddingBottom={getContentPadding()} />
+                <TrackInfoModal />
+                <BigMusicPlayerStickedToBottom
+                  onTrackChanged={handleTrackChanged}
+                  onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+                  visible={playerVisible}
+                />
+              </TrackInfoModalProvider>
+            </BigMusicPlayerProvider>
+          </SpotifyGuard>
+        </PartyContentWrapper>
+      </PartyProvider>
     </React.Fragment>
   );
 

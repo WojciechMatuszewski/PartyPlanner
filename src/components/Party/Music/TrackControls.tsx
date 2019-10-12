@@ -14,6 +14,11 @@ type MoreInfoButtonProps = {
   onMoreInfoClick: VoidFunction;
 };
 
+type AddToQueueButtonProps = {
+  loading?: boolean;
+  onAddToQueueClick: VoidFunction;
+};
+
 const TrackTileControlsWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
   padding-left: 12px;
@@ -36,7 +41,8 @@ const ButtonStyles = css`
 `;
 
 type TrackControlsProps = { className?: string } & MoreInfoButtonProps &
-  PlayPauseButtonProps;
+  PlayPauseButtonProps &
+  AddToQueueButtonProps;
 
 export default function TrackControls(props: TrackControlsProps) {
   return (
@@ -47,7 +53,10 @@ export default function TrackControls(props: TrackControlsProps) {
         hasPreviewUrl={props.hasPreviewUrl}
       />
       <MoreInfoTrackButton onMoreInfoClick={props.onMoreInfoClick} />
-      <AddToQueueTrackButton />
+      <AddToQueueTrackButton
+        loading={props.loading}
+        onAddToQueueClick={props.onAddToQueueClick}
+      />
     </TrackTileControlsWrapper>
   );
 }
@@ -77,9 +86,11 @@ export function MoreInfoTrackButton(props: MoreInfoButtonProps) {
     />
   );
 }
-export function AddToQueueTrackButton() {
+export function AddToQueueTrackButton(props: AddToQueueButtonProps) {
   return (
     <Button
+      loading={props.loading}
+      onClick={props.onAddToQueueClick}
       css={[ButtonStyles]}
       icon="plus"
       type="ghost"

@@ -1,4 +1,4 @@
-import { Resolvers } from 'apollo-boost';
+import { Resolvers } from 'apollo-client';
 import {
   PaginateMessagesQueryNode,
   MeQueryQuery,

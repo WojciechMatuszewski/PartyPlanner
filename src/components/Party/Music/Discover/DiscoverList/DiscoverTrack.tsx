@@ -1,11 +1,14 @@
+import { useParty } from '@components/Party/PartyProvider';
+import css from '@emotion/css';
+import { useAddTrackToParty } from '@generated/graphql';
+import { Avatar, Badge, List, message, Tag, Typography } from 'antd';
 import React from 'react';
 import { Track } from 'spotify-web-sdk';
-import { List, Avatar, Badge, Tag, Typography } from 'antd';
-import css from '@emotion/css';
+
 import {
   AddToQueueTrackButton,
-  PlayPauseTrackButton,
-  MoreInfoTrackButton
+  MoreInfoTrackButton,
+  PlayPauseTrackButton
 } from '../../TrackControls';
 
 interface Props {
@@ -51,6 +54,27 @@ const ListItemStyles = css`
 `;
 
 function DiscoverTrack(props: Props) {
+  const { partyId } = useParty();
+
+  const { track } = props;
+
+  const [mutate, { loading }] = useAddTrackToParty({
+    variables: {
+      data: {
+        spotifyId: track.id,
+        name: track.name,
+        downVotes: 0,
+        upVotes: 1,
+        duration: track.durationMs,
+        preview_url: track.previewUrl,
+        imageUrl: track.album.imageUrl,
+        party: { connect: { id: partyId } }
+      }
+    },
+    onCompleted: () => message.success('Track successfully added!'),
+    onError: () => message.error('Could not add track to given party playlist!')
+  });
+
   return (
     <List.Item
       style={props.style}
@@ -64,7 +88,11 @@ function DiscoverTrack(props: Props) {
           hasPreviewUrl={props.track.previewUrl != null}
         />,
         <MoreInfoTrackButton onMoreInfoClick={handleMoreInfoClick} key={2} />,
-        <AddToQueueTrackButton key={3} />
+        <AddToQueueTrackButton
+          key={3}
+          onAddToQueueClick={mutate}
+          loading={loading}
+        />
       ]}
     >
       <List.Item.Meta

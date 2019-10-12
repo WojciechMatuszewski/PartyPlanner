@@ -4,6 +4,12 @@ import { Typography } from 'antd';
 
 import { SerializedStyles } from '@emotion/css';
 import { UISectionWrapper } from './styles';
+import styled from '@emotion/styled-base';
+
+const ErrorSectionTitle = styled(Typography.Title)`
+  margin-top: 12px;
+  margin-bottom: 12px;
+`;
 
 const defaultProps = Object.freeze({
   image: '/static/error.svg',
@@ -22,9 +28,9 @@ function ErrorSection(props: Props) {
     <UISectionWrapper style={props.style} css={props.emotionCSS}>
       <img src={props.image} />
       <div style={{ textAlign: 'center' }}>
-        <Typography.Title level={4} type="danger">
+        <ErrorSectionTitle level={4} type="danger">
           {props.title}
-        </Typography.Title>
+        </ErrorSectionTitle>
         {props.description && (
           <Typography.Paragraph>{props.description}</Typography.Paragraph>
         )}

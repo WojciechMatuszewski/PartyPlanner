@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from "apollo-boost";
+import { ApolloClient, InMemoryCache } from "apollo-client";
 import { LocalResolvers } from "@graphql/resolvers";
 import { ApolloLink } from 'apollo-link';
 
