@@ -1,19 +1,23 @@
-import GraphqlLoading from '@components/GraphqlLoading';
-import EmptySection from '@components/UI/EmptySection';
-import ErrorSection from '@components/UI/ErrorSection';
-import {
-  PartySavedTrackOrderByInput,
-  useParty_SavedTracksConnection
-} from '@generated/graphql';
-import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
-import { Button, List } from 'antd';
-import { NetworkStatus } from 'apollo-client';
 import React from 'react';
+import styled from '@emotion/styled-base';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
+import { Affix, Button } from 'antd';
 import gql from 'graphql-tag';
+import {
+  useParty_SavedTracksConnection,
+  PartySavedTrackOrderByInput
+} from '@generated/graphql';
+import GraphqlLoading from '@components/GraphqlLoading';
+import { hasGraphqlData, handleRefetch } from '@shared/graphqlUtils';
+import { NetworkStatus } from 'apollo-client';
+import ErrorSection from '@components/UI/ErrorSection';
+import EmptySection from '@components/UI/EmptySection';
+import SavedTracksList from './SavedTracksList';
+import SavedTracksControls from './SavedTracksControls';
 
-interface Props {
-  partyId: string;
-}
+const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
+  padding-top: 12px;
+`;
 
 export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
   query Party_SavedTracksConnection(
@@ -37,13 +41,23 @@ export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
       edges {
         node {
           id
+          name
+          imageUrl
+          explicit
+          length
+          artists {
+            name
+          }
         }
       }
     }
   }
 `;
 
-export default function SavedTracksList(props: Props) {
+interface Props {
+  partyId: string;
+}
+export default function SavedTracks({ partyId }: Props) {
   const {
     data,
     error,
@@ -51,7 +65,7 @@ export default function SavedTracksList(props: Props) {
     networkStatus
   } = useParty_SavedTracksConnection({
     variables: {
-      where: { party: { id: props.partyId } },
+      where: { party: { id: partyId } },
       orderBy: PartySavedTrackOrderByInput.UpVotesDesc
     },
     notifyOnNetworkStatusChange: true
@@ -96,10 +110,13 @@ export default function SavedTracksList(props: Props) {
     );
 
   return (
-    <List bordered={true}>
-      {edges.map(() => (
-        <List.Item key={Math.random()}>works</List.Item>
-      ))}
-    </List>
+    <React.Fragment>
+      <Affix>
+        <SavedTracksControls />
+      </Affix>
+      <SavedTracksInnerWrapper>
+        <SavedTracksList tracks={edges} className="" loading={false} />
+      </SavedTracksInnerWrapper>
+    </React.Fragment>
   );
 }

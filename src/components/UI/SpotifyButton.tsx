@@ -62,7 +62,8 @@ const GreenSpotifyButtonStyles = css`
   }
   &:disabled,
   &:disabled:hover {
-    background: #1db954;
+    background: white;
+    color: rgba(0, 0, 0, 0.25);
     .anticon {
       color: rgba(0, 0, 0, 0.25);
     }

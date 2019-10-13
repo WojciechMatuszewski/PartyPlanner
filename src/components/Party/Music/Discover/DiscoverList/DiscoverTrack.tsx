@@ -1,7 +1,6 @@
 import { useParty } from '@components/Party/PartyProvider';
-import css from '@emotion/css';
 import { useAddTrackToParty } from '@generated/graphql';
-import { Avatar, Badge, List, message, Tag, Typography } from 'antd';
+import { message } from 'antd';
 import React from 'react';
 import { Track } from 'spotify-web-sdk';
 
@@ -10,6 +9,7 @@ import {
   MoreInfoTrackButton,
   PlayPauseTrackButton
 } from '../../TrackControls';
+import VirtualizedListTrackItem from '../../VirtualizedListTrackItem';
 
 interface Props {
   track: Track;
@@ -18,40 +18,6 @@ interface Props {
   onTogglePlayClick: (track: Track) => void;
   onMoreInfoClick: (track: Track) => void;
 }
-
-const ListItemStyles = css`
-  transition: transform 0.2s ease;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 100%;
-  &.track-playing,
-  &:hover {
-    background: #e6f7ff;
-  }
-  height: 72px;
-  .ant-list-item-meta {
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .ant-list-item-meta-content {
-    white-space: nowrap;
-    min-width: 0;
-    & > * {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-  }
-
-  .ant-list-item-meta-description {
-    line-height: 1;
-  }
-
-  @media screen and (max-width: 680px) {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-  }
-`;
 
 function DiscoverTrack(props: Props) {
   const { partyId } = useParty();
@@ -65,9 +31,11 @@ function DiscoverTrack(props: Props) {
         name: track.name,
         downVotes: 0,
         upVotes: 1,
-        duration: track.durationMs,
+        length: track.length,
+        durationMs: track.durationMs,
         preview_url: track.previewUrl,
         imageUrl: track.album.imageUrl,
+        explicit: props.track.explicit,
         party: { connect: { id: partyId } }
       }
     },
@@ -76,10 +44,9 @@ function DiscoverTrack(props: Props) {
   });
 
   return (
-    <List.Item
+    <VirtualizedListTrackItem
       style={props.style}
-      css={[ListItemStyles]}
-      className={props.trackPlaying ? 'track-playing' : undefined}
+      trackPlaying={props.trackPlaying}
       actions={[
         <PlayPauseTrackButton
           onTogglePlayClick={handleTogglePlayClick}
@@ -94,30 +61,17 @@ function DiscoverTrack(props: Props) {
           loading={loading}
         />
       ]}
-    >
-      <List.Item.Meta
-        avatar={
-          <Avatar
-            style={{ width: 48, height: 48 }}
-            src={props.track.album.imageUrl}
-            shape="square"
-          />
-        }
-        title={props.track.name}
-        description={
-          <Typography.Text ellipsis={true}>
-            {props.track.explicit && <Tag color="magenta">E</Tag>}
-            {props.track.album.artists.map(artist => artist.name).join(', ')}
-            <Badge
-              style={{ marginLeft: 8 }}
-              status="default"
-              color="blue"
-              text={props.track.length}
-            />
-          </Typography.Text>
-        }
-      />
-    </List.Item>
+      track={{
+        name: track.name,
+        imageUrl: track.album.imageUrl,
+        artists: track.artists.reduce(
+          (acc, artist) => acc.concat(`${artist.name} ,`),
+          ''
+        ),
+        explicit: track.explicit,
+        length: track.length
+      }}
+    />
   );
 
   function handleTogglePlayClick() {

@@ -1,34 +1,18 @@
 import PartyAuthenticator from '@auth/party-auth';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
-import SavedTracksList from '@components/Party/Music/SavedPartyTracks/SavedTracksList';
+import SavedTracks from '@components/Party/Music/Saved/SavedTracks';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
-import {
-  PartyContentInnerWrapper,
-  PartyContentWrapper
+import { PartyContentWrapper
 } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
-import styled from '@emotion/styled';
+
 import { NextFunctionComponent } from 'next';
 import React from 'react';
 
 import { NextContextWithApollo } from './_app';
-
-// const EmptySectionStyles = css`
-//   width: 100%;
-//   height: 100%;
-
-//   ${FlexBoxFullCenteredStyles};
-//   img {
-//     max-width: 600px;
-//   }
-// `;
-
-const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
-  padding-top: 12px;
-`;
 
 interface InjectedProps {
   isInParty: boolean;
@@ -58,9 +42,10 @@ const PartyMusicSavedTracks: NextFunctionComponent<
         <PartyContentWrapper>
           <TrackInfoModalProvider>
             <BigMusicPlayerProvider>
-              <SavedTracksInnerWrapper>
+              <SavedTracks partyId={partyId} />
+              {/* <SavedTracksInnerWrapper>
                 <SavedTracksList partyId={partyId} />
-              </SavedTracksInnerWrapper>
+              </SavedTracksInnerWrapper> */}
               <BigMusicPlayerStickedToBottom />
             </BigMusicPlayerProvider>
           </TrackInfoModalProvider>

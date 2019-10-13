@@ -24,9 +24,9 @@ interface Props {
 }
 
 const PartyMenu: React.FC<Props> = (props: Props) => {
-  const isOnMobile = useMedia('(max-width:1080px)');
+  const shouldCollapse = useMedia('(max-width:1080px)');
 
-  if (isOnMobile)
+  if (shouldCollapse)
     return (
       <DrawerNavigation>
         <MenuContent {...props} />

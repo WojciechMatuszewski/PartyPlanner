@@ -2353,7 +2353,6 @@ export type Mutation = {
   deleteManyTracks: BatchPayload,
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
-  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2361,6 +2360,7 @@ export type Mutation = {
   inviteToFriends: User,
   requestReset?: Maybe<SuccessMessage>,
   resetPassword?: Maybe<AuthPayload>,
+  joinParty?: Maybe<Scalars['Boolean']>,
 };
 
 
@@ -2862,11 +2862,6 @@ export type MutationDeleteManyPartiesArgs = {
 };
 
 
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type MutationSignupArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -2906,6 +2901,11 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
 };
 
 export enum MutationType {
@@ -4127,9 +4127,11 @@ export type PartySavedTrack = Node & {
   party: Party,
   imageUrl: Scalars['String'],
   artists?: Maybe<Array<Artist>>,
-  duration: Scalars['Int'],
+  durationMs: Scalars['Int'],
+  length: Scalars['String'],
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit: Scalars['Boolean'],
   upVotes: Scalars['Int'],
   downVotes: Scalars['Int'],
   votedBy?: Maybe<Array<User>>,
@@ -4172,9 +4174,11 @@ export type PartySavedTrackCreateInput = {
   spotifyId: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  duration: Scalars['Int'],
+  durationMs: Scalars['Int'],
+  length: Scalars['String'],
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit: Scalars['Boolean'],
   upVotes: Scalars['Int'],
   downVotes: Scalars['Int'],
   party: PartyCreateOneWithoutSavedTracksInput,
@@ -4192,9 +4196,11 @@ export type PartySavedTrackCreateWithoutPartyInput = {
   spotifyId: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  duration: Scalars['Int'],
+  durationMs: Scalars['Int'],
+  length: Scalars['String'],
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit: Scalars['Boolean'],
   upVotes: Scalars['Int'],
   downVotes: Scalars['Int'],
   artists?: Maybe<ArtistCreateManyInput>,
@@ -4219,12 +4225,16 @@ export enum PartySavedTrackOrderByInput {
   NameDesc = 'name_DESC',
   ImageUrlAsc = 'imageUrl_ASC',
   ImageUrlDesc = 'imageUrl_DESC',
-  DurationAsc = 'duration_ASC',
-  DurationDesc = 'duration_DESC',
+  DurationMsAsc = 'durationMs_ASC',
+  DurationMsDesc = 'durationMs_DESC',
+  LengthAsc = 'length_ASC',
+  LengthDesc = 'length_DESC',
   PreviewUrlAsc = 'preview_url_ASC',
   PreviewUrlDesc = 'preview_url_DESC',
   UriAsc = 'uri_ASC',
   UriDesc = 'uri_DESC',
+  ExplicitAsc = 'explicit_ASC',
+  ExplicitDesc = 'explicit_DESC',
   UpVotesAsc = 'upVotes_ASC',
   UpVotesDesc = 'upVotes_DESC',
   DownVotesAsc = 'downVotes_ASC',
@@ -4237,9 +4247,11 @@ export type PartySavedTrackPreviousValues = {
   spotifyId: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  duration: Scalars['Int'],
+  durationMs: Scalars['Int'],
+  length: Scalars['String'],
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit: Scalars['Boolean'],
   upVotes: Scalars['Int'],
   downVotes: Scalars['Int'],
 };
@@ -4359,21 +4371,48 @@ export type PartySavedTrackScalarWhereInput = {
   imageUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
-  duration_not?: Maybe<Scalars['Int']>,
+  durationMs_not?: Maybe<Scalars['Int']>,
   /** All values that are contained in given list. */
-  duration_in?: Maybe<Array<Scalars['Int']>>,
+  durationMs_in?: Maybe<Array<Scalars['Int']>>,
   /** All values that are not contained in given list. */
-  duration_not_in?: Maybe<Array<Scalars['Int']>>,
+  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
   /** All values less than the given value. */
-  duration_lt?: Maybe<Scalars['Int']>,
+  durationMs_lt?: Maybe<Scalars['Int']>,
   /** All values less than or equal the given value. */
-  duration_lte?: Maybe<Scalars['Int']>,
+  durationMs_lte?: Maybe<Scalars['Int']>,
   /** All values greater than the given value. */
-  duration_gt?: Maybe<Scalars['Int']>,
+  durationMs_gt?: Maybe<Scalars['Int']>,
   /** All values greater than or equal the given value. */
-  duration_gte?: Maybe<Scalars['Int']>,
+  durationMs_gte?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  length_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  length_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  length_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  length_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  length_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  length_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  length_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  length_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  length_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  length_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  length_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  length_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  length_not_ends_with?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   preview_url_not?: Maybe<Scalars['String']>,
@@ -4428,6 +4467,9 @@ export type PartySavedTrackScalarWhereInput = {
   uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   uri_not_ends_with?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  explicit_not?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
   upVotes_not?: Maybe<Scalars['Int']>,
@@ -4490,9 +4532,11 @@ export type PartySavedTrackUpdateInput = {
   spotifyId?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   downVotes?: Maybe<Scalars['Int']>,
   party?: Maybe<PartyUpdateOneRequiredWithoutSavedTracksInput>,
@@ -4504,9 +4548,11 @@ export type PartySavedTrackUpdateManyDataInput = {
   spotifyId?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   downVotes?: Maybe<Scalars['Int']>,
 };
@@ -4515,9 +4561,11 @@ export type PartySavedTrackUpdateManyMutationInput = {
   spotifyId?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   downVotes?: Maybe<Scalars['Int']>,
 };
@@ -4543,9 +4591,11 @@ export type PartySavedTrackUpdateWithoutPartyDataInput = {
   spotifyId?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   downVotes?: Maybe<Scalars['Int']>,
   artists?: Maybe<ArtistUpdateManyInput>,
@@ -4678,21 +4728,48 @@ export type PartySavedTrackWhereInput = {
   imageUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  duration?: Maybe<Scalars['Int']>,
+  durationMs?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
-  duration_not?: Maybe<Scalars['Int']>,
+  durationMs_not?: Maybe<Scalars['Int']>,
   /** All values that are contained in given list. */
-  duration_in?: Maybe<Array<Scalars['Int']>>,
+  durationMs_in?: Maybe<Array<Scalars['Int']>>,
   /** All values that are not contained in given list. */
-  duration_not_in?: Maybe<Array<Scalars['Int']>>,
+  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
   /** All values less than the given value. */
-  duration_lt?: Maybe<Scalars['Int']>,
+  durationMs_lt?: Maybe<Scalars['Int']>,
   /** All values less than or equal the given value. */
-  duration_lte?: Maybe<Scalars['Int']>,
+  durationMs_lte?: Maybe<Scalars['Int']>,
   /** All values greater than the given value. */
-  duration_gt?: Maybe<Scalars['Int']>,
+  durationMs_gt?: Maybe<Scalars['Int']>,
   /** All values greater than or equal the given value. */
-  duration_gte?: Maybe<Scalars['Int']>,
+  durationMs_gte?: Maybe<Scalars['Int']>,
+  length?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  length_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  length_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  length_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  length_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  length_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  length_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  length_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  length_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  length_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  length_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  length_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  length_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  length_not_ends_with?: Maybe<Scalars['String']>,
   preview_url?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   preview_url_not?: Maybe<Scalars['String']>,
@@ -4747,6 +4824,9 @@ export type PartySavedTrackWhereInput = {
   uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   uri_not_ends_with?: Maybe<Scalars['String']>,
+  explicit?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  explicit_not?: Maybe<Scalars['Boolean']>,
   upVotes?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
   upVotes_not?: Maybe<Scalars['Int']>,
@@ -5872,11 +5952,11 @@ export type Query = {
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
   hasChats: Scalars['Boolean'],
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   paginateUsers: UserConnection,
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -6296,18 +6376,6 @@ export type QueryHasChatsArgs = {
 };
 
 
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
-
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -6327,6 +6395,18 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
 };
 
 export enum SocialMediaType {
@@ -7987,6 +8067,15 @@ export type Last_Chat_Message_FragmentFragment = (
   )>> }
 );
 
+export type Full_Saved_Track_FragmentFragment = (
+  { __typename?: 'PartySavedTrack' }
+  & Pick<PartySavedTrack, 'id' | 'spotifyId' | 'name' | 'imageUrl' | 'durationMs' | 'length' | 'uri' | 'explicit' | 'upVotes' | 'downVotes'>
+  & { artists: Maybe<Array<(
+    { __typename?: 'Artist' }
+    & Pick<Artist, 'name'>
+  )>> }
+);
+
 export type SignupMutationVariables = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -8499,6 +8588,11 @@ export type JoinPartyFindQuery = (
   ) }
 );
 
+export type Is_Unread_ThreadFragment = (
+  { __typename?: 'Chat' }
+  & Pick<Chat, 'hasUnreadMessages'>
+);
+
 export type Party_SavedTracksConnectionQueryVariables = {
   where?: Maybe<PartySavedTrackWhereInput>,
   orderBy?: Maybe<PartySavedTrackOrderByInput>,
@@ -8518,15 +8612,14 @@ export type Party_SavedTracksConnectionQuery = (
       { __typename?: 'PartySavedTrackEdge' }
       & { node: (
         { __typename?: 'PartySavedTrack' }
-        & Pick<PartySavedTrack, 'id'>
+        & Pick<PartySavedTrack, 'id' | 'name' | 'imageUrl' | 'explicit' | 'length'>
+        & { artists: Maybe<Array<(
+          { __typename?: 'Artist' }
+          & Pick<Artist, 'name'>
+        )>> }
       ) }
     )>> }
   ) }
-);
-
-export type Is_Unread_ThreadFragment = (
-  { __typename?: 'Chat' }
-  & Pick<Chat, 'hasUnreadMessages'>
 );
 
 export type PartyDashboardParticipantsQueryQueryVariables = {
@@ -8576,6 +8669,7 @@ export type Party_Invitation_FragmentUser = Party_Invitation_FragmentFragment['u
 export type Party_Invitation_FragmentParty = Party_Invitation_FragmentFragment['party'];
 export type Last_Chat_Message_FragmentMessages = Last_Chat_Message_FragmentFragment['messages'][0];
 export type Last_Chat_Message_FragmentAuthor = Last_Chat_Message_FragmentFragment['messages'][0]['author'];
+export type Full_Saved_Track_FragmentArtists = Full_Saved_Track_FragmentFragment['artists'][0];
 export type SignupVariables = SignupMutationVariables;
 export type SignupSignup = SignupMutation['signup'];
 export const useSignup = useSignupMutation;
@@ -8694,6 +8788,7 @@ export type Party_SavedTracksConnectionVariables = Party_SavedTracksConnectionQu
 export type Party_SavedTracksConnectionPartySavedTracksConnection = Party_SavedTracksConnectionQuery['partySavedTracksConnection'];
 export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0];
 export type Party_SavedTracksConnectionNode = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0]['node'];
+export type Party_SavedTracksConnectionArtists = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0]['node']['artists'][0];
 export const useParty_SavedTracksConnection = useParty_SavedTracksConnectionQuery;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
@@ -8774,6 +8869,23 @@ export const Last_Chat_Message_FragmentFragmentDoc = gql`
     }
   }
   hasUnreadMessages @client
+}
+    `;
+export const Full_Saved_Track_FragmentFragmentDoc = gql`
+    fragment FULL_SAVED_TRACK_FRAGMENT on PartySavedTrack {
+  id
+  spotifyId
+  name
+  imageUrl
+  artists {
+    name
+  }
+  durationMs
+  length
+  uri
+  explicit
+  upVotes
+  downVotes
 }
     `;
 export const Is_Unread_ThreadFragmentDoc = gql`
@@ -9520,6 +9632,13 @@ export const Party_SavedTracksConnectionDocument = gql`
     edges {
       node {
         id
+        name
+        imageUrl
+        explicit
+        length
+        artists {
+          name
+        }
       }
     }
   }
