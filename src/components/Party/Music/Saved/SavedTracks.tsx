@@ -1,19 +1,22 @@
-import React from 'react';
-import styled from '@emotion/styled-base';
-import { PartyContentInnerWrapper } from '@components/Party/styles';
-import { Affix, Button } from 'antd';
-import gql from 'graphql-tag';
-import {
-  useParty_SavedTracksConnection,
-  PartySavedTrackOrderByInput
-} from '@generated/graphql';
 import GraphqlLoading from '@components/GraphqlLoading';
-import { hasGraphqlData, handleRefetch } from '@shared/graphqlUtils';
-import { NetworkStatus } from 'apollo-client';
-import ErrorSection from '@components/UI/ErrorSection';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
-import SavedTracksList from './SavedTracksList';
+import ErrorSection from '@components/UI/ErrorSection';
+import styled from '@emotion/styled-base';
+import {
+  PartySavedTrackOrderByInput,
+  useParty_SavedTracksConnection
+} from '@generated/graphql';
+import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
+import { Affix, Button } from 'antd';
+import { NetworkStatus } from 'apollo-client';
+import gql from 'graphql-tag';
+import React from 'react';
+import { ListRowRenderer } from 'react-virtualized';
+
+import SavedTrack from './SavedTrack';
 import SavedTracksControls from './SavedTracksControls';
+import SavedTracksList from './SavedTracksList';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding-top: 12px;
@@ -71,6 +74,11 @@ export default function SavedTracks({ partyId }: Props) {
     notifyOnNetworkStatusChange: true
   });
 
+  const [selectingTracks, setSelectingTracks] = React.useState(false);
+  const [, setSelectedTracks] = React.useState<string[]>([]);
+
+  const toggleSetSelectingSongs = () => setSelectingTracks(prev => !prev);
+
   if (
     networkStatus == NetworkStatus.loading ||
     !hasGraphqlData(data, ['partySavedTracksConnection'])
@@ -100,6 +108,23 @@ export default function SavedTracks({ partyId }: Props) {
     partySavedTracksConnection: { edges }
   } = data;
 
+  const renderTrack: ListRowRenderer = ({ style, index }) => {
+    const trackToRender = edges[index].node;
+    return (
+      <SavedTrack
+        onSelectTrack={() =>
+          setSelectedTracks(prev => [...prev, trackToRender.id])
+        }
+        onDeselectTrack={() => {}}
+        selecting={selectingTracks}
+        style={style}
+        track={{ ...trackToRender, artists: '' }}
+        key={index}
+        trackPlaying={false}
+      />
+    );
+  };
+
   if (edges.length == 0)
     return (
       <EmptySection
@@ -112,10 +137,19 @@ export default function SavedTracks({ partyId }: Props) {
   return (
     <React.Fragment>
       <Affix>
-        <SavedTracksControls />
+        <SavedTracksControls
+          onSelectSongsClick={toggleSetSelectingSongs}
+          selectingTracks={selectingTracks}
+        />
       </Affix>
       <SavedTracksInnerWrapper>
-        <SavedTracksList tracks={edges} className="" loading={false} />
+        <SavedTracksList
+          trackRenderer={renderTrack}
+          tracks={edges}
+          className=""
+          loading={false}
+          selectingSongs={selectingTracks}
+        />
       </SavedTracksInnerWrapper>
     </React.Fragment>
   );

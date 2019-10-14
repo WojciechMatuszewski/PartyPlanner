@@ -1,8 +1,14 @@
-import { List } from 'antd';
-import React from 'react';
-import { AutoSizer, List as VList, WindowScroller } from 'react-virtualized';
 import css from '@emotion/css';
 import { Party_SavedTracksConnectionEdges } from '@generated/graphql';
+import { List } from 'antd';
+import React from 'react';
+import {
+  AutoSizer,
+  List as VList,
+  ListRowRenderer,
+  WindowScroller
+} from 'react-virtualized';
+
 import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
 
 const ListStyles = css`
@@ -24,6 +30,8 @@ interface Props {
   loading: boolean;
   tracks: NonNullable<Party_SavedTracksConnectionEdges>[];
   className: string;
+  selectingSongs: boolean;
+  trackRenderer: ListRowRenderer;
 }
 
 export default function SavedTracksList(props: Props) {
@@ -50,30 +58,7 @@ export default function SavedTracksList(props: Props) {
                   rowHeight={VirtualizedListTrackItem.Height}
                   width={width}
                   scrollTop={scrollTop}
-                  rowRenderer={({ index, style }) => {
-                    const track = props.tracks[index];
-                    return (
-                      <VirtualizedListTrackItem
-                        style={style}
-                        track={{ ...track.node, artists: '' }}
-                        key={index}
-                        trackPlaying={false}
-                      />
-                      // <DiscoverTrack
-                      //   onMoreInfoClick={handleMoreInfoClick}
-                      //   onTogglePlayClick={handleOnPlayClick}
-                      //   trackPlaying={
-                      //     currentPlayerTrack
-                      //       ? currentPlayerTrack.id == track.id &&
-                      //         playerState == 'playing'
-                      //       : false
-                      //   }
-                      //   style={style}
-                      //   track={track}
-                      //   key={index}
-                      // />
-                    );
-                  }}
+                  rowRenderer={props.trackRenderer}
                 />
               )}
             </AutoSizer>

@@ -29,13 +29,21 @@ const InnerWrapper = styled.div`
   }
 `;
 
-export default function SavedTracksControls() {
+interface Props {
+  onSelectSongsClick: VoidFunction;
+  selectingTracks: boolean;
+}
+
+export default function SavedTracksControls(props: Props) {
   const isOnMobile = useMedia('(max-width:630px)');
 
   return (
     <Wrapper>
       <InnerWrapper>
-        <Button>
+        <Button
+          onClick={props.onSelectSongsClick}
+          type={props.selectingTracks ? 'primary' : 'defulat'}
+        >
           <Icon type="select" />
           {!isOnMobile && <span>Select songs</span>}
         </Button>

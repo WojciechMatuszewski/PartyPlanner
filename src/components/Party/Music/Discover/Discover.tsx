@@ -13,8 +13,7 @@ import { ActionType, createStandardAction } from 'typesafe-actions';
 import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
 import { Filters } from './DiscoverFilters/shared';
 import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
-
-const MOBILE_BREAKPOINT = '800px';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 
 const SearchWrapper = styled.div`
   width: 100%;
@@ -32,7 +31,7 @@ const SearchWrapper = styled.div`
 const ContentWrapper = styled(PartyContentInnerWrapper)`
   flex: 1;
   margin: 0 auto;
-  @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
+  @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
     padding: 0;
     .discover-tracks-list {
       border-radius: 0;

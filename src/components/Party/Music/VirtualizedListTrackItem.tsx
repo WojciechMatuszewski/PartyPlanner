@@ -1,12 +1,17 @@
 import css from '@emotion/css';
 import { Avatar, Badge, List, Tag, Typography } from 'antd';
 import React from 'react';
+import posed from 'react-pose';
 
 const ListItemStyles = css`
   transition: transform 0.2s ease;
   padding-top: 0;
   padding-bottom: 0;
   height: 100%;
+  display: flex;
+  .posed-content-wrapper {
+    flex: 1;
+  }
   &.track-playing,
   &:hover {
     background: #e6f7ff;
@@ -36,10 +41,21 @@ const ListItemStyles = css`
   }
 `;
 
+const PosedWrapper = posed.div({
+  moved: {
+    x: 32
+  },
+  notMoved: {
+    x: 0
+  }
+});
+
 interface Props {
   trackPlaying: boolean;
   actions?: React.ReactNode[];
+  children?: React.ReactNode;
   style?: React.CSSProperties;
+  shouldMoveContent?: boolean;
   track: {
     name: string;
     imageUrl: string;
@@ -48,11 +64,14 @@ interface Props {
     length: string;
   };
 }
+
 function VirtualizedListTrackItem({
   trackPlaying,
   actions,
   track,
-  style
+  style,
+  children,
+  shouldMoveContent
 }: Props) {
   return (
     <List.Item
@@ -61,28 +80,35 @@ function VirtualizedListTrackItem({
       className={trackPlaying ? 'track-playing' : undefined}
       actions={actions}
     >
-      <List.Item.Meta
-        title={track.name}
-        avatar={
-          <Avatar
-            style={{ width: 48, height: 48 }}
-            src={track.imageUrl}
-            shape="square"
-          />
-        }
-        description={
-          <Typography.Text ellipsis={true}>
-            {track.explicit && <Tag color="magenta">E</Tag>}
-            {track.artists}
-            <Badge
-              style={{ marginLeft: 8 }}
-              status="default"
-              color="blue"
-              text={track.length}
+      {children}
+      <PosedWrapper
+        className="posed-content-wrapper"
+        initialPose="notMoved"
+        pose={shouldMoveContent ? 'moved' : 'notMoved'}
+      >
+        <List.Item.Meta
+          title={track.name}
+          avatar={
+            <Avatar
+              style={{ width: 48, height: 48 }}
+              src={track.imageUrl}
+              shape="square"
             />
-          </Typography.Text>
-        }
-      />
+          }
+          description={
+            <Typography.Text ellipsis={true}>
+              {track.explicit && <Tag color="magenta">E</Tag>}
+              {track.artists}
+              <Badge
+                style={{ marginLeft: 8 }}
+                status="default"
+                color="blue"
+                text={track.length}
+              />
+            </Typography.Text>
+          }
+        />
+      </PosedWrapper>
     </List.Item>
   );
 }

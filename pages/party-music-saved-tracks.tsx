@@ -5,14 +5,14 @@ import SavedTracks from '@components/Party/Music/Saved/SavedTracks';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
-import { PartyContentWrapper
-} from '@components/Party/styles';
+import { PartyContentWrapper } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
 
 import { NextFunctionComponent } from 'next';
 import React from 'react';
 
 import { NextContextWithApollo } from './_app';
+import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 
 interface InjectedProps {
   isInParty: boolean;
@@ -42,6 +42,7 @@ const PartyMusicSavedTracks: NextFunctionComponent<
         <PartyContentWrapper>
           <TrackInfoModalProvider>
             <BigMusicPlayerProvider>
+              <TrackInfoModal />
               <SavedTracks partyId={partyId} />
               {/* <SavedTracksInnerWrapper>
                 <SavedTracksList partyId={partyId} />
