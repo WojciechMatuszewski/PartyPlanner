@@ -1,7 +1,7 @@
-import React from 'react';
-import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
+import React from 'react';
+
 // import { TRACK_INFO_MODAL_MOBILE_BREAKPOINT } from './TrackInfoModal';
 
 const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
@@ -56,16 +56,22 @@ const TitleAuthorsWrapper = styled.div`
 `;
 
 interface Props {
-  track: Track;
+  track: {
+    album: {
+      imageUrl: string;
+    };
+    name: string;
+    stringArtists: string;
+  };
 }
 const TrackInfoModalBasicInfo: React.FC<Props> = ({ track }) => {
   return (
     <TrackImageInfoWrapper>
-      <img src={track.album.images[0].url} />
+      <img src={track.album.imageUrl} />
       <TitleAuthorsWrapper>
         <Typography.Title level={1}>{track.name}</Typography.Title>
         <Typography.Title level={3}>
-          By : {track.artists.map(artist => artist.name).join(', ')}
+          By : {track.stringArtists}
         </Typography.Title>
       </TitleAuthorsWrapper>
     </TrackImageInfoWrapper>

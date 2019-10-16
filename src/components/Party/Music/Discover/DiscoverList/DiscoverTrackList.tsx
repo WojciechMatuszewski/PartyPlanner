@@ -5,7 +5,7 @@ import DiscoverTrack from './DiscoverTrack';
 import css from '@emotion/css';
 import { useBigMusicPlayer } from '../../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../../TrackInfoModal/TrackInfoModalProvider';
-import { Track } from 'spotify-web-sdk';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 const ListStyles = css`
   .ant-spin-container.ant-spin-blur > div:first-of-type {
@@ -36,7 +36,7 @@ interface Props {
   canLoadMore: boolean;
   onLoadMoreClick: () => Promise<void>;
   loading: boolean;
-  tracks: Track[];
+  tracks: Full_Saved_Track_FragmentFragment[];
   loadingMore: boolean;
   className?: string;
 }
@@ -51,14 +51,20 @@ export default function DiscoverTrackList(props: Props) {
 
   const { openModal } = useTrackInfoModal();
 
-  const handleOnPlayClick = React.useCallback((track: Track) => {
-    audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
-    setTrack(track);
-  }, []);
+  const handleOnPlayClick = React.useCallback(
+    (track: Full_Saved_Track_FragmentFragment) => {
+      audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
+      setTrack(track);
+    },
+    []
+  );
 
-  const handleMoreInfoClick = React.useCallback((track: Track) => {
-    openModal(track);
-  }, []);
+  const handleMoreInfoClick = React.useCallback(
+    (track: Full_Saved_Track_FragmentFragment) => {
+      openModal(track);
+    },
+    []
+  );
 
   return (
     <WindowScroller serverHeight={400}>
@@ -85,6 +91,7 @@ export default function DiscoverTrackList(props: Props) {
                   scrollTop={scrollTop}
                   rowRenderer={({ index, style }) => {
                     const track = props.tracks[index];
+
                     return (
                       <DiscoverTrack
                         onMoreInfoClick={handleMoreInfoClick}

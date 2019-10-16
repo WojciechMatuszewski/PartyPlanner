@@ -4,6 +4,7 @@ import useMedia from '@hooks/useMedia';
 import { Button, Icon } from 'antd';
 import React from 'react';
 
+
 const Wrapper = styled.div`
   width: 100%;
   background: white;
@@ -32,6 +33,8 @@ const InnerWrapper = styled.div`
 interface Props {
   onSelectSongsClick: VoidFunction;
   selectingTracks: boolean;
+  onCreatePlaylistClick: VoidFunction;
+  hasSelectedAtLeastOneTrack: boolean;
 }
 
 export default function SavedTracksControls(props: Props) {
@@ -42,12 +45,17 @@ export default function SavedTracksControls(props: Props) {
       <InnerWrapper>
         <Button
           onClick={props.onSelectSongsClick}
-          type={props.selectingTracks ? 'primary' : 'defulat'}
+          type={props.selectingTracks ? 'primary' : 'default'}
         >
           <Icon type="select" />
           {!isOnMobile && <span>Select songs</span>}
         </Button>
-        <GreenSpotifyButton disabled={true}>Create playlist</GreenSpotifyButton>
+        <GreenSpotifyButton
+          disabled={!props.hasSelectedAtLeastOneTrack}
+          onClick={props.onCreatePlaylistClick}
+        >
+          Create playlist
+        </GreenSpotifyButton>
         <Button style={{ alignSelf: 'flex-end' }}>
           <Icon type="filter" />
           Filters

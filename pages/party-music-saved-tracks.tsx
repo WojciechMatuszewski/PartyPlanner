@@ -26,6 +26,8 @@ const PartyMusicSavedTracks: NextFunctionComponent<
   InjectedProps,
   NextContextWithApollo<RouterQuery>
 > = ({ isInParty, partyId }) => {
+  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
+
   if (!isInParty)
     return (
       <PageException
@@ -44,16 +46,27 @@ const PartyMusicSavedTracks: NextFunctionComponent<
             <BigMusicPlayerProvider>
               <TrackInfoModal />
               <SavedTracks partyId={partyId} />
-              {/* <SavedTracksInnerWrapper>
-                <SavedTracksList partyId={partyId} />
-              </SavedTracksInnerWrapper> */}
-              <BigMusicPlayerStickedToBottom />
+              <BigMusicPlayerStickedToBottom
+                onTrackChanged={handleTrackChanged}
+                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+                visible={playerVisible}
+              />
             </BigMusicPlayerProvider>
           </TrackInfoModalProvider>
         </PartyContentWrapper>
       </PartyProvider>
     </React.Fragment>
   );
+
+  function handleTrackChanged() {
+    if (!playerVisible) {
+      setPlayerVisible(true);
+    }
+  }
+
+  function handleMusicPlayerVisibilityChange() {
+    setPlayerVisible(!playerVisible);
+  }
 };
 
 PartyMusicSavedTracks.getInitialProps = PartyAuthenticator.isUserInParty;

@@ -3,10 +3,12 @@ import css from '@emotion/css';
 import { Modal } from 'antd';
 import { Global } from '@emotion/core';
 import styled from '@emotion/styled';
-import { Track } from 'spotify-web-sdk';
 import TrackInfoModalBasicInfo from './TrackInfoModalBasicInfo';
 import TrackInfoModalDetailedInformation from './TrackInfoModalDetailedInformation';
-import { useTrackInfoModal } from './TrackInfoModalProvider';
+import {
+  useTrackInfoModal,
+  TrackInfoModalTrack
+} from './TrackInfoModalProvider';
 
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
@@ -56,7 +58,9 @@ const TrackInfoModalBodyWrapper = styled.div`
   }
 `;
 
-const TrackInfoModalBody: React.FC<{ track: Track }> = ({ track }) => {
+const TrackInfoModalBody: React.FC<{ track: TrackInfoModalTrack }> = ({
+  track
+}) => {
   const { audioPlayerCommands$ } = useBigMusicPlayer();
 
   return (

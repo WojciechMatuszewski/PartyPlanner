@@ -4,9 +4,10 @@ import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
 import styled from '@emotion/styled-base';
 import {
-  PartySavedTrackOrderByInput,
+  Full_Saved_Track_FragmentFragment,
   useParty_SavedTracksConnection
 } from '@generated/graphql';
+import { FULL_SAVED_TRACK_FRAGMENT } from '@graphql/fragments';
 import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import { Affix, Button } from 'antd';
 import { NetworkStatus } from 'apollo-client';
@@ -14,6 +15,9 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { ListRowRenderer } from 'react-virtualized';
 
+import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
+import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
+import CreatePlaylists from './CreatePlaylists';
 import SavedTrack from './SavedTrack';
 import SavedTracksControls from './SavedTracksControls';
 import SavedTracksList from './SavedTracksList';
@@ -43,23 +47,18 @@ export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
     ) {
       edges {
         node {
-          id
-          name
-          imageUrl
-          explicit
-          length
-          artists {
-            name
-          }
+          ...FULL_SAVED_TRACK_FRAGMENT
         }
       }
     }
   }
+  ${FULL_SAVED_TRACK_FRAGMENT}
 `;
 
 interface Props {
   partyId: string;
 }
+
 export default function SavedTracks({ partyId }: Props) {
   const {
     data,
@@ -68,16 +67,43 @@ export default function SavedTracks({ partyId }: Props) {
     networkStatus
   } = useParty_SavedTracksConnection({
     variables: {
-      where: { party: { id: partyId } },
-      orderBy: PartySavedTrackOrderByInput.UpVotesDesc
+      where: { party: { id: partyId } }
     },
     notifyOnNetworkStatusChange: true
   });
 
   const [selectingTracks, setSelectingTracks] = React.useState(false);
-  const [, setSelectedTracks] = React.useState<string[]>([]);
+  const [selectedTracks, setSelectedTracks] = React.useState<
+    Full_Saved_Track_FragmentFragment[]
+  >([]);
+
+  const [
+    createPlaylistModalVisible,
+    setCreatePlaylistModalVisible
+  ] = React.useState(false);
 
   const toggleSetSelectingSongs = () => setSelectingTracks(prev => !prev);
+  const toggleCreatePlaylistModalVisible = () =>
+    setCreatePlaylistModalVisible(prev => !prev);
+
+  const { setTrack, audioPlayerCommands$ } = useBigMusicPlayer();
+
+  const { openModal } = useTrackInfoModal();
+
+  const handlePlayPauseClick = React.useCallback(
+    (track: Full_Saved_Track_FragmentFragment) => {
+      audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
+      setTrack(track);
+    },
+    []
+  );
+
+  const handleMoreInfoClick = React.useCallback(
+    (track: Full_Saved_Track_FragmentFragment) => {
+      openModal(track);
+    },
+    []
+  );
 
   if (
     networkStatus == NetworkStatus.loading ||
@@ -110,15 +136,18 @@ export default function SavedTracks({ partyId }: Props) {
 
   const renderTrack: ListRowRenderer = ({ style, index }) => {
     const trackToRender = edges[index].node;
+
     return (
       <SavedTrack
         onSelectTrack={() =>
-          setSelectedTracks(prev => [...prev, trackToRender.id])
+          setSelectedTracks(prev => [...prev, trackToRender])
         }
+        onPlayPauseClick={handlePlayPauseClick}
+        onShowMoreInfoClick={handleMoreInfoClick}
         onDeselectTrack={() => {}}
         selecting={selectingTracks}
         style={style}
-        track={{ ...trackToRender, artists: '' }}
+        track={trackToRender}
         key={index}
         trackPlaying={false}
       />
@@ -136,8 +165,15 @@ export default function SavedTracks({ partyId }: Props) {
 
   return (
     <React.Fragment>
+      <CreatePlaylists
+        visible={createPlaylistModalVisible}
+        onClose={toggleCreatePlaylistModalVisible}
+        tracks={selectedTracks}
+      />
       <Affix>
         <SavedTracksControls
+          hasSelectedAtLeastOneTrack={!(selectedTracks.length == 0)}
+          onCreatePlaylistClick={toggleCreatePlaylistModalVisible}
           onSelectSongsClick={toggleSetSelectingSongs}
           selectingTracks={selectingTracks}
         />

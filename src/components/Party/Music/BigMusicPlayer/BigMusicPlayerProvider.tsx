@@ -1,10 +1,11 @@
 import React from 'react';
-import { Track } from 'spotify-web-sdk';
+
 import { Subject } from 'rxjs';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 export interface UseBigMusicPlayerCommandsPayload {
   command: 'toggle' | 'pause';
-  trackInQuestion: Track;
+  trackInQuestion: Full_Saved_Track_FragmentFragment;
 }
 
 export type UseBigMusicPlayerStates =
@@ -13,8 +14,8 @@ export type UseBigMusicPlayerStates =
   | 'paused'
   | 'disabled';
 interface BigMusicPlayerContextValue {
-  track: Track | null;
-  setTrack: (track: Track) => void;
+  track: Full_Saved_Track_FragmentFragment | null;
+  setTrack: (track: Full_Saved_Track_FragmentFragment) => void;
   playerState: UseBigMusicPlayerStates;
   setPlayerState: (state: UseBigMusicPlayerStates) => void;
   audioPlayerCommands$: Subject<UseBigMusicPlayerCommandsPayload>;
@@ -31,7 +32,10 @@ const BigMusicPlayerContext = React.createContext<
 export const BigMusicPlayerProvider: React.FC<BigMusicPlayerProviderProps> = ({
   children
 }) => {
-  const [track, setTrack] = React.useState<Track | null>(null);
+  const [
+    track,
+    setTrack
+  ] = React.useState<Full_Saved_Track_FragmentFragment | null>(null);
   const [playerState, setPlayerState] = React.useState<UseBigMusicPlayerStates>(
     'disabled'
   );

@@ -2,6 +2,7 @@ import css from '@emotion/css';
 import { Avatar, Badge, List, Tag, Typography } from 'antd';
 import React from 'react';
 import posed from 'react-pose';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 const ListItemStyles = css`
   transition: transform 0.2s ease;
@@ -56,13 +57,7 @@ interface Props {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   shouldMoveContent?: boolean;
-  track: {
-    name: string;
-    imageUrl: string;
-    explicit: boolean;
-    artists: string;
-    length: string;
-  };
+  track: Full_Saved_Track_FragmentFragment;
 }
 
 function VirtualizedListTrackItem({
@@ -91,14 +86,14 @@ function VirtualizedListTrackItem({
           avatar={
             <Avatar
               style={{ width: 48, height: 48 }}
-              src={track.imageUrl}
+              src={track.album.imageUrl}
               shape="square"
             />
           }
           description={
             <Typography.Text ellipsis={true}>
               {track.explicit && <Tag color="magenta">E</Tag>}
-              {track.artists}
+              {track.stringArtists}
               <Badge
                 style={{ marginLeft: 8 }}
                 status="default"

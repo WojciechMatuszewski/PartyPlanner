@@ -7,6 +7,7 @@ import posed, { PoseGroup } from 'react-pose';
 import { MoreInfoTrackButton, PlayPauseTrackButton } from '../TrackControls';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 type VirtualizedListTrackItemProps = typeof VirtualizedListTrackItem extends (
   args: infer Props
@@ -24,9 +25,12 @@ const PosedCheckboxWrapper = styled(
 `;
 
 type Props = VirtualizedListTrackItemProps & {
+  track: Full_Saved_Track_FragmentFragment;
   selecting: boolean;
-  onSelectTrack: (track: VirtualizedListTrackItemProps['track']) => void;
-  onDeselectTrack: (track: VirtualizedListTrackItemProps['track']) => void;
+  onSelectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
+  onDeselectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
+  onPlayPauseClick: (track: Full_Saved_Track_FragmentFragment) => void;
+  onShowMoreInfoClick: (track: Full_Saved_Track_FragmentFragment) => void;
 };
 
 export default function SavedTrack({
@@ -34,6 +38,8 @@ export default function SavedTrack({
   onSelectTrack,
   onDeselectTrack,
   track,
+  onPlayPauseClick,
+  onShowMoreInfoClick,
   ...virtualItemProps
 }: Props) {
   function handleCheckboxStateChange(
@@ -55,10 +61,10 @@ export default function SavedTrack({
       shouldMoveContent={selecting}
       actions={[
         <PlayPauseTrackButton
-          onTogglePlayClick={() => {}}
+          onTogglePlayClick={() => onPlayPauseClick(track)}
           key={1}
           trackPlaying={false}
-          hasPreviewUrl={false}
+          hasPreviewUrl={true}
         />,
         <MoreInfoTrackButton onMoreInfoClick={() => openModal(track)} key={2} />
       ]}

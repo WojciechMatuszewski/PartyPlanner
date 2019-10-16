@@ -7,8 +7,8 @@ import {
 } from '@shared/styles';
 
 import { Typography, Icon, Button } from 'antd';
-import { Track } from 'spotify-web-sdk';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
@@ -59,15 +59,15 @@ const DefaultImageWrapper = styled.div`
 
 interface Props {
   isOnMobile: boolean;
-  track: Track | null;
+  track: Full_Saved_Track_FragmentFragment | null;
 }
 
-const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
+const BigMusicPlayerTrackInfo: React.FC<Props> = ({ track, isOnMobile }) => {
   const { openModal } = useTrackInfoModal();
 
   return (
     <TrackInfoWrapper>
-      {props.isOnMobile ? (
+      {isOnMobile ? (
         <Button
           size="small"
           shape="circle"
@@ -78,13 +78,8 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
         </Button>
       ) : (
         <React.Fragment>
-          {props.track ? (
-            <img
-              src={
-                props.track.album.images[props.track.album.images.length - 1]
-                  .url
-              }
-            />
+          {track ? (
+            <img src={track.album.imageUrl} />
           ) : (
             <DefaultImageWrapper>
               <Icon type="question" />
@@ -93,10 +88,10 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
 
           <div className="track-info-text">
             <Typography.Title level={4} ellipsis={true}>
-              {props.track ? props.track.name : ''}
+              {track ? track.name : ''}
             </Typography.Title>
             <Typography.Text ellipsis={true}>
-              <a>{props.track ? props.track.artists[0].name : ''}</a>
+              <a>{track ? track.stringArtists : ''}</a>
             </Typography.Text>
           </div>
         </React.Fragment>
@@ -105,8 +100,8 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   );
 
   function handleMoreInfoClick() {
-    if (!props.track) return null;
-    openModal(props.track);
+    if (!track) return null;
+    openModal(track);
   }
 };
 

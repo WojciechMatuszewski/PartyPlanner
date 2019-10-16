@@ -82,17 +82,21 @@ export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
 export const FULL_SAVED_TRACK_FRAGMENT = gql`
   fragment FULL_SAVED_TRACK_FRAGMENT on PartySavedTrack {
     id
-    spotifyId
     name
-    imageUrl
-    artists {
-      name
-    }
-    durationMs
     length
     uri
+    popularity
+    durationMs
+    previewUrl
+    stringArtists
     explicit
-    upVotes
-    downVotes
+    popularity
+    album {
+      id
+      name
+      uri
+      imageUrl
+      releaseDate
+    }
   }
 `;

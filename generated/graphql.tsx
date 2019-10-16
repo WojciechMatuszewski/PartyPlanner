@@ -13,7 +13,7 @@ export type Scalars = {
   Int: number,
   Float: number,
   DateTime: any,
-  /** 
+  /**
  * The `Long` scalar type represents non-fractional signed whole numeric values.
    * Long can represent values between -(2^63) and 2^63 - 1.
  **/
@@ -98,33 +98,11 @@ export type AggregateUser = {
 export type Album = Node & {
    __typename?: 'Album',
   id: Scalars['ID'],
+  spotifyId: Scalars['ID'],
   uri: Scalars['String'],
   name: Scalars['String'],
   releaseDate: Scalars['String'],
-  images?: Maybe<Array<Image>>,
-  artists?: Maybe<Array<Artist>>,
-};
-
-
-export type AlbumImagesArgs = {
-  where?: Maybe<ImageWhereInput>,
-  orderBy?: Maybe<ImageOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type AlbumArtistsArgs = {
-  where?: Maybe<ArtistWhereInput>,
-  orderBy?: Maybe<ArtistOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
+  imageUrl: Scalars['String'],
 };
 
 /** A connection to a list of items. */
@@ -139,11 +117,11 @@ export type AlbumConnection = {
 
 export type AlbumCreateInput = {
   id?: Maybe<Scalars['ID']>,
+  spotifyId: Scalars['ID'],
   uri: Scalars['String'],
   name: Scalars['String'],
   releaseDate: Scalars['String'],
-  images?: Maybe<ImageCreateManyInput>,
-  artists?: Maybe<ArtistCreateManyInput>,
+  imageUrl: Scalars['String'],
 };
 
 export type AlbumCreateOneInput = {
@@ -163,20 +141,26 @@ export type AlbumEdge = {
 export enum AlbumOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  SpotifyIdAsc = 'spotifyId_ASC',
+  SpotifyIdDesc = 'spotifyId_DESC',
   UriAsc = 'uri_ASC',
   UriDesc = 'uri_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   ReleaseDateAsc = 'releaseDate_ASC',
-  ReleaseDateDesc = 'releaseDate_DESC'
+  ReleaseDateDesc = 'releaseDate_DESC',
+  ImageUrlAsc = 'imageUrl_ASC',
+  ImageUrlDesc = 'imageUrl_DESC'
 }
 
 export type AlbumPreviousValues = {
    __typename?: 'AlbumPreviousValues',
   id: Scalars['ID'],
+  spotifyId: Scalars['ID'],
   uri: Scalars['String'],
   name: Scalars['String'],
   releaseDate: Scalars['String'],
+  imageUrl: Scalars['String'],
 };
 
 export type AlbumSubscriptionPayload = {
@@ -206,25 +190,27 @@ export type AlbumSubscriptionWhereInput = {
 };
 
 export type AlbumUpdateDataInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
   uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   releaseDate?: Maybe<Scalars['String']>,
-  images?: Maybe<ImageUpdateManyInput>,
-  artists?: Maybe<ArtistUpdateManyInput>,
+  imageUrl?: Maybe<Scalars['String']>,
 };
 
 export type AlbumUpdateInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
   uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   releaseDate?: Maybe<Scalars['String']>,
-  images?: Maybe<ImageUpdateManyInput>,
-  artists?: Maybe<ArtistUpdateManyInput>,
+  imageUrl?: Maybe<Scalars['String']>,
 };
 
 export type AlbumUpdateManyMutationInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
   uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   releaseDate?: Maybe<Scalars['String']>,
+  imageUrl?: Maybe<Scalars['String']>,
 };
 
 export type AlbumUpdateOneRequiredInput = {
@@ -273,6 +259,33 @@ export type AlbumWhereInput = {
   id_ends_with?: Maybe<Scalars['ID']>,
   /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<Scalars['ID']>,
+  spotifyId?: Maybe<Scalars['ID']>,
+  /** All values that are not equal to given value. */
+  spotifyId_not?: Maybe<Scalars['ID']>,
+  /** All values that are contained in given list. */
+  spotifyId_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values that are not contained in given list. */
+  spotifyId_not_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values less than the given value. */
+  spotifyId_lt?: Maybe<Scalars['ID']>,
+  /** All values less than or equal the given value. */
+  spotifyId_lte?: Maybe<Scalars['ID']>,
+  /** All values greater than the given value. */
+  spotifyId_gt?: Maybe<Scalars['ID']>,
+  /** All values greater than or equal the given value. */
+  spotifyId_gte?: Maybe<Scalars['ID']>,
+  /** All values containing the given string. */
+  spotifyId_contains?: Maybe<Scalars['ID']>,
+  /** All values not containing the given string. */
+  spotifyId_not_contains?: Maybe<Scalars['ID']>,
+  /** All values starting with the given string. */
+  spotifyId_starts_with?: Maybe<Scalars['ID']>,
+  /** All values not starting with the given string. */
+  spotifyId_not_starts_with?: Maybe<Scalars['ID']>,
+  /** All values ending with the given string. */
+  spotifyId_ends_with?: Maybe<Scalars['ID']>,
+  /** All values not ending with the given string. */
+  spotifyId_not_ends_with?: Maybe<Scalars['ID']>,
   uri?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   uri_not?: Maybe<Scalars['String']>,
@@ -354,12 +367,33 @@ export type AlbumWhereInput = {
   releaseDate_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   releaseDate_not_ends_with?: Maybe<Scalars['String']>,
-  images_every?: Maybe<ImageWhereInput>,
-  images_some?: Maybe<ImageWhereInput>,
-  images_none?: Maybe<ImageWhereInput>,
-  artists_every?: Maybe<ArtistWhereInput>,
-  artists_some?: Maybe<ArtistWhereInput>,
-  artists_none?: Maybe<ArtistWhereInput>,
+  imageUrl?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  imageUrl_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  imageUrl_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  imageUrl_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  imageUrl_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  imageUrl_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  imageUrl_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  imageUrl_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  imageUrl_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  imageUrl_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  imageUrl_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  imageUrl_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  imageUrl_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  imageUrl_not_ends_with?: Maybe<Scalars['String']>,
 };
 
 export type AlbumWhereUniqueInput = {
@@ -369,6 +403,8 @@ export type AlbumWhereUniqueInput = {
 export type Artist = Node & {
    __typename?: 'Artist',
   id: Scalars['ID'],
+  spotifyId: Scalars['ID'],
+  uri: Scalars['String'],
   name: Scalars['String'],
 };
 
@@ -384,6 +420,8 @@ export type ArtistConnection = {
 
 export type ArtistCreateInput = {
   id?: Maybe<Scalars['ID']>,
+  spotifyId: Scalars['ID'],
+  uri: Scalars['String'],
   name: Scalars['String'],
 };
 
@@ -404,6 +442,10 @@ export type ArtistEdge = {
 export enum ArtistOrderByInput {
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  SpotifyIdAsc = 'spotifyId_ASC',
+  SpotifyIdDesc = 'spotifyId_DESC',
+  UriAsc = 'uri_ASC',
+  UriDesc = 'uri_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC'
 }
@@ -411,6 +453,8 @@ export enum ArtistOrderByInput {
 export type ArtistPreviousValues = {
    __typename?: 'ArtistPreviousValues',
   id: Scalars['ID'],
+  spotifyId: Scalars['ID'],
+  uri: Scalars['String'],
   name: Scalars['String'],
 };
 
@@ -448,6 +492,60 @@ export type ArtistScalarWhereInput = {
   id_ends_with?: Maybe<Scalars['ID']>,
   /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<Scalars['ID']>,
+  spotifyId?: Maybe<Scalars['ID']>,
+  /** All values that are not equal to given value. */
+  spotifyId_not?: Maybe<Scalars['ID']>,
+  /** All values that are contained in given list. */
+  spotifyId_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values that are not contained in given list. */
+  spotifyId_not_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values less than the given value. */
+  spotifyId_lt?: Maybe<Scalars['ID']>,
+  /** All values less than or equal the given value. */
+  spotifyId_lte?: Maybe<Scalars['ID']>,
+  /** All values greater than the given value. */
+  spotifyId_gt?: Maybe<Scalars['ID']>,
+  /** All values greater than or equal the given value. */
+  spotifyId_gte?: Maybe<Scalars['ID']>,
+  /** All values containing the given string. */
+  spotifyId_contains?: Maybe<Scalars['ID']>,
+  /** All values not containing the given string. */
+  spotifyId_not_contains?: Maybe<Scalars['ID']>,
+  /** All values starting with the given string. */
+  spotifyId_starts_with?: Maybe<Scalars['ID']>,
+  /** All values not starting with the given string. */
+  spotifyId_not_starts_with?: Maybe<Scalars['ID']>,
+  /** All values ending with the given string. */
+  spotifyId_ends_with?: Maybe<Scalars['ID']>,
+  /** All values not ending with the given string. */
+  spotifyId_not_ends_with?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  uri_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  uri_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  uri_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  uri_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  uri_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  uri_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  uri_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  uri_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  uri_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  uri_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  uri_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  uri_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  uri_not_ends_with?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   name_not?: Maybe<Scalars['String']>,
@@ -504,14 +602,20 @@ export type ArtistSubscriptionWhereInput = {
 };
 
 export type ArtistUpdateDataInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
 };
 
 export type ArtistUpdateInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
 };
 
 export type ArtistUpdateManyDataInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
 };
 
@@ -528,6 +632,8 @@ export type ArtistUpdateManyInput = {
 };
 
 export type ArtistUpdateManyMutationInput = {
+  spotifyId?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
 };
 
@@ -581,6 +687,60 @@ export type ArtistWhereInput = {
   id_ends_with?: Maybe<Scalars['ID']>,
   /** All values not ending with the given string. */
   id_not_ends_with?: Maybe<Scalars['ID']>,
+  spotifyId?: Maybe<Scalars['ID']>,
+  /** All values that are not equal to given value. */
+  spotifyId_not?: Maybe<Scalars['ID']>,
+  /** All values that are contained in given list. */
+  spotifyId_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values that are not contained in given list. */
+  spotifyId_not_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values less than the given value. */
+  spotifyId_lt?: Maybe<Scalars['ID']>,
+  /** All values less than or equal the given value. */
+  spotifyId_lte?: Maybe<Scalars['ID']>,
+  /** All values greater than the given value. */
+  spotifyId_gt?: Maybe<Scalars['ID']>,
+  /** All values greater than or equal the given value. */
+  spotifyId_gte?: Maybe<Scalars['ID']>,
+  /** All values containing the given string. */
+  spotifyId_contains?: Maybe<Scalars['ID']>,
+  /** All values not containing the given string. */
+  spotifyId_not_contains?: Maybe<Scalars['ID']>,
+  /** All values starting with the given string. */
+  spotifyId_starts_with?: Maybe<Scalars['ID']>,
+  /** All values not starting with the given string. */
+  spotifyId_not_starts_with?: Maybe<Scalars['ID']>,
+  /** All values ending with the given string. */
+  spotifyId_ends_with?: Maybe<Scalars['ID']>,
+  /** All values not ending with the given string. */
+  spotifyId_not_ends_with?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  uri_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  uri_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  uri_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  uri_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  uri_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  uri_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  uri_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  uri_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  uri_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  uri_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  uri_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  uri_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  uri_not_ends_with?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   name_not?: Maybe<Scalars['String']>,
@@ -1377,11 +1537,6 @@ export type ImageCreateInput = {
   url: Scalars['String'],
 };
 
-export type ImageCreateManyInput = {
-  create?: Maybe<Array<ImageCreateInput>>,
-  connect?: Maybe<Array<ImageWhereUniqueInput>>,
-};
-
 /** An edge in a connection. */
 export type ImageEdge = {
    __typename?: 'ImageEdge',
@@ -1410,99 +1565,6 @@ export type ImagePreviousValues = {
   url: Scalars['String'],
 };
 
-export type ImageScalarWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<ImageScalarWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<ImageScalarWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<ImageScalarWhereInput>>,
-  id?: Maybe<Scalars['ID']>,
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<Scalars['ID']>,
-  /** All values that are contained in given list. */
-  id_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values less than the given value. */
-  id_lt?: Maybe<Scalars['ID']>,
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<Scalars['ID']>,
-  /** All values greater than the given value. */
-  id_gt?: Maybe<Scalars['ID']>,
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<Scalars['ID']>,
-  /** All values containing the given string. */
-  id_contains?: Maybe<Scalars['ID']>,
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<Scalars['ID']>,
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<Scalars['ID']>,
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<Scalars['ID']>,
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<Scalars['ID']>,
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<Scalars['ID']>,
-  height?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  height_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  height_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  height_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  height_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  height_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  height_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  height_gte?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  width_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  width_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  width_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  width_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  width_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  width_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  width_gte?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  url_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  url_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  url_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  url_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  url_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  url_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  url_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  url_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  url_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  url_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  url_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  url_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  url_not_ends_with?: Maybe<Scalars['String']>,
-};
-
 export type ImageSubscriptionPayload = {
    __typename?: 'ImageSubscriptionPayload',
   mutation: MutationType,
@@ -1529,56 +1591,16 @@ export type ImageSubscriptionWhereInput = {
   node?: Maybe<ImageWhereInput>,
 };
 
-export type ImageUpdateDataInput = {
-  height?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-};
-
 export type ImageUpdateInput = {
   height?: Maybe<Scalars['Int']>,
   width?: Maybe<Scalars['Int']>,
   url?: Maybe<Scalars['String']>,
 };
 
-export type ImageUpdateManyDataInput = {
-  height?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-};
-
-export type ImageUpdateManyInput = {
-  create?: Maybe<Array<ImageCreateInput>>,
-  connect?: Maybe<Array<ImageWhereUniqueInput>>,
-  set?: Maybe<Array<ImageWhereUniqueInput>>,
-  disconnect?: Maybe<Array<ImageWhereUniqueInput>>,
-  delete?: Maybe<Array<ImageWhereUniqueInput>>,
-  update?: Maybe<Array<ImageUpdateWithWhereUniqueNestedInput>>,
-  updateMany?: Maybe<Array<ImageUpdateManyWithWhereNestedInput>>,
-  deleteMany?: Maybe<Array<ImageScalarWhereInput>>,
-  upsert?: Maybe<Array<ImageUpsertWithWhereUniqueNestedInput>>,
-};
-
 export type ImageUpdateManyMutationInput = {
   height?: Maybe<Scalars['Int']>,
   width?: Maybe<Scalars['Int']>,
   url?: Maybe<Scalars['String']>,
-};
-
-export type ImageUpdateManyWithWhereNestedInput = {
-  where: ImageScalarWhereInput,
-  data: ImageUpdateManyDataInput,
-};
-
-export type ImageUpdateWithWhereUniqueNestedInput = {
-  where: ImageWhereUniqueInput,
-  data: ImageUpdateDataInput,
-};
-
-export type ImageUpsertWithWhereUniqueNestedInput = {
-  where: ImageWhereUniqueInput,
-  update: ImageUpdateDataInput,
-  create: ImageCreateInput,
 };
 
 export type ImageWhereInput = {
@@ -2272,14 +2294,14 @@ export type Mutation = {
   createPartyCart: PartyCart,
   createPartyCartItem: PartyCartItem,
   createPartySavedTrack: PartySavedTrack,
-  createAlbum: Album,
   createImage: Image,
+  createArtist: Artist,
   createLocation: Location,
   createGame: Game,
-  createArtist: Artist,
   createTrack: Track,
   createUser: User,
   createParty: Party,
+  createAlbum: Album,
   updateMessage?: Maybe<Message>,
   updatePartyInvitation?: Maybe<PartyInvitation>,
   updateChat?: Maybe<Chat>,
@@ -2287,14 +2309,14 @@ export type Mutation = {
   updatePartyCart?: Maybe<PartyCart>,
   updatePartyCartItem?: Maybe<PartyCartItem>,
   updatePartySavedTrack?: Maybe<PartySavedTrack>,
-  updateAlbum?: Maybe<Album>,
   updateImage?: Maybe<Image>,
+  updateArtist?: Maybe<Artist>,
   updateLocation?: Maybe<Location>,
   updateGame?: Maybe<Game>,
-  updateArtist?: Maybe<Artist>,
   updateTrack?: Maybe<Track>,
   updateUser?: Maybe<User>,
   updateParty?: Maybe<Party>,
+  updateAlbum?: Maybe<Album>,
   deleteMessage?: Maybe<Message>,
   deletePartyInvitation?: Maybe<PartyInvitation>,
   deleteChat?: Maybe<Chat>,
@@ -2302,14 +2324,14 @@ export type Mutation = {
   deletePartyCart?: Maybe<PartyCart>,
   deletePartyCartItem?: Maybe<PartyCartItem>,
   deletePartySavedTrack?: Maybe<PartySavedTrack>,
-  deleteAlbum?: Maybe<Album>,
   deleteImage?: Maybe<Image>,
+  deleteArtist?: Maybe<Artist>,
   deleteLocation?: Maybe<Location>,
   deleteGame?: Maybe<Game>,
-  deleteArtist?: Maybe<Artist>,
   deleteTrack?: Maybe<Track>,
   deleteUser?: Maybe<User>,
   deleteParty?: Maybe<Party>,
+  deleteAlbum?: Maybe<Album>,
   upsertMessage: Message,
   upsertPartyInvitation: PartyInvitation,
   upsertChat: Chat,
@@ -2317,27 +2339,27 @@ export type Mutation = {
   upsertPartyCart: PartyCart,
   upsertPartyCartItem: PartyCartItem,
   upsertPartySavedTrack: PartySavedTrack,
-  upsertAlbum: Album,
   upsertImage: Image,
+  upsertArtist: Artist,
   upsertLocation: Location,
   upsertGame: Game,
-  upsertArtist: Artist,
   upsertTrack: Track,
   upsertUser: User,
   upsertParty: Party,
+  upsertAlbum: Album,
   updateManyMessages: BatchPayload,
   updateManyPartyInvitations: BatchPayload,
   updateManyPlaylists: BatchPayload,
   updateManyPartyCartItems: BatchPayload,
   updateManyPartySavedTracks: BatchPayload,
-  updateManyAlbums: BatchPayload,
   updateManyImages: BatchPayload,
+  updateManyArtists: BatchPayload,
   updateManyLocations: BatchPayload,
   updateManyGames: BatchPayload,
-  updateManyArtists: BatchPayload,
   updateManyTracks: BatchPayload,
   updateManyUsers: BatchPayload,
   updateManyParties: BatchPayload,
+  updateManyAlbums: BatchPayload,
   deleteManyMessages: BatchPayload,
   deleteManyPartyInvitations: BatchPayload,
   deleteManyChats: BatchPayload,
@@ -2345,14 +2367,15 @@ export type Mutation = {
   deleteManyPartyCarts: BatchPayload,
   deleteManyPartyCartItems: BatchPayload,
   deleteManyPartySavedTracks: BatchPayload,
-  deleteManyAlbums: BatchPayload,
   deleteManyImages: BatchPayload,
+  deleteManyArtists: BatchPayload,
   deleteManyLocations: BatchPayload,
   deleteManyGames: BatchPayload,
-  deleteManyArtists: BatchPayload,
   deleteManyTracks: BatchPayload,
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
+  deleteManyAlbums: BatchPayload,
+  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2360,7 +2383,6 @@ export type Mutation = {
   inviteToFriends: User,
   requestReset?: Maybe<SuccessMessage>,
   resetPassword?: Maybe<AuthPayload>,
-  joinParty?: Maybe<Scalars['Boolean']>,
 };
 
 
@@ -2399,13 +2421,13 @@ export type MutationCreatePartySavedTrackArgs = {
 };
 
 
-export type MutationCreateAlbumArgs = {
-  data: AlbumCreateInput
+export type MutationCreateImageArgs = {
+  data: ImageCreateInput
 };
 
 
-export type MutationCreateImageArgs = {
-  data: ImageCreateInput
+export type MutationCreateArtistArgs = {
+  data: ArtistCreateInput
 };
 
 
@@ -2416,11 +2438,6 @@ export type MutationCreateLocationArgs = {
 
 export type MutationCreateGameArgs = {
   data: GameCreateInput
-};
-
-
-export type MutationCreateArtistArgs = {
-  data: ArtistCreateInput
 };
 
 
@@ -2436,6 +2453,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationCreatePartyArgs = {
   data: PartyCreateInput
+};
+
+
+export type MutationCreateAlbumArgs = {
+  data: AlbumCreateInput
 };
 
 
@@ -2481,15 +2503,15 @@ export type MutationUpdatePartySavedTrackArgs = {
 };
 
 
-export type MutationUpdateAlbumArgs = {
-  data: AlbumUpdateInput,
-  where: AlbumWhereUniqueInput
-};
-
-
 export type MutationUpdateImageArgs = {
   data: ImageUpdateInput,
   where: ImageWhereUniqueInput
+};
+
+
+export type MutationUpdateArtistArgs = {
+  data: ArtistUpdateInput,
+  where: ArtistWhereUniqueInput
 };
 
 
@@ -2502,12 +2524,6 @@ export type MutationUpdateLocationArgs = {
 export type MutationUpdateGameArgs = {
   data: GameUpdateInput,
   where: GameWhereUniqueInput
-};
-
-
-export type MutationUpdateArtistArgs = {
-  data: ArtistUpdateInput,
-  where: ArtistWhereUniqueInput
 };
 
 
@@ -2526,6 +2542,12 @@ export type MutationUpdateUserArgs = {
 export type MutationUpdatePartyArgs = {
   data: PartyUpdateInput,
   where: PartyWhereUniqueInput
+};
+
+
+export type MutationUpdateAlbumArgs = {
+  data: AlbumUpdateInput,
+  where: AlbumWhereUniqueInput
 };
 
 
@@ -2564,13 +2586,13 @@ export type MutationDeletePartySavedTrackArgs = {
 };
 
 
-export type MutationDeleteAlbumArgs = {
-  where: AlbumWhereUniqueInput
+export type MutationDeleteImageArgs = {
+  where: ImageWhereUniqueInput
 };
 
 
-export type MutationDeleteImageArgs = {
-  where: ImageWhereUniqueInput
+export type MutationDeleteArtistArgs = {
+  where: ArtistWhereUniqueInput
 };
 
 
@@ -2581,11 +2603,6 @@ export type MutationDeleteLocationArgs = {
 
 export type MutationDeleteGameArgs = {
   where: GameWhereUniqueInput
-};
-
-
-export type MutationDeleteArtistArgs = {
-  where: ArtistWhereUniqueInput
 };
 
 
@@ -2601,6 +2618,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationDeletePartyArgs = {
   where: PartyWhereUniqueInput
+};
+
+
+export type MutationDeleteAlbumArgs = {
+  where: AlbumWhereUniqueInput
 };
 
 
@@ -2653,17 +2675,17 @@ export type MutationUpsertPartySavedTrackArgs = {
 };
 
 
-export type MutationUpsertAlbumArgs = {
-  where: AlbumWhereUniqueInput,
-  create: AlbumCreateInput,
-  update: AlbumUpdateInput
-};
-
-
 export type MutationUpsertImageArgs = {
   where: ImageWhereUniqueInput,
   create: ImageCreateInput,
   update: ImageUpdateInput
+};
+
+
+export type MutationUpsertArtistArgs = {
+  where: ArtistWhereUniqueInput,
+  create: ArtistCreateInput,
+  update: ArtistUpdateInput
 };
 
 
@@ -2678,13 +2700,6 @@ export type MutationUpsertGameArgs = {
   where: GameWhereUniqueInput,
   create: GameCreateInput,
   update: GameUpdateInput
-};
-
-
-export type MutationUpsertArtistArgs = {
-  where: ArtistWhereUniqueInput,
-  create: ArtistCreateInput,
-  update: ArtistUpdateInput
 };
 
 
@@ -2706,6 +2721,13 @@ export type MutationUpsertPartyArgs = {
   where: PartyWhereUniqueInput,
   create: PartyCreateInput,
   update: PartyUpdateInput
+};
+
+
+export type MutationUpsertAlbumArgs = {
+  where: AlbumWhereUniqueInput,
+  create: AlbumCreateInput,
+  update: AlbumUpdateInput
 };
 
 
@@ -2739,15 +2761,15 @@ export type MutationUpdateManyPartySavedTracksArgs = {
 };
 
 
-export type MutationUpdateManyAlbumsArgs = {
-  data: AlbumUpdateManyMutationInput,
-  where?: Maybe<AlbumWhereInput>
-};
-
-
 export type MutationUpdateManyImagesArgs = {
   data: ImageUpdateManyMutationInput,
   where?: Maybe<ImageWhereInput>
+};
+
+
+export type MutationUpdateManyArtistsArgs = {
+  data: ArtistUpdateManyMutationInput,
+  where?: Maybe<ArtistWhereInput>
 };
 
 
@@ -2760,12 +2782,6 @@ export type MutationUpdateManyLocationsArgs = {
 export type MutationUpdateManyGamesArgs = {
   data: GameUpdateManyMutationInput,
   where?: Maybe<GameWhereInput>
-};
-
-
-export type MutationUpdateManyArtistsArgs = {
-  data: ArtistUpdateManyMutationInput,
-  where?: Maybe<ArtistWhereInput>
 };
 
 
@@ -2784,6 +2800,12 @@ export type MutationUpdateManyUsersArgs = {
 export type MutationUpdateManyPartiesArgs = {
   data: PartyUpdateManyMutationInput,
   where?: Maybe<PartyWhereInput>
+};
+
+
+export type MutationUpdateManyAlbumsArgs = {
+  data: AlbumUpdateManyMutationInput,
+  where?: Maybe<AlbumWhereInput>
 };
 
 
@@ -2822,13 +2844,13 @@ export type MutationDeleteManyPartySavedTracksArgs = {
 };
 
 
-export type MutationDeleteManyAlbumsArgs = {
-  where?: Maybe<AlbumWhereInput>
+export type MutationDeleteManyImagesArgs = {
+  where?: Maybe<ImageWhereInput>
 };
 
 
-export type MutationDeleteManyImagesArgs = {
-  where?: Maybe<ImageWhereInput>
+export type MutationDeleteManyArtistsArgs = {
+  where?: Maybe<ArtistWhereInput>
 };
 
 
@@ -2839,11 +2861,6 @@ export type MutationDeleteManyLocationsArgs = {
 
 export type MutationDeleteManyGamesArgs = {
   where?: Maybe<GameWhereInput>
-};
-
-
-export type MutationDeleteManyArtistsArgs = {
-  where?: Maybe<ArtistWhereInput>
 };
 
 
@@ -2859,6 +2876,16 @@ export type MutationDeleteManyUsersArgs = {
 
 export type MutationDeleteManyPartiesArgs = {
   where?: Maybe<PartyWhereInput>
+};
+
+
+export type MutationDeleteManyAlbumsArgs = {
+  where?: Maybe<AlbumWhereInput>
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
@@ -2901,11 +2928,6 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
 };
 
 export enum MutationType {
@@ -4123,40 +4145,16 @@ export type PartySavedTrack = Node & {
    __typename?: 'PartySavedTrack',
   id: Scalars['ID'],
   spotifyId: Scalars['String'],
-  name: Scalars['String'],
-  party: Party,
-  imageUrl: Scalars['String'],
-  artists?: Maybe<Array<Artist>>,
   durationMs: Scalars['Int'],
-  length: Scalars['String'],
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit: Scalars['Boolean'],
-  upVotes: Scalars['Int'],
-  downVotes: Scalars['Int'],
-  votedBy?: Maybe<Array<User>>,
-};
-
-
-export type PartySavedTrackArtistsArgs = {
-  where?: Maybe<ArtistWhereInput>,
-  orderBy?: Maybe<ArtistOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type PartySavedTrackVotedByArgs = {
-  where?: Maybe<UserWhereInput>,
-  orderBy?: Maybe<UserOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
+  name: Scalars['String'],
+  previewUrl?: Maybe<Scalars['String']>,
+  uri: Scalars['String'],
+  party: Party,
+  stringArtists: Scalars['String'],
+  length: Scalars['String'],
+  popularity: Scalars['Int'],
+  album: Album,
 };
 
 /** A connection to a list of items. */
@@ -4172,18 +4170,16 @@ export type PartySavedTrackConnection = {
 export type PartySavedTrackCreateInput = {
   id?: Maybe<Scalars['ID']>,
   spotifyId: Scalars['String'],
-  name: Scalars['String'],
-  imageUrl: Scalars['String'],
   durationMs: Scalars['Int'],
-  length: Scalars['String'],
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit: Scalars['Boolean'],
-  upVotes: Scalars['Int'],
-  downVotes: Scalars['Int'],
+  name: Scalars['String'],
+  previewUrl?: Maybe<Scalars['String']>,
+  uri: Scalars['String'],
+  stringArtists: Scalars['String'],
+  length: Scalars['String'],
+  popularity: Scalars['Int'],
   party: PartyCreateOneWithoutSavedTracksInput,
-  artists?: Maybe<ArtistCreateManyInput>,
-  votedBy?: Maybe<UserCreateManyInput>,
+  album: AlbumCreateOneInput,
 };
 
 export type PartySavedTrackCreateManyWithoutPartyInput = {
@@ -4194,17 +4190,15 @@ export type PartySavedTrackCreateManyWithoutPartyInput = {
 export type PartySavedTrackCreateWithoutPartyInput = {
   id?: Maybe<Scalars['ID']>,
   spotifyId: Scalars['String'],
-  name: Scalars['String'],
-  imageUrl: Scalars['String'],
   durationMs: Scalars['Int'],
-  length: Scalars['String'],
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit: Scalars['Boolean'],
-  upVotes: Scalars['Int'],
-  downVotes: Scalars['Int'],
-  artists?: Maybe<ArtistCreateManyInput>,
-  votedBy?: Maybe<UserCreateManyInput>,
+  name: Scalars['String'],
+  previewUrl?: Maybe<Scalars['String']>,
+  uri: Scalars['String'],
+  stringArtists: Scalars['String'],
+  length: Scalars['String'],
+  popularity: Scalars['Int'],
+  album: AlbumCreateOneInput,
 };
 
 /** An edge in a connection. */
@@ -4221,39 +4215,36 @@ export enum PartySavedTrackOrderByInput {
   IdDesc = 'id_DESC',
   SpotifyIdAsc = 'spotifyId_ASC',
   SpotifyIdDesc = 'spotifyId_DESC',
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
-  ImageUrlAsc = 'imageUrl_ASC',
-  ImageUrlDesc = 'imageUrl_DESC',
   DurationMsAsc = 'durationMs_ASC',
   DurationMsDesc = 'durationMs_DESC',
-  LengthAsc = 'length_ASC',
-  LengthDesc = 'length_DESC',
-  PreviewUrlAsc = 'preview_url_ASC',
-  PreviewUrlDesc = 'preview_url_DESC',
-  UriAsc = 'uri_ASC',
-  UriDesc = 'uri_DESC',
   ExplicitAsc = 'explicit_ASC',
   ExplicitDesc = 'explicit_DESC',
-  UpVotesAsc = 'upVotes_ASC',
-  UpVotesDesc = 'upVotes_DESC',
-  DownVotesAsc = 'downVotes_ASC',
-  DownVotesDesc = 'downVotes_DESC'
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  PreviewUrlAsc = 'previewUrl_ASC',
+  PreviewUrlDesc = 'previewUrl_DESC',
+  UriAsc = 'uri_ASC',
+  UriDesc = 'uri_DESC',
+  StringArtistsAsc = 'stringArtists_ASC',
+  StringArtistsDesc = 'stringArtists_DESC',
+  LengthAsc = 'length_ASC',
+  LengthDesc = 'length_DESC',
+  PopularityAsc = 'popularity_ASC',
+  PopularityDesc = 'popularity_DESC'
 }
 
 export type PartySavedTrackPreviousValues = {
    __typename?: 'PartySavedTrackPreviousValues',
   id: Scalars['ID'],
   spotifyId: Scalars['String'],
-  name: Scalars['String'],
-  imageUrl: Scalars['String'],
   durationMs: Scalars['Int'],
-  length: Scalars['String'],
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit: Scalars['Boolean'],
-  upVotes: Scalars['Int'],
-  downVotes: Scalars['Int'],
+  name: Scalars['String'],
+  previewUrl?: Maybe<Scalars['String']>,
+  uri: Scalars['String'],
+  stringArtists: Scalars['String'],
+  length: Scalars['String'],
+  popularity: Scalars['Int'],
 };
 
 export type PartySavedTrackScalarWhereInput = {
@@ -4317,6 +4308,24 @@ export type PartySavedTrackScalarWhereInput = {
   spotifyId_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   spotifyId_not_ends_with?: Maybe<Scalars['String']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  /** All values that are not equal to given value. */
+  durationMs_not?: Maybe<Scalars['Int']>,
+  /** All values that are contained in given list. */
+  durationMs_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values that are not contained in given list. */
+  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values less than the given value. */
+  durationMs_lt?: Maybe<Scalars['Int']>,
+  /** All values less than or equal the given value. */
+  durationMs_lte?: Maybe<Scalars['Int']>,
+  /** All values greater than the given value. */
+  durationMs_gt?: Maybe<Scalars['Int']>,
+  /** All values greater than or equal the given value. */
+  durationMs_gte?: Maybe<Scalars['Int']>,
+  explicit?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  explicit_not?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   name_not?: Maybe<Scalars['String']>,
@@ -4344,102 +4353,33 @@ export type PartySavedTrackScalarWhereInput = {
   name_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   name_not_ends_with?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  imageUrl_not?: Maybe<Scalars['String']>,
+  previewUrl_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  imageUrl_in?: Maybe<Array<Scalars['String']>>,
+  previewUrl_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  imageUrl_not_in?: Maybe<Array<Scalars['String']>>,
+  previewUrl_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  imageUrl_lt?: Maybe<Scalars['String']>,
+  previewUrl_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  imageUrl_lte?: Maybe<Scalars['String']>,
+  previewUrl_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  imageUrl_gt?: Maybe<Scalars['String']>,
+  previewUrl_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  imageUrl_gte?: Maybe<Scalars['String']>,
+  previewUrl_gte?: Maybe<Scalars['String']>,
   /** All values containing the given string. */
-  imageUrl_contains?: Maybe<Scalars['String']>,
+  previewUrl_contains?: Maybe<Scalars['String']>,
   /** All values not containing the given string. */
-  imageUrl_not_contains?: Maybe<Scalars['String']>,
+  previewUrl_not_contains?: Maybe<Scalars['String']>,
   /** All values starting with the given string. */
-  imageUrl_starts_with?: Maybe<Scalars['String']>,
+  previewUrl_starts_with?: Maybe<Scalars['String']>,
   /** All values not starting with the given string. */
-  imageUrl_not_starts_with?: Maybe<Scalars['String']>,
+  previewUrl_not_starts_with?: Maybe<Scalars['String']>,
   /** All values ending with the given string. */
-  imageUrl_ends_with?: Maybe<Scalars['String']>,
+  previewUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
-  imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  durationMs?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  durationMs_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  durationMs_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  durationMs_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  durationMs_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  durationMs_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  durationMs_gte?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  length_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  length_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  length_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  length_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  length_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  length_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  length_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  length_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  length_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  length_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  length_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  length_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  length_not_ends_with?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  preview_url_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  preview_url_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  preview_url_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  preview_url_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  preview_url_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  preview_url_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  preview_url_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  preview_url_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  preview_url_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  preview_url_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  preview_url_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  preview_url_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  preview_url_not_ends_with?: Maybe<Scalars['String']>,
+  previewUrl_not_ends_with?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   uri_not?: Maybe<Scalars['String']>,
@@ -4467,39 +4407,75 @@ export type PartySavedTrackScalarWhereInput = {
   uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   uri_not_ends_with?: Maybe<Scalars['String']>,
-  explicit?: Maybe<Scalars['Boolean']>,
+  stringArtists?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  explicit_not?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  upVotes_not?: Maybe<Scalars['Int']>,
+  stringArtists_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  upVotes_in?: Maybe<Array<Scalars['Int']>>,
+  stringArtists_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  upVotes_not_in?: Maybe<Array<Scalars['Int']>>,
+  stringArtists_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  upVotes_lt?: Maybe<Scalars['Int']>,
+  stringArtists_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  upVotes_lte?: Maybe<Scalars['Int']>,
+  stringArtists_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  upVotes_gt?: Maybe<Scalars['Int']>,
+  stringArtists_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  upVotes_gte?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
+  stringArtists_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  stringArtists_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  stringArtists_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  stringArtists_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  stringArtists_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  stringArtists_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  stringArtists_not_ends_with?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  downVotes_not?: Maybe<Scalars['Int']>,
+  length_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  downVotes_in?: Maybe<Array<Scalars['Int']>>,
+  length_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  downVotes_not_in?: Maybe<Array<Scalars['Int']>>,
+  length_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  downVotes_lt?: Maybe<Scalars['Int']>,
+  length_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  downVotes_lte?: Maybe<Scalars['Int']>,
+  length_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  downVotes_gt?: Maybe<Scalars['Int']>,
+  length_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  downVotes_gte?: Maybe<Scalars['Int']>,
+  length_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  length_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  length_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  length_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  length_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  length_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  length_not_ends_with?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
+  /** All values that are not equal to given value. */
+  popularity_not?: Maybe<Scalars['Int']>,
+  /** All values that are contained in given list. */
+  popularity_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values that are not contained in given list. */
+  popularity_not_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values less than the given value. */
+  popularity_lt?: Maybe<Scalars['Int']>,
+  /** All values less than or equal the given value. */
+  popularity_lte?: Maybe<Scalars['Int']>,
+  /** All values greater than the given value. */
+  popularity_gt?: Maybe<Scalars['Int']>,
+  /** All values greater than or equal the given value. */
+  popularity_gte?: Maybe<Scalars['Int']>,
 };
 
 export type PartySavedTrackSubscriptionPayload = {
@@ -4530,44 +4506,40 @@ export type PartySavedTrackSubscriptionWhereInput = {
 
 export type PartySavedTrackUpdateInput = {
   spotifyId?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
   durationMs?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
+  uri?: Maybe<Scalars['String']>,
+  stringArtists?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
   party?: Maybe<PartyUpdateOneRequiredWithoutSavedTracksInput>,
-  artists?: Maybe<ArtistUpdateManyInput>,
-  votedBy?: Maybe<UserUpdateManyInput>,
+  album?: Maybe<AlbumUpdateOneRequiredInput>,
 };
 
 export type PartySavedTrackUpdateManyDataInput = {
   spotifyId?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
   durationMs?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
+  uri?: Maybe<Scalars['String']>,
+  stringArtists?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
 };
 
 export type PartySavedTrackUpdateManyMutationInput = {
   spotifyId?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
   durationMs?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
+  uri?: Maybe<Scalars['String']>,
+  stringArtists?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
 };
 
 export type PartySavedTrackUpdateManyWithoutPartyInput = {
@@ -4589,17 +4561,15 @@ export type PartySavedTrackUpdateManyWithWhereNestedInput = {
 
 export type PartySavedTrackUpdateWithoutPartyDataInput = {
   spotifyId?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
   durationMs?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['String']>,
   explicit?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
-  artists?: Maybe<ArtistUpdateManyInput>,
-  votedBy?: Maybe<UserUpdateManyInput>,
+  name?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
+  uri?: Maybe<Scalars['String']>,
+  stringArtists?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
+  album?: Maybe<AlbumUpdateOneRequiredInput>,
 };
 
 export type PartySavedTrackUpdateWithWhereUniqueWithoutPartyInput = {
@@ -4674,6 +4644,24 @@ export type PartySavedTrackWhereInput = {
   spotifyId_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   spotifyId_not_ends_with?: Maybe<Scalars['String']>,
+  durationMs?: Maybe<Scalars['Int']>,
+  /** All values that are not equal to given value. */
+  durationMs_not?: Maybe<Scalars['Int']>,
+  /** All values that are contained in given list. */
+  durationMs_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values that are not contained in given list. */
+  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values less than the given value. */
+  durationMs_lt?: Maybe<Scalars['Int']>,
+  /** All values less than or equal the given value. */
+  durationMs_lte?: Maybe<Scalars['Int']>,
+  /** All values greater than the given value. */
+  durationMs_gt?: Maybe<Scalars['Int']>,
+  /** All values greater than or equal the given value. */
+  durationMs_gte?: Maybe<Scalars['Int']>,
+  explicit?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  explicit_not?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   name_not?: Maybe<Scalars['String']>,
@@ -4701,102 +4689,33 @@ export type PartySavedTrackWhereInput = {
   name_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   name_not_ends_with?: Maybe<Scalars['String']>,
-  imageUrl?: Maybe<Scalars['String']>,
+  previewUrl?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  imageUrl_not?: Maybe<Scalars['String']>,
+  previewUrl_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  imageUrl_in?: Maybe<Array<Scalars['String']>>,
+  previewUrl_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  imageUrl_not_in?: Maybe<Array<Scalars['String']>>,
+  previewUrl_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  imageUrl_lt?: Maybe<Scalars['String']>,
+  previewUrl_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  imageUrl_lte?: Maybe<Scalars['String']>,
+  previewUrl_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  imageUrl_gt?: Maybe<Scalars['String']>,
+  previewUrl_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  imageUrl_gte?: Maybe<Scalars['String']>,
+  previewUrl_gte?: Maybe<Scalars['String']>,
   /** All values containing the given string. */
-  imageUrl_contains?: Maybe<Scalars['String']>,
+  previewUrl_contains?: Maybe<Scalars['String']>,
   /** All values not containing the given string. */
-  imageUrl_not_contains?: Maybe<Scalars['String']>,
+  previewUrl_not_contains?: Maybe<Scalars['String']>,
   /** All values starting with the given string. */
-  imageUrl_starts_with?: Maybe<Scalars['String']>,
+  previewUrl_starts_with?: Maybe<Scalars['String']>,
   /** All values not starting with the given string. */
-  imageUrl_not_starts_with?: Maybe<Scalars['String']>,
+  previewUrl_not_starts_with?: Maybe<Scalars['String']>,
   /** All values ending with the given string. */
-  imageUrl_ends_with?: Maybe<Scalars['String']>,
+  previewUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
-  imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  durationMs?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  durationMs_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  durationMs_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  durationMs_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  durationMs_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  durationMs_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  durationMs_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  durationMs_gte?: Maybe<Scalars['Int']>,
-  length?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  length_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  length_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  length_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  length_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  length_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  length_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  length_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  length_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  length_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  length_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  length_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  length_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  length_not_ends_with?: Maybe<Scalars['String']>,
-  preview_url?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  preview_url_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  preview_url_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  preview_url_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  preview_url_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  preview_url_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  preview_url_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  preview_url_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  preview_url_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  preview_url_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  preview_url_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  preview_url_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  preview_url_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  preview_url_not_ends_with?: Maybe<Scalars['String']>,
+  previewUrl_not_ends_with?: Maybe<Scalars['String']>,
   uri?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   uri_not?: Maybe<Scalars['String']>,
@@ -4824,46 +4743,77 @@ export type PartySavedTrackWhereInput = {
   uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   uri_not_ends_with?: Maybe<Scalars['String']>,
-  explicit?: Maybe<Scalars['Boolean']>,
+  stringArtists?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  explicit_not?: Maybe<Scalars['Boolean']>,
-  upVotes?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  upVotes_not?: Maybe<Scalars['Int']>,
+  stringArtists_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  upVotes_in?: Maybe<Array<Scalars['Int']>>,
+  stringArtists_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  upVotes_not_in?: Maybe<Array<Scalars['Int']>>,
+  stringArtists_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  upVotes_lt?: Maybe<Scalars['Int']>,
+  stringArtists_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  upVotes_lte?: Maybe<Scalars['Int']>,
+  stringArtists_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  upVotes_gt?: Maybe<Scalars['Int']>,
+  stringArtists_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  upVotes_gte?: Maybe<Scalars['Int']>,
-  downVotes?: Maybe<Scalars['Int']>,
+  stringArtists_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  stringArtists_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  stringArtists_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  stringArtists_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  stringArtists_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  stringArtists_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  stringArtists_not_ends_with?: Maybe<Scalars['String']>,
+  length?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  downVotes_not?: Maybe<Scalars['Int']>,
+  length_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  downVotes_in?: Maybe<Array<Scalars['Int']>>,
+  length_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  downVotes_not_in?: Maybe<Array<Scalars['Int']>>,
+  length_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  downVotes_lt?: Maybe<Scalars['Int']>,
+  length_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  downVotes_lte?: Maybe<Scalars['Int']>,
+  length_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  downVotes_gt?: Maybe<Scalars['Int']>,
+  length_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  downVotes_gte?: Maybe<Scalars['Int']>,
+  length_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  length_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  length_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  length_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  length_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  length_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  length_not_ends_with?: Maybe<Scalars['String']>,
+  popularity?: Maybe<Scalars['Int']>,
+  /** All values that are not equal to given value. */
+  popularity_not?: Maybe<Scalars['Int']>,
+  /** All values that are contained in given list. */
+  popularity_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values that are not contained in given list. */
+  popularity_not_in?: Maybe<Array<Scalars['Int']>>,
+  /** All values less than the given value. */
+  popularity_lt?: Maybe<Scalars['Int']>,
+  /** All values less than or equal the given value. */
+  popularity_lte?: Maybe<Scalars['Int']>,
+  /** All values greater than the given value. */
+  popularity_gt?: Maybe<Scalars['Int']>,
+  /** All values greater than or equal the given value. */
+  popularity_gte?: Maybe<Scalars['Int']>,
   party?: Maybe<PartyWhereInput>,
-  artists_every?: Maybe<ArtistWhereInput>,
-  artists_some?: Maybe<ArtistWhereInput>,
-  artists_none?: Maybe<ArtistWhereInput>,
-  votedBy_every?: Maybe<UserWhereInput>,
-  votedBy_some?: Maybe<UserWhereInput>,
-  votedBy_none?: Maybe<UserWhereInput>,
+  album?: Maybe<AlbumWhereInput>,
 };
 
 export type PartySavedTrackWhereUniqueInput = {
@@ -5911,14 +5861,14 @@ export type Query = {
   partyCarts: Array<Maybe<PartyCart>>,
   partyCartItems: Array<Maybe<PartyCartItem>>,
   partySavedTracks: Array<Maybe<PartySavedTrack>>,
-  albums: Array<Maybe<Album>>,
   images: Array<Maybe<Image>>,
+  artists: Array<Maybe<Artist>>,
   locations: Array<Maybe<Location>>,
   games: Array<Maybe<Game>>,
-  artists: Array<Maybe<Artist>>,
   tracks: Array<Maybe<Track>>,
   users: Array<Maybe<User>>,
   parties: Array<Maybe<Party>>,
+  albums: Array<Maybe<Album>>,
   message?: Maybe<Message>,
   partyInvitation?: Maybe<PartyInvitation>,
   chat?: Maybe<Chat>,
@@ -5926,14 +5876,14 @@ export type Query = {
   partyCart?: Maybe<PartyCart>,
   partyCartItem?: Maybe<PartyCartItem>,
   partySavedTrack?: Maybe<PartySavedTrack>,
-  album?: Maybe<Album>,
   image?: Maybe<Image>,
+  artist?: Maybe<Artist>,
   location?: Maybe<Location>,
   game?: Maybe<Game>,
-  artist?: Maybe<Artist>,
   track?: Maybe<Track>,
   user?: Maybe<User>,
   party?: Maybe<Party>,
+  album?: Maybe<Album>,
   messagesConnection: MessageConnection,
   partyInvitationsConnection: PartyInvitationConnection,
   chatsConnection: ChatConnection,
@@ -5941,22 +5891,22 @@ export type Query = {
   partyCartsConnection: PartyCartConnection,
   partyCartItemsConnection: PartyCartItemConnection,
   partySavedTracksConnection: PartySavedTrackConnection,
-  albumsConnection: AlbumConnection,
   imagesConnection: ImageConnection,
+  artistsConnection: ArtistConnection,
   locationsConnection: LocationConnection,
   gamesConnection: GameConnection,
-  artistsConnection: ArtistConnection,
   tracksConnection: TrackConnection,
   usersConnection: UserConnection,
   partiesConnection: PartyConnection,
+  albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
   hasChats: Scalars['Boolean'],
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   paginateUsers: UserConnection,
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -6038,9 +5988,9 @@ export type QueryPartySavedTracksArgs = {
 };
 
 
-export type QueryAlbumsArgs = {
-  where?: Maybe<AlbumWhereInput>,
-  orderBy?: Maybe<AlbumOrderByInput>,
+export type QueryImagesArgs = {
+  where?: Maybe<ImageWhereInput>,
+  orderBy?: Maybe<ImageOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6049,9 +5999,9 @@ export type QueryAlbumsArgs = {
 };
 
 
-export type QueryImagesArgs = {
-  where?: Maybe<ImageWhereInput>,
-  orderBy?: Maybe<ImageOrderByInput>,
+export type QueryArtistsArgs = {
+  where?: Maybe<ArtistWhereInput>,
+  orderBy?: Maybe<ArtistOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6074,17 +6024,6 @@ export type QueryLocationsArgs = {
 export type QueryGamesArgs = {
   where?: Maybe<GameWhereInput>,
   orderBy?: Maybe<GameOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryArtistsArgs = {
-  where?: Maybe<ArtistWhereInput>,
-  orderBy?: Maybe<ArtistOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6118,6 +6057,17 @@ export type QueryUsersArgs = {
 export type QueryPartiesArgs = {
   where?: Maybe<PartyWhereInput>,
   orderBy?: Maybe<PartyOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryAlbumsArgs = {
+  where?: Maybe<AlbumWhereInput>,
+  orderBy?: Maybe<AlbumOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6161,13 +6111,13 @@ export type QueryPartySavedTrackArgs = {
 };
 
 
-export type QueryAlbumArgs = {
-  where: AlbumWhereUniqueInput
+export type QueryImageArgs = {
+  where: ImageWhereUniqueInput
 };
 
 
-export type QueryImageArgs = {
-  where: ImageWhereUniqueInput
+export type QueryArtistArgs = {
+  where: ArtistWhereUniqueInput
 };
 
 
@@ -6178,11 +6128,6 @@ export type QueryLocationArgs = {
 
 export type QueryGameArgs = {
   where: GameWhereUniqueInput
-};
-
-
-export type QueryArtistArgs = {
-  where: ArtistWhereUniqueInput
 };
 
 
@@ -6198,6 +6143,11 @@ export type QueryUserArgs = {
 
 export type QueryPartyArgs = {
   where: PartyWhereUniqueInput
+};
+
+
+export type QueryAlbumArgs = {
+  where: AlbumWhereUniqueInput
 };
 
 
@@ -6278,9 +6228,9 @@ export type QueryPartySavedTracksConnectionArgs = {
 };
 
 
-export type QueryAlbumsConnectionArgs = {
-  where?: Maybe<AlbumWhereInput>,
-  orderBy?: Maybe<AlbumOrderByInput>,
+export type QueryImagesConnectionArgs = {
+  where?: Maybe<ImageWhereInput>,
+  orderBy?: Maybe<ImageOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6289,9 +6239,9 @@ export type QueryAlbumsConnectionArgs = {
 };
 
 
-export type QueryImagesConnectionArgs = {
-  where?: Maybe<ImageWhereInput>,
-  orderBy?: Maybe<ImageOrderByInput>,
+export type QueryArtistsConnectionArgs = {
+  where?: Maybe<ArtistWhereInput>,
+  orderBy?: Maybe<ArtistOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6314,17 +6264,6 @@ export type QueryLocationsConnectionArgs = {
 export type QueryGamesConnectionArgs = {
   where?: Maybe<GameWhereInput>,
   orderBy?: Maybe<GameOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryArtistsConnectionArgs = {
-  where?: Maybe<ArtistWhereInput>,
-  orderBy?: Maybe<ArtistOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6366,6 +6305,17 @@ export type QueryPartiesConnectionArgs = {
 };
 
 
+export type QueryAlbumsConnectionArgs = {
+  where?: Maybe<AlbumWhereInput>,
+  orderBy?: Maybe<AlbumOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
 export type QueryNodeArgs = {
   id: Scalars['ID']
 };
@@ -6373,6 +6323,18 @@ export type QueryNodeArgs = {
 
 export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>
+};
+
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
 };
 
 
@@ -6397,18 +6359,6 @@ export type QueryPaginateUsersArgs = {
   last?: Maybe<Scalars['Int']>
 };
 
-
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
 export enum SocialMediaType {
   Facebook = 'FACEBOOK',
   Spotify = 'SPOTIFY',
@@ -6424,14 +6374,14 @@ export type Subscription = {
   partyCart?: Maybe<PartyCartSubscriptionPayload>,
   partyCartItem?: Maybe<PartyCartItemSubscriptionPayload>,
   partySavedTrack?: Maybe<PartySavedTrackSubscriptionPayload>,
-  album?: Maybe<AlbumSubscriptionPayload>,
   image?: Maybe<ImageSubscriptionPayload>,
+  artist?: Maybe<ArtistSubscriptionPayload>,
   location?: Maybe<LocationSubscriptionPayload>,
   game?: Maybe<GameSubscriptionPayload>,
-  artist?: Maybe<ArtistSubscriptionPayload>,
   track?: Maybe<TrackSubscriptionPayload>,
   user?: Maybe<UserSubscriptionPayload>,
   party?: Maybe<PartySubscriptionPayload>,
+  album?: Maybe<AlbumSubscriptionPayload>,
 };
 
 
@@ -6470,13 +6420,13 @@ export type SubscriptionPartySavedTrackArgs = {
 };
 
 
-export type SubscriptionAlbumArgs = {
-  where?: Maybe<AlbumSubscriptionWhereInput>
+export type SubscriptionImageArgs = {
+  where?: Maybe<ImageSubscriptionWhereInput>
 };
 
 
-export type SubscriptionImageArgs = {
-  where?: Maybe<ImageSubscriptionWhereInput>
+export type SubscriptionArtistArgs = {
+  where?: Maybe<ArtistSubscriptionWhereInput>
 };
 
 
@@ -6487,11 +6437,6 @@ export type SubscriptionLocationArgs = {
 
 export type SubscriptionGameArgs = {
   where?: Maybe<GameSubscriptionWhereInput>
-};
-
-
-export type SubscriptionArtistArgs = {
-  where?: Maybe<ArtistSubscriptionWhereInput>
 };
 
 
@@ -6507,6 +6452,11 @@ export type SubscriptionUserArgs = {
 
 export type SubscriptionPartyArgs = {
   where?: Maybe<PartySubscriptionWhereInput>
+};
+
+
+export type SubscriptionAlbumArgs = {
+  where?: Maybe<AlbumSubscriptionWhereInput>
 };
 
 export type SuccessMessage = {
@@ -8069,11 +8019,11 @@ export type Last_Chat_Message_FragmentFragment = (
 
 export type Full_Saved_Track_FragmentFragment = (
   { __typename?: 'PartySavedTrack' }
-  & Pick<PartySavedTrack, 'id' | 'spotifyId' | 'name' | 'imageUrl' | 'durationMs' | 'length' | 'uri' | 'explicit' | 'upVotes' | 'downVotes'>
-  & { artists: Maybe<Array<(
-    { __typename?: 'Artist' }
-    & Pick<Artist, 'name'>
-  )>> }
+  & Pick<PartySavedTrack, 'id' | 'name' | 'length' | 'uri' | 'popularity' | 'durationMs' | 'previewUrl' | 'stringArtists' | 'explicit'>
+  & { album: (
+    { __typename?: 'Album' }
+    & Pick<Album, 'id' | 'name' | 'uri' | 'imageUrl' | 'releaseDate'>
+  ) }
 );
 
 export type SignupMutationVariables = {
@@ -8610,14 +8560,9 @@ export type Party_SavedTracksConnectionQuery = (
     { __typename?: 'PartySavedTrackConnection' }
     & { edges: Array<Maybe<(
       { __typename?: 'PartySavedTrackEdge' }
-      & { node: (
-        { __typename?: 'PartySavedTrack' }
-        & Pick<PartySavedTrack, 'id' | 'name' | 'imageUrl' | 'explicit' | 'length'>
-        & { artists: Maybe<Array<(
-          { __typename?: 'Artist' }
-          & Pick<Artist, 'name'>
-        )>> }
-      ) }
+      & { node: { __typename?: 'PartySavedTrack' }
+        & Full_Saved_Track_FragmentFragment
+       }
     )>> }
   ) }
 );
@@ -8669,7 +8614,7 @@ export type Party_Invitation_FragmentUser = Party_Invitation_FragmentFragment['u
 export type Party_Invitation_FragmentParty = Party_Invitation_FragmentFragment['party'];
 export type Last_Chat_Message_FragmentMessages = Last_Chat_Message_FragmentFragment['messages'][0];
 export type Last_Chat_Message_FragmentAuthor = Last_Chat_Message_FragmentFragment['messages'][0]['author'];
-export type Full_Saved_Track_FragmentArtists = Full_Saved_Track_FragmentFragment['artists'][0];
+export type Full_Saved_Track_FragmentAlbum = Full_Saved_Track_FragmentFragment['album'];
 export type SignupVariables = SignupMutationVariables;
 export type SignupSignup = SignupMutation['signup'];
 export const useSignup = useSignupMutation;
@@ -8787,8 +8732,7 @@ export const useJoinPartyFind = useJoinPartyFindQuery;
 export type Party_SavedTracksConnectionVariables = Party_SavedTracksConnectionQueryVariables;
 export type Party_SavedTracksConnectionPartySavedTracksConnection = Party_SavedTracksConnectionQuery['partySavedTracksConnection'];
 export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0];
-export type Party_SavedTracksConnectionNode = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0]['node'];
-export type Party_SavedTracksConnectionArtists = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0]['node']['artists'][0];
+export type Party_SavedTracksConnectionNode = Full_Saved_Track_FragmentFragment;
 export const useParty_SavedTracksConnection = useParty_SavedTracksConnectionQuery;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
@@ -8874,18 +8818,22 @@ export const Last_Chat_Message_FragmentFragmentDoc = gql`
 export const Full_Saved_Track_FragmentFragmentDoc = gql`
     fragment FULL_SAVED_TRACK_FRAGMENT on PartySavedTrack {
   id
-  spotifyId
   name
-  imageUrl
-  artists {
-    name
-  }
-  durationMs
   length
   uri
+  popularity
+  durationMs
+  previewUrl
+  stringArtists
   explicit
-  upVotes
-  downVotes
+  popularity
+  album {
+    id
+    name
+    uri
+    imageUrl
+    releaseDate
+  }
 }
     `;
 export const Is_Unread_ThreadFragmentDoc = gql`
@@ -8911,7 +8859,7 @@ export type SignupComponentProps = Omit<ApolloReactComponents.MutationComponentO
     export const SignupComponent = (props: SignupComponentProps) => (
       <ApolloReactComponents.Mutation<SignupMutation, SignupMutationVariables> mutation={SignupDocument} {...props} />
     );
-    
+
 
     export function useSignupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
       return ApolloReactHooks.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, baseOptions);
@@ -8932,7 +8880,7 @@ export type LoginComponentProps = Omit<ApolloReactComponents.MutationComponentOp
     export const LoginComponent = (props: LoginComponentProps) => (
       <ApolloReactComponents.Mutation<LoginMutation, LoginMutationVariables> mutation={LoginDocument} {...props} />
     );
-    
+
 
     export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
       return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
@@ -8953,7 +8901,7 @@ export type CreatePartyComponentProps = Omit<ApolloReactComponents.MutationCompo
     export const CreatePartyComponent = (props: CreatePartyComponentProps) => (
       <ApolloReactComponents.Mutation<CreatePartyMutation, CreatePartyMutationVariables> mutation={CreatePartyDocument} {...props} />
     );
-    
+
 
     export function useCreatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePartyMutation, CreatePartyMutationVariables>) {
       return ApolloReactHooks.useMutation<CreatePartyMutation, CreatePartyMutationVariables>(CreatePartyDocument, baseOptions);
@@ -8986,7 +8934,7 @@ export type CreateMessageComponentProps = Omit<ApolloReactComponents.MutationCom
     export const CreateMessageComponent = (props: CreateMessageComponentProps) => (
       <ApolloReactComponents.Mutation<CreateMessageMutation, CreateMessageMutationVariables> mutation={CreateMessageDocument} {...props} />
     );
-    
+
 
     export function useCreateMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
       return ApolloReactHooks.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, baseOptions);
@@ -9007,7 +8955,7 @@ export type RequestPasswordResetComponentProps = Omit<ApolloReactComponents.Muta
     export const RequestPasswordResetComponent = (props: RequestPasswordResetComponentProps) => (
       <ApolloReactComponents.Mutation<RequestPasswordResetMutation, RequestPasswordResetMutationVariables> mutation={RequestPasswordResetDocument} {...props} />
     );
-    
+
 
     export function useRequestPasswordResetMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RequestPasswordResetMutation, RequestPasswordResetMutationVariables>) {
       return ApolloReactHooks.useMutation<RequestPasswordResetMutation, RequestPasswordResetMutationVariables>(RequestPasswordResetDocument, baseOptions);
@@ -9028,7 +8976,7 @@ export type ResetPasswordComponentProps = Omit<ApolloReactComponents.MutationCom
     export const ResetPasswordComponent = (props: ResetPasswordComponentProps) => (
       <ApolloReactComponents.Mutation<ResetPasswordMutation, ResetPasswordMutationVariables> mutation={ResetPasswordDocument} {...props} />
     );
-    
+
 
     export function useResetPasswordMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
       return ApolloReactHooks.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, baseOptions);
@@ -9049,7 +8997,7 @@ export type UpdateUserComponentProps = Omit<ApolloReactComponents.MutationCompon
     export const UpdateUserComponent = (props: UpdateUserComponentProps) => (
       <ApolloReactComponents.Mutation<UpdateUserMutation, UpdateUserMutationVariables> mutation={UpdateUserDocument} {...props} />
     );
-    
+
 
     export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
       return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
@@ -9070,7 +9018,7 @@ export type CreatePartyInvitationComponentProps = Omit<ApolloReactComponents.Mut
     export const CreatePartyInvitationComponent = (props: CreatePartyInvitationComponentProps) => (
       <ApolloReactComponents.Mutation<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables> mutation={CreatePartyInvitationDocument} {...props} />
     );
-    
+
 
     export function useCreatePartyInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables>) {
       return ApolloReactHooks.useMutation<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables>(CreatePartyInvitationDocument, baseOptions);
@@ -9091,7 +9039,7 @@ export type DeleteManyPartyInvitationsComponentProps = Omit<ApolloReactComponent
     export const DeleteManyPartyInvitationsComponent = (props: DeleteManyPartyInvitationsComponentProps) => (
       <ApolloReactComponents.Mutation<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables> mutation={DeleteManyPartyInvitationsDocument} {...props} />
     );
-    
+
 
     export function useDeleteManyPartyInvitationsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables>) {
       return ApolloReactHooks.useMutation<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables>(DeleteManyPartyInvitationsDocument, baseOptions);
@@ -9112,7 +9060,7 @@ export type DeletePartyInvitationMutationComponentProps = Omit<ApolloReactCompon
     export const DeletePartyInvitationMutationComponent = (props: DeletePartyInvitationMutationComponentProps) => (
       <ApolloReactComponents.Mutation<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables> mutation={DeletePartyInvitationMutationDocument} {...props} />
     );
-    
+
 
     export function useDeletePartyInvitationMutationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables>) {
       return ApolloReactHooks.useMutation<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables>(DeletePartyInvitationMutationDocument, baseOptions);
@@ -9131,7 +9079,7 @@ export type JoinPartyMutationComponentProps = Omit<ApolloReactComponents.Mutatio
     export const JoinPartyMutationComponent = (props: JoinPartyMutationComponentProps) => (
       <ApolloReactComponents.Mutation<JoinPartyMutationMutation, JoinPartyMutationMutationVariables> mutation={JoinPartyMutationDocument} {...props} />
     );
-    
+
 
     export function useJoinPartyMutationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<JoinPartyMutationMutation, JoinPartyMutationMutationVariables>) {
       return ApolloReactHooks.useMutation<JoinPartyMutationMutation, JoinPartyMutationMutationVariables>(JoinPartyMutationDocument, baseOptions);
@@ -9152,7 +9100,7 @@ export type AddTrackToPartyComponentProps = Omit<ApolloReactComponents.MutationC
     export const AddTrackToPartyComponent = (props: AddTrackToPartyComponentProps) => (
       <ApolloReactComponents.Mutation<AddTrackToPartyMutation, AddTrackToPartyMutationVariables> mutation={AddTrackToPartyDocument} {...props} />
     );
-    
+
 
     export function useAddTrackToPartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>) {
       return ApolloReactHooks.useMutation<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>(AddTrackToPartyDocument, baseOptions);
@@ -9176,7 +9124,7 @@ export type MeQueryComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
     export const MeQueryComponent = (props: MeQueryComponentProps) => (
       <ApolloReactComponents.Query<MeQueryQuery, MeQueryQueryVariables> query={MeQueryDocument} {...props} />
     );
-    
+
 
     export function useMeQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQueryQuery, MeQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<MeQueryQuery, MeQueryQueryVariables>(MeQueryDocument, baseOptions);
@@ -9184,7 +9132,7 @@ export type MeQueryComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
       export function useMeQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQueryQuery, MeQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<MeQueryQuery, MeQueryQueryVariables>(MeQueryDocument, baseOptions);
       }
-      
+
 export type MeQueryQueryHookResult = ReturnType<typeof useMeQueryQuery>;
 export type MeQueryQueryResult = ApolloReactCommon.QueryResult<MeQueryQuery, MeQueryQueryVariables>;
 export const PaginateUsersQueryDocument = gql`
@@ -9212,7 +9160,7 @@ export type PaginateUsersQueryComponentProps = Omit<ApolloReactComponents.QueryC
     export const PaginateUsersQueryComponent = (props: PaginateUsersQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables> query={PaginateUsersQueryDocument} {...props} />
     );
-    
+
 
     export function usePaginateUsersQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>(PaginateUsersQueryDocument, baseOptions);
@@ -9220,7 +9168,7 @@ export type PaginateUsersQueryComponentProps = Omit<ApolloReactComponents.QueryC
       export function usePaginateUsersQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>(PaginateUsersQueryDocument, baseOptions);
       }
-      
+
 export type PaginateUsersQueryQueryHookResult = ReturnType<typeof usePaginateUsersQueryQuery>;
 export type PaginateUsersQueryQueryResult = ApolloReactCommon.QueryResult<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>;
 export const PartiesQueryDocument = gql`
@@ -9240,7 +9188,7 @@ export type PartiesQueryComponentProps = Omit<ApolloReactComponents.QueryCompone
     export const PartiesQueryComponent = (props: PartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<PartiesQueryQuery, PartiesQueryQueryVariables> query={PartiesQueryDocument} {...props} />
     );
-    
+
 
     export function usePartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartiesQueryQuery, PartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartiesQueryQuery, PartiesQueryQueryVariables>(PartiesQueryDocument, baseOptions);
@@ -9248,7 +9196,7 @@ export type PartiesQueryComponentProps = Omit<ApolloReactComponents.QueryCompone
       export function usePartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartiesQueryQuery, PartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartiesQueryQuery, PartiesQueryQueryVariables>(PartiesQueryDocument, baseOptions);
       }
-      
+
 export type PartiesQueryQueryHookResult = ReturnType<typeof usePartiesQueryQuery>;
 export type PartiesQueryQueryResult = ApolloReactCommon.QueryResult<PartiesQueryQuery, PartiesQueryQueryVariables>;
 export const PaginatePartiesQueryDocument = gql`
@@ -9271,7 +9219,7 @@ export type PaginatePartiesQueryComponentProps = Omit<ApolloReactComponents.Quer
     export const PaginatePartiesQueryComponent = (props: PaginatePartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables> query={PaginatePartiesQueryDocument} {...props} />
     );
-    
+
 
     export function usePaginatePartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>(PaginatePartiesQueryDocument, baseOptions);
@@ -9279,7 +9227,7 @@ export type PaginatePartiesQueryComponentProps = Omit<ApolloReactComponents.Quer
       export function usePaginatePartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>(PaginatePartiesQueryDocument, baseOptions);
       }
-      
+
 export type PaginatePartiesQueryQueryHookResult = ReturnType<typeof usePaginatePartiesQueryQuery>;
 export type PaginatePartiesQueryQueryResult = ApolloReactCommon.QueryResult<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>;
 export const PaginateChatsQueryDocument = gql`
@@ -9319,7 +9267,7 @@ export type PaginateChatsQueryComponentProps = Omit<ApolloReactComponents.QueryC
     export const PaginateChatsQueryComponent = (props: PaginateChatsQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables> query={PaginateChatsQueryDocument} {...props} />
     );
-    
+
 
     export function usePaginateChatsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>(PaginateChatsQueryDocument, baseOptions);
@@ -9327,7 +9275,7 @@ export type PaginateChatsQueryComponentProps = Omit<ApolloReactComponents.QueryC
       export function usePaginateChatsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>(PaginateChatsQueryDocument, baseOptions);
       }
-      
+
 export type PaginateChatsQueryQueryHookResult = ReturnType<typeof usePaginateChatsQueryQuery>;
 export type PaginateChatsQueryQueryResult = ApolloReactCommon.QueryResult<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>;
 export const PaginateMessagesQueryDocument = gql`
@@ -9350,7 +9298,7 @@ export type PaginateMessagesQueryComponentProps = Omit<ApolloReactComponents.Que
     export const PaginateMessagesQueryComponent = (props: PaginateMessagesQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables> query={PaginateMessagesQueryDocument} {...props} />
     );
-    
+
 
     export function usePaginateMessagesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>(PaginateMessagesQueryDocument, baseOptions);
@@ -9358,7 +9306,7 @@ export type PaginateMessagesQueryComponentProps = Omit<ApolloReactComponents.Que
       export function usePaginateMessagesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>(PaginateMessagesQueryDocument, baseOptions);
       }
-      
+
 export type PaginateMessagesQueryQueryHookResult = ReturnType<typeof usePaginateMessagesQueryQuery>;
 export type PaginateMessagesQueryQueryResult = ApolloReactCommon.QueryResult<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>;
 export const PaginateUsersInviteToPartyQueryDocument = gql`
@@ -9395,7 +9343,7 @@ export type PaginateUsersInviteToPartyQueryComponentProps = Omit<ApolloReactComp
     export const PaginateUsersInviteToPartyQueryComponent = (props: PaginateUsersInviteToPartyQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables> query={PaginateUsersInviteToPartyQueryDocument} {...props} />
     );
-    
+
 
     export function usePaginateUsersInviteToPartyQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>(PaginateUsersInviteToPartyQueryDocument, baseOptions);
@@ -9403,7 +9351,7 @@ export type PaginateUsersInviteToPartyQueryComponentProps = Omit<ApolloReactComp
       export function usePaginateUsersInviteToPartyQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>(PaginateUsersInviteToPartyQueryDocument, baseOptions);
       }
-      
+
 export type PaginateUsersInviteToPartyQueryQueryHookResult = ReturnType<typeof usePaginateUsersInviteToPartyQueryQuery>;
 export type PaginateUsersInviteToPartyQueryQueryResult = ApolloReactCommon.QueryResult<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>;
 export const PartyInvitationsConnectionQueryDocument = gql`
@@ -9431,7 +9379,7 @@ export type PartyInvitationsConnectionQueryComponentProps = Omit<ApolloReactComp
     export const PartyInvitationsConnectionQueryComponent = (props: PartyInvitationsConnectionQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables> query={PartyInvitationsConnectionQueryDocument} {...props} />
     );
-    
+
 
     export function usePartyInvitationsConnectionQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>(PartyInvitationsConnectionQueryDocument, baseOptions);
@@ -9439,7 +9387,7 @@ export type PartyInvitationsConnectionQueryComponentProps = Omit<ApolloReactComp
       export function usePartyInvitationsConnectionQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>(PartyInvitationsConnectionQueryDocument, baseOptions);
       }
-      
+
 export type PartyInvitationsConnectionQueryQueryHookResult = ReturnType<typeof usePartyInvitationsConnectionQueryQuery>;
 export type PartyInvitationsConnectionQueryQueryResult = ApolloReactCommon.QueryResult<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>;
 export const HasChatsQueryDocument = gql`
@@ -9452,7 +9400,7 @@ export type HasChatsQueryComponentProps = Omit<ApolloReactComponents.QueryCompon
     export const HasChatsQueryComponent = (props: HasChatsQueryComponentProps) => (
       <ApolloReactComponents.Query<HasChatsQueryQuery, HasChatsQueryQueryVariables> query={HasChatsQueryDocument} {...props} />
     );
-    
+
 
     export function useHasChatsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HasChatsQueryQuery, HasChatsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<HasChatsQueryQuery, HasChatsQueryQueryVariables>(HasChatsQueryDocument, baseOptions);
@@ -9460,7 +9408,7 @@ export type HasChatsQueryComponentProps = Omit<ApolloReactComponents.QueryCompon
       export function useHasChatsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HasChatsQueryQuery, HasChatsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<HasChatsQueryQuery, HasChatsQueryQueryVariables>(HasChatsQueryDocument, baseOptions);
       }
-      
+
 export type HasChatsQueryQueryHookResult = ReturnType<typeof useHasChatsQueryQuery>;
 export type HasChatsQueryQueryResult = ApolloReactCommon.QueryResult<HasChatsQueryQuery, HasChatsQueryQueryVariables>;
 export const HasPartiesQueryDocument = gql`
@@ -9473,7 +9421,7 @@ export type HasPartiesQueryComponentProps = Omit<ApolloReactComponents.QueryComp
     export const HasPartiesQueryComponent = (props: HasPartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<HasPartiesQueryQuery, HasPartiesQueryQueryVariables> query={HasPartiesQueryDocument} {...props} />
     );
-    
+
 
     export function useHasPartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>(HasPartiesQueryDocument, baseOptions);
@@ -9481,7 +9429,7 @@ export type HasPartiesQueryComponentProps = Omit<ApolloReactComponents.QueryComp
       export function useHasPartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>(HasPartiesQueryDocument, baseOptions);
       }
-      
+
 export type HasPartiesQueryQueryHookResult = ReturnType<typeof useHasPartiesQueryQuery>;
 export type HasPartiesQueryQueryResult = ApolloReactCommon.QueryResult<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>;
 export const PartyInvitationsQueryDocument = gql`
@@ -9496,7 +9444,7 @@ export type PartyInvitationsQueryComponentProps = Omit<ApolloReactComponents.Que
     export const PartyInvitationsQueryComponent = (props: PartyInvitationsQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables> query={PartyInvitationsQueryDocument} {...props} />
     );
-    
+
 
     export function usePartyInvitationsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>(PartyInvitationsQueryDocument, baseOptions);
@@ -9504,7 +9452,7 @@ export type PartyInvitationsQueryComponentProps = Omit<ApolloReactComponents.Que
       export function usePartyInvitationsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>(PartyInvitationsQueryDocument, baseOptions);
       }
-      
+
 export type PartyInvitationsQueryQueryHookResult = ReturnType<typeof usePartyInvitationsQueryQuery>;
 export type PartyInvitationsQueryQueryResult = ApolloReactCommon.QueryResult<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>;
 export const CanJoinPartyQueryDocument = gql`
@@ -9517,7 +9465,7 @@ export type CanJoinPartyQueryComponentProps = Omit<ApolloReactComponents.QueryCo
     export const CanJoinPartyQueryComponent = (props: CanJoinPartyQueryComponentProps) => (
       <ApolloReactComponents.Query<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables> query={CanJoinPartyQueryDocument} {...props} />
     );
-    
+
 
     export function useCanJoinPartyQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>(CanJoinPartyQueryDocument, baseOptions);
@@ -9525,7 +9473,7 @@ export type CanJoinPartyQueryComponentProps = Omit<ApolloReactComponents.QueryCo
       export function useCanJoinPartyQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>(CanJoinPartyQueryDocument, baseOptions);
       }
-      
+
 export type CanJoinPartyQueryQueryHookResult = ReturnType<typeof useCanJoinPartyQueryQuery>;
 export type CanJoinPartyQueryQueryResult = ApolloReactCommon.QueryResult<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>;
 export const ChatMessagesSubscriptionDocument = gql`
@@ -9557,7 +9505,7 @@ export type ChatMessagesSubscriptionComponentProps = Omit<ApolloReactComponents.
     export const ChatMessagesSubscriptionComponent = (props: ChatMessagesSubscriptionComponentProps) => (
       <ApolloReactComponents.Subscription<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables> subscription={ChatMessagesSubscriptionDocument} {...props} />
     );
-    
+
 
     export function useChatMessagesSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables>) {
       return ApolloReactHooks.useSubscription<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables>(ChatMessagesSubscriptionDocument, baseOptions);
@@ -9584,7 +9532,7 @@ export type PartyInvitationSubscriptionComponentProps = Omit<ApolloReactComponen
     export const PartyInvitationSubscriptionComponent = (props: PartyInvitationSubscriptionComponentProps) => (
       <ApolloReactComponents.Subscription<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables> subscription={PartyInvitationSubscriptionDocument} {...props} />
     );
-    
+
 
     export function usePartyInvitationSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables>) {
       return ApolloReactHooks.useSubscription<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables>(PartyInvitationSubscriptionDocument, baseOptions);
@@ -9615,7 +9563,7 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
     export const JoinPartyFindComponent = (props: JoinPartyFindComponentProps) => (
       <ApolloReactComponents.Query<JoinPartyFindQuery, JoinPartyFindQueryVariables> query={JoinPartyFindDocument} {...props} />
     );
-    
+
 
     export function useJoinPartyFindQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<JoinPartyFindQuery, JoinPartyFindQueryVariables>) {
       return ApolloReactHooks.useQuery<JoinPartyFindQuery, JoinPartyFindQueryVariables>(JoinPartyFindDocument, baseOptions);
@@ -9623,7 +9571,7 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
       export function useJoinPartyFindLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<JoinPartyFindQuery, JoinPartyFindQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<JoinPartyFindQuery, JoinPartyFindQueryVariables>(JoinPartyFindDocument, baseOptions);
       }
-      
+
 export type JoinPartyFindQueryHookResult = ReturnType<typeof useJoinPartyFindQuery>;
 export type JoinPartyFindQueryResult = ApolloReactCommon.QueryResult<JoinPartyFindQuery, JoinPartyFindQueryVariables>;
 export const Party_SavedTracksConnectionDocument = gql`
@@ -9631,25 +9579,18 @@ export const Party_SavedTracksConnectionDocument = gql`
   partySavedTracksConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
     edges {
       node {
-        id
-        name
-        imageUrl
-        explicit
-        length
-        artists {
-          name
-        }
+        ...FULL_SAVED_TRACK_FRAGMENT
       }
     }
   }
 }
-    `;
+    ${Full_Saved_Track_FragmentFragmentDoc}`;
 export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>, 'query'>;
 
     export const Party_SavedTracksConnectionComponent = (props: Party_SavedTracksConnectionComponentProps) => (
       <ApolloReactComponents.Query<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables> query={Party_SavedTracksConnectionDocument} {...props} />
     );
-    
+
 
     export function useParty_SavedTracksConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>) {
       return ApolloReactHooks.useQuery<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>(Party_SavedTracksConnectionDocument, baseOptions);
@@ -9657,7 +9598,7 @@ export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponen
       export function useParty_SavedTracksConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>(Party_SavedTracksConnectionDocument, baseOptions);
       }
-      
+
 export type Party_SavedTracksConnectionQueryHookResult = ReturnType<typeof useParty_SavedTracksConnectionQuery>;
 export type Party_SavedTracksConnectionQueryResult = ApolloReactCommon.QueryResult<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
@@ -9687,7 +9628,7 @@ export type PartyDashboardParticipantsQueryComponentProps = Omit<ApolloReactComp
     export const PartyDashboardParticipantsQueryComponent = (props: PartyDashboardParticipantsQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables> query={PartyDashboardParticipantsQueryDocument} {...props} />
     );
-    
+
 
     export function usePartyDashboardParticipantsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>(PartyDashboardParticipantsQueryDocument, baseOptions);
@@ -9695,6 +9636,6 @@ export type PartyDashboardParticipantsQueryComponentProps = Omit<ApolloReactComp
       export function usePartyDashboardParticipantsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>(PartyDashboardParticipantsQueryDocument, baseOptions);
       }
-      
+
 export type PartyDashboardParticipantsQueryQueryHookResult = ReturnType<typeof usePartyDashboardParticipantsQueryQuery>;
 export type PartyDashboardParticipantsQueryQueryResult = ApolloReactCommon.QueryResult<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>;

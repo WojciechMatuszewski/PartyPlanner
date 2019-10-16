@@ -1,22 +1,17 @@
 import { useParty } from '@components/Party/PartyProvider';
-import { useAddTrackToParty } from '@generated/graphql';
+import { Full_Saved_Track_FragmentFragment, useAddTrackToParty } from '@generated/graphql';
 import { message } from 'antd';
 import React from 'react';
-import { Track } from 'spotify-web-sdk';
 
-import {
-  AddToQueueTrackButton,
-  MoreInfoTrackButton,
-  PlayPauseTrackButton
-} from '../../TrackControls';
+import { AddToQueueTrackButton, MoreInfoTrackButton, PlayPauseTrackButton } from '../../TrackControls';
 import VirtualizedListTrackItem from '../../VirtualizedListTrackItem';
 
 interface Props {
-  track: Track;
+  track: Full_Saved_Track_FragmentFragment;
   style?: React.CSSProperties;
   trackPlaying: boolean;
-  onTogglePlayClick: (track: Track) => void;
-  onMoreInfoClick: (track: Track) => void;
+  onTogglePlayClick: (track: Full_Saved_Track_FragmentFragment) => void;
+  onMoreInfoClick: (track: Full_Saved_Track_FragmentFragment) => void;
 }
 
 function DiscoverTrack(props: Props) {
@@ -29,12 +24,21 @@ function DiscoverTrack(props: Props) {
       data: {
         spotifyId: track.id,
         name: track.name,
-        downVotes: 0,
-        upVotes: 1,
         length: track.length,
+        uri: track.uri,
+        popularity: track.popularity,
         durationMs: track.durationMs,
-        preview_url: track.previewUrl,
-        imageUrl: track.album.imageUrl,
+        previewUrl: track.previewUrl,
+        stringArtists: track.stringArtists,
+        album: {
+          create: {
+            spotifyId: track.album.id,
+            uri: track.album.uri,
+            name: track.album.name,
+            imageUrl: track.album.imageUrl,
+            releaseDate: track.album.releaseDate
+          }
+        },
         explicit: props.track.explicit,
         party: { connect: { id: partyId } }
       }
@@ -61,16 +65,7 @@ function DiscoverTrack(props: Props) {
           loading={loading}
         />
       ]}
-      track={{
-        name: track.name,
-        imageUrl: track.album.imageUrl,
-        artists: track.artists.reduce(
-          (acc, artist) => acc.concat(`${artist.name} ,`),
-          ''
-        ),
-        explicit: track.explicit,
-        length: track.length
-      }}
+      track={track}
     />
   );
 
