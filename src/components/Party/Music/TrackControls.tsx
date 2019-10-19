@@ -2,6 +2,7 @@ import React from 'react';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import styled from '@emotion/styled';
 import { Button } from 'antd';
+import { curry } from 'ramda';
 import css from '@emotion/css';
 
 type PlayPauseButtonProps = {
@@ -44,6 +45,17 @@ type TrackControlsProps = { className?: string } & MoreInfoButtonProps &
   PlayPauseButtonProps &
   AddToQueueButtonProps;
 
+function trapEventWithin(
+  fnToRun: any,
+  event: React.MouseEvent<HTMLElement, MouseEvent>
+) {
+  event.preventDefault();
+  event.stopPropagation();
+  fnToRun(event);
+}
+
+const withTrappedEvent = curry(trapEventWithin);
+
 export default function TrackControls(props: TrackControlsProps) {
   return (
     <TrackTileControlsWrapper className={props.className}>
@@ -70,7 +82,7 @@ export function PlayPauseTrackButton(props: PlayPauseButtonProps) {
       shape="circle-outline"
       size="small"
       disabled={!props.hasPreviewUrl}
-      onClick={props.onTogglePlayClick}
+      onClick={withTrappedEvent(props.onTogglePlayClick)}
     />
   );
 }
@@ -78,7 +90,7 @@ export function MoreInfoTrackButton(props: MoreInfoButtonProps) {
   return (
     <Button
       css={[ButtonStyles]}
-      onClick={props.onMoreInfoClick}
+      onClick={withTrappedEvent(props.onMoreInfoClick)}
       icon="ellipsis"
       type="ghost"
       size="small"
@@ -90,7 +102,7 @@ export function AddToQueueTrackButton(props: AddToQueueButtonProps) {
   return (
     <Button
       loading={props.loading}
-      onClick={props.onAddToQueueClick}
+      onClick={withTrappedEvent(props.onAddToQueueClick)}
       css={[ButtonStyles]}
       icon="plus"
       type="ghost"

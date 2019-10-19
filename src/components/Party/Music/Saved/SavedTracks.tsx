@@ -17,13 +17,23 @@ import { ListRowRenderer } from 'react-virtualized';
 
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
-import CreatePlaylists from './CreatePlaylists';
+import CreatePlaylists from '../CreatePlaylist/CreatePlaylists';
 import SavedTrack from './SavedTrack';
 import SavedTracksControls from './SavedTracksControls';
 import SavedTracksList from './SavedTracksList';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding-top: 12px;
+  @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
+    padding: 0;
+    .discover-tracks-list {
+      border-radius: 0;
+      box-shadow: none;
+      border-left: 0;
+      border-right: 0;
+    }
+  }
 `;
 
 export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
@@ -73,6 +83,7 @@ export default function SavedTracks({ partyId }: Props) {
   });
 
   const [selectingTracks, setSelectingTracks] = React.useState(false);
+
   const [selectedTracks, setSelectedTracks] = React.useState<
     Full_Saved_Track_FragmentFragment[]
   >([]);
@@ -86,7 +97,12 @@ export default function SavedTracks({ partyId }: Props) {
   const toggleCreatePlaylistModalVisible = () =>
     setCreatePlaylistModalVisible(prev => !prev);
 
-  const { setTrack, audioPlayerCommands$ } = useBigMusicPlayer();
+  const {
+    setTrack,
+    audioPlayerCommands$,
+    track: currentTrackInMusicPlayer,
+    playerState
+  } = useBigMusicPlayer();
 
   const { openModal } = useTrackInfoModal();
 
@@ -139,17 +155,16 @@ export default function SavedTracks({ partyId }: Props) {
 
     return (
       <SavedTrack
-        onSelectTrack={() =>
-          setSelectedTracks(prev => [...prev, trackToRender])
-        }
+        onSelectTrack={() => selectTrack(trackToRender)}
+        onDeselectTrack={() => deselectTrack(trackToRender)}
+        isSelected={isTrackSelected(trackToRender)}
         onPlayPauseClick={handlePlayPauseClick}
         onShowMoreInfoClick={handleMoreInfoClick}
-        onDeselectTrack={() => {}}
         selecting={selectingTracks}
         style={style}
         track={trackToRender}
         key={index}
-        trackPlaying={false}
+        trackPlaying={isTrackPlaying(trackToRender)}
       />
     );
   };
@@ -181,7 +196,7 @@ export default function SavedTracks({ partyId }: Props) {
       <SavedTracksInnerWrapper>
         <SavedTracksList
           trackRenderer={renderTrack}
-          tracks={edges}
+          tracksLength={edges.length}
           className=""
           loading={false}
           selectingSongs={selectingTracks}
@@ -189,4 +204,23 @@ export default function SavedTracks({ partyId }: Props) {
       </SavedTracksInnerWrapper>
     </React.Fragment>
   );
+
+  function deselectTrack(trackToDeselect: Full_Saved_Track_FragmentFragment) {
+    return setSelectedTracks(prev =>
+      prev.filter(({ id: selectedId }) => selectedId != trackToDeselect.id)
+    );
+  }
+  function selectTrack(trackToSelect: Full_Saved_Track_FragmentFragment) {
+    return setSelectedTracks(prev => [...prev, trackToSelect]);
+  }
+  function isTrackPlaying(trackToCheck: Full_Saved_Track_FragmentFragment) {
+    return (
+      currentTrackInMusicPlayer != null &&
+      currentTrackInMusicPlayer.id == trackToCheck.id &&
+      playerState == 'playing'
+    );
+  }
+  function isTrackSelected(trackToCheck: Full_Saved_Track_FragmentFragment) {
+    return selectedTracks.includes(trackToCheck);
+  }
 }

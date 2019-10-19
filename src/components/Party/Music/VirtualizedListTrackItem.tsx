@@ -1,8 +1,9 @@
-import css from '@emotion/css';
+import css, { SerializedStyles } from '@emotion/css';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import { Avatar, Badge, List, Tag, Typography } from 'antd';
+import { ListItemProps } from 'antd/lib/list';
 import React from 'react';
 import posed from 'react-pose';
-import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 const ListItemStyles = css`
   transition: transform 0.2s ease;
@@ -51,10 +52,12 @@ const PosedWrapper = posed.div({
   }
 });
 
-interface Props {
+interface Props extends ListItemProps {
   trackPlaying: boolean;
   actions?: React.ReactNode[];
   children?: React.ReactNode;
+  emotionCSS?: SerializedStyles;
+  emphasis?: boolean;
   style?: React.CSSProperties;
   shouldMoveContent?: boolean;
   track: Full_Saved_Track_FragmentFragment;
@@ -66,14 +69,18 @@ function VirtualizedListTrackItem({
   track,
   style,
   children,
-  shouldMoveContent
+  shouldMoveContent,
+  emotionCSS,
+  emphasis,
+  ...restOfProps
 }: Props) {
   return (
     <List.Item
       style={style}
-      css={[ListItemStyles]}
-      className={trackPlaying ? 'track-playing' : undefined}
+      css={[ListItemStyles, emotionCSS]}
+      className={trackPlaying || emphasis ? 'track-playing' : undefined}
       actions={actions}
+      {...restOfProps}
     >
       {children}
       <PosedWrapper

@@ -1,5 +1,4 @@
 import css from '@emotion/css';
-import { Party_SavedTracksConnectionEdges } from '@generated/graphql';
 import { List } from 'antd';
 import React from 'react';
 import {
@@ -28,7 +27,7 @@ const ListStyles = css`
 
 interface Props {
   loading: boolean;
-  tracks: NonNullable<Party_SavedTracksConnectionEdges>[];
+  tracksLength: number;
   className: string;
   selectingSongs: boolean;
   trackRenderer: ListRowRenderer;
@@ -53,7 +52,7 @@ export default function SavedTracksList(props: Props) {
                   isScrolling={isScrolling}
                   onScroll={onChildScroll}
                   height={height}
-                  rowCount={props.tracks.length}
+                  rowCount={props.tracksLength}
                   overscanRowCount={15}
                   rowHeight={VirtualizedListTrackItem.Height}
                   width={width}

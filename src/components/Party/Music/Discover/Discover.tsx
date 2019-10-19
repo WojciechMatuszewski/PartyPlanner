@@ -116,6 +116,7 @@ function reducer(state: State, action: DiscoverTracksActions): State {
 export default function PartyMusicDiscover(props: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const lastInputValueOnError = React.useRef<string | undefined>(undefined);
+
   const isFirstMount = React.useRef(true);
 
   const [filters, setFilters] = React.useState<Filters>({

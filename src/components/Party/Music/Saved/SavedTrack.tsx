@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import { Checkbox } from 'antd';
-import { isNil } from 'ramda';
+import { always, identity, ifElse } from 'ramda';
 import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
 
 import { MoreInfoTrackButton, PlayPauseTrackButton } from '../TrackControls';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
-import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 type VirtualizedListTrackItemProps = typeof VirtualizedListTrackItem extends (
   args: infer Props
@@ -26,6 +26,7 @@ const PosedCheckboxWrapper = styled(
 
 type Props = VirtualizedListTrackItemProps & {
   track: Full_Saved_Track_FragmentFragment;
+  isSelected: boolean;
   selecting: boolean;
   onSelectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
   onDeselectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
@@ -33,38 +34,36 @@ type Props = VirtualizedListTrackItemProps & {
   onShowMoreInfoClick: (track: Full_Saved_Track_FragmentFragment) => void;
 };
 
-export default function SavedTrack({
+function SavedTrack({
   selecting,
   onSelectTrack,
   onDeselectTrack,
   track,
   onPlayPauseClick,
   onShowMoreInfoClick,
-  ...virtualItemProps
+  isSelected,
+  ...restOfProps
 }: Props) {
-  function handleCheckboxStateChange(
-    e: import('antd/lib/checkbox').CheckboxChangeEvent | undefined
-  ) {
-    if (isNil(e)) return;
-    const {
-      target: { checked }
-    } = e;
-    return checked ? onSelectTrack(track) : onDeselectTrack(track);
+  function handleClick() {
+    if (isSelected) return onDeselectTrack(track);
+    return onSelectTrack(track);
   }
 
   const { openModal } = useTrackInfoModal();
 
   return (
     <VirtualizedListTrackItem
-      {...virtualItemProps}
+      {...restOfProps}
+      emphasis={isSelected}
+      onClick={ifElse(always(selecting), handleClick, identity)}
       track={track}
       shouldMoveContent={selecting}
       actions={[
         <PlayPauseTrackButton
           onTogglePlayClick={() => onPlayPauseClick(track)}
           key={1}
-          trackPlaying={false}
-          hasPreviewUrl={true}
+          trackPlaying={restOfProps.trackPlaying}
+          hasPreviewUrl={Boolean(track.previewUrl)}
         />,
         <MoreInfoTrackButton onMoreInfoClick={() => openModal(track)} key={2} />
       ]}
@@ -72,10 +71,12 @@ export default function SavedTrack({
       <PoseGroup animateOnMount={true}>
         {selecting && (
           <PosedCheckboxWrapper key={1}>
-            <Checkbox onChange={handleCheckboxStateChange} />
+            <Checkbox checked={isSelected} />
           </PosedCheckboxWrapper>
         )}
       </PoseGroup>
     </VirtualizedListTrackItem>
   );
 }
+
+export default SavedTrack;
