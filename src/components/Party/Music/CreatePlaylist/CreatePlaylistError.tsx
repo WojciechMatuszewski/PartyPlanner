@@ -9,7 +9,7 @@ interface Props {
 
 export default function CreatePlaylistError({ onRetry, retryLoading }: Props) {
   return (
-    <GraphqlInlineError>
+    <GraphqlInlineError title="Could not create your playlist">
       <Button onClick={onRetry} loading={retryLoading} type="danger">
         Retry
       </Button>

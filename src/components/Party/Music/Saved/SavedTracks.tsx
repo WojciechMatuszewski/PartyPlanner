@@ -14,7 +14,6 @@ import { NetworkStatus } from 'apollo-client';
 import gql from 'graphql-tag';
 import React from 'react';
 import { ListRowRenderer } from 'react-virtualized';
-
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 import CreatePlaylists from '../CreatePlaylist/CreatePlaylists';
@@ -22,6 +21,7 @@ import SavedTrack from './SavedTrack';
 import SavedTracksControls from './SavedTracksControls';
 import SavedTracksList from './SavedTracksList';
 import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
+import css from '@emotion/css';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding-top: 12px;
@@ -33,6 +33,12 @@ const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
       border-left: 0;
       border-right: 0;
     }
+  }
+`;
+
+const EmptySectionStyles = css`
+  height: calc() @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
+    padding: 12px;
   }
 `;
 
@@ -60,6 +66,10 @@ export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
           ...FULL_SAVED_TRACK_FRAGMENT
         }
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
   }
   ${FULL_SAVED_TRACK_FRAGMENT}
@@ -70,18 +80,6 @@ interface Props {
 }
 
 export default function SavedTracks({ partyId }: Props) {
-  const {
-    data,
-    error,
-    refetch,
-    networkStatus
-  } = useParty_SavedTracksConnection({
-    variables: {
-      where: { party: { id: partyId } }
-    },
-    notifyOnNetworkStatusChange: true
-  });
-
   const [selectingTracks, setSelectingTracks] = React.useState(false);
 
   const [selectedTracks, setSelectedTracks] = React.useState<
@@ -93,7 +91,24 @@ export default function SavedTracks({ partyId }: Props) {
     setCreatePlaylistModalVisible
   ] = React.useState(false);
 
-  const toggleSetSelectingSongs = () => setSelectingTracks(prev => !prev);
+  const {
+    data,
+    error,
+    refetch,
+    networkStatus,
+    fetchMore
+  } = useParty_SavedTracksConnection({
+    variables: {
+      where: { party: { id: partyId } },
+      first: 20
+    },
+    notifyOnNetworkStatusChange: true
+  });
+
+  const toggleSetSelectingSongs = () => {
+    setSelectingTracks(prev => !prev);
+    setSelectedTracks([]);
+  };
   const toggleCreatePlaylistModalVisible = () =>
     setCreatePlaylistModalVisible(prev => !prev);
 
@@ -147,7 +162,10 @@ export default function SavedTracks({ partyId }: Props) {
     );
 
   const {
-    partySavedTracksConnection: { edges }
+    partySavedTracksConnection: {
+      edges,
+      pageInfo: { hasNextPage, endCursor }
+    }
   } = data;
 
   const renderTrack: ListRowRenderer = ({ style, index }) => {
@@ -169,15 +187,6 @@ export default function SavedTracks({ partyId }: Props) {
     );
   };
 
-  if (edges.length == 0)
-    return (
-      <EmptySection
-        title="No saved tracks"
-        description="Add tracks in discover tab!"
-        image="/static/music-note.svg"
-      />
-    );
-
   return (
     <React.Fragment>
       <CreatePlaylists
@@ -187,6 +196,10 @@ export default function SavedTracks({ partyId }: Props) {
       />
       <Affix>
         <SavedTracksControls
+          hasTracks={edges.length > 0}
+          onSearch={searchValue =>
+            refetch({ where: { name_contains: searchValue } })
+          }
           hasSelectedAtLeastOneTrack={!(selectedTracks.length == 0)}
           onCreatePlaylistClick={toggleCreatePlaylistModalVisible}
           onSelectSongsClick={toggleSetSelectingSongs}
@@ -194,13 +207,27 @@ export default function SavedTracks({ partyId }: Props) {
         />
       </Affix>
       <SavedTracksInnerWrapper>
-        <SavedTracksList
-          trackRenderer={renderTrack}
-          tracksLength={edges.length}
-          className=""
-          loading={false}
-          selectingSongs={selectingTracks}
-        />
+        {edges.length == 0 ? (
+          <EmptySection
+            emotionCSS={EmptySectionStyles}
+            title="No saved tracks with that name"
+            image="/static/music-note.svg"
+          />
+        ) : (
+          <React.Fragment>
+            <SavedTracksList
+              onLoadMore={handleLoadMore}
+              canLoadMore={
+                hasNextPage && networkStatus != NetworkStatus.setVariables
+              }
+              loadingMore={networkStatus == NetworkStatus.fetchMore}
+              trackRenderer={renderTrack}
+              tracksLength={edges.length}
+              loading={networkStatus == NetworkStatus.setVariables}
+              selectingSongs={selectingTracks}
+            />
+          </React.Fragment>
+        )}
       </SavedTracksInnerWrapper>
     </React.Fragment>
   );
@@ -222,5 +249,31 @@ export default function SavedTracks({ partyId }: Props) {
   }
   function isTrackSelected(trackToCheck: Full_Saved_Track_FragmentFragment) {
     return selectedTracks.includes(trackToCheck);
+  }
+
+  function handleLoadMore() {
+    fetchMore({
+      variables: {
+        after: endCursor,
+        where: {
+          party: { id: partyId }
+        }
+      },
+      updateQuery: (prevResults, { fetchMoreResult }) => {
+        if (!fetchMoreResult || !fetchMoreResult.partySavedTracksConnection)
+          return prevResults;
+        return {
+          ...prevResults,
+          partySavedTracksConnection: {
+            ...prevResults.partySavedTracksConnection,
+            edges: [
+              ...prevResults.partySavedTracksConnection.edges,
+              ...fetchMoreResult.partySavedTracksConnection.edges
+            ],
+            pageInfo: fetchMoreResult.partySavedTracksConnection.pageInfo
+          }
+        };
+      }
+    });
   }
 }

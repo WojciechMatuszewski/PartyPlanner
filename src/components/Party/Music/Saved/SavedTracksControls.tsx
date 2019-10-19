@@ -1,9 +1,9 @@
 import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
 import styled from '@emotion/styled';
 import useMedia from '@hooks/useMedia';
-import { Button, Icon } from 'antd';
+import { Button, Icon, Input } from 'antd';
 import React from 'react';
-
+import { debounce } from 'lodash';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,11 +23,6 @@ const InnerWrapper = styled.div`
   button {
     margin-right: 12px;
   }
-  button:last-of-type {
-    margin-right: 0;
-    align-self: flex-end;
-    margin-left: auto;
-  }
 `;
 
 interface Props {
@@ -35,31 +30,45 @@ interface Props {
   selectingTracks: boolean;
   onCreatePlaylistClick: VoidFunction;
   hasSelectedAtLeastOneTrack: boolean;
+  onSearch: (searchQuery: string) => void;
+  hasTracks: boolean;
 }
 
 export default function SavedTracksControls(props: Props) {
   const isOnMobile = useMedia('(max-width:630px)');
 
+  const debouncedFnRef = React.useRef(
+    debounce<(query: string) => void>(props.onSearch, 300)
+  );
+
   return (
     <Wrapper>
       <InnerWrapper>
         <Button
+          disabled={!props.hasTracks}
           onClick={props.onSelectSongsClick}
-          type={props.selectingTracks ? 'primary' : 'default'}
+          type={props.selectingTracks ? 'danger' : 'primary'}
         >
           <Icon type="select" />
-          {!isOnMobile && <span>Select songs</span>}
+          {!isOnMobile && (
+            <span>
+              {props.selectingTracks ? 'Cancel selection' : 'Select tracks'}
+            </span>
+          )}
         </Button>
         <GreenSpotifyButton
           disabled={!props.hasSelectedAtLeastOneTrack}
           onClick={props.onCreatePlaylistClick}
         >
-          Create playlist
+          {!isOnMobile && <span>Create playlist</span>}
         </GreenSpotifyButton>
-        <Button style={{ alignSelf: 'flex-end' }}>
-          <Icon type="filter" />
-          Filters
-        </Button>
+        <Input.Search
+          allowClear={true}
+          onChange={e => debouncedFnRef.current(e.currentTarget.value)}
+          onSearch={props.onSearch}
+          type="text"
+          placeholder="Search ..."
+        />
       </InnerWrapper>
     </Wrapper>
   );

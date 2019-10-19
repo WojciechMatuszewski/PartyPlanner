@@ -6,7 +6,7 @@ import { UISectionWrapper } from './styles';
 const defaultProps = Object.freeze({
   image: '/static/no-data.svg',
   title: 'No data',
-  description: 'There is not data to show'
+  description: 'There is no data to show'
 });
 
 type Props = typeof defaultProps & {

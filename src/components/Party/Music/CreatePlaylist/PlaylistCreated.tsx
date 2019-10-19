@@ -3,38 +3,92 @@ import {
   FlexBoxFullCenteredStyles,
   FlexBoxHorizontallyCenteredStyles
 } from '@shared/styles';
-import { Button, Typography } from 'antd';
+import { Button, Typography, Avatar, Icon } from 'antd';
 import React from 'react';
+import { Playlist } from 'spotify-web-sdk';
+import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
 
 const PlayListCreatedWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
   flex-direction: column;
 `;
 
-const PlaylistBasicInfoWrapper = styled.div`
+const CreatedPlaylistInfo = styled.div`
   ${FlexBoxHorizontallyCenteredStyles}
-  margin:24px 0;
+  margin-bottom:24px;
 `;
 
-const PlaylistImage = styled.image`
-  width: 96px;
-  height: 96px;
-  border-radius: 6px;
+const PlaylistImage = styled(Avatar)`
+  width: 196px;
+  height: 196px;
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
 `;
 
-export default function PlaylistCreated() {
+const CreatedPlaylistBasicInfo = styled.div`
+  margin-left: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  button:first-of-type {
+    margin-right: 24px;
+  }
+`;
+
+const PlaylistCreatedParagraph = styled(Typography.Paragraph)`
+  font-size: 20px;
+`;
+
+interface Props {
+  createdPlaylist: Playlist;
+}
+
+export default function PlaylistCreated({ createdPlaylist }: Props) {
+  const canViewOnSpotify = Boolean(createdPlaylist.externalUrls.spotify);
+
+  function handleViewOnSpotifyClick() {
+    canViewOnSpotify && window.open(createdPlaylist.externalUrls.spotify);
+  }
+
   return (
     <PlayListCreatedWrapper>
-      <Typography.Title style={{ margin: 0 }} level={4}>
-        Your Playlist was created!
+      <Typography.Title level={2} style={{ marginBottom: 24 }}>
+        Playlist created
       </Typography.Title>
-      <PlaylistBasicInfoWrapper>
-        <PlaylistImage />
-      </PlaylistBasicInfoWrapper>
-      <Button.Group>
-        <Button>View on Spotify</Button>
-        <Button>Do something else</Button>
-      </Button.Group>
+      <CreatedPlaylistInfo>
+        <PlaylistImage src={createdPlaylist.images[0].url} />
+        <CreatedPlaylistBasicInfo>
+          <PlaylistCreatedParagraph>
+            <Icon type="highlight" style={{ marginRight: 8 }} />
+            {createdPlaylist.name}
+          </PlaylistCreatedParagraph>
+          <PlaylistCreatedParagraph>
+            <Icon type="user" style={{ marginRight: 8 }} />
+            {createdPlaylist.owner.displayName}
+          </PlaylistCreatedParagraph>
+          <PlaylistCreatedParagraph>
+            <Icon type="lock" style={{ marginRight: 8 }} />
+            Public
+          </PlaylistCreatedParagraph>
+        </CreatedPlaylistBasicInfo>
+      </CreatedPlaylistInfo>
+      <ButtonsWrapper>
+        <Button size="large" type="primary" onClick={() => {}}>
+          Go to party playlists
+        </Button>
+        <GreenSpotifyButton
+          disabled={!canViewOnSpotify}
+          size="large"
+          onClick={handleViewOnSpotifyClick}
+        >
+          View on Spotify
+        </GreenSpotifyButton>
+      </ButtonsWrapper>
     </PlayListCreatedWrapper>
   );
 }

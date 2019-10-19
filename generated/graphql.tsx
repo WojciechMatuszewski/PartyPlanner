@@ -13,7 +13,7 @@ export type Scalars = {
   Int: number,
   Float: number,
   DateTime: any,
-  /**
+  /** 
  * The `Long` scalar type represents non-fractional signed whole numeric values.
    * Long can represent values between -(2^63) and 2^63 - 1.
  **/
@@ -8563,7 +8563,10 @@ export type Party_SavedTracksConnectionQuery = (
       & { node: { __typename?: 'PartySavedTrack' }
         & Full_Saved_Track_FragmentFragment
        }
-    )>> }
+    )>>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
+    ) }
   ) }
 );
 
@@ -8733,6 +8736,7 @@ export type Party_SavedTracksConnectionVariables = Party_SavedTracksConnectionQu
 export type Party_SavedTracksConnectionPartySavedTracksConnection = Party_SavedTracksConnectionQuery['partySavedTracksConnection'];
 export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0];
 export type Party_SavedTracksConnectionNode = Full_Saved_Track_FragmentFragment;
+export type Party_SavedTracksConnectionPageInfo = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['pageInfo'];
 export const useParty_SavedTracksConnection = useParty_SavedTracksConnectionQuery;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
@@ -8859,7 +8863,7 @@ export type SignupComponentProps = Omit<ApolloReactComponents.MutationComponentO
     export const SignupComponent = (props: SignupComponentProps) => (
       <ApolloReactComponents.Mutation<SignupMutation, SignupMutationVariables> mutation={SignupDocument} {...props} />
     );
-
+    
 
     export function useSignupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SignupMutation, SignupMutationVariables>) {
       return ApolloReactHooks.useMutation<SignupMutation, SignupMutationVariables>(SignupDocument, baseOptions);
@@ -8880,7 +8884,7 @@ export type LoginComponentProps = Omit<ApolloReactComponents.MutationComponentOp
     export const LoginComponent = (props: LoginComponentProps) => (
       <ApolloReactComponents.Mutation<LoginMutation, LoginMutationVariables> mutation={LoginDocument} {...props} />
     );
-
+    
 
     export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
       return ApolloReactHooks.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, baseOptions);
@@ -8901,7 +8905,7 @@ export type CreatePartyComponentProps = Omit<ApolloReactComponents.MutationCompo
     export const CreatePartyComponent = (props: CreatePartyComponentProps) => (
       <ApolloReactComponents.Mutation<CreatePartyMutation, CreatePartyMutationVariables> mutation={CreatePartyDocument} {...props} />
     );
-
+    
 
     export function useCreatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePartyMutation, CreatePartyMutationVariables>) {
       return ApolloReactHooks.useMutation<CreatePartyMutation, CreatePartyMutationVariables>(CreatePartyDocument, baseOptions);
@@ -8934,7 +8938,7 @@ export type CreateMessageComponentProps = Omit<ApolloReactComponents.MutationCom
     export const CreateMessageComponent = (props: CreateMessageComponentProps) => (
       <ApolloReactComponents.Mutation<CreateMessageMutation, CreateMessageMutationVariables> mutation={CreateMessageDocument} {...props} />
     );
-
+    
 
     export function useCreateMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
       return ApolloReactHooks.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, baseOptions);
@@ -8955,7 +8959,7 @@ export type RequestPasswordResetComponentProps = Omit<ApolloReactComponents.Muta
     export const RequestPasswordResetComponent = (props: RequestPasswordResetComponentProps) => (
       <ApolloReactComponents.Mutation<RequestPasswordResetMutation, RequestPasswordResetMutationVariables> mutation={RequestPasswordResetDocument} {...props} />
     );
-
+    
 
     export function useRequestPasswordResetMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RequestPasswordResetMutation, RequestPasswordResetMutationVariables>) {
       return ApolloReactHooks.useMutation<RequestPasswordResetMutation, RequestPasswordResetMutationVariables>(RequestPasswordResetDocument, baseOptions);
@@ -8976,7 +8980,7 @@ export type ResetPasswordComponentProps = Omit<ApolloReactComponents.MutationCom
     export const ResetPasswordComponent = (props: ResetPasswordComponentProps) => (
       <ApolloReactComponents.Mutation<ResetPasswordMutation, ResetPasswordMutationVariables> mutation={ResetPasswordDocument} {...props} />
     );
-
+    
 
     export function useResetPasswordMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
       return ApolloReactHooks.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, baseOptions);
@@ -8997,7 +9001,7 @@ export type UpdateUserComponentProps = Omit<ApolloReactComponents.MutationCompon
     export const UpdateUserComponent = (props: UpdateUserComponentProps) => (
       <ApolloReactComponents.Mutation<UpdateUserMutation, UpdateUserMutationVariables> mutation={UpdateUserDocument} {...props} />
     );
-
+    
 
     export function useUpdateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
       return ApolloReactHooks.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
@@ -9018,7 +9022,7 @@ export type CreatePartyInvitationComponentProps = Omit<ApolloReactComponents.Mut
     export const CreatePartyInvitationComponent = (props: CreatePartyInvitationComponentProps) => (
       <ApolloReactComponents.Mutation<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables> mutation={CreatePartyInvitationDocument} {...props} />
     );
-
+    
 
     export function useCreatePartyInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables>) {
       return ApolloReactHooks.useMutation<CreatePartyInvitationMutation, CreatePartyInvitationMutationVariables>(CreatePartyInvitationDocument, baseOptions);
@@ -9039,7 +9043,7 @@ export type DeleteManyPartyInvitationsComponentProps = Omit<ApolloReactComponent
     export const DeleteManyPartyInvitationsComponent = (props: DeleteManyPartyInvitationsComponentProps) => (
       <ApolloReactComponents.Mutation<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables> mutation={DeleteManyPartyInvitationsDocument} {...props} />
     );
-
+    
 
     export function useDeleteManyPartyInvitationsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables>) {
       return ApolloReactHooks.useMutation<DeleteManyPartyInvitationsMutation, DeleteManyPartyInvitationsMutationVariables>(DeleteManyPartyInvitationsDocument, baseOptions);
@@ -9060,7 +9064,7 @@ export type DeletePartyInvitationMutationComponentProps = Omit<ApolloReactCompon
     export const DeletePartyInvitationMutationComponent = (props: DeletePartyInvitationMutationComponentProps) => (
       <ApolloReactComponents.Mutation<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables> mutation={DeletePartyInvitationMutationDocument} {...props} />
     );
-
+    
 
     export function useDeletePartyInvitationMutationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables>) {
       return ApolloReactHooks.useMutation<DeletePartyInvitationMutationMutation, DeletePartyInvitationMutationMutationVariables>(DeletePartyInvitationMutationDocument, baseOptions);
@@ -9079,7 +9083,7 @@ export type JoinPartyMutationComponentProps = Omit<ApolloReactComponents.Mutatio
     export const JoinPartyMutationComponent = (props: JoinPartyMutationComponentProps) => (
       <ApolloReactComponents.Mutation<JoinPartyMutationMutation, JoinPartyMutationMutationVariables> mutation={JoinPartyMutationDocument} {...props} />
     );
-
+    
 
     export function useJoinPartyMutationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<JoinPartyMutationMutation, JoinPartyMutationMutationVariables>) {
       return ApolloReactHooks.useMutation<JoinPartyMutationMutation, JoinPartyMutationMutationVariables>(JoinPartyMutationDocument, baseOptions);
@@ -9100,7 +9104,7 @@ export type AddTrackToPartyComponentProps = Omit<ApolloReactComponents.MutationC
     export const AddTrackToPartyComponent = (props: AddTrackToPartyComponentProps) => (
       <ApolloReactComponents.Mutation<AddTrackToPartyMutation, AddTrackToPartyMutationVariables> mutation={AddTrackToPartyDocument} {...props} />
     );
-
+    
 
     export function useAddTrackToPartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>) {
       return ApolloReactHooks.useMutation<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>(AddTrackToPartyDocument, baseOptions);
@@ -9124,7 +9128,7 @@ export type MeQueryComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
     export const MeQueryComponent = (props: MeQueryComponentProps) => (
       <ApolloReactComponents.Query<MeQueryQuery, MeQueryQueryVariables> query={MeQueryDocument} {...props} />
     );
-
+    
 
     export function useMeQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQueryQuery, MeQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<MeQueryQuery, MeQueryQueryVariables>(MeQueryDocument, baseOptions);
@@ -9132,7 +9136,7 @@ export type MeQueryComponentProps = Omit<ApolloReactComponents.QueryComponentOpt
       export function useMeQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQueryQuery, MeQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<MeQueryQuery, MeQueryQueryVariables>(MeQueryDocument, baseOptions);
       }
-
+      
 export type MeQueryQueryHookResult = ReturnType<typeof useMeQueryQuery>;
 export type MeQueryQueryResult = ApolloReactCommon.QueryResult<MeQueryQuery, MeQueryQueryVariables>;
 export const PaginateUsersQueryDocument = gql`
@@ -9160,7 +9164,7 @@ export type PaginateUsersQueryComponentProps = Omit<ApolloReactComponents.QueryC
     export const PaginateUsersQueryComponent = (props: PaginateUsersQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables> query={PaginateUsersQueryDocument} {...props} />
     );
-
+    
 
     export function usePaginateUsersQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>(PaginateUsersQueryDocument, baseOptions);
@@ -9168,7 +9172,7 @@ export type PaginateUsersQueryComponentProps = Omit<ApolloReactComponents.QueryC
       export function usePaginateUsersQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>(PaginateUsersQueryDocument, baseOptions);
       }
-
+      
 export type PaginateUsersQueryQueryHookResult = ReturnType<typeof usePaginateUsersQueryQuery>;
 export type PaginateUsersQueryQueryResult = ApolloReactCommon.QueryResult<PaginateUsersQueryQuery, PaginateUsersQueryQueryVariables>;
 export const PartiesQueryDocument = gql`
@@ -9188,7 +9192,7 @@ export type PartiesQueryComponentProps = Omit<ApolloReactComponents.QueryCompone
     export const PartiesQueryComponent = (props: PartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<PartiesQueryQuery, PartiesQueryQueryVariables> query={PartiesQueryDocument} {...props} />
     );
-
+    
 
     export function usePartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartiesQueryQuery, PartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartiesQueryQuery, PartiesQueryQueryVariables>(PartiesQueryDocument, baseOptions);
@@ -9196,7 +9200,7 @@ export type PartiesQueryComponentProps = Omit<ApolloReactComponents.QueryCompone
       export function usePartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartiesQueryQuery, PartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartiesQueryQuery, PartiesQueryQueryVariables>(PartiesQueryDocument, baseOptions);
       }
-
+      
 export type PartiesQueryQueryHookResult = ReturnType<typeof usePartiesQueryQuery>;
 export type PartiesQueryQueryResult = ApolloReactCommon.QueryResult<PartiesQueryQuery, PartiesQueryQueryVariables>;
 export const PaginatePartiesQueryDocument = gql`
@@ -9219,7 +9223,7 @@ export type PaginatePartiesQueryComponentProps = Omit<ApolloReactComponents.Quer
     export const PaginatePartiesQueryComponent = (props: PaginatePartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables> query={PaginatePartiesQueryDocument} {...props} />
     );
-
+    
 
     export function usePaginatePartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>(PaginatePartiesQueryDocument, baseOptions);
@@ -9227,7 +9231,7 @@ export type PaginatePartiesQueryComponentProps = Omit<ApolloReactComponents.Quer
       export function usePaginatePartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>(PaginatePartiesQueryDocument, baseOptions);
       }
-
+      
 export type PaginatePartiesQueryQueryHookResult = ReturnType<typeof usePaginatePartiesQueryQuery>;
 export type PaginatePartiesQueryQueryResult = ApolloReactCommon.QueryResult<PaginatePartiesQueryQuery, PaginatePartiesQueryQueryVariables>;
 export const PaginateChatsQueryDocument = gql`
@@ -9267,7 +9271,7 @@ export type PaginateChatsQueryComponentProps = Omit<ApolloReactComponents.QueryC
     export const PaginateChatsQueryComponent = (props: PaginateChatsQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables> query={PaginateChatsQueryDocument} {...props} />
     );
-
+    
 
     export function usePaginateChatsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>(PaginateChatsQueryDocument, baseOptions);
@@ -9275,7 +9279,7 @@ export type PaginateChatsQueryComponentProps = Omit<ApolloReactComponents.QueryC
       export function usePaginateChatsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>(PaginateChatsQueryDocument, baseOptions);
       }
-
+      
 export type PaginateChatsQueryQueryHookResult = ReturnType<typeof usePaginateChatsQueryQuery>;
 export type PaginateChatsQueryQueryResult = ApolloReactCommon.QueryResult<PaginateChatsQueryQuery, PaginateChatsQueryQueryVariables>;
 export const PaginateMessagesQueryDocument = gql`
@@ -9298,7 +9302,7 @@ export type PaginateMessagesQueryComponentProps = Omit<ApolloReactComponents.Que
     export const PaginateMessagesQueryComponent = (props: PaginateMessagesQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables> query={PaginateMessagesQueryDocument} {...props} />
     );
-
+    
 
     export function usePaginateMessagesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>(PaginateMessagesQueryDocument, baseOptions);
@@ -9306,7 +9310,7 @@ export type PaginateMessagesQueryComponentProps = Omit<ApolloReactComponents.Que
       export function usePaginateMessagesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>(PaginateMessagesQueryDocument, baseOptions);
       }
-
+      
 export type PaginateMessagesQueryQueryHookResult = ReturnType<typeof usePaginateMessagesQueryQuery>;
 export type PaginateMessagesQueryQueryResult = ApolloReactCommon.QueryResult<PaginateMessagesQueryQuery, PaginateMessagesQueryQueryVariables>;
 export const PaginateUsersInviteToPartyQueryDocument = gql`
@@ -9343,7 +9347,7 @@ export type PaginateUsersInviteToPartyQueryComponentProps = Omit<ApolloReactComp
     export const PaginateUsersInviteToPartyQueryComponent = (props: PaginateUsersInviteToPartyQueryComponentProps) => (
       <ApolloReactComponents.Query<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables> query={PaginateUsersInviteToPartyQueryDocument} {...props} />
     );
-
+    
 
     export function usePaginateUsersInviteToPartyQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>(PaginateUsersInviteToPartyQueryDocument, baseOptions);
@@ -9351,7 +9355,7 @@ export type PaginateUsersInviteToPartyQueryComponentProps = Omit<ApolloReactComp
       export function usePaginateUsersInviteToPartyQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>(PaginateUsersInviteToPartyQueryDocument, baseOptions);
       }
-
+      
 export type PaginateUsersInviteToPartyQueryQueryHookResult = ReturnType<typeof usePaginateUsersInviteToPartyQueryQuery>;
 export type PaginateUsersInviteToPartyQueryQueryResult = ApolloReactCommon.QueryResult<PaginateUsersInviteToPartyQueryQuery, PaginateUsersInviteToPartyQueryQueryVariables>;
 export const PartyInvitationsConnectionQueryDocument = gql`
@@ -9379,7 +9383,7 @@ export type PartyInvitationsConnectionQueryComponentProps = Omit<ApolloReactComp
     export const PartyInvitationsConnectionQueryComponent = (props: PartyInvitationsConnectionQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables> query={PartyInvitationsConnectionQueryDocument} {...props} />
     );
-
+    
 
     export function usePartyInvitationsConnectionQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>(PartyInvitationsConnectionQueryDocument, baseOptions);
@@ -9387,7 +9391,7 @@ export type PartyInvitationsConnectionQueryComponentProps = Omit<ApolloReactComp
       export function usePartyInvitationsConnectionQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>(PartyInvitationsConnectionQueryDocument, baseOptions);
       }
-
+      
 export type PartyInvitationsConnectionQueryQueryHookResult = ReturnType<typeof usePartyInvitationsConnectionQueryQuery>;
 export type PartyInvitationsConnectionQueryQueryResult = ApolloReactCommon.QueryResult<PartyInvitationsConnectionQueryQuery, PartyInvitationsConnectionQueryQueryVariables>;
 export const HasChatsQueryDocument = gql`
@@ -9400,7 +9404,7 @@ export type HasChatsQueryComponentProps = Omit<ApolloReactComponents.QueryCompon
     export const HasChatsQueryComponent = (props: HasChatsQueryComponentProps) => (
       <ApolloReactComponents.Query<HasChatsQueryQuery, HasChatsQueryQueryVariables> query={HasChatsQueryDocument} {...props} />
     );
-
+    
 
     export function useHasChatsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HasChatsQueryQuery, HasChatsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<HasChatsQueryQuery, HasChatsQueryQueryVariables>(HasChatsQueryDocument, baseOptions);
@@ -9408,7 +9412,7 @@ export type HasChatsQueryComponentProps = Omit<ApolloReactComponents.QueryCompon
       export function useHasChatsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HasChatsQueryQuery, HasChatsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<HasChatsQueryQuery, HasChatsQueryQueryVariables>(HasChatsQueryDocument, baseOptions);
       }
-
+      
 export type HasChatsQueryQueryHookResult = ReturnType<typeof useHasChatsQueryQuery>;
 export type HasChatsQueryQueryResult = ApolloReactCommon.QueryResult<HasChatsQueryQuery, HasChatsQueryQueryVariables>;
 export const HasPartiesQueryDocument = gql`
@@ -9421,7 +9425,7 @@ export type HasPartiesQueryComponentProps = Omit<ApolloReactComponents.QueryComp
     export const HasPartiesQueryComponent = (props: HasPartiesQueryComponentProps) => (
       <ApolloReactComponents.Query<HasPartiesQueryQuery, HasPartiesQueryQueryVariables> query={HasPartiesQueryDocument} {...props} />
     );
-
+    
 
     export function useHasPartiesQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>(HasPartiesQueryDocument, baseOptions);
@@ -9429,7 +9433,7 @@ export type HasPartiesQueryComponentProps = Omit<ApolloReactComponents.QueryComp
       export function useHasPartiesQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>(HasPartiesQueryDocument, baseOptions);
       }
-
+      
 export type HasPartiesQueryQueryHookResult = ReturnType<typeof useHasPartiesQueryQuery>;
 export type HasPartiesQueryQueryResult = ApolloReactCommon.QueryResult<HasPartiesQueryQuery, HasPartiesQueryQueryVariables>;
 export const PartyInvitationsQueryDocument = gql`
@@ -9444,7 +9448,7 @@ export type PartyInvitationsQueryComponentProps = Omit<ApolloReactComponents.Que
     export const PartyInvitationsQueryComponent = (props: PartyInvitationsQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables> query={PartyInvitationsQueryDocument} {...props} />
     );
-
+    
 
     export function usePartyInvitationsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>(PartyInvitationsQueryDocument, baseOptions);
@@ -9452,7 +9456,7 @@ export type PartyInvitationsQueryComponentProps = Omit<ApolloReactComponents.Que
       export function usePartyInvitationsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>(PartyInvitationsQueryDocument, baseOptions);
       }
-
+      
 export type PartyInvitationsQueryQueryHookResult = ReturnType<typeof usePartyInvitationsQueryQuery>;
 export type PartyInvitationsQueryQueryResult = ApolloReactCommon.QueryResult<PartyInvitationsQueryQuery, PartyInvitationsQueryQueryVariables>;
 export const CanJoinPartyQueryDocument = gql`
@@ -9465,7 +9469,7 @@ export type CanJoinPartyQueryComponentProps = Omit<ApolloReactComponents.QueryCo
     export const CanJoinPartyQueryComponent = (props: CanJoinPartyQueryComponentProps) => (
       <ApolloReactComponents.Query<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables> query={CanJoinPartyQueryDocument} {...props} />
     );
-
+    
 
     export function useCanJoinPartyQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>(CanJoinPartyQueryDocument, baseOptions);
@@ -9473,7 +9477,7 @@ export type CanJoinPartyQueryComponentProps = Omit<ApolloReactComponents.QueryCo
       export function useCanJoinPartyQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>(CanJoinPartyQueryDocument, baseOptions);
       }
-
+      
 export type CanJoinPartyQueryQueryHookResult = ReturnType<typeof useCanJoinPartyQueryQuery>;
 export type CanJoinPartyQueryQueryResult = ApolloReactCommon.QueryResult<CanJoinPartyQueryQuery, CanJoinPartyQueryQueryVariables>;
 export const ChatMessagesSubscriptionDocument = gql`
@@ -9505,7 +9509,7 @@ export type ChatMessagesSubscriptionComponentProps = Omit<ApolloReactComponents.
     export const ChatMessagesSubscriptionComponent = (props: ChatMessagesSubscriptionComponentProps) => (
       <ApolloReactComponents.Subscription<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables> subscription={ChatMessagesSubscriptionDocument} {...props} />
     );
-
+    
 
     export function useChatMessagesSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables>) {
       return ApolloReactHooks.useSubscription<ChatMessagesSubscriptionSubscription, ChatMessagesSubscriptionSubscriptionVariables>(ChatMessagesSubscriptionDocument, baseOptions);
@@ -9532,7 +9536,7 @@ export type PartyInvitationSubscriptionComponentProps = Omit<ApolloReactComponen
     export const PartyInvitationSubscriptionComponent = (props: PartyInvitationSubscriptionComponentProps) => (
       <ApolloReactComponents.Subscription<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables> subscription={PartyInvitationSubscriptionDocument} {...props} />
     );
-
+    
 
     export function usePartyInvitationSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables>) {
       return ApolloReactHooks.useSubscription<PartyInvitationSubscriptionSubscription, PartyInvitationSubscriptionSubscriptionVariables>(PartyInvitationSubscriptionDocument, baseOptions);
@@ -9563,7 +9567,7 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
     export const JoinPartyFindComponent = (props: JoinPartyFindComponentProps) => (
       <ApolloReactComponents.Query<JoinPartyFindQuery, JoinPartyFindQueryVariables> query={JoinPartyFindDocument} {...props} />
     );
-
+    
 
     export function useJoinPartyFindQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<JoinPartyFindQuery, JoinPartyFindQueryVariables>) {
       return ApolloReactHooks.useQuery<JoinPartyFindQuery, JoinPartyFindQueryVariables>(JoinPartyFindDocument, baseOptions);
@@ -9571,7 +9575,7 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
       export function useJoinPartyFindLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<JoinPartyFindQuery, JoinPartyFindQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<JoinPartyFindQuery, JoinPartyFindQueryVariables>(JoinPartyFindDocument, baseOptions);
       }
-
+      
 export type JoinPartyFindQueryHookResult = ReturnType<typeof useJoinPartyFindQuery>;
 export type JoinPartyFindQueryResult = ApolloReactCommon.QueryResult<JoinPartyFindQuery, JoinPartyFindQueryVariables>;
 export const Party_SavedTracksConnectionDocument = gql`
@@ -9582,6 +9586,10 @@ export const Party_SavedTracksConnectionDocument = gql`
         ...FULL_SAVED_TRACK_FRAGMENT
       }
     }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
     ${Full_Saved_Track_FragmentFragmentDoc}`;
@@ -9590,7 +9598,7 @@ export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponen
     export const Party_SavedTracksConnectionComponent = (props: Party_SavedTracksConnectionComponentProps) => (
       <ApolloReactComponents.Query<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables> query={Party_SavedTracksConnectionDocument} {...props} />
     );
-
+    
 
     export function useParty_SavedTracksConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>) {
       return ApolloReactHooks.useQuery<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>(Party_SavedTracksConnectionDocument, baseOptions);
@@ -9598,7 +9606,7 @@ export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponen
       export function useParty_SavedTracksConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>(Party_SavedTracksConnectionDocument, baseOptions);
       }
-
+      
 export type Party_SavedTracksConnectionQueryHookResult = ReturnType<typeof useParty_SavedTracksConnectionQuery>;
 export type Party_SavedTracksConnectionQueryResult = ApolloReactCommon.QueryResult<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
@@ -9628,7 +9636,7 @@ export type PartyDashboardParticipantsQueryComponentProps = Omit<ApolloReactComp
     export const PartyDashboardParticipantsQueryComponent = (props: PartyDashboardParticipantsQueryComponentProps) => (
       <ApolloReactComponents.Query<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables> query={PartyDashboardParticipantsQueryDocument} {...props} />
     );
-
+    
 
     export function usePartyDashboardParticipantsQueryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>) {
       return ApolloReactHooks.useQuery<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>(PartyDashboardParticipantsQueryDocument, baseOptions);
@@ -9636,6 +9644,6 @@ export type PartyDashboardParticipantsQueryComponentProps = Omit<ApolloReactComp
       export function usePartyDashboardParticipantsQueryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>(PartyDashboardParticipantsQueryDocument, baseOptions);
       }
-
+      
 export type PartyDashboardParticipantsQueryQueryHookResult = ReturnType<typeof usePartyDashboardParticipantsQueryQuery>;
 export type PartyDashboardParticipantsQueryQueryResult = ApolloReactCommon.QueryResult<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>;

@@ -6,6 +6,7 @@ import { Typography } from 'antd';
 interface Props {
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  title?: string;
 }
 
 const ErrorWrapper = styled.div`
@@ -15,12 +16,12 @@ const ErrorWrapper = styled.div`
   flex-direction: column;
 `;
 
-const GraphqlInlineError: React.FC<Props> = ({ children, style }) => {
+const GraphqlInlineError: React.FC<Props> = ({ children, style, title }) => {
   return (
     <ErrorWrapper style={style} data-testid="graphqlInlineError">
       <React.Fragment>
         <Typography.Paragraph type="danger">
-          Some error occurred
+          {title || 'Some error occurred'}
         </Typography.Paragraph>
         {children}
       </React.Fragment>

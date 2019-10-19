@@ -1,5 +1,5 @@
 import css from '@emotion/css';
-import { List } from 'antd';
+import { List, Button } from 'antd';
 import React from 'react';
 import {
   AutoSizer,
@@ -9,6 +9,7 @@ import {
 } from 'react-virtualized';
 
 import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 
 const ListStyles = css`
   .ant-spin-container.ant-spin-blur > div:first-of-type {
@@ -16,21 +17,37 @@ const ListStyles = css`
   }
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  margin-top: 12px;
   h4 {
     margin-bottom: 0;
   }
   .ant-list-item-meta {
     align-items: center;
   }
+
+  @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
+    margin-top: 12px;
+    border-radius: 0;
+  }
 `;
 
+const LoadMoreButtonStyles = css`
+  display: block;
+  margin: 0 auto;
+  margin-top: 12px;
+  @media screen and (max-width: 530px) {
+    margin-right: auto;
+    margin-left: 12px;
+  }
+`;
 interface Props {
   loading: boolean;
   tracksLength: number;
-  className: string;
+
   selectingSongs: boolean;
   trackRenderer: ListRowRenderer;
+  onLoadMore: VoidFunction;
+  canLoadMore: boolean;
+  loadingMore: boolean;
 }
 
 export default function SavedTracksList(props: Props) {
@@ -42,7 +59,6 @@ export default function SavedTracksList(props: Props) {
             bordered={true}
             renderItem={undefined}
             loading={props.loading}
-            className={props.className}
             css={[ListStyles]}
           >
             <AutoSizer disableHeight={true}>
@@ -62,15 +78,15 @@ export default function SavedTracksList(props: Props) {
               )}
             </AutoSizer>
           </List>
-          {/* {props.canLoadMore && (
+          {props.canLoadMore && (
             <Button
-              size="default"
-              onClick={props.onLoadMoreClick}
+              onClick={props.onLoadMore}
               loading={props.loadingMore}
               css={[LoadMoreButtonStyles]}
             >
               Load More Songs
-            </Button> */}
+            </Button>
+          )}
         </React.Fragment>
       )}
     </WindowScroller>

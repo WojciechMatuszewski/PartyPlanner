@@ -13,7 +13,7 @@ export const UISectionWrapper = styled.div`
     margin-bottom: 24px;
     display: block;
     width: 100%;
-    max-width: 900px;
+    max-width: 640px;
   }
 
   h3 {

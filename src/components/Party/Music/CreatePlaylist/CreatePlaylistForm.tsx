@@ -5,22 +5,23 @@ import { Field, Formik } from 'formik';
 import React from 'react';
 import * as yup from 'yup';
 
-interface CreatePlaylistFormValues {
+export interface CreatePlaylistFormValues {
   playlistName: string | undefined;
-  private?: boolean;
+  isPrivate: boolean;
 }
 
 const validationSchema = yup.object().shape<CreatePlaylistFormValues>({
-  playlistName: yup.string().required('Playlist name is required')
+  playlistName: yup.string().required('Playlist name is required'),
+  isPrivate: yup.boolean()
 });
 
 const initialFormValues: CreatePlaylistFormValues = {
   playlistName: undefined,
-  private: false
+  isPrivate: false
 };
 
 interface Props {
-  onSubmit: VoidFunction;
+  onSubmit: (values: CreatePlaylistFormValues) => void;
   loading: boolean;
 }
 
@@ -40,19 +41,18 @@ export default function CreatePlaylistForm({ onSubmit, loading }: Props) {
             }
           `}
         >
-          <Form.Item style={{ margin: 0 }}>
-            <Field
-              component={FormikInputField}
-              type="text"
-              placeholder="Playlist name"
-              name="playlistName"
-            />
-          </Form.Item>
-          <Form.Item style={{ margin: 0 }}>
+          <Field
+            component={FormikInputField}
+            type="text"
+            placeholder="Playlist name"
+            name="playlistName"
+          />
+
+          <Form.Item>
             <Checkbox
-              name="private"
-              checked={values.private}
-              onChange={e => setFieldValue('private', e.target.checked)}
+              name="isPrivate"
+              checked={values.isPrivate}
+              onChange={e => setFieldValue('isPrivate', e.target.checked)}
             >
               Make it private
             </Checkbox>

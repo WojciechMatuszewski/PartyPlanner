@@ -6,14 +6,18 @@ import {
   createPlaylist,
   getCurrentUserProfile,
   addTracksToPlaylist,
-  getPlaylist
+  getPlaylist,
+  Playlist
 } from 'spotify-web-sdk';
 import { actions, Machine } from 'xstate';
 
 import CreatePlaylistError from './CreatePlaylistError';
-import CreatePlaylistForm from './CreatePlaylistForm';
+import CreatePlaylistForm, {
+  CreatePlaylistFormValues
+} from './CreatePlaylistForm';
 import PlaylistCreated from './PlaylistCreated';
 import useSpotifyWebSdk from '@hooks/useSpotifyWebSdk';
+import css from '@emotion/css';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -21,14 +25,31 @@ interface Props {
   onClose: VoidFunction;
 }
 
+interface MachineContext {
+  createPlaylistPayload: {
+    tracks: Full_Saved_Track_FragmentFragment[];
+    playlistName: string;
+    isPrivate: boolean;
+  };
+  createdPlaylist: Playlist | undefined;
+}
+
+const ModalStyles = css`
+  min-width: 530px;
+  width: auto;
+`;
+
 const playlistMachine = Machine(
   {
     id: 'fetch',
     initial: 'idle',
     context: {
-      createdPlaylist: {},
-      playlistName: undefined,
-      tracks: []
+      createdPlaylist: undefined,
+      createPlaylistPayload: {
+        playlistName: '',
+        isPrivate: false,
+        tracks: []
+      }
     },
     states: {
       idle: {
@@ -44,6 +65,14 @@ const playlistMachine = Machine(
         }
       },
       errorLoading: {
+        invoke: {
+          src: 'createSpotifyPlaylist',
+          onDone: {
+            target: 'success',
+            actions: 'setData'
+          },
+          onError: 'error'
+        },
         on: {
           SUCCESS_ERROR: 'success',
           FAILURE_ERROR: 'error'
@@ -70,14 +99,17 @@ const playlistMachine = Machine(
       notifyFailure: () => message.error('Could not create playlist'),
       setData: actions.assign({ createdPlaylist: (_, event) => event.data }),
       setPreFetchData: actions.assign({
-        playlistName: (_, event) => event.playlistName,
-        tracks: (_, event) => event.tracks
+        createPlaylistPayload: (_, event) => event.payload
       })
     },
     services: {
-      createSpotifyPlaylist: async ({ playlistName, tracks }) => {
+      createSpotifyPlaylist: async ({
+        createPlaylistPayload: { tracks, playlistName, isPrivate }
+      }: MachineContext) => {
         const { id } = await getCurrentUserProfile();
-        const { id: playlistId } = await createPlaylist(id, playlistName);
+        const { id: playlistId } = await createPlaylist(id, playlistName, {
+          public: !isPrivate
+        });
         await addTracksToPlaylist(playlistId, tracks.map(track => track.uri));
         return await getPlaylist(playlistId);
       }
@@ -92,16 +124,21 @@ export default function CreatePlaylists({ visible, onClose, tracks }: Props) {
     services: {}
   });
 
-  const handleFormSubmit = () =>
-    send('CREATE', { playlistName: 'elobenc', tracks });
+  const handleFormSubmit = (formValues: CreatePlaylistFormValues) =>
+    send('CREATE', { payload: { ...formValues, tracks } });
+
   const handleRetryClick = () => send('RETRY');
+
+  const { createdPlaylist } = state.context;
 
   return (
     <Modal
+      destroyOnClose={true}
       closable={true}
       maskClosable={true}
       onCancel={onClose}
       centered={true}
+      css={[ModalStyles]}
       visible={visible}
       title="Create Spotify playlist"
       footer={null}
@@ -115,7 +152,7 @@ export default function CreatePlaylists({ visible, onClose, tracks }: Props) {
       ) : state.value == 'errorLoading' ? (
         <CreatePlaylistError onRetry={handleRetryClick} retryLoading={true} />
       ) : state.value == 'success' ? (
-        <PlaylistCreated />
+        <PlaylistCreated createdPlaylist={createdPlaylist as any} />
       ) : null}
     </Modal>
   );

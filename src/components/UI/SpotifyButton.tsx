@@ -6,9 +6,9 @@ import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import SpotifyIcon from '@customIcons/spotify.svg';
 
 const BaseSpotifyButtonStyles = css`
-  .anticon + span,
-  span + .anticon {
-    margin-bottom: 3px;
+  &:not(.ant-btn-lg) .anticon + span,
+  &:not(.ant-btn-lg) span + .anticon {
+    margin-bottom: 2px;
   }
 `;
 
