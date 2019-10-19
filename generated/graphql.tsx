@@ -8185,8 +8185,10 @@ export type AddTrackToPartyMutation = (
   { __typename?: 'Mutation' }
   & { createPartySavedTrack: (
     { __typename?: 'PartySavedTrack' }
-    & Pick<PartySavedTrack, 'id'>
-  ) }
+    & Pick<PartySavedTrack, 'spotifyId'>
+  )
+    & Full_Saved_Track_FragmentFragment
+   }
 );
 
 export type MeQueryQueryVariables = {};
@@ -8538,6 +8540,25 @@ export type JoinPartyFindQuery = (
   ) }
 );
 
+export type Party_SavedTracksQueryVariables = {
+  where?: Maybe<PartySavedTrackWhereInput>,
+  orderBy?: Maybe<PartySavedTrackOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type Party_SavedTracksQuery = (
+  { __typename?: 'Query' }
+  & { partySavedTracks: Array<Maybe<(
+    { __typename?: 'PartySavedTrack' }
+    & Pick<PartySavedTrack, 'spotifyId'>
+  )>> }
+);
+
 export type Is_Unread_ThreadFragment = (
   { __typename?: 'Chat' }
   & Pick<Chat, 'hasUnreadMessages'>
@@ -8652,7 +8673,7 @@ export const useDeletePartyInvitationMutation = useDeletePartyInvitationMutation
 export type JoinPartyMutationVariables = JoinPartyMutationMutationVariables;
 export const useJoinPartyMutation = useJoinPartyMutationMutation;
 export type AddTrackToPartyVariables = AddTrackToPartyMutationVariables;
-export type AddTrackToPartyCreatePartySavedTrack = AddTrackToPartyMutation['createPartySavedTrack'];
+export type AddTrackToPartyCreatePartySavedTrack = Full_Saved_Track_FragmentFragment;
 export const useAddTrackToParty = useAddTrackToPartyMutation;
 export type MeQueryVariables = MeQueryQueryVariables;
 export type MeQueryMe = MeQueryQuery['me'];
@@ -8732,6 +8753,9 @@ export type JoinPartyFindMembers = JoinPartyFindQuery['parties'][0]['members'][0
 export type JoinPartyFindMembersCount = JoinPartyFindQuery['membersCount'];
 export type JoinPartyFindAggregate = JoinPartyFindQuery['membersCount']['aggregate'];
 export const useJoinPartyFind = useJoinPartyFindQuery;
+export type Party_SavedTracksVariables = Party_SavedTracksQueryVariables;
+export type Party_SavedTracksPartySavedTracks = Party_SavedTracksQuery['partySavedTracks'][0];
+export const useParty_SavedTracks = useParty_SavedTracksQuery;
 export type Party_SavedTracksConnectionVariables = Party_SavedTracksConnectionQueryVariables;
 export type Party_SavedTracksConnectionPartySavedTracksConnection = Party_SavedTracksConnectionQuery['partySavedTracksConnection'];
 export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['edges'][0];
@@ -9094,10 +9118,11 @@ export type JoinPartyMutationMutationOptions = ApolloReactCommon.BaseMutationOpt
 export const AddTrackToPartyDocument = gql`
     mutation AddTrackToParty($data: PartySavedTrackCreateInput!) {
   createPartySavedTrack(data: $data) {
-    id
+    ...FULL_SAVED_TRACK_FRAGMENT
+    spotifyId
   }
 }
-    `;
+    ${Full_Saved_Track_FragmentFragmentDoc}`;
 export type AddTrackToPartyMutationFn = ApolloReactCommon.MutationFunction<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>;
 export type AddTrackToPartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>, 'mutation'>;
 
@@ -9578,6 +9603,29 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
       
 export type JoinPartyFindQueryHookResult = ReturnType<typeof useJoinPartyFindQuery>;
 export type JoinPartyFindQueryResult = ApolloReactCommon.QueryResult<JoinPartyFindQuery, JoinPartyFindQueryVariables>;
+export const Party_SavedTracksDocument = gql`
+    query Party_SavedTracks($where: PartySavedTrackWhereInput, $orderBy: PartySavedTrackOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
+  partySavedTracks(where: $where, orderBy: $orderBy, after: $after, skip: $skip, before: $before, first: $first, last: $last) {
+    spotifyId
+  }
+}
+    `;
+export type Party_SavedTracksComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>, 'query'>;
+
+    export const Party_SavedTracksComponent = (props: Party_SavedTracksComponentProps) => (
+      <ApolloReactComponents.Query<Party_SavedTracksQuery, Party_SavedTracksQueryVariables> query={Party_SavedTracksDocument} {...props} />
+    );
+    
+
+    export function useParty_SavedTracksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>(Party_SavedTracksDocument, baseOptions);
+    }
+      export function useParty_SavedTracksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>(Party_SavedTracksDocument, baseOptions);
+      }
+      
+export type Party_SavedTracksQueryHookResult = ReturnType<typeof useParty_SavedTracksQuery>;
+export type Party_SavedTracksQueryResult = ApolloReactCommon.QueryResult<Party_SavedTracksQuery, Party_SavedTracksQueryVariables>;
 export const Party_SavedTracksConnectionDocument = gql`
     query Party_SavedTracksConnection($where: PartySavedTrackWhereInput, $orderBy: PartySavedTrackOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   partySavedTracksConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {

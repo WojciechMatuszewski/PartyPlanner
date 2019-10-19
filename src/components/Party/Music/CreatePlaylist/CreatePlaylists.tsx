@@ -22,7 +22,7 @@ import css from '@emotion/css';
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
   visible: boolean;
-  onClose: VoidFunction;
+  onClose: (isClosingAfterSuccess: boolean) => void;
 }
 
 interface MachineContext {
@@ -91,7 +91,11 @@ const playlistMachine = Machine(
           SUCCESS: 'success'
         }
       },
-      success: {}
+      success: {
+        on: {
+          RESET: 'idle'
+        }
+      }
     }
   },
   {
@@ -123,20 +127,25 @@ export default function CreatePlaylists({ visible, onClose, tracks }: Props) {
   const [state, send] = useMachine(playlistMachine, {
     services: {}
   });
+  const { createdPlaylist } = state.context;
 
   const handleFormSubmit = (formValues: CreatePlaylistFormValues) =>
     send('CREATE', { payload: { ...formValues, tracks } });
 
   const handleRetryClick = () => send('RETRY');
 
-  const { createdPlaylist } = state.context;
+  function handleClose() {
+    send('RESET');
+    if (state.value == 'success') return onClose(true);
+    onClose(false);
+  }
 
   return (
     <Modal
       destroyOnClose={true}
       closable={true}
       maskClosable={true}
-      onCancel={onClose}
+      onCancel={handleClose}
       centered={true}
       css={[ModalStyles]}
       visible={visible}

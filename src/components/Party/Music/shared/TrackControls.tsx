@@ -18,6 +18,7 @@ type MoreInfoButtonProps = {
 type AddToQueueButtonProps = {
   loading?: boolean;
   onAddToQueueClick: VoidFunction;
+  disabled?: boolean;
 };
 
 const TrackTileControlsWrapper = styled.div`
@@ -66,6 +67,7 @@ export default function TrackControls(props: TrackControlsProps) {
       />
       <MoreInfoTrackButton onMoreInfoClick={props.onMoreInfoClick} />
       <AddToQueueTrackButton
+        disabled={props.disabled}
         loading={props.loading}
         onAddToQueueClick={props.onAddToQueueClick}
       />
@@ -102,6 +104,7 @@ export function AddToQueueTrackButton(props: AddToQueueButtonProps) {
   return (
     <Button
       loading={props.loading}
+      disabled={props.disabled}
       onClick={withTrappedEvent(props.onAddToQueueClick)}
       css={[ButtonStyles]}
       icon="plus"

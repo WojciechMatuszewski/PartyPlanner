@@ -29,14 +29,14 @@ const LoaderWrapper = styled(
 interface Props {
   isLoadingInitially: boolean;
   loading: boolean;
-  textToDisplay: string;
+  textToDisplay?: string;
   height?: string;
 }
 
 const GraphqlLoading: React.FC<Props> = ({
   isLoadingInitially,
   loading,
-  textToDisplay,
+  textToDisplay = null,
   height
 }) => {
   return (

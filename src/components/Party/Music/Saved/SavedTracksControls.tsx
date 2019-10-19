@@ -28,7 +28,7 @@ const InnerWrapper = styled.div`
 interface Props {
   onSelectSongsClick: VoidFunction;
   selectingTracks: boolean;
-  onCreatePlaylistClick: VoidFunction;
+  onCreatePlaylistClick: (shouldResetState: boolean) => void;
   hasSelectedAtLeastOneTrack: boolean;
   onSearch: (searchQuery: string) => void;
   hasTracks: boolean;
@@ -58,7 +58,7 @@ export default function SavedTracksControls(props: Props) {
         </Button>
         <GreenSpotifyButton
           disabled={!props.hasSelectedAtLeastOneTrack}
-          onClick={props.onCreatePlaylistClick}
+          onClick={() => props.onCreatePlaylistClick(false)}
         >
           {!isOnMobile && <span>Create playlist</span>}
         </GreenSpotifyButton>

@@ -1,10 +1,15 @@
 import { useParty } from '@components/Party/PartyProvider';
-import { Full_Saved_Track_FragmentFragment, useAddTrackToParty } from '@generated/graphql';
-import { message } from 'antd';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import React from 'react';
 
-import { AddToQueueTrackButton, MoreInfoTrackButton, PlayPauseTrackButton } from '../../TrackControls';
-import VirtualizedListTrackItem from '../../VirtualizedListTrackItem';
+import { useIsTrackSaved } from '../../Saved/SavedTracksProvider';
+import {
+  AddToQueueTrackButton,
+  MoreInfoTrackButton,
+  PlayPauseTrackButton
+} from '../../shared/TrackControls';
+import { useSaveTrack } from '../../shared/useSaveTrack';
+import VirtualizedListTrackItem from '../../shared/VirtualizedListTrackItem';
 
 interface Props {
   track: Full_Saved_Track_FragmentFragment;
@@ -15,37 +20,11 @@ interface Props {
 }
 
 function DiscoverTrack(props: Props) {
-  const { partyId } = useParty();
-
   const { track } = props;
 
-  const [mutate, { loading }] = useAddTrackToParty({
-    variables: {
-      data: {
-        spotifyId: track.id,
-        name: track.name,
-        length: track.length,
-        uri: track.uri,
-        popularity: track.popularity,
-        durationMs: track.durationMs,
-        previewUrl: track.previewUrl,
-        stringArtists: track.stringArtists,
-        album: {
-          create: {
-            spotifyId: track.album.id,
-            uri: track.album.uri,
-            name: track.album.name,
-            imageUrl: track.album.imageUrl,
-            releaseDate: track.album.releaseDate
-          }
-        },
-        explicit: props.track.explicit,
-        party: { connect: { id: partyId } }
-      }
-    },
-    onCompleted: () => message.success('Track successfully added!'),
-    onError: () => message.error('Could not add track to given party playlist!')
-  });
+  const { partyId } = useParty();
+  const [mutate, { loading }] = useSaveTrack(track, partyId);
+  const isAlreadySaved = useIsTrackSaved(track.id);
 
   return (
     <VirtualizedListTrackItem
@@ -60,6 +39,7 @@ function DiscoverTrack(props: Props) {
         />,
         <MoreInfoTrackButton onMoreInfoClick={handleMoreInfoClick} key={2} />,
         <AddToQueueTrackButton
+          disabled={isAlreadySaved}
           key={3}
           onAddToQueueClick={mutate}
           loading={loading}

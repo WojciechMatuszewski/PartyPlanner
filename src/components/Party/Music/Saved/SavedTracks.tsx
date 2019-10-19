@@ -24,9 +24,10 @@ import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 import css from '@emotion/css';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
-  padding-top: 12px;
+  padding: 12px;
   @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
     padding: 0;
+    padding-bottom: 12px;
     .discover-tracks-list {
       border-radius: 0;
       box-shadow: none;
@@ -42,6 +43,7 @@ const EmptySectionStyles = css`
   }
 `;
 
+export const PARTY_SAVED_TRACKS_CONNECTION_PAGINATION_SIZE = 20;
 export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
   query Party_SavedTracksConnection(
     $where: PartySavedTrackWhereInput
@@ -100,7 +102,7 @@ export default function SavedTracks({ partyId }: Props) {
   } = useParty_SavedTracksConnection({
     variables: {
       where: { party: { id: partyId } },
-      first: 20
+      first: PARTY_SAVED_TRACKS_CONNECTION_PAGINATION_SIZE
     },
     notifyOnNetworkStatusChange: true
   });
@@ -109,8 +111,13 @@ export default function SavedTracks({ partyId }: Props) {
     setSelectingTracks(prev => !prev);
     setSelectedTracks([]);
   };
-  const toggleCreatePlaylistModalVisible = () =>
+  const toggleCreatePlaylistModalVisible = (shouldResetState: boolean) => {
     setCreatePlaylistModalVisible(prev => !prev);
+    if (shouldResetState) {
+      setSelectedTracks([]);
+      setSelectingTracks(false);
+    }
+  };
 
   const {
     setTrack,
@@ -145,7 +152,6 @@ export default function SavedTracks({ partyId }: Props) {
         height="calc(100vh - 90px)"
         isLoadingInitially={true}
         loading={true}
-        textToDisplay="Loading saved tracks"
       />
     );
 
@@ -198,7 +204,9 @@ export default function SavedTracks({ partyId }: Props) {
         <SavedTracksControls
           hasTracks={edges.length > 0}
           onSearch={searchValue =>
-            refetch({ where: { name_contains: searchValue } })
+            refetch({
+              where: { name_contains: searchValue, party: { id: partyId } }
+            })
           }
           hasSelectedAtLeastOneTrack={!(selectedTracks.length == 0)}
           onCreatePlaylistClick={toggleCreatePlaylistModalVisible}
@@ -248,7 +256,7 @@ export default function SavedTracks({ partyId }: Props) {
     );
   }
   function isTrackSelected(trackToCheck: Full_Saved_Track_FragmentFragment) {
-    return selectedTracks.includes(trackToCheck);
+    return selectedTracks.filter(({ id }) => trackToCheck.id == id).length > 0;
   }
 
   function handleLoadMore() {

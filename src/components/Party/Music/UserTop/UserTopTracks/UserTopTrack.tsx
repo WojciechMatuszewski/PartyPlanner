@@ -3,7 +3,10 @@ import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 
 import { Typography, Icon } from 'antd';
-import TrackControls from '../../TrackControls';
+import TrackControls from '../../shared/TrackControls';
+import { useIsTrackSaved } from '../../Saved/SavedTracksProvider';
+import { useParty } from '@components/Party/PartyProvider';
+import { useSaveTrack } from '../../shared/useSaveTrack';
 
 const MOBILE_BREAKPOINT = '1080px';
 
@@ -118,6 +121,10 @@ interface Props {
 }
 
 const UserTopTrack: React.FC<Props> = props => {
+  const { partyId } = useParty();
+  const [mutate, { loading }] = useSaveTrack(props.track, partyId);
+  const isAlreadySaved = useIsTrackSaved(props.track.id);
+
   return (
     <TopTrackTile
       style={props.style}
@@ -146,6 +153,9 @@ const UserTopTrack: React.FC<Props> = props => {
 
       <ControlsWithPlayingIndicatorWrapper>
         <TrackControls
+          onAddToQueueClick={mutate}
+          loading={loading}
+          disabled={isAlreadySaved}
           className="controls"
           trackPlaying={props.trackPlaying}
           onMoreInfoClick={() => props.onMoreInfoClick(props.track)}

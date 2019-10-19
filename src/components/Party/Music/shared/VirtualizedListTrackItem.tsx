@@ -13,6 +13,8 @@ const ListItemStyles = css`
   display: flex;
   .posed-content-wrapper {
     flex: 1;
+    max-width: 100%;
+    min-width: 0;
   }
   &.track-playing,
   &:hover {
@@ -22,6 +24,10 @@ const ListItemStyles = css`
   .ant-list-item-meta {
     max-width: 100%;
     min-width: 0;
+  }
+
+  .ant-avatar {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
 
   .ant-list-item-meta-content {

@@ -5,9 +5,12 @@ import { always, identity, ifElse } from 'ramda';
 import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
 
-import { MoreInfoTrackButton, PlayPauseTrackButton } from '../TrackControls';
+import {
+  MoreInfoTrackButton,
+  PlayPauseTrackButton
+} from '../shared/TrackControls';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
-import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
+import VirtualizedListTrackItem from '../shared/VirtualizedListTrackItem';
 
 type VirtualizedListTrackItemProps = typeof VirtualizedListTrackItem extends (
   args: infer Props

@@ -8,7 +8,7 @@ import {
   WindowScroller
 } from 'react-virtualized';
 
-import VirtualizedListTrackItem from '../VirtualizedListTrackItem';
+import VirtualizedListTrackItem from '../shared/VirtualizedListTrackItem';
 import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 
 const ListStyles = css`
