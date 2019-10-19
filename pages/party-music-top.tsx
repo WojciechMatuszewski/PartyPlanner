@@ -82,22 +82,22 @@ const PartyMusicTopPage: NextFunctionComponent<
       <PartyMenu routerPath={'/party-music-top'} partyId={partyId} />
       <PartyContentWrapper>
         <SpotifyGuard>
-          <BigMusicPlayerProvider>
-            <TrackInfoModalProvider>
-              <PartyProvider partyId={partyId}>
-                <SavedTracksProvider savedTracks={partySavedTracks}>
+          <SavedTracksProvider savedTracks={partySavedTracks}>
+            <BigMusicPlayerProvider>
+              <TrackInfoModalProvider>
+                <PartyProvider partyId={partyId}>
                   <UserTopTracks />
-                </SavedTracksProvider>
-              </PartyProvider>
-              {/* <UserTopArtists /> */}
-              <BigMusicPlayerStickedToBottom
-                onTrackChanged={handleTrackChanged}
-                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                visible={playerVisible}
-              />
-              <TrackInfoModal />
-            </TrackInfoModalProvider>
-          </BigMusicPlayerProvider>
+                </PartyProvider>
+                <BigMusicPlayerStickedToBottom
+                  partyId={partyId}
+                  onTrackChanged={handleTrackChanged}
+                  onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+                  visible={playerVisible}
+                />
+                <TrackInfoModal />
+              </TrackInfoModalProvider>
+            </BigMusicPlayerProvider>
+          </SavedTracksProvider>
         </SpotifyGuard>
       </PartyContentWrapper>
     </React.Fragment>

@@ -1,10 +1,11 @@
-import React from 'react';
-import { useBigMusicPlayer } from './BigMusicPlayerProvider';
-import { Button, Icon } from 'antd';
-import BigMusicPlayer from './BigMusicPlayer';
-import { Track } from 'spotify-web-sdk';
 import SlidableWithTrigger from '@components/SlidableWithTrigger';
 import css from '@emotion/css';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
+import { Button, Icon } from 'antd';
+import React from 'react';
+
+import BigMusicPlayer, { BigMusicPlayerProps } from './BigMusicPlayer';
+import { useBigMusicPlayer } from './BigMusicPlayerProvider';
 
 const SlidableContainerStyles = css`
   position: fixed;
@@ -12,21 +13,28 @@ const SlidableContainerStyles = css`
   left: 0;
 `;
 
-interface Props {
+interface Props extends BigMusicPlayerProps {
   onTrackChanged: () => void;
   onVisibilityTriggerClicked: () => void;
   visible: boolean;
 }
 
-const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
+const BigMusicPlayerStickedToBottom: React.FC<Props> = ({
+  onTrackChanged,
+  onVisibilityTriggerClicked,
+  visible,
+  ...bigMusicPlayerProps
+}) => {
   const { track, playerState } = useBigMusicPlayer();
-  const previousTrackRef = React.useRef<Track | null>(track);
+  const previousTrackRef = React.useRef<Full_Saved_Track_FragmentFragment | null>(
+    track
+  );
 
   React.useEffect(() => {
     if (!track) return;
     if (!previousTrackRef.current || previousTrackRef.current.id !== track.id) {
       previousTrackRef.current = track;
-      props.onTrackChanged();
+      onTrackChanged();
     }
   }, [track]);
 
@@ -35,19 +43,19 @@ const BigMusicPlayerStickedToBottom: React.FC<Props> = props => {
       containerCSS={SlidableContainerStyles}
       trigger={suggestedTriggerStyles => (
         <Button
-          icon={props.visible ? 'caret-down' : 'caret-up'}
+          icon={visible ? 'caret-down' : 'caret-up'}
           css={[suggestedTriggerStyles]}
-          onClick={props.onVisibilityTriggerClicked}
+          onClick={onVisibilityTriggerClicked}
         >
           Music Player
-          {playerState === 'playing' && !props.visible && (
+          {playerState === 'playing' && !visible && (
             <Icon type="sound" theme="twoTone" />
           )}
         </Button>
       )}
-      visible={props.visible}
+      visible={visible}
     >
-      <BigMusicPlayer />
+      <BigMusicPlayer {...bigMusicPlayerProps} />
     </SlidableWithTrigger>
   );
 };

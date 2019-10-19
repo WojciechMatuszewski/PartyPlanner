@@ -123,7 +123,7 @@ interface Props {
 const UserTopTrack: React.FC<Props> = props => {
   const { partyId } = useParty();
   const [mutate, { loading }] = useSaveTrack(props.track, partyId);
-  const isAlreadySaved = useIsTrackSaved(props.track.id);
+  const [isAlreadySaved] = useIsTrackSaved(props.track.id);
 
   return (
     <TopTrackTile

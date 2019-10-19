@@ -24,7 +24,7 @@ function DiscoverTrack(props: Props) {
 
   const { partyId } = useParty();
   const [mutate, { loading }] = useSaveTrack(track, partyId);
-  const isAlreadySaved = useIsTrackSaved(track.id);
+  const [isAlreadySaved] = useIsTrackSaved(track.id);
 
   return (
     <VirtualizedListTrackItem

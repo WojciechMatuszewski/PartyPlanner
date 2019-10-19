@@ -1,14 +1,13 @@
-import React from 'react';
 import styled from '@emotion/styled';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import {
   FlexBoxHorizontallyCenteredStyles,
-  TransparentButtonStyles,
   FlexBoxVerticallyCenteredStyles
 } from '@shared/styles';
+import { Button, Icon, Typography } from 'antd';
+import React from 'react';
 
-import { Typography, Icon, Button } from 'antd';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
-import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 const TrackInfoWrapper = styled.div`
   height: 64px;
@@ -68,12 +67,7 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = ({ track, isOnMobile }) => {
   return (
     <TrackInfoWrapper>
       {isOnMobile ? (
-        <Button
-          size="small"
-          shape="circle"
-          css={[TransparentButtonStyles]}
-          onClick={handleMoreInfoClick}
-        >
+        <Button size="small" shape="circle" onClick={handleMoreInfoClick}>
           <Icon type="info" />
         </Button>
       ) : (

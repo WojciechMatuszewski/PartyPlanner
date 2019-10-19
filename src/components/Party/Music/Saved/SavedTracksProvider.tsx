@@ -23,7 +23,10 @@ export default function SavedTracksProvider({ savedTracks, children }: Props) {
   );
 }
 
-export function useIsTrackSaved(trackSpotifyId: string) {
+export function useIsTrackSaved(
+  trackSpotifyId: string,
+  { lazy }: { lazy: boolean } = { lazy: false }
+) {
   const [isSaved, setIsSaved] = React.useState(false);
 
   const listOfSavedTracks = React.useContext(SavedTracksContext);
@@ -31,13 +34,20 @@ export function useIsTrackSaved(trackSpotifyId: string) {
   if (!listOfSavedTracks)
     throw Error('useIsTrackSaved can only be used within SavedTracksProvider');
 
+  const checkIfSaved = React.useCallback(
+    trackSpotifyId => {
+      return (
+        listOfSavedTracks.filter(({ spotifyId }) => spotifyId == trackSpotifyId)
+          .length > 0
+      );
+    },
+    [listOfSavedTracks, trackSpotifyId]
+  );
+
   React.useEffect(() => {
-    const isInsideList = listOfSavedTracks.filter(
-      ({ spotifyId }) => spotifyId == trackSpotifyId
-    );
+    if (lazy) return;
+    return setIsSaved(checkIfSaved(trackSpotifyId));
+  }, [listOfSavedTracks, trackSpotifyId]);
 
-    return setIsSaved(isInsideList.length > 0);
-  }, [listOfSavedTracks]);
-
-  return isSaved;
+  return [isSaved, checkIfSaved] as [boolean, (spotifyId: string) => boolean];
 }

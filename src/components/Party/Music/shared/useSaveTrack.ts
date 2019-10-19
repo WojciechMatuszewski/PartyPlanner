@@ -11,36 +11,43 @@ import {
   useAddTrackToParty
 } from './../../../../../generated/graphql';
 
+// do it lazely here so that big music player can pass a null value first
+function mapTrackToMutationVariables(
+  track: Full_Saved_Track_FragmentFragment,
+  partyId: string
+) {
+  return {
+    data: {
+      spotifyId: track.id,
+      name: track.name,
+      length: track.length,
+      uri: track.uri,
+      popularity: track.popularity,
+      durationMs: track.durationMs,
+      previewUrl: track.previewUrl,
+      stringArtists: track.stringArtists,
+      album: {
+        create: {
+          spotifyId: track.album.id,
+          uri: track.album.uri,
+          name: track.album.name,
+          imageUrl: track.album.imageUrl,
+          releaseDate: track.album.releaseDate
+        }
+      },
+      explicit: track.explicit,
+      party: { connect: { id: partyId } }
+    }
+  };
+}
+
 export function useSaveTrack(
   track: Full_Saved_Track_FragmentFragment,
   partyId: string
 ) {
   const whereVariables = { party: { id: partyId } };
 
-  const useMutationApolloProps = useAddTrackToParty({
-    variables: {
-      data: {
-        spotifyId: track.id,
-        name: track.name,
-        length: track.length,
-        uri: track.uri,
-        popularity: track.popularity,
-        durationMs: track.durationMs,
-        previewUrl: track.previewUrl,
-        stringArtists: track.stringArtists,
-        album: {
-          create: {
-            spotifyId: track.album.id,
-            uri: track.album.uri,
-            name: track.album.name,
-            imageUrl: track.album.imageUrl,
-            releaseDate: track.album.releaseDate
-          }
-        },
-        explicit: track.explicit,
-        party: { connect: { id: partyId } }
-      }
-    },
+  const [mutate, stateProps] = useAddTrackToParty({
     onCompleted: () => message.success('Track successfully added!'),
     onError: () =>
       message.error('Could not add track to given party playlist!'),
@@ -91,5 +98,8 @@ export function useSaveTrack(
     }
   });
 
-  return useMutationApolloProps;
+  return [
+    () => mutate({ variables: mapTrackToMutationVariables(track, partyId) }),
+    stateProps
+  ] as ReturnType<typeof useAddTrackToParty>;
 }

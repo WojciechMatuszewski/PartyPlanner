@@ -47,6 +47,8 @@ const PartyMusicSavedTracks: NextFunctionComponent<
               <TrackInfoModal />
               <SavedTracks partyId={partyId} />
               <BigMusicPlayerStickedToBottom
+                partyId={partyId}
+                isUsingSavedTracksContext={false}
                 onTrackChanged={handleTrackChanged}
                 onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
                 visible={playerVisible}

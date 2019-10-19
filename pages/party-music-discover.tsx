@@ -86,19 +86,22 @@ const PartyMusicDiscoverPage: NextFunctionComponent<
       <PartyProvider partyId={partyId}>
         <PartyContentWrapper>
           <SpotifyGuard>
-            <BigMusicPlayerProvider>
-              <TrackInfoModalProvider>
-                <SavedTracksProvider savedTracks={partySavedTracks}>
+            <SavedTracksProvider savedTracks={partySavedTracks}>
+              <BigMusicPlayerProvider>
+                <TrackInfoModalProvider>
                   <PartyMusicDiscover paddingBottom={getContentPadding()} />
-                </SavedTracksProvider>
-                <TrackInfoModal />
-                <BigMusicPlayerStickedToBottom
-                  onTrackChanged={handleTrackChanged}
-                  onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                  visible={playerVisible}
-                />
-              </TrackInfoModalProvider>
-            </BigMusicPlayerProvider>
+                  <TrackInfoModal />
+                  <BigMusicPlayerStickedToBottom
+                    partyId={partyId}
+                    onTrackChanged={handleTrackChanged}
+                    onVisibilityTriggerClicked={
+                      handleMusicPlayerVisibilityChange
+                    }
+                    visible={playerVisible}
+                  />
+                </TrackInfoModalProvider>
+              </BigMusicPlayerProvider>
+            </SavedTracksProvider>
           </SpotifyGuard>
         </PartyContentWrapper>
       </PartyProvider>
