@@ -1,7 +1,8 @@
 import {
   Full_Saved_Track_FragmentFragment,
   useParty_CreatePlaylist,
-  Party_CreatePlaylistMutationFn
+  Party_CreatePlaylistMutationFn,
+  Party_PlaylistsConnectionQuery
 } from '@generated/graphql';
 import { useMachine } from '@xstate/react';
 import { message, Modal } from 'antd';
@@ -25,6 +26,11 @@ import SelectedTracks from './SelectedTracks';
 import SpotifyGuard from '@guards/SpotifyGuard';
 import gql from 'graphql-tag';
 import { useParty } from '@components/Party/PartyProvider';
+import {
+  PARTY_PLAYLISTS_CONNECTION_QUERY,
+  getPartyMusicPlaylistsConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
+} from '../Playlists/Playlists';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -50,7 +56,8 @@ const ModalStyles = css`
 
   .ant-modal-content {
     max-height: calc(100vh - 48px);
-    overflow: scroll;
+
+    overflow-y: auto;
   }
 
   @media screen and (max-width: 680px) {
@@ -81,9 +88,10 @@ const ModalStyles = css`
 export const CREATE_PLAYLIST_MUTATION = gql`
   mutation Party_CreatePlaylist($data: PlaylistCreateInput!) {
     createPlaylist(data: $data) {
-      id
+      ...PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
     }
   }
+  ${PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT}
 `;
 
 const playlistMachine = Machine(
@@ -170,10 +178,38 @@ const playlistMachine = Machine(
               name: playlistName,
               isTemporary: false,
               user: { connect: { id: userId } },
+              imageUrl: spotifyPlaylistData.images[0].url,
               uri: spotifyPlaylistData.uri,
               spotifyId: spotifyPlaylistData.id,
               spotifyExternalUrl: spotifyPlaylistData.externalUrls.spotify
             }
+          },
+          update: (proxy, { data }) => {
+            if (data == undefined || data.createPlaylist == undefined) return;
+            const dataInCache = proxy.readQuery<Party_PlaylistsConnectionQuery>(
+              {
+                query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+                variables: getPartyMusicPlaylistsConnectionVariables(partyId)
+              }
+            );
+
+            if (dataInCache == undefined) return;
+
+            const { createPlaylist } = data;
+            const { playlistsConnection } = dataInCache;
+
+            playlistsConnection.edges.push({
+              node: {
+                __typename: 'Playlist',
+                ...createPlaylist
+              }
+            });
+
+            proxy.writeQuery({
+              query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+              variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+              data: playlistsConnection
+            });
           }
         });
 
