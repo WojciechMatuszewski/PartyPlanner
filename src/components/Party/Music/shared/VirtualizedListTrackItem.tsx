@@ -44,8 +44,8 @@ const ListItemStyles = css`
   }
 
   @media screen and (max-width: 680px) {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 `;
 

@@ -16,12 +16,13 @@ import React from 'react';
 import { ListRowRenderer } from 'react-virtualized';
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
-import CreatePlaylists from '../CreatePlaylist/CreatePlaylists';
+import CreatePlaylists from '../CreatePlaylist/CreatePlaylist';
 import SavedTrack from './SavedTrack';
 import SavedTracksControls from './SavedTracksControls';
 import SavedTracksList from './SavedTracksList';
 import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 import css from '@emotion/css';
+import { AffixedBarContainer } from '../shared/styles';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding: 12px;
@@ -195,24 +196,28 @@ export default function SavedTracks({ partyId }: Props) {
 
   return (
     <React.Fragment>
-      <CreatePlaylists
-        visible={createPlaylistModalVisible}
-        onClose={toggleCreatePlaylistModalVisible}
-        tracks={selectedTracks}
-      />
-      <Affix>
-        <SavedTracksControls
-          hasTracks={edges.length > 0}
-          onSearch={searchValue =>
-            refetch({
-              where: { name_contains: searchValue, party: { id: partyId } }
-            })
-          }
-          hasSelectedAtLeastOneTrack={!(selectedTracks.length == 0)}
-          onCreatePlaylistClick={toggleCreatePlaylistModalVisible}
-          onSelectSongsClick={toggleSetSelectingSongs}
-          selectingTracks={selectingTracks}
+      {createPlaylistModalVisible && (
+        <CreatePlaylists
+          onClose={toggleCreatePlaylistModalVisible}
+          tracks={selectedTracks}
         />
+      )}
+
+      <Affix>
+        <AffixedBarContainer>
+          <SavedTracksControls
+            hasTracks={edges.length > 0}
+            onSearch={searchValue =>
+              refetch({
+                where: { name_contains: searchValue, party: { id: partyId } }
+              })
+            }
+            hasSelectedAtLeastOneTrack={!(selectedTracks.length == 0)}
+            onCreatePlaylistClick={toggleCreatePlaylistModalVisible}
+            onSelectSongsClick={toggleSetSelectingSongs}
+            selectingTracks={selectingTracks}
+          />
+        </AffixedBarContainer>
       </Affix>
       <SavedTracksInnerWrapper>
         {edges.length == 0 ? (

@@ -1,31 +1,17 @@
 import PartyAuthenticator from '@auth/party-auth';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
-import SavedTracks from '@components/Party/Music/Saved/SavedTracks';
+import SavedTracks from '@components/Party/Music/SavedTracks/SavedTracks';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
 import { PartyContentWrapper } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
-
-import { NextFunctionComponent } from 'next';
 import React from 'react';
-
-import { NextContextWithApollo } from './_app';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
+import { PartyPage } from '@components/Party/shared';
 
-interface InjectedProps {
-  isInParty: boolean;
-  partyId: string;
-}
-
-type RouterQuery = { id?: string };
-
-const PartyMusicSavedTracks: NextFunctionComponent<
-  InjectedProps,
-  InjectedProps,
-  NextContextWithApollo<RouterQuery>
-> = ({ isInParty, partyId }) => {
+const PartyMusicSavedTracks: PartyPage = ({ isInParty, partyId, userId }) => {
   const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
   if (!isInParty)
@@ -40,7 +26,7 @@ const PartyMusicSavedTracks: NextFunctionComponent<
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-saved-tracks" />
-      <PartyProvider partyId={partyId}>
+      <PartyProvider partyId={partyId} userId={userId}>
         <PartyContentWrapper>
           <TrackInfoModalProvider>
             <BigMusicPlayerProvider>

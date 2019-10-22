@@ -6,14 +6,16 @@ import {
 } from '@generated/graphql';
 import { HAS_PARTIES_QUERY } from '@graphql/queries';
 
-type PartyAuthenticationResult = {
+export type PartyAuthenticationResult = {
   isInParty: boolean;
   partyId: string;
+  userId: string;
 };
 
 const notAuthenticated: PartyAuthenticationResult = {
   isInParty: false,
-  partyId: ''
+  partyId: '',
+  userId: ''
 };
 
 async function isUserInParty<
@@ -44,7 +46,8 @@ async function isUserInParty<
 
   return {
     isInParty: hasParties,
-    partyId: context.query.id
+    partyId: context.query.id,
+    userId: userData.me.id
   };
 }
 

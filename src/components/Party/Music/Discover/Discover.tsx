@@ -1,32 +1,19 @@
 import AntdSearch from '@components/AntdSearch';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
 import styled from '@emotion/styled';
 import useBetterTypeahead from '@hooks/useBetterTypeahead';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Affix, Button, message } from 'antd';
 import React from 'react';
 import { Page, searchTracks, Track } from 'spotify-web-sdk';
 import { ActionType, createStandardAction } from 'typesafe-actions';
 
+import { AffixedBarContainer } from '../shared/styles';
 import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
 import { Filters } from './DiscoverFilters/shared';
 import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
-import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
-
-const SearchWrapper = styled.div`
-  width: 100%;
-  background: white;
-  ${FlexBoxFullCenteredStyles};
-  padding: 12px;
-  border-bottom: 1px solid rgb(232, 232, 232);
-  height: 53px;
-  & > form {
-    max-width: calc(1280px - 24px);
-    width: 1000%;
-  }
-`;
 
 const ContentWrapper = styled(PartyContentInnerWrapper)`
   flex: 1;
@@ -172,7 +159,7 @@ export default function PartyMusicDiscover(props: Props) {
   return (
     <React.Fragment>
       <Affix>
-        <SearchWrapper>
+        <AffixedBarContainer>
           <AntdSearch
             defaultValue={lastInputValueOnError.current}
             loading={state.loading}
@@ -182,7 +169,7 @@ export default function PartyMusicDiscover(props: Props) {
             placeholder="Track name ..."
           />
           <DiscoverFilters onFiltersChange={setFilters} />
-        </SearchWrapper>
+        </AffixedBarContainer>
       </Affix>
       <ContentWrapper style={{ paddingBottom: props.paddingBottom }}>
         {state.currentTracks.length == 0 ? (

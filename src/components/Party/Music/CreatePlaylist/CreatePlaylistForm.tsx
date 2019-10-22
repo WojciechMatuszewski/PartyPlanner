@@ -20,50 +20,61 @@ const initialFormValues: CreatePlaylistFormValues = {
   isPrivate: false
 };
 
+const FormStyles = css`
+  .ant-form-item {
+    margin: 0;
+  }
+`;
+
 interface Props {
   onSubmit: (values: CreatePlaylistFormValues) => void;
   loading: boolean;
+  disabled: boolean;
 }
 
-export default function CreatePlaylistForm({ onSubmit, loading }: Props) {
+export default function CreatePlaylistForm({
+  onSubmit,
+  loading,
+  disabled
+}: Props) {
   return (
-    <Formik
-      initialValues={initialFormValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {({ handleSubmit, values, setFieldValue }) => (
-        <Form
-          onSubmit={handleSubmit}
-          css={css`
-            .ant-form-item {
-              margin: 0;
-            }
-          `}
-        >
-          <Field
-            component={FormikInputField}
-            type="text"
-            placeholder="Playlist name"
-            name="playlistName"
-          />
-
-          <Form.Item>
-            <Checkbox
-              name="isPrivate"
-              checked={values.isPrivate}
-              onChange={e => setFieldValue('isPrivate', e.target.checked)}
-            >
-              Make it private
-            </Checkbox>
-          </Form.Item>
-          <Form.Item>
-            <Button loading={loading} type="primary" htmlType="submit">
-              Create
-            </Button>
-          </Form.Item>
-        </Form>
-      )}
-    </Formik>
+    <React.Fragment>
+      <Formik
+        initialValues={initialFormValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {({ handleSubmit, values, setFieldValue }) => (
+          <Form onSubmit={handleSubmit} css={FormStyles}>
+            <Field
+              component={FormikInputField}
+              type="text"
+              placeholder="Playlist name"
+              name="playlistName"
+            />
+            <Form.Item>
+              <Checkbox
+                name="isPrivate"
+                checked={values.isPrivate}
+                onChange={e => setFieldValue('isPrivate', e.target.checked)}
+              >
+                Make it private
+              </Checkbox>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                disabled={disabled}
+                style={{ marginBottom: 14 }}
+                loading={loading}
+                type="primary"
+                htmlType="submit"
+              >
+                Create
+              </Button>
+            </Form.Item>
+          </Form>
+        )}
+      </Formik>
+    </React.Fragment>
   );
 }

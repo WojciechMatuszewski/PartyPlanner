@@ -5,13 +5,13 @@ import { message } from 'antd';
 import {
   PARTY_SAVED_TRACKS_CONNECTION_PAGINATION_SIZE,
   PARTY_SAVED_TRACKS_CONNECTION_QUERY
-} from '../Saved/SavedTracks';
+} from '../SavedTracks/SavedTracks';
 import {
   Party_SavedTracksQuery,
   useAddTrackToParty
 } from './../../../../../generated/graphql';
 
-// do it lazely here so that big music player can pass a null value first
+// do it lazily here so that big music player can pass a null value first
 function mapTrackToMutationVariables(
   track: Full_Saved_Track_FragmentFragment,
   partyId: string

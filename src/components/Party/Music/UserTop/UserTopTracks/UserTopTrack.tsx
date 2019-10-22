@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import { Typography, Icon } from 'antd';
 import TrackControls from '../../shared/TrackControls';
-import { useIsTrackSaved } from '../../Saved/SavedTracksProvider';
+import { useIsTrackSaved } from '../../SavedTracks/SavedTracksProvider';
 import { useParty } from '@components/Party/PartyProvider';
 import { useSaveTrack } from '../../shared/useSaveTrack';
 

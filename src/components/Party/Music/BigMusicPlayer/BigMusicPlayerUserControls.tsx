@@ -3,7 +3,7 @@ import { Button, Icon } from 'antd';
 import React from 'react';
 import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import { useSaveTrack } from '../shared/useSaveTrack';
-import { useIsTrackSaved } from '../Saved/SavedTracksProvider';
+import { useIsTrackSaved } from '../SavedTracks/SavedTracksProvider';
 
 const ControlsWrapper = styled.div`
   display: grid;

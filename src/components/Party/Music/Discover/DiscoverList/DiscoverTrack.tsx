@@ -2,7 +2,7 @@ import { useParty } from '@components/Party/PartyProvider';
 import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import React from 'react';
 
-import { useIsTrackSaved } from '../../Saved/SavedTracksProvider';
+import { useIsTrackSaved } from '../../SavedTracks/SavedTracksProvider';
 import {
   AddToQueueTrackButton,
   MoreInfoTrackButton,

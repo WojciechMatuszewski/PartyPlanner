@@ -1,11 +1,12 @@
 import React from 'react';
 
-type PartyContextType = { partyId: string } | undefined;
+type PartyContextType = { partyId: string; userId: string } | undefined;
 
 const PartyContext = React.createContext<PartyContextType>(undefined);
 
 interface Props {
   partyId: string;
+  userId: string;
   children: React.ReactNode;
 }
 
