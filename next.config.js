@@ -6,6 +6,7 @@ const withCSS = require('@zeit/next-css');
 const Dotenv = require('dotenv-webpack');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withNextEnv = nextEnv();
+const webpackImport = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const compose = require('lodash/fp/compose');
@@ -30,13 +31,14 @@ const IMAGE_CACHE_CONFIG = {
 };
 
 const BASE_CONFIG = {
-  target: 'serverless',
+  target: 'server',
   generateInDevMode: false,
   workboxOpts: {
     skipWaiting: true,
     swDest: 'static/service-worker.js',
     runtimeCaching: [IMAGE_CACHE_CONFIG]
   },
+
   webpack: config => {
     config.plugins = config.plugins || [];
 
@@ -67,6 +69,7 @@ const BASE_CONFIG = {
         exclude: /mini-css-extract-plugin[^]*Conflicting order between:/
       })
     );
+    config.plugins.push(new webpackImport.IgnorePlugin(/\/iconv-loader$/));
 
     config.resolve.alias = {
       ...config.resolve.alias,

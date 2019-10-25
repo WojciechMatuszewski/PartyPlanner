@@ -56,10 +56,14 @@ const Home: React.FC<WithRouterProps> = ({ router }) => {
           Organize, make plans, schedule, invite others!
         </Typography.Title>
         <HomeHeroControlsWrapper>
-          <Button onClick={() => router && router.push('/register')}>
+          <Button
+            onClick={() => router && router.push('/auth-register', '/register')}
+          >
             Register now
           </Button>
-          <Button onClick={() => router && router.push('/login')}>
+          <Button
+            onClick={() => router && router.push('/auth-login', '/login')}
+          >
             Login now
           </Button>
         </HomeHeroControlsWrapper>

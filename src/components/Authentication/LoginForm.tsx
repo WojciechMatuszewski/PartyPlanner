@@ -88,7 +88,7 @@ const LoginForm: React.FC<{
             >
               Login
             </Button>
-            <Link href="/forgot-password">
+            <Link href="/auth-forgot-password" as="/forgot-password">
               <a>Forgot password ? </a>
             </Link>
           </LoginControlsWrapper>

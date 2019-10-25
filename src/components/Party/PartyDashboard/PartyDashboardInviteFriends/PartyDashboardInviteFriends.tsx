@@ -105,7 +105,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   );
 
   // Im batching this operation in initApollo.ts
-  const createPartyInvitation = useCreatePartyInvitationMutation({
+  const [createPartyInvitation] = useCreatePartyInvitationMutation({
     refetchQueries: [
       {
         query: PaginateUsersInviteToPartyQueryDocument,

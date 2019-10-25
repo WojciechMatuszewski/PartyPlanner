@@ -1,6 +1,6 @@
-import React from 'react';
 import AntdSearch from '@components/AntdSearch';
-import { Button, Icon } from 'antd';
+import React from 'react';
+
 interface Props {
   onSearch: (query: string) => void;
   loading: boolean;
@@ -8,10 +8,10 @@ interface Props {
 export default function PlaylistsControls({ onSearch, loading }: Props) {
   return (
     <React.Fragment>
-      <Button style={{ marginRight: 12 }} type="primary">
+      {/* <Button style={{ marginRight: 12 }} type="primary">
         <Icon type="import" />
         Import playlist
-      </Button>
+      </Button> */}
       <AntdSearch
         loading={loading}
         debounceOnChange={true}

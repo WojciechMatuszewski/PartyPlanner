@@ -186,33 +186,37 @@ const playlistMachine = Machine(
           },
           update: (proxy, { data }) => {
             if (data == undefined || data.createPlaylist == undefined) return;
-            const dataInCache = proxy.readQuery<Party_PlaylistsConnectionQuery>(
-              {
+            try {
+              const dataInCache = proxy.readQuery<
+                Party_PlaylistsConnectionQuery
+              >({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
                 variables: getPartyMusicPlaylistsConnectionVariables(partyId)
-              }
-            );
+              });
+              if (dataInCache == undefined) return;
 
-            if (dataInCache == undefined) return;
+              const { createPlaylist } = data;
+              const { playlistsConnection } = dataInCache;
 
-            const { createPlaylist } = data;
-            const { playlistsConnection } = dataInCache;
+              playlistsConnection.edges.push({
+                node: {
+                  __typename: 'Playlist',
+                  ...createPlaylist
+                }
+              });
 
-            playlistsConnection.edges.push({
-              node: {
-                __typename: 'Playlist',
-                ...createPlaylist
-              }
-            });
-
-            proxy.writeQuery({
-              query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-              variables: getPartyMusicPlaylistsConnectionVariables(partyId),
-              data: playlistsConnection
-            });
+              proxy.writeQuery({
+                query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+                variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+                data: {
+                  playlistConnection: playlistsConnection
+                }
+              });
+            } catch (e) {
+              // noop
+            }
           }
         });
-
         return spotifyPlaylistData;
       }
     }

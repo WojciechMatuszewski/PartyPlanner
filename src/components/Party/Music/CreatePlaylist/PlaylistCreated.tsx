@@ -7,6 +7,8 @@ import { Button, Typography, Avatar, Icon } from 'antd';
 import React from 'react';
 import { Playlist } from 'spotify-web-sdk';
 import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
+import Link from 'next/link';
+import { useParty } from '@components/Party/PartyProvider';
 
 const PlayListCreatedWrapper = styled.div`
   ${FlexBoxFullCenteredStyles};
@@ -19,11 +21,12 @@ const CreatedPlaylistInfo = styled.div`
 `;
 
 const PlaylistImage = styled(Avatar)`
-  width: 196px;
-  height: 196px;
-  border-radius: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
+  align-self: center;
 `;
 
 const CreatedPlaylistBasicInfo = styled.div`
@@ -40,9 +43,7 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-const PlaylistCreatedParagraph = styled(Typography.Paragraph)`
-  font-size: 20px;
-`;
+const PlaylistCreatedParagraph = styled(Typography.Paragraph)``;
 
 interface Props {
   createdPlaylist: Playlist;
@@ -54,6 +55,8 @@ export default function PlaylistCreated({ createdPlaylist }: Props) {
   function handleViewOnSpotifyClick() {
     canViewOnSpotify && window.open(createdPlaylist.externalUrls.spotify);
   }
+
+  const { partyId } = useParty();
 
   return (
     <PlayListCreatedWrapper>
@@ -78,12 +81,14 @@ export default function PlaylistCreated({ createdPlaylist }: Props) {
         </CreatedPlaylistBasicInfo>
       </CreatedPlaylistInfo>
       <ButtonsWrapper>
-        <Button size="large" type="primary" onClick={() => {}}>
-          Go to party playlists
-        </Button>
+        <Link
+          href={`party-music-playlists?id=${partyId}`}
+          as={`/party/${partyId}/music/playlists`}
+        >
+          <Button type="primary">Go to party playlists</Button>
+        </Link>
         <GreenSpotifyButton
           disabled={!canViewOnSpotify}
-          size="large"
           onClick={handleViewOnSpotifyClick}
         >
           View on Spotify

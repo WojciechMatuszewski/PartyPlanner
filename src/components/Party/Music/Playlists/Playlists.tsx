@@ -124,7 +124,10 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
       </Affix>
       <PartyContentInnerWrapper style={{ padding: 12 }}>
         {edges.length == 0 ? (
-          <EmptySection title="No saved" image="/static/music-note.svg" />
+          <EmptySection
+            title="No saved playlists to display"
+            image="/static/music-note.svg"
+          />
         ) : (
           <PlaylistsList
             loading={isLoadingOnSearch}

@@ -1,12 +1,13 @@
 import React from 'react';
 import cookie from 'cookie';
 
-import { getDataFromTree } from 'react-apollo';
+import { getDataFromTree } from '@apollo/react-ssr';
 import Head from 'next/head';
 import initApollo, { isBrowser } from './initApollo';
 import { NextAppContext, AppComponentType } from 'next/app';
 import { IncomingMessage } from 'http';
-import { ApolloClient, NormalizedCacheObject } from 'apollo-client';
+import { ApolloClient } from 'apollo-client';
+import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 
 export function parseCookies(req?: IncomingMessage, options = {}) {
   return cookie.parse(
@@ -27,7 +28,7 @@ export default (App: AppComponentType<any>) => {
       const apollo = initApollo(
         {},
         {
-          getAuthToken: () => parseCookies(req).token
+          getAuthToken: () => parseCookies(req as IncomingMessage).token
         }
       );
       (ctx.ctx as any).apolloClient = apollo;
@@ -87,7 +88,7 @@ export default (App: AppComponentType<any>) => {
     }
 
     render() {
-      return <App {...this.props as any} apolloClient={this.apolloClient} />;
+      return <App {...(this.props as any)} apolloClient={this.apolloClient} />;
     }
   };
 };

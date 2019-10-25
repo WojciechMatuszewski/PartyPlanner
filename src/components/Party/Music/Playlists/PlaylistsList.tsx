@@ -15,12 +15,12 @@ interface Props {
   onLoadMore: VoidFunction;
 }
 
-const CardsList = styled.div<{ loading: boolean }>`
+const CardsList = styled.div<{ isLoading: boolean }>`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-gap: 12px;
-  opacity: ${({ loading }) => (loading ? '0.6' : '1')};
-  pointer-events: ${({ loading }) => (loading ? 'none' : 'all')};
+  opacity: ${({ isLoading }) => (isLoading ? '0.6' : '1')};
+  pointer-events: ${({ isLoading }) => (isLoading ? 'none' : 'all')};
   transition: opacity 0.3s ease;
 `;
 const LoadMoreButtonStyles = css`
@@ -42,7 +42,7 @@ export default function PlaylistsList({
 }: Props) {
   return (
     <React.Fragment>
-      <CardsList loading={loading}>
+      <CardsList isLoading={loading}>
         {playlists.map(playlist => (
           <PlaylistCard playlist={playlist} key={playlist.node.id} />
         ))}

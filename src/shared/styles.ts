@@ -57,5 +57,6 @@ export const FlexWrapperFullHeightMinusHeaderStyles = css`
 `;
 
 export const Colors = {
-  AntdBlue: '#1890ff'
+  AntdBlue: '#1890ff',
+  SpotifyGreen: '#1db954'
 };
