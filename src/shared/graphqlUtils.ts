@@ -6,7 +6,7 @@ import { get } from 'lodash';
 import { curryN, compose, map, filter } from 'ramda';
 
 type DeepWithoutMaybeObject<T> = {
-  [K in keyof T]: T[K] extends Maybe<infer E> ? DeepWithoutMaybe<E> : T[K]
+  [K in keyof T]: T[K] extends Maybe<infer E> ? DeepWithoutMaybe<E> : T[K];
 };
 export type DeepWithoutMaybe<T> = T extends (Maybe<infer E>)[]
   ? DeepWithoutMaybeObject<E>[]

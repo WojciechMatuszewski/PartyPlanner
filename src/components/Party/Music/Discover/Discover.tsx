@@ -1,41 +1,24 @@
-import React from 'react';
-import { Page, Track, searchTracks } from 'spotify-web-sdk';
-import { createStandardAction, ActionType } from 'typesafe-actions';
-import { Affix, message, Button } from 'antd';
-import styled from '@emotion/styled';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import AntdSearch from '@components/AntdSearch';
-import useBetterTypeahead from '@hooks/useBetterTypeahead';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
-import css from '@emotion/css';
-import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 import ErrorSection from '@components/UI/ErrorSection';
+import styled from '@emotion/styled';
+import useBetterTypeahead from '@hooks/useBetterTypeahead';
+import { Affix, Button, message } from 'antd';
+import React from 'react';
+import { Page, searchTracks, Track } from 'spotify-web-sdk';
+import { ActionType, createStandardAction } from 'typesafe-actions';
+
+import { AffixedBarContainer } from '../shared/styles';
 import DiscoverFilters from './DiscoverFilters/DiscoverFilters';
 import { Filters } from './DiscoverFilters/shared';
+import DiscoverTrackList from './DiscoverList/DiscoverTrackList';
 
-const MOBILE_BREAKPOINT = '800px';
-
-const SearchWrapper = styled.div`
-  width: 100%;
-  background: white;
-  ${FlexBoxFullCenteredStyles};
-  padding: 12px;
-  border-bottom: 1px solid rgb(232, 232, 232);
-  height: 53px;
-  & > form {
-    max-width: calc(1280px - 24px);
-    width: 1000%;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 1280px;
-  padding: 0 12px;
-  width: 100%;
-  height: 100%;
+const ContentWrapper = styled(PartyContentInnerWrapper)`
   flex: 1;
   margin: 0 auto;
-  @media screen and (max-width: ${MOBILE_BREAKPOINT}) {
+  @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
     padding: 0;
     .discover-tracks-list {
       border-radius: 0;
@@ -43,27 +26,6 @@ const ContentWrapper = styled.div`
       border-left: 0;
       border-right: 0;
     }
-  }
-`;
-
-const ErrorSectionStyles = css`
-  height: 100%;
-  ${FlexBoxFullCenteredStyles};
-  button {
-    margin-top: 12px;
-  }
-  img {
-    max-width: 600px;
-  }
-`;
-
-const EmptySectionStyles = css`
-  width: 100%;
-  height: 100%;
-
-  ${FlexBoxFullCenteredStyles};
-  img {
-    max-width: 600px;
   }
 `;
 
@@ -141,6 +103,7 @@ function reducer(state: State, action: DiscoverTracksActions): State {
 export default function PartyMusicDiscover(props: Props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const lastInputValueOnError = React.useRef<string | undefined>(undefined);
+
   const isFirstMount = React.useRef(true);
 
   const [filters, setFilters] = React.useState<Filters>({
@@ -186,7 +149,7 @@ export default function PartyMusicDiscover(props: Props) {
 
   if (state.error)
     return (
-      <ErrorSection emotionCSS={ErrorSectionStyles}>
+      <ErrorSection>
         <Button loading={state.loading} onClick={handleOnErrorRetry}>
           Try Again
         </Button>
@@ -196,7 +159,7 @@ export default function PartyMusicDiscover(props: Props) {
   return (
     <React.Fragment>
       <Affix>
-        <SearchWrapper>
+        <AffixedBarContainer>
           <AntdSearch
             defaultValue={lastInputValueOnError.current}
             loading={state.loading}
@@ -206,14 +169,13 @@ export default function PartyMusicDiscover(props: Props) {
             placeholder="Track name ..."
           />
           <DiscoverFilters onFiltersChange={setFilters} />
-        </SearchWrapper>
+        </AffixedBarContainer>
       </Affix>
       <ContentWrapper style={{ paddingBottom: props.paddingBottom }}>
         {state.currentTracks.length == 0 ? (
           <EmptySection
             image="/static/music.svg"
             title="No tracks to display"
-            emotionCSS={EmptySectionStyles}
           />
         ) : (
           <DiscoverTrackList

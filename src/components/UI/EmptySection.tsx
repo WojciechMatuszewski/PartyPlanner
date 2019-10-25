@@ -6,7 +6,7 @@ import { UISectionWrapper } from './styles';
 const defaultProps = Object.freeze({
   image: '/static/no-data.svg',
   title: 'No data',
-  description: 'There is not data to show'
+  description: 'There is no data to show'
 });
 
 type Props = typeof defaultProps & {
@@ -19,10 +19,8 @@ function EmptySection(props: Props) {
     <UISectionWrapper css={props.emotionCSS} style={props.style}>
       <img src={props.image} />
       <div style={{ textAlign: 'center' }}>
-        <Typography.Title level={4}>{props.title}</Typography.Title>
-        <Typography.Paragraph type="secondary">
-          {props.description}
-        </Typography.Paragraph>
+        <Typography.Title level={3}>{props.title}</Typography.Title>
+        <Typography.Paragraph>{props.description}</Typography.Paragraph>
       </div>
     </UISectionWrapper>
   );

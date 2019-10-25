@@ -29,8 +29,8 @@ const ButtonsWrapper = styled.div`
 `;
 
 const PartyInvitesModal: React.FC<Props & WithRouterProps> = props => {
-  const joinParty = useJoinPartyMutation();
-  const deletePartyInvitation = useDeletePartyInvitationMutation();
+  const [joinParty] = useJoinPartyMutation();
+  const [deletePartyInvitation] = useDeletePartyInvitationMutation();
   const [loading, setLoading] = React.useState<boolean>(false);
 
   if (!props.invitation || !props.router) return null;

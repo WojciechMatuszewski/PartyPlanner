@@ -1,8 +1,8 @@
-import { Track } from 'spotify-web-sdk';
 import React from 'react';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 
 interface TrackInfoModalState {
-  lastTrack: Track | null;
+  lastTrack: Full_Saved_Track_FragmentFragment | null;
   visible: boolean;
 }
 
@@ -56,7 +56,7 @@ export function useTrackInfoModal() {
     setState(prev => ({ ...prev, visible: false }));
   }
 
-  function openModal(track: Track) {
+  function openModal(track: Full_Saved_Track_FragmentFragment) {
     setState(() => ({ lastTrack: track, visible: true }));
   }
 }

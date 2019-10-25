@@ -1,13 +1,12 @@
-import React from 'react';
 import styled from '@emotion/styled';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import {
   FlexBoxHorizontallyCenteredStyles,
-  TransparentButtonStyles,
   FlexBoxVerticallyCenteredStyles
 } from '@shared/styles';
+import { Button, Icon, Typography } from 'antd';
+import React from 'react';
 
-import { Typography, Icon, Button } from 'antd';
-import { Track } from 'spotify-web-sdk';
 import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
 
 const TrackInfoWrapper = styled.div`
@@ -59,32 +58,22 @@ const DefaultImageWrapper = styled.div`
 
 interface Props {
   isOnMobile: boolean;
-  track: Track | null;
+  track: Full_Saved_Track_FragmentFragment | null;
 }
 
-const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
+const BigMusicPlayerTrackInfo: React.FC<Props> = ({ track, isOnMobile }) => {
   const { openModal } = useTrackInfoModal();
 
   return (
     <TrackInfoWrapper>
-      {props.isOnMobile ? (
-        <Button
-          size="small"
-          shape="circle"
-          css={[TransparentButtonStyles]}
-          onClick={handleMoreInfoClick}
-        >
+      {isOnMobile ? (
+        <Button size="small" shape="circle" onClick={handleMoreInfoClick}>
           <Icon type="info" />
         </Button>
       ) : (
         <React.Fragment>
-          {props.track ? (
-            <img
-              src={
-                props.track.album.images[props.track.album.images.length - 1]
-                  .url
-              }
-            />
+          {track ? (
+            <img src={track.album.imageUrl} />
           ) : (
             <DefaultImageWrapper>
               <Icon type="question" />
@@ -93,10 +82,10 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
 
           <div className="track-info-text">
             <Typography.Title level={4} ellipsis={true}>
-              {props.track ? props.track.name : ''}
+              {track ? track.name : ''}
             </Typography.Title>
             <Typography.Text ellipsis={true}>
-              <a>{props.track ? props.track.artists[0].name : ''}</a>
+              <a>{track ? track.stringArtists : ''}</a>
             </Typography.Text>
           </div>
         </React.Fragment>
@@ -105,8 +94,8 @@ const BigMusicPlayerTrackInfo: React.FC<Props> = props => {
   );
 
   function handleMoreInfoClick() {
-    if (!props.track) return null;
-    openModal(props.track);
+    if (!track) return null;
+    openModal(track);
   }
 };
 

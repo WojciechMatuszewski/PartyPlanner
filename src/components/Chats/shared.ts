@@ -4,7 +4,7 @@ import {
   ChatMessagesSubscriptionNode,
   PaginateMessagesQueryDocument
 } from '@generated/graphql';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
 
 export const PAGINATE_MESSAGES_QUERY_VARIABLES_BATCH_SIZE = 30;
 

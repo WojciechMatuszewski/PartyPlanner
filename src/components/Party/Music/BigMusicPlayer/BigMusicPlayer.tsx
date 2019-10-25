@@ -118,7 +118,14 @@ const SliderWrapper = styled.div`
   }
 `;
 
-const BigMusicPlayer: React.FC = () => {
+export interface BigMusicPlayerProps {
+  partyId: string;
+  isUsingSavedTracksContext?: boolean;
+}
+const BigMusicPlayer: React.FC<BigMusicPlayerProps> = ({
+  partyId,
+  isUsingSavedTracksContext = true
+}) => {
   const isOnMobile = useMedia(
     `(max-width:${BIG_MUSIC_PLAYER_MOBILE_BREAKPOINT}px)`
   );
@@ -207,11 +214,17 @@ const BigMusicPlayer: React.FC = () => {
             isOnMobile={isOnMobile}
             skip={skip}
           />
-          {isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
+          {isOnMobile && isUsingSavedTracksContext && (
+            <BigMusicPlayerUserControls
+              isOnMobile={isOnMobile}
+              track={track}
+              partyId={partyId}
+            />
+          )}
         </ControlButtonsWrapper>
         {isOnMobile && track && (
           <Typography.Text style={{ order: 1 }} ellipsis={true}>
-            {track.name} by <strong>{track.artists[0].name}</strong>
+            {track.name} by <strong>{track.stringArtists}</strong>
           </Typography.Text>
         )}
         <SliderWrapper>
@@ -243,7 +256,13 @@ const BigMusicPlayer: React.FC = () => {
           )}
         </SliderWrapper>
       </BigMusicPlayerInnerWrapper>
-      {!isOnMobile && <BigMusicPlayerUserControls isOnMobile={isOnMobile} />}
+      {!isOnMobile && isUsingSavedTracksContext && (
+        <BigMusicPlayerUserControls
+          isOnMobile={isOnMobile}
+          track={track}
+          partyId={partyId}
+        />
+      )}
     </BigMusicPlayerWrapper>
   );
 

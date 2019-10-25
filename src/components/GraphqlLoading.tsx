@@ -29,14 +29,14 @@ const LoaderWrapper = styled(
 interface Props {
   isLoadingInitially: boolean;
   loading: boolean;
-  textToDisplay: string;
+  textToDisplay?: string;
   height?: string;
 }
 
 const GraphqlLoading: React.FC<Props> = ({
   isLoadingInitially,
   loading,
-  textToDisplay,
+  textToDisplay = null,
   height
 }) => {
   return (
@@ -45,11 +45,16 @@ const GraphqlLoading: React.FC<Props> = ({
         <LoaderWrapper
           isLoadingInitially={isLoadingInitially}
           key={1}
-          style={{ height: height ? height : 'calc(100vh-66px)' }}
+          style={{ height: height ? height : 'calc(100vh - 66px)' }}
         >
           <Spin size="large" />
           {isLoadingInitially && (
-            <Typography.Text>{textToDisplay}</Typography.Text>
+            <Typography.Title
+              level={4}
+              style={{ marginBottom: 0, marginTop: 12 }}
+            >
+              {textToDisplay}
+            </Typography.Title>
           )}
         </LoaderWrapper>
       )}

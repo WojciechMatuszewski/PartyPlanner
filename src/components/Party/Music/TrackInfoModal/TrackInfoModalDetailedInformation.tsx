@@ -1,7 +1,6 @@
-import React from 'react';
-import { Track } from 'spotify-web-sdk';
 import styled from '@emotion/styled';
 import { List, Typography } from 'antd';
+import React from 'react';
 
 const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
 
@@ -33,7 +32,14 @@ interface ListDataEntry {
   content: React.ReactNode;
 }
 interface Props {
-  track: Track;
+  track: {
+    popularity: number;
+    explicit: boolean;
+    album: {
+      name: string;
+      releaseDate: string;
+    };
+  };
 }
 const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
   const listData = React.useMemo(
@@ -41,10 +47,10 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
       [
         {
           title: 'Popularity',
-          content: getTrackPopularity(track)
+          content: getTrackPopularity(track.popularity)
         },
         { title: 'Explicit', content: track.explicit ? 'Yes' : 'No' },
-        { title: 'Album name', content: track.albumName },
+        { title: 'Album name', content: track.album.name },
         { title: 'Album release date', content: track.album.releaseDate }
       ] as ListDataEntry[],
     [track]
@@ -70,12 +76,11 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
     </DetailedInfoWrapper>
   );
 
-  function getTrackPopularity(track: Track) {
-    if (track.popularity > 80) return 'Very Popular';
-    else if (track.popularity > 60 && track.popularity < 80) return 'Popular';
-    else if (track.popularity > 40 && track.popularity < 60)
-      return 'Semi-popular';
-    else return 'Not very popular';
+  function getTrackPopularity(popularity: number) {
+    if (popularity > 80) return 'Very Popular';
+    if (popularity > 60 && popularity < 80) return 'Popular';
+    if (popularity > 40 && popularity < 60) return 'Semi-popular';
+    return 'Not very popular';
   }
 };
 

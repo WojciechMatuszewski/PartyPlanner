@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert } from 'antd';
-import { ApolloError } from 'apollo-boost';
+import { ApolloError } from 'apollo-client';
 
 const GraphqlError: React.FC<{
   error?: ApolloError;

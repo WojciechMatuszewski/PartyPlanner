@@ -2,6 +2,7 @@ import React from 'react';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import styled from '@emotion/styled';
 import { Button } from 'antd';
+import { curry } from 'ramda';
 import css from '@emotion/css';
 
 type PlayPauseButtonProps = {
@@ -12,6 +13,12 @@ type PlayPauseButtonProps = {
 
 type MoreInfoButtonProps = {
   onMoreInfoClick: VoidFunction;
+};
+
+type AddToQueueButtonProps = {
+  loading?: boolean;
+  onAddToQueueClick: VoidFunction;
+  disabled?: boolean;
 };
 
 const TrackTileControlsWrapper = styled.div`
@@ -36,7 +43,19 @@ const ButtonStyles = css`
 `;
 
 type TrackControlsProps = { className?: string } & MoreInfoButtonProps &
-  PlayPauseButtonProps;
+  PlayPauseButtonProps &
+  AddToQueueButtonProps;
+
+function trapEventWithin(
+  fnToRun: any,
+  event: React.MouseEvent<HTMLElement, MouseEvent>
+) {
+  event.preventDefault();
+  event.stopPropagation();
+  fnToRun(event);
+}
+
+const withTrappedEvent = curry(trapEventWithin);
 
 export default function TrackControls(props: TrackControlsProps) {
   return (
@@ -47,7 +66,11 @@ export default function TrackControls(props: TrackControlsProps) {
         hasPreviewUrl={props.hasPreviewUrl}
       />
       <MoreInfoTrackButton onMoreInfoClick={props.onMoreInfoClick} />
-      <AddToQueueTrackButton />
+      <AddToQueueTrackButton
+        disabled={props.disabled}
+        loading={props.loading}
+        onAddToQueueClick={props.onAddToQueueClick}
+      />
     </TrackTileControlsWrapper>
   );
 }
@@ -61,7 +84,7 @@ export function PlayPauseTrackButton(props: PlayPauseButtonProps) {
       shape="circle-outline"
       size="small"
       disabled={!props.hasPreviewUrl}
-      onClick={props.onTogglePlayClick}
+      onClick={withTrappedEvent(props.onTogglePlayClick)}
     />
   );
 }
@@ -69,7 +92,7 @@ export function MoreInfoTrackButton(props: MoreInfoButtonProps) {
   return (
     <Button
       css={[ButtonStyles]}
-      onClick={props.onMoreInfoClick}
+      onClick={withTrappedEvent(props.onMoreInfoClick)}
       icon="ellipsis"
       type="ghost"
       size="small"
@@ -77,9 +100,12 @@ export function MoreInfoTrackButton(props: MoreInfoButtonProps) {
     />
   );
 }
-export function AddToQueueTrackButton() {
+export function AddToQueueTrackButton(props: AddToQueueButtonProps) {
   return (
     <Button
+      loading={props.loading}
+      disabled={props.disabled}
+      onClick={withTrappedEvent(props.onAddToQueueClick)}
       css={[ButtonStyles]}
       icon="plus"
       type="ghost"

@@ -174,6 +174,7 @@ const ChatWindow: React.FC = () => {
             flex: 1;
             img {
               max-width: 600px;
+              margin-bottom: 0;
             }
           `}
         />

@@ -7,7 +7,7 @@ import {
 import { Typography, Button } from 'antd';
 import { AvatarList } from 'ant-design-pro';
 import { CallToActionButtonStyles } from '@shared/styles';
-import { ApolloError } from 'apollo-boost';
+import { ApolloError } from 'apollo-client';
 
 import GraphqlError from '@components/GraphqlError';
 import UserAvatar from '@components/UserDefaultAvatar';

@@ -24,9 +24,9 @@ interface Props {
 }
 
 const PartyMenu: React.FC<Props> = (props: Props) => {
-  const isOnMobile = useMedia('(max-width:1080px)');
+  const shouldCollapse = useMedia('(max-width:1080px)');
 
-  if (isOnMobile)
+  if (shouldCollapse)
     return (
       <DrawerNavigation>
         <MenuContent {...props} />
@@ -96,6 +96,22 @@ function MenuContent(props: Props) {
               as={`/party/${props.partyId}/music/discover`}
             >
               <a>Search on Spotify</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/party-music-saved-tracks">
+            <Link
+              href={`/party-music-saved-tracks?id=${props.partyId}`}
+              as={`/party/${props.partyId}/music/tracks`}
+            >
+              <a>Saved Tracks</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/party-music-playlists">
+            <Link
+              href={`/party-music-playlists?id=${props.partyId}`}
+              as={`/party/${props.partyId}/music/playlists`}
+            >
+              <a>Playlists</a>
             </Link>
           </Menu.Item>
         </Menu.SubMenu>

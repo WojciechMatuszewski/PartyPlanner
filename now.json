@@ -64,6 +64,14 @@
       "dest": "party-music-browse?id=$id"
     },
     {
+      "src": "/party/(?<id>[^/]+)/music/tracks",
+      "dest": "party-music-saved-tracks?id=$id"
+    },
+    {
+      "src": "/party/(?<id>[^/]+)/music/playlists",
+      "dest": "party-music-playlists?id=$id"
+    },
+    {
       "src": "/party/(?<id>[^/]+)/music/top",
       "dest": "party-music-top?id=$id"
     },

@@ -1,61 +1,35 @@
+import { useParty } from '@components/Party/PartyProvider';
+import { Full_Saved_Track_FragmentFragment } from '@generated/graphql';
 import React from 'react';
-import { Track } from 'spotify-web-sdk';
-import { List, Avatar, Badge, Tag, Typography } from 'antd';
-import css from '@emotion/css';
+
+import { useIsTrackSaved } from '../../SavedTracks/SavedTracksProvider';
 import {
   AddToQueueTrackButton,
-  PlayPauseTrackButton,
-  MoreInfoTrackButton
-} from '../../TrackControls';
+  MoreInfoTrackButton,
+  PlayPauseTrackButton
+} from '../../shared/TrackControls';
+import { useSaveTrack } from '../../shared/useSaveTrack';
+import VirtualizedListTrackItem from '../../shared/VirtualizedListTrackItem';
 
 interface Props {
-  track: Track;
+  track: Full_Saved_Track_FragmentFragment;
   style?: React.CSSProperties;
   trackPlaying: boolean;
-  onTogglePlayClick: (track: Track) => void;
-  onMoreInfoClick: (track: Track) => void;
+  onTogglePlayClick: (track: Full_Saved_Track_FragmentFragment) => void;
+  onMoreInfoClick: (track: Full_Saved_Track_FragmentFragment) => void;
 }
 
-const ListItemStyles = css`
-  transition: transform 0.2s ease;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 100%;
-  &.track-playing,
-  &:hover {
-    background: #e6f7ff;
-  }
-  height: 72px;
-  .ant-list-item-meta {
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .ant-list-item-meta-content {
-    white-space: nowrap;
-    min-width: 0;
-    & > * {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-  }
-
-  .ant-list-item-meta-description {
-    line-height: 1;
-  }
-
-  @media screen and (max-width: 680px) {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-  }
-`;
-
 function DiscoverTrack(props: Props) {
+  const { track } = props;
+
+  const { partyId } = useParty();
+  const [mutate, { loading }] = useSaveTrack(track, partyId);
+  const [isAlreadySaved] = useIsTrackSaved(track.id);
+
   return (
-    <List.Item
+    <VirtualizedListTrackItem
       style={props.style}
-      css={[ListItemStyles]}
-      className={props.trackPlaying ? 'track-playing' : undefined}
+      trackPlaying={props.trackPlaying}
       actions={[
         <PlayPauseTrackButton
           onTogglePlayClick={handleTogglePlayClick}
@@ -64,32 +38,15 @@ function DiscoverTrack(props: Props) {
           hasPreviewUrl={props.track.previewUrl != null}
         />,
         <MoreInfoTrackButton onMoreInfoClick={handleMoreInfoClick} key={2} />,
-        <AddToQueueTrackButton key={3} />
+        <AddToQueueTrackButton
+          disabled={isAlreadySaved}
+          key={3}
+          onAddToQueueClick={mutate}
+          loading={loading}
+        />
       ]}
-    >
-      <List.Item.Meta
-        avatar={
-          <Avatar
-            style={{ width: 48, height: 48 }}
-            src={props.track.album.imageUrl}
-            shape="square"
-          />
-        }
-        title={props.track.name}
-        description={
-          <Typography.Text ellipsis={true}>
-            {props.track.explicit && <Tag color="magenta">E</Tag>}
-            {props.track.album.artists.map(artist => artist.name).join(', ')}
-            <Badge
-              style={{ marginLeft: 8 }}
-              status="default"
-              color="blue"
-              text={props.track.length}
-            />
-          </Typography.Text>
-        }
-      />
-    </List.Item>
+      track={track}
+    />
   );
 
   function handleTogglePlayClick() {

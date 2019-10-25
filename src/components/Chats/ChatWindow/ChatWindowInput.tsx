@@ -41,7 +41,7 @@ interface Props {
 }
 
 const ChatInput: React.FC<Props> = ({ currentQueryVariables }) => {
-  const sendMessage = useCreateMessage({
+  const [sendMessage] = useCreateMessage({
     update: handleOptimisticUpdate
   });
 

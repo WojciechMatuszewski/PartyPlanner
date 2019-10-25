@@ -27,7 +27,7 @@ export interface UseAudioApi {
 
 export function useAudio(
   audioRef: React.RefObject<HTMLAudioElement>,
-  trackUrl: string | null,
+  trackUrl: string | undefined | null,
   disabled: boolean
 ): UseAudioApi {
   const [state, setState] = React.useState<UseAudioState>({

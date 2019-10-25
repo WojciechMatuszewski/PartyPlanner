@@ -16,7 +16,7 @@ import { ChatsContext } from '@pages/party-chats';
 
 import ChatSectionLoading from './ChatSectionLoading';
 import { LAST_CHAT_MESSAGE_FRAGMENT } from '@graphql/fragments';
-import { ApolloClient, NetworkStatus } from 'apollo-boost';
+import { ApolloClient, NetworkStatus } from 'apollo-client';
 import {
   updateChatThreadMessages,
   createPaginateMessagesQueryVariables

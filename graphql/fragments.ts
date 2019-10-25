@@ -78,3 +78,25 @@ export const LAST_CHAT_MESSAGE_FRAGMENT = gql`
     hasUnreadMessages @client
   }
 `;
+
+export const FULL_SAVED_TRACK_FRAGMENT = gql`
+  fragment FULL_SAVED_TRACK_FRAGMENT on PartySavedTrack {
+    id
+    name
+    length
+    uri
+    popularity
+    durationMs
+    previewUrl
+    stringArtists
+    explicit
+    popularity
+    album {
+      id
+      name
+      uri
+      imageUrl
+      releaseDate
+    }
+  }
+`;

@@ -1,37 +1,32 @@
-import React from 'react';
-import { NextFunctionComponent } from 'next';
-import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import { NextContextWithApollo } from './_app';
-import {
-  HasPartiesQueryQuery,
-  HasPartiesQueryVariables
-} from '@generated/graphql';
-import { HAS_PARTIES_QUERY } from '@graphql/queries';
-import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import UserTopArtists from '@components/Party/Music/UserTop/UserTopArtists/UserTopArtists';
-import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
+import PartyAuthenticator from '@auth/party-auth';
+import GraphqlLoading from '@components/GraphqlLoading';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
-import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import SavedTracksProvider from '@components/Party/Music/SavedTracks/SavedTracksProvider';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
-import SpotifyGuard from '@guards/SpotifyGuard';
-import PageException from '@components/UI/PageException';
+import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
+import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
+import { PartyProvider } from '@components/Party/PartyProvider';
+import { PartyPage } from '@components/Party/shared';
 import { PartyContentWrapper } from '@components/Party/styles';
+import PageException from '@components/UI/PageException';
+import { useParty_SavedTracks } from '@generated/graphql';
+import SpotifyGuard from '@guards/SpotifyGuard';
+import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
+import { Button } from 'antd';
+import { NetworkStatus } from 'apollo-client';
+import React from 'react';
 
-type RouterQuery = { id?: string };
-interface InjectedProps {
-  isInParty: boolean;
-  partyId: string;
-}
-
-const PartyMusicTopPage: NextFunctionComponent<
-  InjectedProps,
-  InjectedProps,
-  NextContextWithApollo<RouterQuery>
-> = props => {
+const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
   const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
 
-  if (!props.isInParty)
+  const { data, error, refetch, networkStatus } = useParty_SavedTracks({
+    variables: { where: { party: { id: partyId } } },
+    notifyOnNetworkStatusChange: true
+  });
+
+  if (!isInParty)
     return (
       <PageException
         desc="Party either does not exist or you are not invited"
@@ -40,23 +35,57 @@ const PartyMusicTopPage: NextFunctionComponent<
       />
     );
 
+  if (error || networkStatus == NetworkStatus.refetch) {
+    return (
+      <PageException
+        actions={
+          <Button
+            type="danger"
+            onClick={() => handleRefetch(refetch)}
+            loading={networkStatus == NetworkStatus.refetch}
+          >
+            Try loading again
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (
+    networkStatus == NetworkStatus.loading ||
+    !hasGraphqlData(data, ['partySavedTracks'])
+  )
+    return (
+      <GraphqlLoading
+        height="calc(100vh - 90px)"
+        isLoadingInitially={true}
+        loading={true}
+      />
+    );
+
+  const { partySavedTracks } = data;
+
   return (
     <React.Fragment>
-      <PartyMenu routerPath={'/party-music-top'} partyId={props.partyId} />
+      <PartyMenu routerPath={'/party-music-top'} partyId={partyId} />
       <PartyContentWrapper>
         <SpotifyGuard>
-          <BigMusicPlayerProvider>
-            <TrackInfoModalProvider>
-              <UserTopTracks />
-              <UserTopArtists />
-              <BigMusicPlayerStickedToBottom
-                onTrackChanged={handleTrackChanged}
-                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                visible={playerVisible}
-              />
-              <TrackInfoModal />
-            </TrackInfoModalProvider>
-          </BigMusicPlayerProvider>
+          <SavedTracksProvider savedTracks={partySavedTracks}>
+            <BigMusicPlayerProvider>
+              <TrackInfoModalProvider>
+                <PartyProvider partyId={partyId} userId={userId}>
+                  <UserTopTracks />
+                </PartyProvider>
+                <BigMusicPlayerStickedToBottom
+                  partyId={partyId}
+                  onTrackChanged={handleTrackChanged}
+                  onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
+                  visible={playerVisible}
+                />
+                <TrackInfoModal />
+              </TrackInfoModalProvider>
+            </BigMusicPlayerProvider>
+          </SavedTracksProvider>
         </SpotifyGuard>
       </PartyContentWrapper>
     </React.Fragment>
@@ -73,38 +102,6 @@ const PartyMusicTopPage: NextFunctionComponent<
   }
 };
 
-PartyMusicTopPage.getInitialProps = async function(context) {
-  const userData = await ApolloAuthenticator.authenticateRoute({
-    userHasToBe: 'authenticated',
-    ctx: context
-  });
-  // redirected to /login
-  if (!userData) return { isInParty: false, partyId: '' };
-
-  if (!context.query.id)
-    return {
-      isInParty: false,
-      partyId: ''
-    };
-
-  const {
-    data: { hasParties }
-  } = await context.apolloClient.query<
-    HasPartiesQueryQuery,
-    HasPartiesQueryVariables
-  >({
-    query: HAS_PARTIES_QUERY,
-    variables: {
-      where: {
-        id: context.query.id
-      }
-    }
-  });
-
-  return {
-    isInParty: hasParties,
-    partyId: context.query.id
-  };
-};
+PartyMusicTopPage.getInitialProps = PartyAuthenticator.isUserInParty;
 
 export default PartyMusicTopPage;
