@@ -1,31 +1,28 @@
+import GraphqlLoading from '@components/GraphqlLoading';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
+import EmptySection from '@components/UI/EmptySection';
+import ErrorSection from '@components/UI/ErrorSection';
+import { useParty_PlaylistsConnection } from '@generated/graphql';
+import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
+import {
+  handleRefetch,
+  hasGraphqlData,
+  isLoadingError,
+  isLoadingInitially,
+  isLoadingMore,
+  isLoadingOnSearch
+} from '@shared/graphqlUtils';
 import { Affix, Button } from 'antd';
+import gql from 'graphql-tag';
 import React from 'react';
+
+import ImportPlaylist from '../ImportPlaylist/ImportPlaylist';
 import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
-import { PartyContentInnerWrapper } from '@components/Party/styles';
-import gql from 'graphql-tag';
-import { useParty_PlaylistsConnection } from '@generated/graphql';
-import { NetworkStatus } from 'apollo-client';
-import { hasGraphqlData, handleRefetch } from '@shared/graphqlUtils';
-import GraphqlLoading from '@components/GraphqlLoading';
-import ErrorSection from '@components/UI/ErrorSection';
 import PlaylistsList from './PlaylistsList';
-import EmptySection from '@components/UI/EmptySection';
 
 export const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
-export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
-  fragment PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT on Playlist {
-    id
-    spotifyExternalUrl
-    name
-    imageUrl
-    user {
-      firstName
-      lastName
-      avatar
-    }
-  }
-`;
+
 export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   query Party_PlaylistsConnection(
     $where: PlaylistWhereInput
@@ -68,8 +65,9 @@ export function getPartyMusicPlaylistsConnectionVariables(partyId: string) {
 
 interface Props {
   partyId: string;
+  userId: string;
 }
-export default function PartyMusicPlaylists({ partyId }: Props) {
+export default function PartyMusicPlaylists({ partyId, userId }: Props) {
   const {
     data,
     error,
@@ -81,16 +79,19 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
     notifyOnNetworkStatusChange: true
   });
 
+  const [
+    importPlaylistModalVisible,
+    setImportPlaylistModalVisible
+  ] = React.useState(false);
+
   function handleSearch(searchQuery: string) {
     refetch({ where: { name_contains: searchQuery } });
   }
 
-  const isLoadingInitially = networkStatus == NetworkStatus.loading;
-  const isLoadingOnSearch = networkStatus == NetworkStatus.setVariables;
-  const isLoadingError = networkStatus == NetworkStatus.refetch;
-  const isLoadingMore = networkStatus == NetworkStatus.fetchMore;
-
-  if (isLoadingInitially || !hasGraphqlData(data, ['playlistsConnection']))
+  if (
+    isLoadingInitially(networkStatus) ||
+    !hasGraphqlData(data, ['playlistsConnection'])
+  )
     return (
       <GraphqlLoading
         height="calc(100vh - 90px)"
@@ -102,7 +103,10 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
   if (error)
     return (
       <ErrorSection style={{ padding: 0 }}>
-        <Button loading={isLoadingError} onClick={() => handleRefetch(refetch)}>
+        <Button
+          loading={isLoadingError(networkStatus)}
+          onClick={() => handleRefetch(refetch)}
+        >
           Try again
         </Button>
       </ErrorSection>
@@ -114,10 +118,17 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
 
   return (
     <React.Fragment>
+      <ImportPlaylist
+        partyId={partyId}
+        userId={userId}
+        visible={importPlaylistModalVisible}
+        onClose={() => setImportPlaylistModalVisible(false)}
+      />
       <Affix>
         <AffixedBarContainer>
           <PlaylistsControls
-            loading={isLoadingOnSearch}
+            onImportModalOpen={() => setImportPlaylistModalVisible(true)}
+            loading={isLoadingOnSearch(networkStatus)}
             onSearch={handleSearch}
           />
         </AffixedBarContainer>
@@ -130,9 +141,11 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
           />
         ) : (
           <PlaylistsList
-            loading={isLoadingOnSearch}
-            canLoadMore={pageInfo.hasNextPage && !isLoadingOnSearch}
-            loadingMore={isLoadingMore}
+            loading={isLoadingOnSearch(networkStatus)}
+            canLoadMore={
+              pageInfo.hasNextPage && !isLoadingOnSearch(networkStatus)
+            }
+            loadingMore={isLoadingMore(networkStatus)}
             onLoadMore={handleLoadMore}
             playlists={edges}
           />

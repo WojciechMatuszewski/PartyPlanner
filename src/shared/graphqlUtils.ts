@@ -1,3 +1,4 @@
+import { NetworkStatus } from 'apollo-client';
 import { PartiesQueryVariables, Maybe } from '@generated/graphql';
 import moment from 'moment';
 import { OperationVariables } from 'react-apollo';
@@ -73,4 +74,20 @@ export async function handleRefetch<QueryVariables extends OperationVariables>(
   } catch (e) {
     message.error('Could not fetch the data');
   }
+}
+
+export function isLoadingInitially(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.loading;
+}
+
+export function isLoadingMore(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.fetchMore;
+}
+
+export function isLoadingError(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.refetch;
+}
+
+export function isLoadingOnSearch(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.setVariables;
 }

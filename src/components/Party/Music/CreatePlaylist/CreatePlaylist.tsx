@@ -28,9 +28,9 @@ import gql from 'graphql-tag';
 import { useParty } from '@components/Party/PartyProvider';
 import {
   PARTY_PLAYLISTS_CONNECTION_QUERY,
-  getPartyMusicPlaylistsConnectionVariables,
-  PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
+  getPartyMusicPlaylistsConnectionVariables
 } from '../Playlists/Playlists';
+import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -267,7 +267,6 @@ export default function CreatePlaylist({ onClose, tracks }: Props) {
 
   return (
     <Modal
-      destroyOnClose={true}
       closable={true}
       maskClosable={true}
       onCancel={handleClose}

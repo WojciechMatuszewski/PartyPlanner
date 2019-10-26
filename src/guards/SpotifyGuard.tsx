@@ -29,13 +29,18 @@ const GuardSectionWrapper = styled.section`
 `;
 
 export default function SpotifyGuard(props: { children: React.ReactNode }) {
-  const { shouldAskForNewToken, initWithNewTokens } = useSpotifyWebSdk();
+  const {
+    shouldAskForNewToken,
+    initWithNewTokens,
+    initializing
+  } = useSpotifyWebSdk();
 
-  return shouldAskForNewToken ? (
-    <AskForNewSpotifyTokens onReAuthClick={handleReAuthClick} />
-  ) : (
-    <React.Fragment>{props.children}</React.Fragment>
-  );
+  if (initializing) return <p>Initializing</p>;
+
+  if (shouldAskForNewToken)
+    return <AskForNewSpotifyTokens onReAuthClick={handleReAuthClick} />;
+
+  return <React.Fragment>{props.children}</React.Fragment>;
 
   async function handleReAuthClick() {
     const tokens = await socialLoginPopup<any>(

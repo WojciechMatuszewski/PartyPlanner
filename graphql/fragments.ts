@@ -100,3 +100,17 @@ export const FULL_SAVED_TRACK_FRAGMENT = gql`
     }
   }
 `;
+
+export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
+  fragment PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT on Playlist {
+    id
+    spotifyExternalUrl
+    name
+    imageUrl
+    user {
+      firstName
+      lastName
+      avatar
+    }
+  }
+`;

@@ -2375,6 +2375,7 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
+  importPlaylistsToParty: Scalars['Boolean'],
   joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
@@ -2881,6 +2882,12 @@ export type MutationDeleteManyPartiesArgs = {
 
 export type MutationDeleteManyAlbumsArgs = {
   where?: Maybe<AlbumWhereInput>
+};
+
+
+export type MutationImportPlaylistsToPartyArgs = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
 };
 
 
@@ -8264,6 +8271,15 @@ export type Full_Saved_Track_FragmentFragment = (
   ) }
 );
 
+export type Party_Playlists_Connection_Node_FragmentFragment = (
+  { __typename?: 'Playlist' }
+  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'imageUrl'>
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'firstName' | 'lastName' | 'avatar'>
+  ) }
+);
+
 export type SignupMutationVariables = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -8814,13 +8830,15 @@ export type Party_CreatePlaylistMutation = (
    }
 );
 
-export type Party_Playlists_Connection_Node_FragmentFragment = (
-  { __typename?: 'Playlist' }
-  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'imageUrl'>
-  & { user: (
-    { __typename?: 'User' }
-    & Pick<User, 'firstName' | 'lastName' | 'avatar'>
-  ) }
+export type Party_ImportPlaylistsToPartyMutationVariables = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
+};
+
+
+export type Party_ImportPlaylistsToPartyMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'importPlaylistsToParty'>
 );
 
 export type Party_PlaylistsConnectionQueryVariables = {
@@ -8925,6 +8943,7 @@ export type Party_Invitation_FragmentParty = Party_Invitation_FragmentFragment['
 export type Last_Chat_Message_FragmentMessages = Last_Chat_Message_FragmentFragment['messages'][0];
 export type Last_Chat_Message_FragmentAuthor = Last_Chat_Message_FragmentFragment['messages'][0]['author'];
 export type Full_Saved_Track_FragmentAlbum = Full_Saved_Track_FragmentFragment['album'];
+export type Party_Playlists_Connection_Node_FragmentUser = Party_Playlists_Connection_Node_FragmentFragment['user'];
 export type SignupVariables = SignupMutationVariables;
 export type SignupSignup = SignupMutation['signup'];
 export const useSignup = useSignupMutation;
@@ -9045,7 +9064,8 @@ export const useJoinPartyFind = useJoinPartyFindQuery;
 export type Party_CreatePlaylistVariables = Party_CreatePlaylistMutationVariables;
 export type Party_CreatePlaylistCreatePlaylist = Party_Playlists_Connection_Node_FragmentFragment;
 export const useParty_CreatePlaylist = useParty_CreatePlaylistMutation;
-export type Party_Playlists_Connection_Node_FragmentUser = Party_Playlists_Connection_Node_FragmentFragment['user'];
+export type Party_ImportPlaylistsToPartyVariables = Party_ImportPlaylistsToPartyMutationVariables;
+export const useParty_ImportPlaylistsToParty = useParty_ImportPlaylistsToPartyMutation;
 export type Party_PlaylistsConnectionVariables = Party_PlaylistsConnectionQueryVariables;
 export type Party_PlaylistsConnectionPlaylistsConnection = Party_PlaylistsConnectionQuery['playlistsConnection'];
 export type Party_PlaylistsConnectionPageInfo = Party_PlaylistsConnectionQuery['playlistsConnection']['pageInfo'];
@@ -9160,11 +9180,6 @@ export const Full_Saved_Track_FragmentFragmentDoc = gql`
   }
 }
     `;
-export const Is_Unread_ThreadFragmentDoc = gql`
-    fragment IS_UNREAD_THREAD on Chat {
-  hasUnreadMessages @client
-}
-    `;
 export const Party_Playlists_Connection_Node_FragmentFragmentDoc = gql`
     fragment PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT on Playlist {
   id
@@ -9176,6 +9191,11 @@ export const Party_Playlists_Connection_Node_FragmentFragmentDoc = gql`
     lastName
     avatar
   }
+}
+    `;
+export const Is_Unread_ThreadFragmentDoc = gql`
+    fragment IS_UNREAD_THREAD on Chat {
+  hasUnreadMessages @client
 }
     `;
 export const UserFragmentDoc = gql`
@@ -9956,6 +9976,25 @@ export type Party_CreatePlaylistComponentProps = Omit<ApolloReactComponents.Muta
 export type Party_CreatePlaylistMutationHookResult = ReturnType<typeof useParty_CreatePlaylistMutation>;
 export type Party_CreatePlaylistMutationResult = ApolloReactCommon.MutationResult<Party_CreatePlaylistMutation>;
 export type Party_CreatePlaylistMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_CreatePlaylistMutation, Party_CreatePlaylistMutationVariables>;
+export const Party_ImportPlaylistsToPartyDocument = gql`
+    mutation Party_ImportPlaylistsToParty($playlists: String!, $partyId: ID!) {
+  importPlaylistsToParty(playlists: $playlists, partyId: $partyId)
+}
+    `;
+export type Party_ImportPlaylistsToPartyMutationFn = ApolloReactCommon.MutationFunction<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>;
+export type Party_ImportPlaylistsToPartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>, 'mutation'>;
+
+    export const Party_ImportPlaylistsToPartyComponent = (props: Party_ImportPlaylistsToPartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables> mutation={Party_ImportPlaylistsToPartyDocument} {...props} />
+    );
+    
+
+    export function useParty_ImportPlaylistsToPartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>(Party_ImportPlaylistsToPartyDocument, baseOptions);
+    }
+export type Party_ImportPlaylistsToPartyMutationHookResult = ReturnType<typeof useParty_ImportPlaylistsToPartyMutation>;
+export type Party_ImportPlaylistsToPartyMutationResult = ApolloReactCommon.MutationResult<Party_ImportPlaylistsToPartyMutation>;
+export type Party_ImportPlaylistsToPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>;
 export const Party_PlaylistsConnectionDocument = gql`
     query Party_PlaylistsConnection($where: PlaylistWhereInput, $orderBy: PlaylistOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   playlistsConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
