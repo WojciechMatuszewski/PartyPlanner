@@ -31,12 +31,15 @@ function GraphqlInlineError({ children, style, title }: Props) {
 
 GraphqlInlineError.WithButton = ({
   onRetry,
-  loading
+  loading,
+  ...restOfProps
 }: {
   onRetry: VoidFunction;
   loading: boolean;
+  style?: React.CSSProperties;
+  title?: string;
 }) => (
-  <GraphqlInlineError>
+  <GraphqlInlineError {...restOfProps}>
     <Button type="danger" onClick={onRetry} loading={loading}>
       Retry
     </Button>

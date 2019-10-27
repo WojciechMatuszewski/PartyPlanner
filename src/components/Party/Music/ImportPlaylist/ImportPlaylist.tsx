@@ -1,26 +1,17 @@
-import AntdSearch from '@components/AntdSearch';
 import GraphqlInlineError from '@components/GraphqlInlineError';
-import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import css from '@emotion/css';
 import {
   Party_Playlists_Connection_Node_FragmentFragment,
-  useParty_ImportPlaylistsToParty,
-  useParty_PlaylistsConnection
+  useParty_ImportPlaylistsToParty
 } from '@generated/graphql';
-import {
-  handleRefetch,
-  hasGraphqlData,
-  isLoadingError,
-  isLoadingInitially,
-  isLoadingMore,
-  isLoadingOnSearch
-} from '@shared/graphqlUtils';
+import { handleRefetch } from '@shared/graphqlUtils';
 import { Button, Modal } from 'antd';
 import gql from 'graphql-tag';
-import React from 'react';
 import { pluck } from 'ramda';
+import React from 'react';
 
-import PlaylistItemList from './PlaylistItemList';
+import ImportPlaylistsSuccess from './ImportPlaylistsSuccess';
+import Playlists from './Playlists';
 
 const ModalStyles = css`
   min-width: 530px;
@@ -86,29 +77,15 @@ export default function ImportPlaylist({
     Party_Playlists_Connection_Node_FragmentFragment[]
   >([]);
 
-  const [filterQuery, setFilterQuery] = React.useState<string | undefined>(
-    undefined
+  const [showSuccess, setShowSuccess] = React.useState(false);
+
+  const [importPlaylists, { loading, error }] = useParty_ImportPlaylistsToParty(
+    {
+      onCompleted: () => setShowSuccess(true)
+    }
   );
 
-  const [
-    importPlaylists,
-    { loading: importingPlaylists }
-  ] = useParty_ImportPlaylistsToParty();
-
-  const { data, error, networkStatus, refetch } = useParty_PlaylistsConnection({
-    variables: {
-      where: {
-        parties_none: { id: partyId },
-        user: { id: userId },
-        name_contains: filterQuery
-      }
-    },
-    notifyOnNetworkStatusChange: true
-  });
-
-  const loadingInitially =
-    isLoadingInitially(networkStatus) ||
-    !hasGraphqlData(data, ['playlistsConnection']);
+  const modalFooterHidden = error || showSuccess;
 
   function handleImportClick() {
     importPlaylists({
@@ -119,6 +96,18 @@ export default function ImportPlaylist({
     });
   }
 
+  function handleSelectPlaylist(
+    playlist: Party_Playlists_Connection_Node_FragmentFragment
+  ) {
+    setSelectedPlaylists(prev => [...prev, playlist]);
+  }
+
+  function handleDeselectPlaylist(
+    playlist: Party_Playlists_Connection_Node_FragmentFragment
+  ) {
+    setSelectedPlaylists(prev => prev.filter(({ id }) => id != playlist.id));
+  }
+
   return (
     <Modal
       title="Import playlists"
@@ -127,54 +116,66 @@ export default function ImportPlaylist({
       visible={visible}
       onCancel={onClose}
       maskClosable={true}
-      footer={[
-        <Button key={0} onClick={onClose}>
-          Close
-        </Button>,
-        <Button
-          key={1}
-          onClick={handleImportClick}
-          loading={importingPlaylists}
-          type="primary"
-          disabled={selectedPlaylists.length == 0}
-        >
-          Import
-        </Button>
-      ]}
+      footer={
+        !modalFooterHidden && (
+          <ModalControls
+            onClose={onClose}
+            onImport={handleImportClick}
+            importLoading={loading}
+            importDisabled={selectedPlaylists.length == 0}
+          />
+        )
+      }
     >
-      {loadingInitially ? (
-        <GraphqlInlineLoading />
-      ) : error ? (
+      {error ? (
         <GraphqlInlineError.WithButton
-          onRetry={() => handleRefetch(refetch)}
-          loading={isLoadingError(networkStatus)}
+          loading={loading}
+          onRetry={() => handleRefetch(handleImportClick)}
         />
+      ) : showSuccess ? (
+        <ImportPlaylistsSuccess />
       ) : (
-        <React.Fragment>
-          <AntdSearch
-            disabled={importingPlaylists}
-            debounceOnChange={true}
-            placeholder="Search ..."
-            loading={isLoadingOnSearch(networkStatus)}
-            onChange={setFilterQuery}
-          />
-          <PlaylistItemList
-            onSelectPlaylists={playlist =>
-              setSelectedPlaylists(prev => [...prev, playlist])
-            }
-            onDeselectPlaylist={playlist =>
-              setSelectedPlaylists(prev =>
-                prev.filter(({ id }) => id != playlist.id)
-              )
-            }
-            playlists={data.playlistsConnection.edges}
-            loading={isLoadingOnSearch(networkStatus)}
-            loadingMore={isLoadingMore(networkStatus)}
-            canLoadMore={false}
-            selectedPlaylists={selectedPlaylists}
-          />
-        </React.Fragment>
+        <Playlists
+          onDeselectPlaylist={handleDeselectPlaylist}
+          onSelectPlaylists={handleSelectPlaylist}
+          selectedPlaylists={selectedPlaylists}
+          importingPlaylists={loading}
+          partyId={partyId}
+          userId={userId}
+        />
       )}
     </Modal>
+  );
+}
+
+interface ModalControlProps {
+  onClose: VoidFunction;
+  onImport: VoidFunction;
+  importDisabled: boolean;
+
+  importLoading: boolean;
+}
+function ModalControls({
+  onClose,
+  onImport,
+  importDisabled,
+
+  importLoading
+}: ModalControlProps) {
+  return (
+    <React.Fragment>
+      <Button key={0} onClick={onClose}>
+        Close
+      </Button>
+      <Button
+        key={1}
+        onClick={onImport}
+        loading={importLoading}
+        type="primary"
+        disabled={importDisabled}
+      >
+        Import
+      </Button>
+    </React.Fragment>
   );
 }

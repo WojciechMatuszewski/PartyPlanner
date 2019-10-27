@@ -20,6 +20,7 @@ interface Props {
   onDeselectPlaylist: (
     playlist: Party_Playlists_Connection_Node_FragmentFragment
   ) => void;
+  onLoadMore: VoidFunction;
 }
 
 const LoadMoreButtonStyles = css`
@@ -46,7 +47,8 @@ export default function PlaylistItemList({
   loadingMore,
   selectedPlaylists,
   onSelectPlaylists,
-  onDeselectPlaylist
+  onDeselectPlaylist,
+  onLoadMore
 }: Props) {
   const hasItems = playlists.length != 0;
 
@@ -74,7 +76,11 @@ export default function PlaylistItemList({
         )}
       </List>
       {canLoadMore && (
-        <Button css={[LoadMoreButtonStyles]} loading={loadingMore}>
+        <Button
+          css={[LoadMoreButtonStyles]}
+          loading={loadingMore}
+          onClick={onLoadMore}
+        >
           Load More
         </Button>
       )}
