@@ -106,8 +106,10 @@ export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
     id
     spotifyExternalUrl
     name
+    spotifyId
     imageUrl
     user {
+      id
       firstName
       lastName
       avatar

@@ -4,7 +4,7 @@ import {
   Party_Playlists_Connection_Node_FragmentFragment
 } from '@generated/graphql';
 import { List, Button, Empty } from 'antd';
-import PlaylistItem from './PlaylistItem';
+import PlaylistItem from './PlaylistsItem';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import css from '@emotion/css';
 
@@ -40,7 +40,7 @@ const ListStyles = css`
   margin-top: 12px;
 `;
 
-export default function PlaylistItemList({
+export default function ImportPlaylistsListItem({
   playlists,
   loading,
   canLoadMore,

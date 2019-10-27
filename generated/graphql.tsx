@@ -8273,10 +8273,10 @@ export type Full_Saved_Track_FragmentFragment = (
 
 export type Party_Playlists_Connection_Node_FragmentFragment = (
   { __typename?: 'Playlist' }
-  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'imageUrl'>
+  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'spotifyId' | 'imageUrl'>
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'firstName' | 'lastName' | 'avatar'>
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
   ) }
 );
 
@@ -8841,6 +8841,19 @@ export type Party_ImportPlaylistsToPartyMutation = (
   & Pick<Mutation, 'importPlaylistsToParty'>
 );
 
+export type Party_DeletePlaylistMutationVariables = {
+  where: PlaylistWhereUniqueInput
+};
+
+
+export type Party_DeletePlaylistMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePlaylist: Maybe<(
+    { __typename?: 'Playlist' }
+    & Pick<Playlist, 'id'>
+  )> }
+);
+
 export type Party_PlaylistsConnectionQueryVariables = {
   where?: Maybe<PlaylistWhereInput>,
   orderBy?: Maybe<PlaylistOrderByInput>,
@@ -9066,6 +9079,9 @@ export type Party_CreatePlaylistCreatePlaylist = Party_Playlists_Connection_Node
 export const useParty_CreatePlaylist = useParty_CreatePlaylistMutation;
 export type Party_ImportPlaylistsToPartyVariables = Party_ImportPlaylistsToPartyMutationVariables;
 export const useParty_ImportPlaylistsToParty = useParty_ImportPlaylistsToPartyMutation;
+export type Party_DeletePlaylistVariables = Party_DeletePlaylistMutationVariables;
+export type Party_DeletePlaylistDeletePlaylist = Party_DeletePlaylistMutation['deletePlaylist'];
+export const useParty_DeletePlaylist = useParty_DeletePlaylistMutation;
 export type Party_PlaylistsConnectionVariables = Party_PlaylistsConnectionQueryVariables;
 export type Party_PlaylistsConnectionPlaylistsConnection = Party_PlaylistsConnectionQuery['playlistsConnection'];
 export type Party_PlaylistsConnectionPageInfo = Party_PlaylistsConnectionQuery['playlistsConnection']['pageInfo'];
@@ -9185,8 +9201,10 @@ export const Party_Playlists_Connection_Node_FragmentFragmentDoc = gql`
   id
   spotifyExternalUrl
   name
+  spotifyId
   imageUrl
   user {
+    id
     firstName
     lastName
     avatar
@@ -9995,6 +10013,27 @@ export type Party_ImportPlaylistsToPartyComponentProps = Omit<ApolloReactCompone
 export type Party_ImportPlaylistsToPartyMutationHookResult = ReturnType<typeof useParty_ImportPlaylistsToPartyMutation>;
 export type Party_ImportPlaylistsToPartyMutationResult = ApolloReactCommon.MutationResult<Party_ImportPlaylistsToPartyMutation>;
 export type Party_ImportPlaylistsToPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>;
+export const Party_DeletePlaylistDocument = gql`
+    mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
+  deletePlaylist(where: $where) {
+    id
+  }
+}
+    `;
+export type Party_DeletePlaylistMutationFn = ApolloReactCommon.MutationFunction<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables>;
+export type Party_DeletePlaylistComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables>, 'mutation'>;
+
+    export const Party_DeletePlaylistComponent = (props: Party_DeletePlaylistComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables> mutation={Party_DeletePlaylistDocument} {...props} />
+    );
+    
+
+    export function useParty_DeletePlaylistMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables>(Party_DeletePlaylistDocument, baseOptions);
+    }
+export type Party_DeletePlaylistMutationHookResult = ReturnType<typeof useParty_DeletePlaylistMutation>;
+export type Party_DeletePlaylistMutationResult = ApolloReactCommon.MutationResult<Party_DeletePlaylistMutation>;
+export type Party_DeletePlaylistMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_DeletePlaylistMutation, Party_DeletePlaylistMutationVariables>;
 export const Party_PlaylistsConnectionDocument = gql`
     query Party_PlaylistsConnection($where: PlaylistWhereInput, $orderBy: PlaylistOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   playlistsConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {

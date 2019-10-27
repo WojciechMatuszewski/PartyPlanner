@@ -5,6 +5,7 @@ import { PartyPage } from '@components/Party/shared';
 import { PartyContentWrapper } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
 import React from 'react';
+import { PartyProvider } from '@components/Party/PartyProvider';
 
 const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
   if (!isInParty)
@@ -20,7 +21,9 @@ const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-playlists" />
       <PartyContentWrapper>
-        <PartyMusicPlaylists partyId={partyId} userId={userId} />
+        <PartyProvider userId={userId} partyId={partyId}>
+          <PartyMusicPlaylists partyId={partyId} userId={userId} />
+        </PartyProvider>
       </PartyContentWrapper>
     </React.Fragment>
   );

@@ -16,13 +16,12 @@ import { Affix, Button } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
 
-import ImportPlaylist from '../ImportPlaylist/ImportPlaylist';
 import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
 import PlaylistsList from './PlaylistsList';
 
 export const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
-
+export const PLAYLIST_CONNECTION_CACHE_KEY = 'party_playlists';
 export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   query Party_PlaylistsConnection(
     $where: PlaylistWhereInput
@@ -67,7 +66,7 @@ interface Props {
   partyId: string;
   userId: string;
 }
-export default function PartyMusicPlaylists({ partyId, userId }: Props) {
+export default function PartyMusicPlaylists({ partyId }: Props) {
   const {
     data,
     error,
@@ -78,11 +77,6 @@ export default function PartyMusicPlaylists({ partyId, userId }: Props) {
     variables: getPartyMusicPlaylistsConnectionVariables(partyId),
     notifyOnNetworkStatusChange: true
   });
-
-  const [
-    importPlaylistModalVisible,
-    setImportPlaylistModalVisible
-  ] = React.useState(false);
 
   function handleSearch(searchQuery: string) {
     refetch({ where: { name_contains: searchQuery } });
@@ -118,16 +112,9 @@ export default function PartyMusicPlaylists({ partyId, userId }: Props) {
 
   return (
     <React.Fragment>
-      <ImportPlaylist
-        partyId={partyId}
-        userId={userId}
-        visible={importPlaylistModalVisible}
-        onClose={() => setImportPlaylistModalVisible(false)}
-      />
       <Affix>
         <AffixedBarContainer>
           <PlaylistsControls
-            onImportModalOpen={() => setImportPlaylistModalVisible(true)}
             loading={isLoadingOnSearch(networkStatus)}
             onSearch={handleSearch}
           />

@@ -11,10 +11,11 @@ import {
   isLoadingOnSearch,
   isLoadingMore
 } from '@shared/graphqlUtils';
-import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
+
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import AntdSearch from '@components/AntdSearch';
-import PlaylistItemList from './PlaylistItemList';
+import PlaylistItemList from './ImportPlaylistsItemList';
+import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 
 interface Props {
   partyId: string;
@@ -28,7 +29,7 @@ interface Props {
   ) => void;
   selectedPlaylists: Party_Playlists_Connection_Node_FragmentFragment[];
 }
-export default function Playlists({
+export default function PartyPlannerPlaylists({
   partyId,
   userId,
   importingPlaylists,

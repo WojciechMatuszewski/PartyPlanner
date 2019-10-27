@@ -5,13 +5,14 @@ import {
   useParty_ImportPlaylistsToParty
 } from '@generated/graphql';
 import { handleRefetch } from '@shared/graphqlUtils';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Icon } from 'antd';
 import gql from 'graphql-tag';
 import { pluck } from 'ramda';
 import React from 'react';
 
 import ImportPlaylistsSuccess from './ImportPlaylistsSuccess';
-import Playlists from './Playlists';
+import PartyPlannerPlaylists from './PartyPlannerPlaylists';
+import { useParty } from '@components/Party/PartyProvider';
 
 const ModalStyles = css`
   min-width: 530px;
@@ -60,24 +61,17 @@ export const IMPORT_PLAYLISTS_TO_PARTY_MUTATION = gql`
   }
 `;
 
-interface Props {
-  partyId: string;
-  userId: string;
-  visible: boolean;
-  onClose: VoidFunction;
-}
-
-export default function ImportPlaylist({
-  partyId,
-  userId,
-  visible,
-  onClose
-}: Props) {
+export default function ImportPlaylists() {
   const [selectedPlaylists, setSelectedPlaylists] = React.useState<
     Party_Playlists_Connection_Node_FragmentFragment[]
   >([]);
 
+  const { userId, partyId } = useParty();
+
   const [showSuccess, setShowSuccess] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  const toggleModalVisible = () => setModalVisible(prev => !prev);
 
   const [importPlaylists, { loading, error }] = useParty_ImportPlaylistsToParty(
     {
@@ -109,42 +103,52 @@ export default function ImportPlaylist({
   }
 
   return (
-    <Modal
-      title="Import playlists"
-      css={[ModalStyles]}
-      closable={true}
-      visible={visible}
-      onCancel={onClose}
-      maskClosable={true}
-      footer={
-        !modalFooterHidden && (
-          <ModalControls
-            onClose={onClose}
-            onImport={handleImportClick}
-            importLoading={loading}
-            importDisabled={selectedPlaylists.length == 0}
+    <React.Fragment>
+      <Button
+        style={{ marginRight: 12 }}
+        type="primary"
+        onClick={toggleModalVisible}
+      >
+        <Icon type="import" />
+        Import playlist
+      </Button>
+      <Modal
+        title="Import playlists"
+        css={[ModalStyles]}
+        closable={true}
+        visible={modalVisible}
+        onCancel={toggleModalVisible}
+        maskClosable={true}
+        footer={
+          !modalFooterHidden && (
+            <ModalControls
+              onClose={toggleModalVisible}
+              onImport={handleImportClick}
+              importLoading={loading}
+              importDisabled={selectedPlaylists.length == 0}
+            />
+          )
+        }
+      >
+        {error ? (
+          <GraphqlInlineError.WithButton
+            loading={loading}
+            onRetry={() => handleRefetch(handleImportClick)}
           />
-        )
-      }
-    >
-      {error ? (
-        <GraphqlInlineError.WithButton
-          loading={loading}
-          onRetry={() => handleRefetch(handleImportClick)}
-        />
-      ) : showSuccess ? (
-        <ImportPlaylistsSuccess />
-      ) : (
-        <Playlists
-          onDeselectPlaylist={handleDeselectPlaylist}
-          onSelectPlaylists={handleSelectPlaylist}
-          selectedPlaylists={selectedPlaylists}
-          importingPlaylists={loading}
-          partyId={partyId}
-          userId={userId}
-        />
-      )}
-    </Modal>
+        ) : showSuccess ? (
+          <ImportPlaylistsSuccess onClose={toggleModalVisible} />
+        ) : (
+          <PartyPlannerPlaylists
+            onDeselectPlaylist={handleDeselectPlaylist}
+            onSelectPlaylists={handleSelectPlaylist}
+            selectedPlaylists={selectedPlaylists}
+            importingPlaylists={loading}
+            partyId={partyId}
+            userId={userId}
+          />
+        )}
+      </Modal>
+    </React.Fragment>
   );
 }
 
