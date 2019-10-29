@@ -10,6 +10,10 @@ import { Colors } from '@shared/styles';
 import { useParty } from '@components/Party/PartyProvider';
 import gql from 'graphql-tag';
 import { unfollowPlaylist } from 'spotify-web-sdk';
+import {
+  PARTY_PLAYLISTS_CONNECTION_QUERY,
+  getPartyPlaylistConnectionVariables
+} from './Playlists';
 
 export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
   mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
@@ -41,7 +45,15 @@ function PlaylistCard({ playlist }: Props) {
       okType: 'danger',
       okText: 'Delete',
       onOk: async () => {
-        await deletePlaylist({ variables: { where: { id: node.id } } });
+        await deletePlaylist({
+          variables: { where: { id: node.id } },
+          refetchQueries: [
+            {
+              query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+              variables: getPartyPlaylistConnectionVariables()
+            }
+          ]
+        });
         await unfollowPlaylist(node.spotifyId);
       }
     });

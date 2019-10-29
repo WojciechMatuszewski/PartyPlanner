@@ -5,6 +5,7 @@ import { Typography } from 'antd';
 import styled from '@emotion/styled';
 import { FlexBoxHorizontallyCenteredStyles } from '@shared/styles';
 import socialLoginPopup from '@shared/socialLoginPopup';
+import GraphqlLoading from '@components/GraphqlLoading';
 
 const GuardSectionWrapper = styled.section`
   padding: 12px;
@@ -35,7 +36,8 @@ export default function SpotifyGuard(props: { children: React.ReactNode }) {
     initializing
   } = useSpotifyWebSdk();
 
-  if (initializing) return <p>Initializing</p>;
+  if (initializing)
+    return <GraphqlLoading loading={true} isLoadingInitially={true} />;
 
   if (shouldAskForNewToken)
     return <AskForNewSpotifyTokens onReAuthClick={handleReAuthClick} />;

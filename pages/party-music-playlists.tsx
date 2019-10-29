@@ -6,6 +6,7 @@ import { PartyContentWrapper } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
 import React from 'react';
 import { PartyProvider } from '@components/Party/PartyProvider';
+import SpotifyGuard from '@guards/SpotifyGuard';
 
 const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
   if (!isInParty)
@@ -21,9 +22,11 @@ const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-playlists" />
       <PartyContentWrapper>
-        <PartyProvider userId={userId} partyId={partyId}>
-          <PartyMusicPlaylists partyId={partyId} userId={userId} />
-        </PartyProvider>
+        <SpotifyGuard>
+          <PartyProvider userId={userId} partyId={partyId}>
+            <PartyMusicPlaylists partyId={partyId} userId={userId} />
+          </PartyProvider>
+        </SpotifyGuard>
       </PartyContentWrapper>
     </React.Fragment>
   );

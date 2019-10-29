@@ -1,37 +1,16 @@
-import React from 'react';
+import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
+import { TransparentModal } from '@components/UI/TransparentModal';
 import css from '@emotion/css';
-import { Modal } from 'antd';
-import { Global } from '@emotion/core';
-import styled from '@emotion/styled';
-import TrackInfoModalBasicInfo from './TrackInfoModalBasicInfo';
-import TrackInfoModalDetailedInformation from './TrackInfoModalDetailedInformation';
-import {
-  useTrackInfoModal,
-  TrackInfoModalTrack
-} from './TrackInfoModalProvider';
+import React from 'react';
 
 import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
-import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
+import TrackInfoModalBasicInfo from './TrackInfoModalBasicInfo';
+import TrackInfoModalDetailedInformation from './TrackInfoModalDetailedInformation';
+import { useTrackInfoModal } from './TrackInfoModalProvider';
 
 const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
 
-const BlurredBackgroundStyles = css`
-  .global-layout-wrapper {
-    filter: blur(8px);
-  }
-`;
-
 const ModalStyles = css`
-  .ant-modal-content {
-    box-shadow: none;
-    background: transparent;
-  }
-  display: table;
-  .ant-modal-close .anticon {
-    color: white;
-    font-size: 26px;
-  }
-
   @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
     .ant-modal-body {
       padding: 12px 4px;
@@ -39,17 +18,7 @@ const ModalStyles = css`
   }
 `;
 
-const TrackInfoModalBodyWrapper = styled.div`
-  position: relative;
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: white;
-  }
-  .spotify-button {
-    margin-top: 24px;
-  }
+const ModalBodyStyles = css`
   @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
     .spotify-button {
       margin-top: 8px;
@@ -58,13 +27,13 @@ const TrackInfoModalBodyWrapper = styled.div`
   }
 `;
 
-const TrackInfoModalBody: React.FC<{ track: TrackInfoModalTrack }> = ({
-  track
-}) => {
+const TrackInfoModalBody: React.FC<{
+  track: any;
+}> = ({ track }) => {
   const { audioPlayerCommands$ } = useBigMusicPlayer();
 
   return (
-    <TrackInfoModalBodyWrapper>
+    <React.Fragment>
       <TrackInfoModalBasicInfo track={track} />
       <TrackInfoModalDetailedInformation track={track} />
       <GreenSpotifyButton
@@ -74,7 +43,7 @@ const TrackInfoModalBody: React.FC<{ track: TrackInfoModalTrack }> = ({
       >
         Listen on Spotify!
       </GreenSpotifyButton>
-    </TrackInfoModalBodyWrapper>
+    </React.Fragment>
   );
 
   function handleOnSpotifyButtonClick() {
@@ -89,21 +58,14 @@ const TrackInfoModal: React.FC = () => {
   if (!trackInModal) return null;
 
   return (
-    <Modal
-      width={650}
-      zIndex={20}
+    <TransparentModal
       visible={modalVisible}
-      css={[ModalStyles]}
-      title={false}
-      centered={true}
-      closable={true}
-      footer={false}
-      onCancel={closeModal}
-      maskStyle={{ background: 'rgba(0,0,0,0.9)' }}
+      onClose={closeModal}
+      modalEmotionCss={ModalStyles}
+      modalBodyEmotionCss={ModalBodyStyles}
     >
       <TrackInfoModalBody track={trackInModal} />
-      {modalVisible && <Global styles={[BlurredBackgroundStyles]} />}
-    </Modal>
+    </TransparentModal>
   );
 };
 

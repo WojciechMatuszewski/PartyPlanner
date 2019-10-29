@@ -2,7 +2,10 @@ import GraphqlLoading from '@components/GraphqlLoading';
 import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
-import { useParty_PlaylistsConnection } from '@generated/graphql';
+import {
+  useParty_PlaylistsConnection,
+  Party_PlaylistsConnectionVariables
+} from '@generated/graphql';
 import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 import {
   handleRefetch,
@@ -19,9 +22,16 @@ import React from 'react';
 import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
 import PlaylistsList from './PlaylistsList';
+import { BehaviorSubject } from 'rxjs';
 
-export const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
-export const PLAYLIST_CONNECTION_CACHE_KEY = 'party_playlists';
+const queryVariablesSubject = new BehaviorSubject<
+  Party_PlaylistsConnectionVariables
+>({});
+
+export function getPartyPlaylistConnectionVariables() {
+  return queryVariablesSubject.getValue();
+}
+
 export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   query Party_PlaylistsConnection(
     $where: PlaylistWhereInput
@@ -55,32 +65,35 @@ export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   ${PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT}
 `;
 
-export function getPartyMusicPlaylistsConnectionVariables(partyId: string) {
-  return {
-    where: { parties_some: { id: partyId } },
-    first: PLAYLIST_CONNECTION_PAGINATION_SIZE
-  };
-}
+const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
 
 interface Props {
   partyId: string;
   userId: string;
 }
 export default function PartyMusicPlaylists({ partyId }: Props) {
+  const [filterQuery, setFilterQuery] = React.useState<undefined | string>(
+    undefined
+  );
+
   const {
     data,
     error,
     networkStatus,
     refetch,
-    fetchMore
+    fetchMore,
+    variables
   } = useParty_PlaylistsConnection({
-    variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+    variables: {
+      where: { parties_some: { id: partyId }, name_contains: filterQuery },
+      first: PLAYLIST_CONNECTION_PAGINATION_SIZE
+    },
     notifyOnNetworkStatusChange: true
   });
 
-  function handleSearch(searchQuery: string) {
-    refetch({ where: { name_contains: searchQuery } });
-  }
+  React.useEffect(() => {
+    queryVariablesSubject.next(variables);
+  }, [variables]);
 
   if (
     isLoadingInitially(networkStatus) ||
@@ -116,7 +129,7 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
         <AffixedBarContainer>
           <PlaylistsControls
             loading={isLoadingOnSearch(networkStatus)}
-            onSearch={handleSearch}
+            onSearch={setFilterQuery}
           />
         </AffixedBarContainer>
       </Affix>

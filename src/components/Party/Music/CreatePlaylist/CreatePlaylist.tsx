@@ -1,36 +1,36 @@
+import { useParty } from '@components/Party/PartyProvider';
+import css from '@emotion/css';
 import {
   Full_Saved_Track_FragmentFragment,
-  useParty_CreatePlaylist,
   Party_CreatePlaylistMutationFn,
-  Party_PlaylistsConnectionQuery
+  Party_PlaylistsConnectionQuery,
+  useParty_CreatePlaylist
 } from '@generated/graphql';
+import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
+import SpotifyGuard from '@guards/SpotifyGuard';
 import { useMachine } from '@xstate/react';
 import { message, Modal } from 'antd';
+import gql from 'graphql-tag';
 import React from 'react';
 import {
+  addTracksToPlaylist,
   createPlaylist,
   getCurrentUserProfile,
-  addTracksToPlaylist,
   getPlaylist,
   Playlist
 } from 'spotify-web-sdk';
 import { actions, Machine } from 'xstate';
 
+import {
+  getPartyPlaylistConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_QUERY
+} from '../Playlists/Playlists';
 import CreatePlaylistError from './CreatePlaylistError';
 import CreatePlaylistForm, {
   CreatePlaylistFormValues
 } from './CreatePlaylistForm';
 import PlaylistCreated from './PlaylistCreated';
-import css from '@emotion/css';
 import SelectedTracks from './SelectedTracks';
-import SpotifyGuard from '@guards/SpotifyGuard';
-import gql from 'graphql-tag';
-import { useParty } from '@components/Party/PartyProvider';
-import {
-  PARTY_PLAYLISTS_CONNECTION_QUERY,
-  getPartyMusicPlaylistsConnectionVariables
-} from '../Playlists/Playlists';
-import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -191,7 +191,7 @@ const playlistMachine = Machine(
                 Party_PlaylistsConnectionQuery
               >({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-                variables: getPartyMusicPlaylistsConnectionVariables(partyId)
+                variables: getPartyPlaylistConnectionVariables()
               });
               if (dataInCache == undefined) return;
 
@@ -207,7 +207,7 @@ const playlistMachine = Machine(
 
               proxy.writeQuery({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-                variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+                variables: getPartyPlaylistConnectionVariables(),
                 data: {
                   playlistConnection: playlistsConnection
                 }

@@ -13,6 +13,10 @@ import React from 'react';
 import ImportPlaylistsSuccess from './ImportPlaylistsSuccess';
 import PartyPlannerPlaylists from './PartyPlannerPlaylists';
 import { useParty } from '@components/Party/PartyProvider';
+import {
+  PARTY_PLAYLISTS_CONNECTION_QUERY,
+  getPartyPlaylistConnectionVariables
+} from '../Playlists/Playlists';
 
 const ModalStyles = css`
   min-width: 530px;
@@ -75,7 +79,13 @@ export default function ImportPlaylists() {
 
   const [importPlaylists, { loading, error }] = useParty_ImportPlaylistsToParty(
     {
-      onCompleted: () => setShowSuccess(true)
+      onCompleted: () => setShowSuccess(true),
+      refetchQueries: [
+        {
+          query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+          variables: getPartyPlaylistConnectionVariables()
+        }
+      ]
     }
   );
 
