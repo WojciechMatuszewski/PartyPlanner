@@ -1,18 +1,20 @@
-import React from 'react';
+import { useParty } from '@components/Party/PartyProvider';
+import UserAvatar from '@components/UserDefaultAvatar';
+import SpotifyIcon from '@customIcons/spotify.svg';
 import {
   Party_PlaylistsConnectionEdges,
   useParty_DeletePlaylist
 } from '@generated/graphql';
-import { Card, Icon, Modal } from 'antd';
-import UserAvatar from '@components/UserDefaultAvatar';
-import SpotifyIcon from '@customIcons/spotify.svg';
 import { Colors } from '@shared/styles';
-import { useParty } from '@components/Party/PartyProvider';
+import { Card, Icon, Modal, message } from 'antd';
 import gql from 'graphql-tag';
+import React from 'react';
 import { unfollowPlaylist } from 'spotify-web-sdk';
+
+import PlaylistInfo from './PlaylistInfo';
 import {
-  PARTY_PLAYLISTS_CONNECTION_QUERY,
-  getPartyPlaylistConnectionVariables
+  getPartyPlaylistConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_QUERY
 } from './Playlists';
 
 export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
@@ -27,7 +29,7 @@ interface Props {
   playlist: NonNullable<Party_PlaylistsConnectionEdges>;
 }
 function PlaylistCard({ playlist }: Props) {
-  const [deletePlaylist] = useParty_DeletePlaylist();
+  const [deletePlaylist, { loading }] = useParty_DeletePlaylist();
   const { node } = playlist;
 
   const { userId } = useParty();
@@ -38,24 +40,30 @@ function PlaylistCard({ playlist }: Props) {
     window.open(node.spotifyExternalUrl);
   }
 
+  async function handlePlaylistDelete() {
+    try {
+      await unfollowPlaylist(node.spotifyId);
+      await deletePlaylist({
+        variables: { where: { id: node.id } },
+        refetchQueries: [
+          {
+            query: PARTY_PLAYLISTS_CONNECTION_QUERY,
+            variables: getPartyPlaylistConnectionVariables()
+          }
+        ]
+      });
+    } catch (e) {
+      message.error('Something went wrong, try again!');
+    }
+  }
+
   function handleDeleteClick() {
     Modal.confirm({
       title: `Do you want to delete ${node.name} ?`,
       content: 'This action is irreversible',
       okType: 'danger',
       okText: 'Delete',
-      onOk: async () => {
-        await deletePlaylist({
-          variables: { where: { id: node.id } },
-          refetchQueries: [
-            {
-              query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-              variables: getPartyPlaylistConnectionVariables()
-            }
-          ]
-        });
-        await unfollowPlaylist(node.spotifyId);
-      }
+      onOk: async () => await handlePlaylistDelete()
     });
   }
 
@@ -66,7 +74,12 @@ function PlaylistCard({ playlist }: Props) {
       style={{ color: Colors.SpotifyGreen }}
       onClick={handleOnSpotifyIconClick}
     />,
-    <Icon type="info-circle" key={1} style={{ color: Colors.AntdBlue }} />
+    <PlaylistInfo
+      key={1}
+      playlist={playlist.node}
+      onDelete={handlePlaylistDelete}
+      loading={loading}
+    />
   ];
 
   const actions = isCreatedByLoggedUser
