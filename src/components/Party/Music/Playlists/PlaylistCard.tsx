@@ -1,3 +1,10 @@
+import PlaylistCardSelected from './PlaylistCardSelected';
+import PlaylistInfo from './PlaylistInfo';
+import {
+  getPartyPlaylistConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_QUERY
+} from './Playlists';
+
 import { useParty } from '@components/Party/PartyProvider';
 import UserAvatar from '@components/UserDefaultAvatar';
 import SpotifyIcon from '@customIcons/spotify.svg';
@@ -5,17 +12,13 @@ import {
   Party_PlaylistsConnectionEdges,
   useParty_DeletePlaylist
 } from '@generated/graphql';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { Colors } from '@shared/styles';
-import { Card, Icon, Modal, message } from 'antd';
+import { Card, Icon, message, Modal } from 'antd';
 import gql from 'graphql-tag';
+import { always, ifElse } from 'ramda';
 import React from 'react';
 import { unfollowPlaylist } from 'spotify-web-sdk';
-
-import PlaylistInfo from './PlaylistInfo';
-import {
-  getPartyPlaylistConnectionVariables,
-  PARTY_PLAYLISTS_CONNECTION_QUERY
-} from './Playlists';
 
 export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
   mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
@@ -26,9 +29,23 @@ export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
 `;
 
 interface Props {
-  playlist: NonNullable<Party_PlaylistsConnectionEdges>;
+  playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>;
+  selecting: boolean;
+  onPlaylistCardSelected: (
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) => void;
+  isSelected: boolean;
+  onPlaylistCardDeselected: (
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) => void;
 }
-function PlaylistCard({ playlist }: Props) {
+function PlaylistCard({
+  playlist,
+  selecting,
+  onPlaylistCardSelected,
+  isSelected,
+  onPlaylistCardDeselected
+}: Props) {
   const [deletePlaylist, { loading }] = useParty_DeletePlaylist();
   const { node } = playlist;
 
@@ -67,6 +84,12 @@ function PlaylistCard({ playlist }: Props) {
     });
   }
 
+  const onPlaylistCardClicked = ifElse(
+    always(selecting),
+    () => onPlaylistCardSelected(playlist),
+    () => {}
+  );
+
   const baseActions = [
     <Icon
       component={SpotifyIcon}
@@ -89,18 +112,30 @@ function PlaylistCard({ playlist }: Props) {
     : baseActions;
 
   return (
-    <Card
-      hoverable={true}
-      bordered={true}
-      cover={<img src={node.imageUrl} />}
-      actions={actions}
+    <li
+      onClick={onPlaylistCardClicked}
+      style={{
+        listStyleType: 'none',
+        position: 'relative'
+      }}
     >
-      <Card.Meta
-        title={node.name}
-        avatar={<UserAvatar userData={node.user} />}
-        description={`By ${node.user.firstName} ${node.user.lastName}`}
+      <Card
+        hoverable={true}
+        bordered={true}
+        cover={<img src={node.imageUrl} />}
+        actions={actions}
+      >
+        <Card.Meta
+          title={node.name}
+          avatar={<UserAvatar userData={node.user} />}
+          description={`By ${node.user.firstName} ${node.user.lastName}`}
+        />
+      </Card>
+      <PlaylistCardSelected
+        visible={isSelected}
+        onDeselect={() => onPlaylistCardDeselected(playlist)}
       />
-    </Card>
+    </li>
   );
 }
 

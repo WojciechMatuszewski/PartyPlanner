@@ -4,7 +4,8 @@ import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
 import {
   useParty_PlaylistsConnection,
-  Party_PlaylistsConnectionVariables
+  Party_PlaylistsConnectionVariables,
+  Party_PlaylistsConnectionEdges
 } from '@generated/graphql';
 import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 import {
@@ -13,7 +14,8 @@ import {
   isLoadingError,
   isLoadingInitially,
   isLoadingMore,
-  isLoadingOnSearch
+  isLoadingOnSearch,
+  DeepWithoutMaybe
 } from '@shared/graphqlUtils';
 import { Affix, Button } from 'antd';
 import gql from 'graphql-tag';
@@ -23,6 +25,7 @@ import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
 import PlaylistsList from './PlaylistsList';
 import { BehaviorSubject } from 'rxjs';
+import PlaylistCard from './PlaylistCard';
 
 const queryVariablesSubject = new BehaviorSubject<
   Party_PlaylistsConnectionVariables
@@ -76,6 +79,31 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
     undefined
   );
 
+  const [selectedPlaylists, setSelectedPlaylists] = React.useState<
+    DeepWithoutMaybe<Party_PlaylistsConnectionEdges[]>
+  >([]);
+
+  const [selectingPlaylists, setSelectingPlaylists] = React.useState(false);
+
+  const toggleSelectingPlaylists = () => {
+    setSelectingPlaylists(p => !p);
+    setSelectedPlaylists([]);
+  };
+
+  function handleSelectPlaylist(
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) {
+    setSelectedPlaylists(prev => [...prev, playlist]);
+  }
+
+  function handleDeselectPlaylist(
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) {
+    setSelectedPlaylists(prev =>
+      prev.filter(({ node: { id } }) => id != playlist.node.id)
+    );
+  }
+
   const {
     data,
     error,
@@ -128,6 +156,8 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
       <Affix>
         <AffixedBarContainer>
           <PlaylistsControls
+            onSelectPlaylistClick={toggleSelectingPlaylists}
+            selectingPlaylists={selectingPlaylists}
             loading={isLoadingOnSearch(networkStatus)}
             onSearch={setFilterQuery}
           />
@@ -148,7 +178,20 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
             loadingMore={isLoadingMore(networkStatus)}
             onLoadMore={handleLoadMore}
             playlists={edges}
-          />
+          >
+            {playlist => (
+              <PlaylistCard
+                key={playlist.node.id}
+                playlist={playlist}
+                selecting={selectingPlaylists}
+                isSelected={selectedPlaylists.some(
+                  p => p.node.id == playlist.node.id
+                )}
+                onPlaylistCardDeselected={handleDeselectPlaylist}
+                onPlaylistCardSelected={handleSelectPlaylist}
+              />
+            )}
+          </PlaylistsList>
         )}
       </PartyContentInnerWrapper>
     </React.Fragment>
