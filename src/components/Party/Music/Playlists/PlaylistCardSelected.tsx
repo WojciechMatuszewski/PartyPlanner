@@ -21,6 +21,7 @@ const PlaylistCardSelectedWrapper = styled(
   display: flex;
   align-items: center;
   z-index: 2;
+  border-radius: 2px;
 `;
 
 const ResultStyles = css`

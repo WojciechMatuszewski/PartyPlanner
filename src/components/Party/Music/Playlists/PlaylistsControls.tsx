@@ -1,7 +1,6 @@
 import ImportPlaylists from '../ImportPlaylists/ImportPlaylists';
 
 import AntdSearch from '@components/AntdSearch';
-import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
 import styled from '@emotion/styled';
 import { Button, Icon } from 'antd';
 import React from 'react';
@@ -18,17 +17,19 @@ interface Props {
   loading: boolean;
   onSelectPlaylistClick: VoidFunction;
   selectingPlaylists: boolean;
+  children: React.ReactNode;
 }
 export default function PlaylistsControls({
   onSearch,
   loading,
   onSelectPlaylistClick,
-  selectingPlaylists
+  selectingPlaylists,
+  children
 }: Props) {
   return (
     <React.Fragment>
       <PlaylistControlsButtons>
-        <GreenSpotifyButton>Merge playlists</GreenSpotifyButton>
+        {children}
         <Button
           type={selectingPlaylists ? 'danger' : 'primary'}
           onClick={onSelectPlaylistClick}

@@ -14,17 +14,45 @@ import {
 } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { Colors } from '@shared/styles';
-import { Card, Icon, message, Modal } from 'antd';
+import { Card, Icon, message, Modal, Typography } from 'antd';
 import gql from 'graphql-tag';
 import { always, ifElse } from 'ramda';
 import React from 'react';
 import { unfollowPlaylist } from 'spotify-web-sdk';
+import posed, { PoseGroup } from 'react-pose';
+import styled from '@emotion/styled';
+import css from '@emotion/css';
 
 export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
   mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
     deletePlaylist(where: $where) {
       id
     }
+  }
+`;
+
+const SelectingIndicator = styled(
+  posed.div({
+    enter: { y: 0, opacity: 1 },
+    exit: { y: 0, opacity: 0 }
+  })
+)`
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  h3 {
+    color: white;
+    padding: 12px;
+    margin: 0;
+  }
+  justify-content: center;
+`;
+const CardStyles = css`
+  .ant-card-cover {
+    position: relative;
   }
 `;
 
@@ -113,16 +141,27 @@ function PlaylistCard({
 
   return (
     <li
-      onClick={onPlaylistCardClicked}
       style={{
         listStyleType: 'none',
         position: 'relative'
       }}
     >
       <Card
+        css={[CardStyles]}
         hoverable={true}
         bordered={true}
-        cover={<img src={node.imageUrl} />}
+        cover={
+          <React.Fragment>
+            <PoseGroup>
+              {selecting && !isSelected && (
+                <SelectingIndicator key={1} onClick={onPlaylistCardClicked}>
+                  <Typography.Title level={3}>Click to select</Typography.Title>
+                </SelectingIndicator>
+              )}
+            </PoseGroup>
+            <img src={node.imageUrl} key={2} />
+          </React.Fragment>
+        }
         actions={actions}
       >
         <Card.Meta

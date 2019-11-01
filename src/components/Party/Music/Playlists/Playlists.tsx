@@ -26,6 +26,7 @@ import PlaylistsControls from './PlaylistsControls';
 import PlaylistsList from './PlaylistsList';
 import { BehaviorSubject } from 'rxjs';
 import PlaylistCard from './PlaylistCard';
+import CombinePlaylists from '../CombinePlaylists/CombinePlaylists';
 
 const queryVariablesSubject = new BehaviorSubject<
   Party_PlaylistsConnectionVariables
@@ -160,7 +161,9 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
             selectingPlaylists={selectingPlaylists}
             loading={isLoadingOnSearch(networkStatus)}
             onSearch={setFilterQuery}
-          />
+          >
+            <CombinePlaylists selectedPlaylists={selectedPlaylists} />
+          </PlaylistsControls>
         </AffixedBarContainer>
       </Affix>
       <PartyContentInnerWrapper style={{ padding: 12 }}>

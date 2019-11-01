@@ -14,7 +14,7 @@ import {
 
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import AntdSearch from '@components/AntdSearch';
-import PlaylistItemList from './ImportPlaylistsItemList';
+import PlaylistItemList from './ImportPlaylistItemList';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 
 interface Props {

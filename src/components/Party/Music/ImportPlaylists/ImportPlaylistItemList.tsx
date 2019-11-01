@@ -1,12 +1,13 @@
-import React from 'react';
-import {
-  Party_PlaylistsConnectionEdges,
-  Party_Playlists_Connection_Node_FragmentFragment
-} from '@generated/graphql';
-import { List, Button, Empty } from 'antd';
-import PlaylistItem from './PlaylistsItem';
-import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import ModalPlaylistItem from '../shared/ModalPlaylistItem';
+
 import css from '@emotion/css';
+import {
+  Party_Playlists_Connection_Node_FragmentFragment,
+  Party_PlaylistsConnectionEdges
+} from '@generated/graphql';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import { Button, Empty, List } from 'antd';
+import React from 'react';
 
 interface Props {
   playlists: DeepWithoutMaybe<Party_PlaylistsConnectionEdges[]>;
@@ -40,7 +41,7 @@ const ListStyles = css`
   margin-top: 12px;
 `;
 
-export default function ImportPlaylistsListItem({
+export default function ImportPlaylistsItemList({
   playlists,
   loading,
   canLoadMore,
@@ -59,12 +60,9 @@ export default function ImportPlaylistsListItem({
           <Empty description="No playlists to import found" />
         ) : (
           playlists.map(edge => (
-            <PlaylistItem
+            <ModalPlaylistItem
               key={edge.node.id}
-              avatarImg={edge.node.imageUrl}
-              isPublic={false}
-              name={edge.node.name}
-              totalTracks={10}
+              playlist={edge.node}
               onSelect={() => onSelectPlaylists(edge.node)}
               onDeselect={() => onDeselectPlaylist(edge.node)}
               onSpotifyButtonClick={() =>

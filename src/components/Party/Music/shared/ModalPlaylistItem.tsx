@@ -1,7 +1,9 @@
 import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
 import css from '@emotion/css';
+import { Party_PlaylistsConnectionNode } from '@generated/graphql';
 import { trapEvent } from '@shared/functionUtils';
-import { Avatar, Badge, Checkbox, List, Typography } from 'antd';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
+import { Avatar, Checkbox, List, Typography } from 'antd';
 import { ifElse } from 'ramda';
 import React from 'react';
 
@@ -63,28 +65,23 @@ const SpotifyButtonStyles = css`
 `;
 
 interface Props {
-  avatarImg: string;
-  isPublic: boolean;
-  totalTracks: number;
-  name: string;
-  onSpotifyButtonClick: VoidFunction;
+  playlist: DeepWithoutMaybe<Party_PlaylistsConnectionNode>;
   isSelected: boolean;
+  onSpotifyButtonClick: VoidFunction;
   onSelect: VoidFunction;
   onDeselect: VoidFunction;
 }
 
-export default function PlaylistItem({
-  avatarImg,
-  isPublic,
-  totalTracks,
-  name,
+export default function ModalPlaylistItem({
   onSpotifyButtonClick,
   isSelected,
   onSelect,
+  playlist,
   onDeselect
 }: Props) {
   const handleChange = () => ifElse(Boolean, onSelect, onDeselect)(!isSelected);
 
+  const { imageUrl, name, user } = playlist;
   return (
     <List.Item
       onClick={handleChange}
@@ -111,21 +108,13 @@ export default function PlaylistItem({
         avatar={
           <Avatar
             style={{ width: 48, height: 48 }}
-            src={avatarImg}
+            src={imageUrl}
             shape="square"
           />
         }
         description={
           <Typography.Text ellipsis={true}>
-            <Typography.Text type={isPublic ? undefined : 'warning'}>
-              {isPublic ? 'public' : 'private'}
-            </Typography.Text>
-            <Badge
-              style={{ marginLeft: 8 }}
-              status="default"
-              color="blue"
-              text={`${totalTracks} tracks`}
-            />
+            By: {user.firstName} {user.lastName}
           </Typography.Text>
         }
         title={name}
