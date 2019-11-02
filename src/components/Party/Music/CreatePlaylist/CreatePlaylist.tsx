@@ -1,4 +1,16 @@
+import {
+  getPartyPlaylistConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_QUERY
+} from '../Playlists/Playlists';
+import CreatePlaylistError from './CreatePlaylistError';
+import CreatePlaylistForm, {
+  CreatePlaylistFormValues
+} from './CreatePlaylistForm';
+import PlaylistCreated from './PlaylistCreated';
+import SelectedTracks from './SelectedTracks';
+
 import { useParty } from '@components/Party/PartyProvider';
+import { createSpotifyPlaylist } from '@components/Party/shared';
 import css from '@emotion/css';
 import {
   Full_Saved_Track_FragmentFragment,
@@ -12,25 +24,8 @@ import { useMachine } from '@xstate/react';
 import { message, Modal } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
-import {
-  addTracksToPlaylist,
-  createPlaylist,
-  getCurrentUserProfile,
-  getPlaylist,
-  Playlist
-} from 'spotify-web-sdk';
+import { Playlist } from 'spotify-web-sdk';
 import { actions, Machine } from 'xstate';
-
-import {
-  getPartyPlaylistConnectionVariables,
-  PARTY_PLAYLISTS_CONNECTION_QUERY
-} from '../Playlists/Playlists';
-import CreatePlaylistError from './CreatePlaylistError';
-import CreatePlaylistForm, {
-  CreatePlaylistFormValues
-} from './CreatePlaylistForm';
-import PlaylistCreated from './PlaylistCreated';
-import SelectedTracks from './SelectedTracks';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -160,15 +155,11 @@ const playlistMachine = Machine(
         partyId,
         userId
       }: MachineContext) => {
-        const { id } = await getCurrentUserProfile();
-
-        const { id: playlistId } = await createPlaylist(id, playlistName, {
-          public: !isPrivate
-        });
-
-        await addTracksToPlaylist(playlistId, tracks.map(track => track.uri));
-
-        const spotifyPlaylistData = await getPlaylist(playlistId);
+        const spotifyPlaylistData = await createSpotifyPlaylist(
+          tracks.map(track => track.uri),
+          playlistName,
+          !isPrivate
+        );
 
         await savePlaylist({
           variables: {

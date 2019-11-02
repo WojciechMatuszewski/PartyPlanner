@@ -75,7 +75,7 @@ interface Props {
   partyId: string;
   userId: string;
 }
-export default function PartyMusicPlaylists({ partyId }: Props) {
+export default function PartyMusicPlaylists({ partyId, userId }: Props) {
   const [filterQuery, setFilterQuery] = React.useState<undefined | string>(
     undefined
   );
@@ -162,7 +162,11 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
             loading={isLoadingOnSearch(networkStatus)}
             onSearch={setFilterQuery}
           >
-            <CombinePlaylists selectedPlaylists={selectedPlaylists} />
+            <CombinePlaylists
+              partyId={partyId}
+              userId={userId}
+              selectedPlaylists={selectedPlaylists}
+            />
           </PlaylistsControls>
         </AffixedBarContainer>
       </Affix>

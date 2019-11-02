@@ -114,5 +114,9 @@ export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
       lastName
       avatar
     }
+    tracks {
+      id
+      uri
+    }
   }
 `;
