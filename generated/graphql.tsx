@@ -8215,7 +8215,10 @@ export type Party_FragmentFragment = (
   ), members: Maybe<Array<(
     { __typename?: 'User' }
     & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
-  )>> }
+  )>>, cart: Maybe<(
+    { __typename?: 'PartyCart' }
+    & Pick<PartyCart, 'id'>
+  )> }
 );
 
 export type Message_FragmentFragment = (
@@ -8773,6 +8776,34 @@ export type PartyInvitationSubscriptionSubscription = (
   )> }
 );
 
+export type Party_CartItemsConnectionQueryVariables = {
+  where?: Maybe<PartyCartItemWhereInput>,
+  orderBy?: Maybe<PartyCartItemOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type Party_CartItemsConnectionQuery = (
+  { __typename?: 'Query' }
+  & { partyCartItemsConnection: (
+    { __typename?: 'PartyCartItemConnection' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
+    ), edges: Array<Maybe<(
+      { __typename?: 'PartyCartItemEdge' }
+      & { node: (
+        { __typename?: 'PartyCartItem' }
+        & Pick<PartyCartItem, 'id'>
+      ) }
+    )>> }
+  ) }
+);
+
 export type JoinPartyFindQueryVariables = {
   inviteSecret: Scalars['String'],
   userId: Scalars['ID']
@@ -8877,6 +8908,19 @@ export type Party_SavedTracksConnectionQuery = (
   ) }
 );
 
+export type Party_CreatePartyCartItemMutationVariables = {
+  data: PartyCartItemCreateInput
+};
+
+
+export type Party_CreatePartyCartItemMutation = (
+  { __typename?: 'Mutation' }
+  & { createPartyCartItem: (
+    { __typename?: 'PartyCartItem' }
+    & Pick<PartyCartItem, 'id'>
+  ) }
+);
+
 export type PartyDashboardParticipantsQueryQueryVariables = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -8918,6 +8962,7 @@ export type UserFragment = (
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
+export type Party_FragmentCart = Party_FragmentFragment['cart'];
 export type Message_FragmentAuthor = Message_FragmentFragment['author'];
 export type Party_Invitation_FragmentInvitedBy = Party_Invitation_FragmentFragment['invitedBy'];
 export type Party_Invitation_FragmentUser = Party_Invitation_FragmentFragment['user'];
@@ -9036,6 +9081,12 @@ export type PartyInvitationSubscriptionPartyInvitation = PartyInvitationSubscrip
 export type PartyInvitationSubscriptionNode = Party_Invitation_FragmentFragment;
 export type PartyInvitationSubscriptionPreviousValues = PartyInvitationSubscriptionSubscription['partyInvitation']['previousValues'];
 export const usePartyInvitationSubscription = usePartyInvitationSubscriptionSubscription;
+export type Party_CartItemsConnectionVariables = Party_CartItemsConnectionQueryVariables;
+export type Party_CartItemsConnectionPartyCartItemsConnection = Party_CartItemsConnectionQuery['partyCartItemsConnection'];
+export type Party_CartItemsConnectionPageInfo = Party_CartItemsConnectionQuery['partyCartItemsConnection']['pageInfo'];
+export type Party_CartItemsConnectionEdges = Party_CartItemsConnectionQuery['partyCartItemsConnection']['edges'][0];
+export type Party_CartItemsConnectionNode = Party_CartItemsConnectionQuery['partyCartItemsConnection']['edges'][0]['node'];
+export const useParty_CartItemsConnection = useParty_CartItemsConnectionQuery;
 export type JoinPartyFindVariables = JoinPartyFindQueryVariables;
 export type JoinPartyFindParties = JoinPartyFindQuery['parties'][0];
 export type JoinPartyFindMembers = JoinPartyFindQuery['parties'][0]['members'][0];
@@ -9058,6 +9109,9 @@ export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery[
 export type Party_SavedTracksConnectionNode = Full_Saved_Track_FragmentFragment;
 export type Party_SavedTracksConnectionPageInfo = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['pageInfo'];
 export const useParty_SavedTracksConnection = useParty_SavedTracksConnectionQuery;
+export type Party_CreatePartyCartItemVariables = Party_CreatePartyCartItemMutationVariables;
+export type Party_CreatePartyCartItemCreatePartyCartItem = Party_CreatePartyCartItemMutation['createPartyCartItem'];
+export const useParty_CreatePartyCartItem = useParty_CreatePartyCartItemMutation;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
@@ -9089,6 +9143,9 @@ export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQ
   end
   isPublic
   inviteSecret
+  cart {
+    id
+  }
 }
     `;
 export const Message_FragmentFragmentDoc = gql`
@@ -9900,6 +9957,37 @@ export type PartyInvitationSubscriptionComponentProps = Omit<ApolloReactComponen
     }
 export type PartyInvitationSubscriptionSubscriptionHookResult = ReturnType<typeof usePartyInvitationSubscriptionSubscription>;
 export type PartyInvitationSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<PartyInvitationSubscriptionSubscription>;
+export const Party_CartItemsConnectionDocument = gql`
+    query Party_CartItemsConnection($where: PartyCartItemWhereInput, $orderBy: PartyCartItemOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
+  partyCartItemsConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+    `;
+export type Party_CartItemsConnectionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>, 'query'>;
+
+    export const Party_CartItemsConnectionComponent = (props: Party_CartItemsConnectionComponentProps) => (
+      <ApolloReactComponents.Query<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables> query={Party_CartItemsConnectionDocument} {...props} />
+    );
+    
+
+    export function useParty_CartItemsConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>(Party_CartItemsConnectionDocument, baseOptions);
+    }
+      export function useParty_CartItemsConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>(Party_CartItemsConnectionDocument, baseOptions);
+      }
+      
+export type Party_CartItemsConnectionQueryHookResult = ReturnType<typeof useParty_CartItemsConnectionQuery>;
+export type Party_CartItemsConnectionQueryResult = ApolloReactCommon.QueryResult<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>;
 export const JoinPartyFindDocument = gql`
     query JoinPartyFind($inviteSecret: String!, $userId: ID!) {
   parties(where: {inviteSecret: $inviteSecret, members_none: {id: $userId}}) {
@@ -10018,6 +10106,27 @@ export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponen
       
 export type Party_SavedTracksConnectionQueryHookResult = ReturnType<typeof useParty_SavedTracksConnectionQuery>;
 export type Party_SavedTracksConnectionQueryResult = ApolloReactCommon.QueryResult<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>;
+export const Party_CreatePartyCartItemDocument = gql`
+    mutation Party_CreatePartyCartItem($data: PartyCartItemCreateInput!) {
+  createPartyCartItem(data: $data) {
+    id
+  }
+}
+    `;
+export type Party_CreatePartyCartItemMutationFn = ApolloReactCommon.MutationFunction<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>;
+export type Party_CreatePartyCartItemComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>, 'mutation'>;
+
+    export const Party_CreatePartyCartItemComponent = (props: Party_CreatePartyCartItemComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables> mutation={Party_CreatePartyCartItemDocument} {...props} />
+    );
+    
+
+    export function useParty_CreatePartyCartItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>(Party_CreatePartyCartItemDocument, baseOptions);
+    }
+export type Party_CreatePartyCartItemMutationHookResult = ReturnType<typeof useParty_CreatePartyCartItemMutation>;
+export type Party_CreatePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_CreatePartyCartItemMutation>;
+export type Party_CreatePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
     query partyDashboardParticipantsQuery($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, before: $before, first: $first, last: $last, after: $after) {
