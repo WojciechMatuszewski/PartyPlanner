@@ -31,9 +31,6 @@ const RightSideWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  //   h3 {
-  //       margin:0;
-  //   }
 `;
 
 export default function PartyCartTop() {

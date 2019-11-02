@@ -1,8 +1,16 @@
 import React from 'react';
 import { Tabs, Icon } from 'antd';
 import PartyCartAddItem from './PartyCartAddItem';
+import PartyCartPending from './PartyCartPending';
+import css from '@emotion/css';
 
 type TabsKeys = 'PENDING' | 'ACCEPTED' | 'REJECTED';
+
+const TabsStyles = css`
+  .ant-tabs-top-bar {
+    margin-bottom: 0;
+  }
+`;
 
 interface Props {
   cartId: string;
@@ -12,6 +20,7 @@ export default function PartyCartTabs({ cartId }: Props) {
 
   return (
     <Tabs
+      css={[TabsStyles]}
       tabBarExtraContent={<PartyCartAddItem cartId={cartId} />}
       activeKey={activeTab}
       onChange={setActiveTab}
@@ -25,7 +34,7 @@ export default function PartyCartTabs({ cartId }: Props) {
           </span>
         }
       >
-        works
+        <PartyCartPending cartId={cartId} />
       </Tabs.TabPane>
       <Tabs.TabPane
         key="ACCEPTED"
