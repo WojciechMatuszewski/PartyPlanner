@@ -45,18 +45,21 @@ export function useTrackInfoModal() {
   }
   const { state, setState } = context;
 
+  const closeModal = React.useCallback(
+    () => setState(prev => ({ ...prev, visible: false })),
+    []
+  );
+
+  const openModal = React.useCallback(
+    (track: Full_Saved_Track_FragmentFragment) =>
+      setState(() => ({ lastTrack: track, visible: true })),
+    []
+  );
+
   return {
     modalVisible: state.visible,
     closeModal,
     openModal,
     trackInModal: state.lastTrack
   };
-
-  function closeModal() {
-    setState(prev => ({ ...prev, visible: false }));
-  }
-
-  function openModal(track: Full_Saved_Track_FragmentFragment) {
-    setState(() => ({ lastTrack: track, visible: true }));
-  }
 }

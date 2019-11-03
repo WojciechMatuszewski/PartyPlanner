@@ -65,7 +65,10 @@ export const IMPORT_PLAYLISTS_TO_PARTY_MUTATION = gql`
   }
 `;
 
-export default function ImportPlaylists() {
+interface Props {
+  isOnMobile: boolean;
+}
+export default function ImportPlaylists({ isOnMobile }: Props) {
   const [selectedPlaylists, setSelectedPlaylists] = React.useState<
     Party_Playlists_Connection_Node_FragmentFragment[]
   >([]);
@@ -114,18 +117,30 @@ export default function ImportPlaylists() {
 
   return (
     <React.Fragment>
-      <Button
-        style={{ marginRight: 12 }}
-        type="primary"
-        onClick={toggleModalVisible}
-      >
-        <Icon type="import" />
-        Import playlist
-      </Button>
+      {isOnMobile ? (
+        <span
+          onClick={toggleModalVisible}
+          style={{ width: '100%', padding: '12px 0px' }}
+        >
+          <Icon type="import" />
+          Import Playlists
+        </span>
+      ) : (
+        <Button
+          style={{ marginRight: 12 }}
+          type="primary"
+          onClick={toggleModalVisible}
+        >
+          <Icon type="import" />
+          Import playlist
+        </Button>
+      )}
+
       <Modal
         title="Import playlists"
         css={[ModalStyles]}
         closable={true}
+        centered={isOnMobile}
         visible={modalVisible}
         onCancel={toggleModalVisible}
         maskClosable={true}

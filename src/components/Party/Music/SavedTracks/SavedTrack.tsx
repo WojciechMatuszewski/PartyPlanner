@@ -34,7 +34,6 @@ type Props = VirtualizedListTrackItemProps & {
   onSelectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
   onDeselectTrack: (track: Full_Saved_Track_FragmentFragment) => void;
   onPlayPauseClick: (track: Full_Saved_Track_FragmentFragment) => void;
-  onShowMoreInfoClick: (track: Full_Saved_Track_FragmentFragment) => void;
 };
 
 function SavedTrack({
@@ -43,7 +42,6 @@ function SavedTrack({
   onDeselectTrack,
   track,
   onPlayPauseClick,
-  onShowMoreInfoClick,
   isSelected,
   ...restOfProps
 }: Props) {
@@ -51,7 +49,6 @@ function SavedTrack({
     if (isSelected) return onDeselectTrack(track);
     return onSelectTrack(track);
   }
-
   const { openModal } = useTrackInfoModal();
 
   return (
@@ -82,4 +79,9 @@ function SavedTrack({
   );
 }
 
-export default SavedTrack;
+export default React.memo(SavedTrack, (prevProps, nextProps) => {
+  return (
+    prevProps.selecting == nextProps.selecting &&
+    prevProps.isSelected == nextProps.isSelected
+  );
+});
