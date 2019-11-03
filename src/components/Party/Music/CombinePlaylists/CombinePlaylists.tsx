@@ -2,10 +2,11 @@ import {
   getPartyPlaylistConnectionVariables,
   PARTY_PLAYLISTS_CONNECTION_QUERY
 } from '../Playlists/Playlists';
-import ModalPlaylistItem from '../shared/ModalPlaylistItem';
 import CombinePlaylistsForm, {
   CombinePlaylistFormValues
 } from './CombinePlaylistsForm';
+import CombinePlaylistsList from './CombinePlaylistsList';
+import { CombinePlaylistsMachine } from './machine';
 
 import { createSpotifyPlaylist } from '@components/Party/shared';
 import { GreenSpotifyButton } from '@components/UI/SpotifyButton';
@@ -15,10 +16,13 @@ import {
   useParty_CombinePlaylistsMutation
 } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { List, Modal } from 'antd';
+import { useMachine } from '@xstate/react';
+import { Button, Modal, Result } from 'antd';
 import gql from 'graphql-tag';
 import { compose, flatten, map } from 'ramda';
 import React from 'react';
+import { Playlist as SDKPlaylist } from 'spotify-web-sdk';
+import { actions } from 'xstate';
 
 export const COMBINE_PLAYLISTS_MUTATION = gql`
   mutation Party_CombinePlaylists(
@@ -33,10 +37,6 @@ export const COMBINE_PLAYLISTS_MUTATION = gql`
     }
   }
 `;
-type Track = NonNullable<
-  Party_Playlists_Connection_Node_FragmentFragment['tracks']
->[0];
-type Playlist = DeepWithoutMaybe<Party_PlaylistsConnectionEdges>;
 
 function getTracksUrisFromPlaylists(playlists: Playlist[]) {
   return compose(
@@ -46,26 +46,86 @@ function getTracksUrisFromPlaylists(playlists: Playlist[]) {
   )(playlists);
 }
 
+type Track = NonNullable<
+  Party_Playlists_Connection_Node_FragmentFragment['tracks']
+>[0];
+type Playlist = DeepWithoutMaybe<Party_PlaylistsConnectionEdges>;
+
+export interface CombinePlaylistsMachineContext {
+  createdSpotifyPlaylist: SDKPlaylist | undefined;
+  formData: CombinePlaylistFormValues;
+  playlists: Playlist[];
+  userId: string;
+  partyId: string;
+}
+
 interface Props {
   selectedPlaylists: Playlist[];
   partyId: string;
   userId: string;
+  onFinished: VoidFunction;
 }
 
 export default function CombinePlaylists({
   selectedPlaylists,
   partyId,
-  userId
+  userId,
+  onFinished
 }: Props) {
-  const [mutate] = useParty_CombinePlaylistsMutation();
-
   const [modalVisible, setModalVisible] = React.useState(false);
   // capture local state so that user can change their mind
   const [localPlaylists, setLocalPlaylists] = React.useState(selectedPlaylists);
 
-  const toggleModalVisible = () => setModalVisible(prev => !prev);
+  React.useEffect(() => {
+    setLocalPlaylists(selectedPlaylists);
+  }, [selectedPlaylists]);
 
+  const [mutate] = useParty_CombinePlaylistsMutation({
+    notifyOnNetworkStatusChange: false
+  });
+
+  const [currentMachineState, send] = useMachine(CombinePlaylistsMachine, {
+    context: {
+      createdSpotifyPlaylist: undefined,
+      formData: undefined,
+      userId,
+      partyId
+    },
+    actions: {
+      setPreWorkData: actions.assign({
+        formData: (_, event) =>
+          event.payload.formData as CombinePlaylistFormValues,
+        playlists: (_, event) => event.payload.playlists as any
+      }),
+      setSpotifyPlaylistData: actions.assign({
+        createdSpotifyPlaylist: (_, event) => event.data as any
+      })
+    },
+    services: {
+      createPlaylistInSpotify: createNewPlaylistInSpotify,
+      combineSelectedPlaylists: createCombinedPartyPlannerPlaylist
+    }
+  });
+
+  const toggleModalVisible = () => setModalVisible(prev => !prev);
   const hasSelectedAtLeastTwo = selectedPlaylists.length > 1;
+
+  const formLoading =
+    currentMachineState.value == 'workingSpotify' ||
+    currentMachineState.value == 'workingPartyPlanner';
+
+  const isErrorLoading =
+    currentMachineState.value == 'errorSpotifyLoading' ||
+    currentMachineState.value == 'errorPartyPlannerLoading';
+
+  const showError =
+    currentMachineState.value == 'errorSpotify' ||
+    currentMachineState.value == 'errorPartyPlanner' ||
+    isErrorLoading;
+
+  const showSuccess = currentMachineState.value == 'success';
+
+  const shouldResetMachineOnClose = showError || showSuccess;
 
   function handleDeselect(playlist: Playlist) {
     const filtered = localPlaylists.filter(
@@ -78,44 +138,54 @@ export default function CombinePlaylists({
     setLocalPlaylists(prev => [...prev, playlist]);
   }
 
-  React.useEffect(() => {
-    if (!modalVisible) return;
-    setLocalPlaylists(selectedPlaylists);
-  }, [modalVisible, selectedPlaylists]);
-
   function isStillSelected(playlist: Playlist) {
     return localPlaylists.some(
       localPlaylist => localPlaylist.node.id == playlist.node.id
     );
   }
 
-  async function handleOnSubmit({
-    name,
-    shouldDeleteWhenCombining
-  }: CombinePlaylistFormValues) {
-    const spotifyPlaylistData = await createSpotifyPlaylist(
-      getTracksUrisFromPlaylists(localPlaylists),
-      name as string,
+  function handleFormSubmit(formData: CombinePlaylistFormValues) {
+    send('START', {
+      payload: { formData, playlists: localPlaylists }
+    });
+  }
+
+  function createNewPlaylistInSpotify({
+    playlists,
+    formData
+  }: CombinePlaylistsMachineContext) {
+    return createSpotifyPlaylist(
+      [...new Set(getTracksUrisFromPlaylists(playlists))],
+      formData.name as string,
       true
     );
+  }
 
-    mutate({
+  function createCombinedPartyPlannerPlaylist({
+    createdSpotifyPlaylist,
+    playlists,
+    userId,
+    partyId,
+    formData
+  }: CombinePlaylistsMachineContext) {
+    const spotifyPlaylist = createdSpotifyPlaylist as SDKPlaylist;
+    return mutate({
       variables: {
         partyPlannerData: {
-          playlists: localPlaylists.map(playlist => playlist.node.id).join(','),
+          playlists: playlists.map(playlist => playlist.node.id).join(','),
           userId,
           partyId,
-          deleteAffected: Boolean(shouldDeleteWhenCombining)
+          deleteAffected: Boolean(formData.shouldDeleteWhenCombining)
         },
         spotifyData: {
-          imageUrl: spotifyPlaylistData.images[0].url,
-          uri: spotifyPlaylistData.uri,
-          spotifyId: spotifyPlaylistData.id,
-          spotifyExternalUrl: spotifyPlaylistData.externalUrls
-            .spotify as string,
-          name: spotifyPlaylistData.name
+          imageUrl: spotifyPlaylist.images[0].url,
+          uri: spotifyPlaylist.uri,
+          spotifyId: spotifyPlaylist.id,
+          spotifyExternalUrl: spotifyPlaylist.externalUrls.spotify as string,
+          name: spotifyPlaylist.name
         }
       },
+      awaitRefetchQueries: true,
       refetchQueries: [
         {
           query: PARTY_PLAYLISTS_CONNECTION_QUERY,
@@ -123,6 +193,12 @@ export default function CombinePlaylists({
         }
       ]
     });
+  }
+
+  function handleClose() {
+    if (shouldResetMachineOnClose) send('IDLE');
+    if (showSuccess) onFinished();
+    toggleModalVisible();
   }
 
   return (
@@ -135,31 +211,49 @@ export default function CombinePlaylists({
       </GreenSpotifyButton>
       <Modal
         title="Combine Playlists"
-        closable={true}
+        closable={!formLoading}
         maskClosable={true}
         visible={modalVisible}
-        onCancel={toggleModalVisible}
+        onCancel={handleClose}
         footer={null}
       >
-        <CombinePlaylistsForm
-          onSubmit={handleOnSubmit}
-          disabled={localPlaylists.length < 2}
-        />
-        <List
-          bordered={true}
-          header={`Selected playlists (${localPlaylists.length})`}
-        >
-          {selectedPlaylists.map(playlist => (
-            <ModalPlaylistItem
-              isSelected={isStillSelected(playlist)}
-              playlist={playlist.node}
-              onDeselect={() => handleDeselect(playlist)}
-              onSelect={() => handleSelect(playlist)}
-              onSpotifyButtonClick={() => {}}
-              key={playlist.node.id}
+        {showSuccess ? (
+          <Result
+            status="success"
+            title="Playlists combined"
+            subTitle="Playlists were combined successfully!"
+            extra={<Button onClick={handleClose}>Close</Button>}
+          />
+        ) : showError ? (
+          <Result
+            status="error"
+            title="Something went wrong"
+            subTitle="Something went wrong and we could not finish the action"
+            extra={
+              <Button
+                onClick={() => send('ERROR_RETRY')}
+                loading={isErrorLoading}
+              >
+                Try again
+              </Button>
+            }
+          />
+        ) : (
+          <React.Fragment>
+            <CombinePlaylistsForm
+              loading={formLoading}
+              onSubmit={handleFormSubmit}
+              disabled={localPlaylists.length < 2}
             />
-          ))}
-        </List>
+            <CombinePlaylistsList
+              isPlaylistStillSelected={isStillSelected}
+              onDeselectPlaylist={handleDeselect}
+              onSelectPlaylist={handleSelect}
+              numberOfSelectedItems={localPlaylists.length}
+              playlists={selectedPlaylists}
+            />
+          </React.Fragment>
+        )}
       </Modal>
     </React.Fragment>
   );

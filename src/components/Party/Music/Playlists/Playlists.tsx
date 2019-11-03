@@ -105,6 +105,11 @@ export default function PartyMusicPlaylists({ partyId, userId }: Props) {
     );
   }
 
+  function resetState() {
+    setSelectedPlaylists([]);
+    setSelectingPlaylists(false);
+  }
+
   const {
     data,
     error,
@@ -163,6 +168,7 @@ export default function PartyMusicPlaylists({ partyId, userId }: Props) {
             onSearch={setFilterQuery}
           >
             <CombinePlaylists
+              onFinished={resetState}
               partyId={partyId}
               userId={userId}
               selectedPlaylists={selectedPlaylists}

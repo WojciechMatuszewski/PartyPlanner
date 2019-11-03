@@ -23,9 +23,14 @@ const initialFormValues: CombinePlaylistFormValues = {
 
 interface Props {
   disabled: boolean;
+  loading: boolean;
   onSubmit: (formValues: CombinePlaylistFormValues) => void;
 }
-export default function CombinePlaylistsForm({ disabled, onSubmit }: Props) {
+export default function CombinePlaylistsForm({
+  disabled,
+  onSubmit,
+  loading
+}: Props) {
   return (
     <Formik
       onSubmit={onSubmit}
@@ -52,7 +57,12 @@ export default function CombinePlaylistsForm({ disabled, onSubmit }: Props) {
             </Checkbox>
           </Form.Item>
           <Form.Item>
-            <Button htmlType="submit" type="primary" disabled={disabled}>
+            <Button
+              htmlType="submit"
+              type="primary"
+              disabled={disabled}
+              loading={loading}
+            >
               Combine
             </Button>
           </Form.Item>

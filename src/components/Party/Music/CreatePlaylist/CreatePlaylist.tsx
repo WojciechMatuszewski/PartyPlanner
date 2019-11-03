@@ -190,17 +190,20 @@ const playlistMachine = Machine(
               const { playlistsConnection } = dataInCache;
 
               playlistsConnection.edges.push({
+                __typename: 'PlaylistEdge',
                 node: {
                   __typename: 'Playlist',
                   ...createPlaylist
                 }
               });
 
-              proxy.writeQuery({
+              proxy.writeQuery<Party_PlaylistsConnectionQuery>({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
                 variables: getPartyPlaylistConnectionVariables(),
                 data: {
-                  playlistConnection: playlistsConnection
+                  playlistsConnection: {
+                    ...playlistsConnection
+                  }
                 }
               });
             } catch (e) {
