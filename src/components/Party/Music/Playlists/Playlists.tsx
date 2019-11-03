@@ -1,31 +1,41 @@
+import GraphqlLoading from '@components/GraphqlLoading';
+import { PartyContentInnerWrapper } from '@components/Party/styles';
+import EmptySection from '@components/UI/EmptySection';
+import ErrorSection from '@components/UI/ErrorSection';
+import {
+  useParty_PlaylistsConnection,
+  Party_PlaylistsConnectionVariables,
+  Party_PlaylistsConnectionEdges
+} from '@generated/graphql';
+import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
+import {
+  handleRefetch,
+  hasGraphqlData,
+  isLoadingError,
+  isLoadingInitially,
+  isLoadingMore,
+  isLoadingOnSearch,
+  DeepWithoutMaybe
+} from '@shared/graphqlUtils';
 import { Affix, Button } from 'antd';
+import gql from 'graphql-tag';
 import React from 'react';
+
 import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
-import { PartyContentInnerWrapper } from '@components/Party/styles';
-import gql from 'graphql-tag';
-import { useParty_PlaylistsConnection } from '@generated/graphql';
-import { NetworkStatus } from 'apollo-client';
-import { hasGraphqlData, handleRefetch } from '@shared/graphqlUtils';
-import GraphqlLoading from '@components/GraphqlLoading';
-import ErrorSection from '@components/UI/ErrorSection';
 import PlaylistsList from './PlaylistsList';
-import EmptySection from '@components/UI/EmptySection';
+import { BehaviorSubject } from 'rxjs';
+import PlaylistCard from './PlaylistCard';
+import CombinePlaylists from '../CombinePlaylists/CombinePlaylists';
 
-export const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
-export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
-  fragment PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT on Playlist {
-    id
-    spotifyExternalUrl
-    name
-    imageUrl
-    user {
-      firstName
-      lastName
-      avatar
-    }
-  }
-`;
+const queryVariablesSubject = new BehaviorSubject<
+  Party_PlaylistsConnectionVariables
+>({});
+
+export function getPartyPlaylistConnectionVariables() {
+  return queryVariablesSubject.getValue();
+}
+
 export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   query Party_PlaylistsConnection(
     $where: PlaylistWhereInput
@@ -59,38 +69,70 @@ export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
   ${PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT}
 `;
 
-export function getPartyMusicPlaylistsConnectionVariables(partyId: string) {
-  return {
-    where: { parties_some: { id: partyId } },
-    first: PLAYLIST_CONNECTION_PAGINATION_SIZE
-  };
-}
+const PLAYLIST_CONNECTION_PAGINATION_SIZE = 20;
 
 interface Props {
   partyId: string;
+  userId: string;
 }
-export default function PartyMusicPlaylists({ partyId }: Props) {
+export default function PartyMusicPlaylists({ partyId, userId }: Props) {
+  const [filterQuery, setFilterQuery] = React.useState<undefined | string>(
+    undefined
+  );
+
+  const [selectedPlaylists, setSelectedPlaylists] = React.useState<
+    DeepWithoutMaybe<Party_PlaylistsConnectionEdges[]>
+  >([]);
+
+  const [selectingPlaylists, setSelectingPlaylists] = React.useState(false);
+
+  const toggleSelectingPlaylists = () => {
+    setSelectingPlaylists(p => !p);
+    setSelectedPlaylists([]);
+  };
+
+  function handleSelectPlaylist(
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) {
+    setSelectedPlaylists(prev => [...prev, playlist]);
+  }
+
+  function handleDeselectPlaylist(
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) {
+    setSelectedPlaylists(prev =>
+      prev.filter(({ node: { id } }) => id != playlist.node.id)
+    );
+  }
+
+  function resetState() {
+    setSelectedPlaylists([]);
+    setSelectingPlaylists(false);
+  }
+
   const {
     data,
     error,
     networkStatus,
     refetch,
-    fetchMore
+    fetchMore,
+    variables
   } = useParty_PlaylistsConnection({
-    variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+    variables: {
+      where: { parties_some: { id: partyId }, name_contains: filterQuery },
+      first: PLAYLIST_CONNECTION_PAGINATION_SIZE
+    },
     notifyOnNetworkStatusChange: true
   });
 
-  function handleSearch(searchQuery: string) {
-    refetch({ where: { name_contains: searchQuery } });
-  }
+  React.useEffect(() => {
+    queryVariablesSubject.next(variables);
+  }, [variables]);
 
-  const isLoadingInitially = networkStatus == NetworkStatus.loading;
-  const isLoadingOnSearch = networkStatus == NetworkStatus.setVariables;
-  const isLoadingError = networkStatus == NetworkStatus.refetch;
-  const isLoadingMore = networkStatus == NetworkStatus.fetchMore;
-
-  if (isLoadingInitially || !hasGraphqlData(data, ['playlistsConnection']))
+  if (
+    isLoadingInitially(networkStatus) ||
+    !hasGraphqlData(data, ['playlistsConnection'])
+  )
     return (
       <GraphqlLoading
         height="calc(100vh - 90px)"
@@ -102,7 +144,10 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
   if (error)
     return (
       <ErrorSection style={{ padding: 0 }}>
-        <Button loading={isLoadingError} onClick={() => handleRefetch(refetch)}>
+        <Button
+          loading={isLoadingError(networkStatus)}
+          onClick={() => handleRefetch(refetch)}
+        >
           Try again
         </Button>
       </ErrorSection>
@@ -117,9 +162,18 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
       <Affix>
         <AffixedBarContainer>
           <PlaylistsControls
-            loading={isLoadingOnSearch}
-            onSearch={handleSearch}
-          />
+            onSelectPlaylistClick={toggleSelectingPlaylists}
+            selectingPlaylists={selectingPlaylists}
+            loading={isLoadingOnSearch(networkStatus)}
+            onSearch={setFilterQuery}
+          >
+            <CombinePlaylists
+              onFinished={resetState}
+              partyId={partyId}
+              userId={userId}
+              selectedPlaylists={selectedPlaylists}
+            />
+          </PlaylistsControls>
         </AffixedBarContainer>
       </Affix>
       <PartyContentInnerWrapper style={{ padding: 12 }}>
@@ -130,12 +184,27 @@ export default function PartyMusicPlaylists({ partyId }: Props) {
           />
         ) : (
           <PlaylistsList
-            loading={isLoadingOnSearch}
-            canLoadMore={pageInfo.hasNextPage && !isLoadingOnSearch}
-            loadingMore={isLoadingMore}
+            loading={isLoadingOnSearch(networkStatus)}
+            canLoadMore={
+              pageInfo.hasNextPage && !isLoadingOnSearch(networkStatus)
+            }
+            loadingMore={isLoadingMore(networkStatus)}
             onLoadMore={handleLoadMore}
             playlists={edges}
-          />
+          >
+            {playlist => (
+              <PlaylistCard
+                key={playlist.node.id}
+                playlist={playlist}
+                selecting={selectingPlaylists}
+                isSelected={selectedPlaylists.some(
+                  p => p.node.id == playlist.node.id
+                )}
+                onPlaylistCardDeselected={handleDeselectPlaylist}
+                onPlaylistCardSelected={handleSelectPlaylist}
+              />
+            )}
+          </PlaylistsList>
         )}
       </PartyContentInnerWrapper>
     </React.Fragment>

@@ -10,9 +10,7 @@ import { init } from 'spotify-web-sdk';
 import { Subject } from 'rxjs';
 import axios from 'axios';
 
-const NEW_ACCESS_TOKEN_ENDPOINT = `${
-  process.env.NEXT_STATIC_ENDPOINT_URL
-}/auth/spotify/new-token`;
+const NEW_ACCESS_TOKEN_ENDPOINT = `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/spotify/new-token`;
 
 export const SpotifyAuthenticationError$ = new Subject<void>();
 
@@ -20,6 +18,9 @@ function useSpotifyWebSdk() {
   const [shouldAskForNewToken, setShouldAskForANewToken] = React.useState<
     boolean
   >(false);
+
+  const [initializing, setInitializing] = React.useState(true);
+
   const { retrieveFromStorage, saveToStorage } = useLocalStorage();
 
   React.useEffect(() => {
@@ -28,13 +29,16 @@ function useSpotifyWebSdk() {
     const refreshToken = retrieveFromStorage(
       LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN
     );
-    if (!token || !refreshToken) return setShouldAskForANewToken(true);
-
+    if (!token || !refreshToken) {
+      setInitializing(false);
+      return setShouldAskForANewToken(true);
+    }
     init({
       token,
       refreshToken,
       refreshTokenFunction: getNewAccessToken
     });
+    setInitializing(false);
   }, []);
 
   React.useEffect(() => {
@@ -47,7 +51,8 @@ function useSpotifyWebSdk() {
 
   return {
     shouldAskForNewToken,
-    initWithNewTokens
+    initWithNewTokens,
+    initializing
   };
 
   // ---------------------------- //

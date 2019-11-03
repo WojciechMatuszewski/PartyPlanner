@@ -1,7 +1,16 @@
+import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
+import CreatePlaylists from '../CreatePlaylist/CreatePlaylist';
+import { AffixedBarContainer } from '../shared/styles';
+import SavedTrack from './SavedTrack';
+import SavedTracksControls from './SavedTracksControls';
+import SavedTracksList from './SavedTracksList';
+
 import GraphqlLoading from '@components/GraphqlLoading';
+import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
 import { PartyContentInnerWrapper } from '@components/Party/styles';
 import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
+import css from '@emotion/css';
 import styled from '@emotion/styled-base';
 import {
   Full_Saved_Track_FragmentFragment,
@@ -14,15 +23,6 @@ import { NetworkStatus } from 'apollo-client';
 import gql from 'graphql-tag';
 import React from 'react';
 import { ListRowRenderer } from 'react-virtualized';
-import { useBigMusicPlayer } from '../BigMusicPlayer/BigMusicPlayerProvider';
-import { useTrackInfoModal } from '../TrackInfoModal/TrackInfoModalProvider';
-import CreatePlaylists from '../CreatePlaylist/CreatePlaylist';
-import SavedTrack from './SavedTrack';
-import SavedTracksControls from './SavedTracksControls';
-import SavedTracksList from './SavedTracksList';
-import { MOBILE_LIST_BREAKPOINT } from '@components/Party/shared';
-import css from '@emotion/css';
-import { AffixedBarContainer } from '../shared/styles';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding: 12px;
@@ -127,19 +127,10 @@ export default function SavedTracks({ partyId }: Props) {
     playerState
   } = useBigMusicPlayer();
 
-  const { openModal } = useTrackInfoModal();
-
   const handlePlayPauseClick = React.useCallback(
     (track: Full_Saved_Track_FragmentFragment) => {
       audioPlayerCommands$.next({ command: 'toggle', trackInQuestion: track });
       setTrack(track);
-    },
-    []
-  );
-
-  const handleMoreInfoClick = React.useCallback(
-    (track: Full_Saved_Track_FragmentFragment) => {
-      openModal(track);
     },
     []
   );
@@ -184,7 +175,6 @@ export default function SavedTracks({ partyId }: Props) {
         onDeselectTrack={() => deselectTrack(trackToRender)}
         isSelected={isTrackSelected(trackToRender)}
         onPlayPauseClick={handlePlayPauseClick}
-        onShowMoreInfoClick={handleMoreInfoClick}
         selecting={selectingTracks}
         style={style}
         track={trackToRender}

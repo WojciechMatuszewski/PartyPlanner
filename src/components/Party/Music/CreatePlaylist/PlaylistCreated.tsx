@@ -76,7 +76,7 @@ export default function PlaylistCreated({ createdPlaylist }: Props) {
           </PlaylistCreatedParagraph>
           <PlaylistCreatedParagraph>
             <Icon type="lock" style={{ marginRight: 8 }} />
-            Public
+            {createdPlaylist.public ? 'Public' : 'Private'}
           </PlaylistCreatedParagraph>
         </CreatedPlaylistBasicInfo>
       </CreatedPlaylistInfo>

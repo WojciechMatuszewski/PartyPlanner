@@ -1,3 +1,4 @@
+import { NetworkStatus } from 'apollo-client';
 import { PartiesQueryVariables, Maybe } from '@generated/graphql';
 import moment from 'moment';
 import { OperationVariables } from 'react-apollo';
@@ -8,11 +9,13 @@ import { curryN, compose, map, filter } from 'ramda';
 type DeepWithoutMaybeObject<T> = {
   [K in keyof T]: T[K] extends Maybe<infer E> ? DeepWithoutMaybe<E> : T[K];
 };
-export type DeepWithoutMaybe<T> = T extends (Maybe<infer E>)[]
-  ? DeepWithoutMaybeObject<E>[]
-  : T extends object
-  ? DeepWithoutMaybeObject<T>
-  : T;
+export type DeepWithoutMaybe<T> = NonNullable<
+  T extends (Maybe<infer E>)[]
+    ? DeepWithoutMaybeObject<E>[]
+    : T extends object
+    ? DeepWithoutMaybeObject<T>
+    : T
+>;
 type Diff<T, U> = T extends U ? never : T;
 export type NonNullable<T> = Diff<T, null | undefined>;
 
@@ -73,4 +76,20 @@ export async function handleRefetch<QueryVariables extends OperationVariables>(
   } catch (e) {
     message.error('Could not fetch the data');
   }
+}
+
+export function isLoadingInitially(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.loading;
+}
+
+export function isLoadingMore(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.fetchMore;
+}
+
+export function isLoadingError(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.refetch;
+}
+
+export function isLoadingOnSearch(networkStatus: NetworkStatus) {
+  return networkStatus == NetworkStatus.setVariables;
 }

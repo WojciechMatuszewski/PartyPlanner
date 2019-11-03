@@ -1,7 +1,7 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
+import React from 'react';
 
 interface Props {
   children?: React.ReactNode;
@@ -16,7 +16,7 @@ const ErrorWrapper = styled.div`
   flex-direction: column;
 `;
 
-const GraphqlInlineError: React.FC<Props> = ({ children, style, title }) => {
+function GraphqlInlineError({ children, style, title }: Props) {
   return (
     <ErrorWrapper style={style} data-testid="graphqlInlineError">
       <React.Fragment>
@@ -27,6 +27,23 @@ const GraphqlInlineError: React.FC<Props> = ({ children, style, title }) => {
       </React.Fragment>
     </ErrorWrapper>
   );
-};
+}
+
+GraphqlInlineError.WithButton = ({
+  onRetry,
+  loading,
+  ...restOfProps
+}: {
+  onRetry: VoidFunction;
+  loading: boolean;
+  style?: React.CSSProperties;
+  title?: string;
+}) => (
+  <GraphqlInlineError {...restOfProps}>
+    <Button type="danger" onClick={onRetry} loading={loading}>
+      Retry
+    </Button>
+  </GraphqlInlineError>
+);
 
 export default GraphqlInlineError;
