@@ -1,12 +1,14 @@
-import React from 'react';
-import { PartyPage } from '@components/Party/shared';
 import PartyAuthenticator from '@auth/party-auth';
-import PageException from '@components/UI/PageException';
-import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import { PartyContentWrapper } from '@components/Party/styles';
 import PartyMusicPlaylists from '@components/Party/Music/Playlists/Playlists';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
+import { PartyPage } from '@components/Party/shared';
+import { PartyContentWrapper } from '@components/Party/styles';
+import PageException from '@components/UI/PageException';
+import React from 'react';
+import { PartyProvider } from '@components/Party/PartyProvider';
+import SpotifyGuard from '@guards/SpotifyGuard';
 
-const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId }) => {
+const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
   if (!isInParty)
     return (
       <PageException
@@ -20,7 +22,11 @@ const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId }) => {
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-playlists" />
       <PartyContentWrapper>
-        <PartyMusicPlaylists partyId={partyId} />
+        <SpotifyGuard>
+          <PartyProvider userId={userId} partyId={partyId}>
+            <PartyMusicPlaylists partyId={partyId} userId={userId} />
+          </PartyProvider>
+        </SpotifyGuard>
       </PartyContentWrapper>
     </React.Fragment>
   );

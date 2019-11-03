@@ -5,18 +5,21 @@ import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { Button } from 'antd';
 import React from 'react';
 
-import PlaylistCard from './PlaylistCard';
-
 interface Props {
   playlists: DeepWithoutMaybe<Party_PlaylistsConnectionEdges[]>;
   loading: boolean;
   loadingMore: boolean;
   canLoadMore: boolean;
   onLoadMore: VoidFunction;
+  children: (
+    playlist: DeepWithoutMaybe<Party_PlaylistsConnectionEdges>
+  ) => React.ReactNode;
 }
 
-const CardsList = styled.div<{ isLoading: boolean }>`
+const CardsList = styled.ul<{ isLoading: boolean }>`
   display: grid;
+  padding: 0;
+  margin: 0;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-gap: 12px;
   opacity: ${({ isLoading }) => (isLoading ? '0.6' : '1')};
@@ -38,15 +41,12 @@ export default function PlaylistsList({
   loading,
   canLoadMore,
   loadingMore,
-  onLoadMore
+  onLoadMore,
+  children
 }: Props) {
   return (
     <React.Fragment>
-      <CardsList isLoading={loading}>
-        {playlists.map(playlist => (
-          <PlaylistCard playlist={playlist} key={playlist.node.id} />
-        ))}
-      </CardsList>
+      <CardsList isLoading={loading}>{playlists.map(children)}</CardsList>
       {canLoadMore && (
         <Button
           onClick={onLoadMore}

@@ -1,36 +1,31 @@
 import {
-  Full_Saved_Track_FragmentFragment,
-  useParty_CreatePlaylist,
-  Party_CreatePlaylistMutationFn,
-  Party_PlaylistsConnectionQuery
-} from '@generated/graphql';
-import { useMachine } from '@xstate/react';
-import { message, Modal } from 'antd';
-import React from 'react';
-import {
-  createPlaylist,
-  getCurrentUserProfile,
-  addTracksToPlaylist,
-  getPlaylist,
-  Playlist
-} from 'spotify-web-sdk';
-import { actions, Machine } from 'xstate';
-
+  getPartyPlaylistConnectionVariables,
+  PARTY_PLAYLISTS_CONNECTION_QUERY
+} from '../Playlists/Playlists';
 import CreatePlaylistError from './CreatePlaylistError';
 import CreatePlaylistForm, {
   CreatePlaylistFormValues
 } from './CreatePlaylistForm';
 import PlaylistCreated from './PlaylistCreated';
-import css from '@emotion/css';
 import SelectedTracks from './SelectedTracks';
-import SpotifyGuard from '@guards/SpotifyGuard';
-import gql from 'graphql-tag';
+
 import { useParty } from '@components/Party/PartyProvider';
+import { createSpotifyPlaylist } from '@components/Party/shared';
+import css from '@emotion/css';
 import {
-  PARTY_PLAYLISTS_CONNECTION_QUERY,
-  getPartyMusicPlaylistsConnectionVariables,
-  PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
-} from '../Playlists/Playlists';
+  Full_Saved_Track_FragmentFragment,
+  Party_CreatePlaylistMutationFn,
+  Party_PlaylistsConnectionQuery,
+  useParty_CreatePlaylist
+} from '@generated/graphql';
+import { PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
+import SpotifyGuard from '@guards/SpotifyGuard';
+import { useMachine } from '@xstate/react';
+import { message, Modal } from 'antd';
+import gql from 'graphql-tag';
+import React from 'react';
+import { Playlist } from 'spotify-web-sdk';
+import { actions, Machine } from 'xstate';
 
 interface Props {
   tracks: Full_Saved_Track_FragmentFragment[];
@@ -160,15 +155,11 @@ const playlistMachine = Machine(
         partyId,
         userId
       }: MachineContext) => {
-        const { id } = await getCurrentUserProfile();
-
-        const { id: playlistId } = await createPlaylist(id, playlistName, {
-          public: !isPrivate
-        });
-
-        await addTracksToPlaylist(playlistId, tracks.map(track => track.uri));
-
-        const spotifyPlaylistData = await getPlaylist(playlistId);
+        const spotifyPlaylistData = await createSpotifyPlaylist(
+          tracks.map(track => track.uri),
+          playlistName,
+          !isPrivate
+        );
 
         await savePlaylist({
           variables: {
@@ -191,7 +182,7 @@ const playlistMachine = Machine(
                 Party_PlaylistsConnectionQuery
               >({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-                variables: getPartyMusicPlaylistsConnectionVariables(partyId)
+                variables: getPartyPlaylistConnectionVariables()
               });
               if (dataInCache == undefined) return;
 
@@ -199,17 +190,20 @@ const playlistMachine = Machine(
               const { playlistsConnection } = dataInCache;
 
               playlistsConnection.edges.push({
+                __typename: 'PlaylistEdge',
                 node: {
                   __typename: 'Playlist',
                   ...createPlaylist
                 }
               });
 
-              proxy.writeQuery({
+              proxy.writeQuery<Party_PlaylistsConnectionQuery>({
                 query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-                variables: getPartyMusicPlaylistsConnectionVariables(partyId),
+                variables: getPartyPlaylistConnectionVariables(),
                 data: {
-                  playlistConnection: playlistsConnection
+                  playlistsConnection: {
+                    ...playlistsConnection
+                  }
                 }
               });
             } catch (e) {
@@ -267,7 +261,6 @@ export default function CreatePlaylist({ onClose, tracks }: Props) {
 
   return (
     <Modal
-      destroyOnClose={true}
       closable={true}
       maskClosable={true}
       onCancel={handleClose}

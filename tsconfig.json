@@ -3,7 +3,12 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "lib": ["dom", "es2017", "webworker", "es2015"],
+    "lib": [
+      "dom",
+      "es2017",
+      "webworker",
+      "es2015"
+    ],
     "moduleResolution": "node",
     "allowJs": true,
     "noEmit": true,
@@ -19,19 +24,57 @@
     "noImplicitAny": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["./src/components/*"],
-      "@pages/*": ["./pages/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
-      "@shared/*": ["./src/shared/*"],
-      "@generated/*": ["./generated/*"],
-      "@apolloSetup/*": ["./apolloSetup/*"],
-      "@axios/*": ["axios/*"],
-      "@customIcons/*": ["custom-icons/*"],
-      "@graphql/*": ["./graphql/*"],
-      "@hoc/*": ["./src/hoc/*"],
-      "@guards/*": ["./src/guards/*"],
-      "@auth/*": ["./src/auth/*"]
-    }
-  }
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ],
+      "@generated/*": [
+        "./generated/*"
+      ],
+      "@apolloSetup/*": [
+        "./apolloSetup/*"
+      ],
+      "@axios/*": [
+        "axios/*"
+      ],
+      "@customIcons/*": [
+        "custom-icons/*"
+      ],
+      "@graphql/*": [
+        "./graphql/*"
+      ],
+      "@hoc/*": [
+        "./src/hoc/*"
+      ],
+      "@guards/*": [
+        "./src/guards/*"
+      ],
+      "@auth/*": [
+        "./src/auth/*"
+      ]
+    },
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

@@ -1,31 +1,5 @@
-import styled from '@emotion/styled';
 import { List, Typography } from 'antd';
 import React from 'react';
-
-const TRACK_INFO_MODAL_MOBILE_BREAKPOINT = 678;
-
-const DetailedInfoWrapper = styled.div`
-  .actions-heading {
-    width: 100%;
-    color: white;
-    padding-top: 24px;
-  }
-
-  .list-item-content {
-    color: rgba(255, 255, 255, 0.8);
-  }
-  h4 {
-    margin-bottom: 0;
-  }
-  @media screen and (max-width: ${TRACK_INFO_MODAL_MOBILE_BREAKPOINT}px) {
-    .ant-list-item {
-      padding: 8px;
-    }
-    .actions-heading {
-      font-size: 16px;
-    }
-  }
-`;
 
 interface ListDataEntry {
   title: string;
@@ -57,7 +31,7 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
   );
 
   return (
-    <DetailedInfoWrapper>
+    <React.Fragment>
       <Typography.Title level={3} className="actions-heading">
         Detailed information
       </Typography.Title>
@@ -73,7 +47,7 @@ const TrackInfoModalDetailedInformation: React.FC<Props> = ({ track }) => {
           </List.Item>
         )}
       />
-    </DetailedInfoWrapper>
+    </React.Fragment>
   );
 
   function getTrackPopularity(popularity: number) {
