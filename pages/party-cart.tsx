@@ -1,27 +1,28 @@
-import PartyCartTabs from '@components/Party/PartyCart/PartyCartTabs';
+import { NextContextWithApollo } from './_app';
+
+import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
+import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
+import PartyCartDivider from '@components/Party/PartyCart/PartyCartDivider';
 import PartyCartTop from '@components/Party/PartyCart/PartyCartTop';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
+import { PartyProvider } from '@components/Party/PartyProvider';
 import { PartyPage } from '@components/Party/shared';
 import {
   PartyContentInnerWrapper,
   PartyContentWrapper
 } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
+import css from '@emotion/css';
 import styled from '@emotion/styled-base';
-import React from 'react';
-import gql from 'graphql-tag';
 import {
   PartiesQueryQuery,
   PartiesQueryQueryVariables
 } from '@generated/graphql';
-import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
-import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
 import { PARTIES_QUERY } from '@graphql/queries';
-import { NextContextWithApollo } from './_app';
-import { Result, Button } from 'antd';
-import css from '@emotion/css';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { PartyProvider } from '@components/Party/PartyProvider';
+import { Button, Result } from 'antd';
+import React from 'react';
+import PartyCartItems from '@components/Party/PartyCart/PartyCartItems';
 
 const PartyPageContentInnerWrapper = styled(PartyContentInnerWrapper)`
   margin: 24px auto;
@@ -36,38 +37,6 @@ const PartyPageContentInnerWrapper = styled(PartyContentInnerWrapper)`
     border-radius: 0;
     width: 100%;
     max-width: 100%;
-  }
-`;
-
-export const PARTY_CART_ITEMS_CONNECTION_QUERY = gql`
-  query Party_CartItemsConnection(
-    $where: PartyCartItemWhereInput
-    $orderBy: PartyCartItemOrderByInput
-    $skip: Int
-    $after: String
-    $before: String
-    $first: Int
-    $last: Int
-  ) {
-    partyCartItemsConnection(
-      where: $where
-      orderBy: $orderBy
-      skip: $skip
-      after: $after
-      before: $before
-      first: $first
-      last: $last
-    ) {
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      edges {
-        node {
-          id
-        }
-      }
-    }
   }
 `;
 
@@ -127,8 +96,9 @@ const PartyCartPage: PartyPage<InjectedProps> = ({ userData, partyData }) => {
       <PartyContentWrapper>
         <PartyProvider userId={user.id} partyId={party.id}>
           <PartyPageContentInnerWrapper style={{ background: 'white' }}>
-            <PartyCartTop />
-            <PartyCartTabs cartId={party.cart.id} />
+            <PartyCartTop cartId={party.cart.id} partyTitle={party.title} />
+            <PartyCartDivider cartId={party.cart.id} />
+            <PartyCartItems />
           </PartyPageContentInnerWrapper>
         </PartyProvider>
       </PartyContentWrapper>

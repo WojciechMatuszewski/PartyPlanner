@@ -115,7 +115,7 @@ function MenuContent(props: Props) {
             </Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item>
+        <Menu.Item key="party-cart">
           <Link
             href={`/party-cart?id=${props.partyId}`}
             as={`/party/${props.partyId}/cart`}

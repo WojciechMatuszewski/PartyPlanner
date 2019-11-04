@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Icon, Statistic, Typography } from 'antd';
+import { Skeleton, Typography } from 'antd';
 import React from 'react';
 
 const TopHeader = styled.header`
@@ -29,19 +29,26 @@ const TopHeader = styled.header`
 const RightSideWrapper = styled.div`
   padding: 24px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
   flex-direction: column;
 `;
 
-export default function PartyCartTop() {
+interface Props {
+  partyTitle: string;
+  cartId: string;
+}
+export default function PartyCartTop({ partyTitle }: Props) {
+  // probably some kind of query here??
   return (
     <TopHeader>
       <div className="img-wrapper">
         <img src="/static/wallet.svg" />
       </div>
       <RightSideWrapper>
-        <Typography.Title level={3}>Part Cart</Typography.Title>
-        <Statistic
+        <Typography.Title level={3}>{partyTitle}s' cart</Typography.Title>
+        <Skeleton />
+        {/* <Statistic
           prefix={<Icon type="dollar" />}
           title="Estimated Party Cost (PLN)"
           value={112893}
@@ -49,7 +56,7 @@ export default function PartyCartTop() {
         />
         <div>
           <Typography.Title level={3}>People</Typography.Title>
-        </div>
+        </div> */}
       </RightSideWrapper>
     </TopHeader>
   );

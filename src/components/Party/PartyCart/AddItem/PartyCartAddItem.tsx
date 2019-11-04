@@ -1,22 +1,30 @@
-import React from 'react';
-import { Button, Modal, Icon, Result } from 'antd';
-import gql from 'graphql-tag';
+import { useParty } from '../../PartyProvider';
 import {
-  useParty_CreatePartyCartItem,
-  PartyCartItemStatus
-} from '@generated/graphql';
-import { useParty } from '../PartyProvider';
+  getPartyCartItemsVariables,
+  PARTY_CART_ITEMS_CONNECTION_QUERY
+} from '../PartyCartItems';
 import PartyCartAddItemForm, {
   PartyCartAddItemFormValues
 } from './PartyCartAddItemForm';
+
+import {
+  Party_CartItemsConnectionQuery,
+  PartyCartItemStatus,
+  useParty_CreatePartyCartItem
+} from '@generated/graphql';
+import { PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 import useMedia from '@hooks/useMedia';
+import { Button, Icon, Modal, Result } from 'antd';
+import gql from 'graphql-tag';
+import React from 'react';
 
 export const CREATE_PARTY_CART_ITEM_MUTATION = gql`
   mutation Party_CreatePartyCartItem($data: PartyCartItemCreateInput!) {
     createPartyCartItem(data: $data) {
-      id
+      ...PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT
     }
   }
+  ${PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT}
 `;
 interface Props {
   cartId: string;
@@ -50,6 +58,33 @@ export default function PartyCartAddItem({ cartId }: Props) {
             user: { connect: { id: userId } },
             cart: { connect: { id: cartId } },
             status: PartyCartItemStatus.Pending
+          }
+        },
+        update: (proxy, { data }) => {
+          if (!data || data.createPartyCartItem == undefined) return;
+          const { createPartyCartItem } = data;
+          try {
+            const dataInCache = proxy.readQuery<Party_CartItemsConnectionQuery>(
+              {
+                query: PARTY_CART_ITEMS_CONNECTION_QUERY,
+                variables: getPartyCartItemsVariables()
+              }
+            );
+
+            if (!dataInCache) return;
+
+            dataInCache.partyCartItemsConnection.edges.unshift({
+              __typename: 'PartyCartItemEdge',
+              node: createPartyCartItem
+            });
+
+            proxy.writeQuery<Party_CartItemsConnectionQuery>({
+              query: PARTY_CART_ITEMS_CONNECTION_QUERY,
+              variables: getPartyCartItemsVariables(),
+              data: dataInCache
+            });
+          } catch (e) {
+            // noop
           }
         }
       });
