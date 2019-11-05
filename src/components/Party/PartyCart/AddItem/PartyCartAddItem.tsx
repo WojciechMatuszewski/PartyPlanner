@@ -8,7 +8,6 @@ import PartyCartAddItemForm, {
 } from './PartyCartAddItemForm';
 
 import {
-  Party_CartItemsConnectionQuery,
   PartyCartItemStatus,
   useParty_CreatePartyCartItem
 } from '@generated/graphql';
@@ -60,33 +59,13 @@ export default function PartyCartAddItem({ cartId }: Props) {
             status: PartyCartItemStatus.Pending
           }
         },
-        update: (proxy, { data }) => {
-          if (!data || data.createPartyCartItem == undefined) return;
-          const { createPartyCartItem } = data;
-          try {
-            const dataInCache = proxy.readQuery<Party_CartItemsConnectionQuery>(
-              {
-                query: PARTY_CART_ITEMS_CONNECTION_QUERY,
-                variables: getPartyCartItemsVariables()
-              }
-            );
-
-            if (!dataInCache) return;
-
-            dataInCache.partyCartItemsConnection.edges.unshift({
-              __typename: 'PartyCartItemEdge',
-              node: createPartyCartItem
-            });
-
-            proxy.writeQuery<Party_CartItemsConnectionQuery>({
-              query: PARTY_CART_ITEMS_CONNECTION_QUERY,
-              variables: getPartyCartItemsVariables(),
-              data: dataInCache
-            });
-          } catch (e) {
-            // noop
+        refetchQueries: [
+          {
+            query: PARTY_CART_ITEMS_CONNECTION_QUERY,
+            variables: getPartyCartItemsVariables()
           }
-        }
+        ],
+        awaitRefetchQueries: true
       });
     } catch (e) {
       // noop

@@ -6,6 +6,14 @@ import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { Button, Divider, Icon, Input, Table, Tag } from 'antd';
 import React from 'react';
 import { PaginationConfig } from 'antd/lib/table';
+import { PARTY_CART_ITEMS_PAGE_SIZE } from './PartyCartItems';
+import css from '@emotion/css';
+
+const TableStyles = css`
+  .ant-pagination {
+    margin-right: 16px;
+  }
+`;
 
 export type CartItem = DeepWithoutMaybe<Party_CartItemsConnectionEdges>;
 export type CartItemActions =
@@ -25,15 +33,22 @@ interface Props {
   }) => void;
   onUserSearch: (query: string | undefined) => void;
   onStatusFilter: (statuses: PartyCartItemStatus[] | undefined) => void;
+  numberOfCartItems: number;
+  onPageChange: (newPage: number) => void;
+  hasUserQueryApplied: boolean;
 }
 export default function PartyCartItemsTable({
   cartItems,
   loading,
   onCartItemUpdate,
   onUserSearch,
-  onStatusFilter
+  onStatusFilter,
+  numberOfCartItems,
+  onPageChange,
+  hasUserQueryApplied
 }: Props) {
   function handleTableChange(_: PaginationConfig, sorter: any) {
+    if (!sorter.status) return;
     sorter.status.length == 0
       ? onStatusFilter(undefined)
       : onStatusFilter(sorter.status);
@@ -41,6 +56,14 @@ export default function PartyCartItemsTable({
 
   return (
     <Table
+      css={[TableStyles]}
+      rowKey={cartItem => cartItem.node.id}
+      pagination={{
+        pageSize: PARTY_CART_ITEMS_PAGE_SIZE,
+        hideOnSinglePage: true,
+        total: numberOfCartItems,
+        onChange: onPageChange
+      }}
       dataSource={cartItems}
       loading={loading}
       onChange={handleTableChange}
@@ -48,7 +71,12 @@ export default function PartyCartItemsTable({
       <Table.Column<CartItem>
         title="Added By"
         key="addedby"
-        filterIcon={<Icon type="search" />}
+        filterIcon={
+          <Icon
+            type="search"
+            style={{ color: hasUserQueryApplied ? '#1890ff' : undefined }}
+          />
+        }
         filterDropdown={() => (
           <NameFilter
             onSearch={onUserSearch}

@@ -3,6 +3,7 @@ import PartyCartItemsTable, {
   CartItemActions
 } from './PartyCartItemsTable';
 
+import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import {
   Party_CartItemsConnectionQuery,
   Party_CartItemsConnectionVariables,
@@ -15,7 +16,6 @@ import { message, Modal } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { noop } from 'lodash';
 
 const variablesSubject = new BehaviorSubject<
   Party_CartItemsConnectionVariables
@@ -46,11 +46,17 @@ export const PARTY_CART_ITEMS_CONNECTION_QUERY = gql`
       pageInfo {
         hasNextPage
         endCursor
+        startCursor
       }
       edges {
         node {
           ...PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT
         }
+      }
+    }
+    pagination: partyCartItemsConnection(where: $where) {
+      aggregate {
+        count
       }
     }
   }
@@ -68,6 +74,8 @@ export const UPDATE_PARTY_CART_ITEM_MUTATION = gql`
   }
 `;
 
+export const PARTY_CART_ITEMS_PAGE_SIZE = 1;
+
 interface Props {
   cartId: string;
 }
@@ -75,6 +83,8 @@ export default function PartyCartItems({ cartId }: Props) {
   const lastUpdateCartItemPayload = React.useRef<
     Parameters<typeof handleCartItemUpdate>[0] | undefined
   >(undefined);
+
+  const currentPaginationPage = React.useRef<number>(1);
 
   const [statusFilter, setStatusFilter] = React.useState<any[] | undefined>(
     undefined
@@ -88,7 +98,8 @@ export default function PartyCartItems({ cartId }: Props) {
     data,
     loading,
     variables,
-    networkStatus
+    networkStatus,
+    refetch
   } = useParty_CartItemsConnection({
     variables: {
       where: {
@@ -102,7 +113,10 @@ export default function PartyCartItems({ cartId }: Props) {
             { lastName_contains: userQuery }
           ]
         }
-      }
+      },
+      first: PARTY_CART_ITEMS_PAGE_SIZE,
+      skip: undefined,
+      last: undefined
     },
     notifyOnNetworkStatusChange: true
   });
@@ -147,7 +161,8 @@ export default function PartyCartItems({ cartId }: Props) {
             query: PARTY_CART_ITEMS_CONNECTION_QUERY,
             variables: variables
           }
-        ]
+        ],
+        awaitRefetchQueries: true
       });
     } catch (e) {
       // e
@@ -158,19 +173,11 @@ export default function PartyCartItems({ cartId }: Props) {
     variablesSubject.next(variables);
   }, [variables]);
 
-  if (isLoadingInitially(networkStatus))
-    return (
-      <PartyCartItemsTable
-        cartItems={[]}
-        loading={loading}
-        onCartItemUpdate={noop}
-        onStatusFilter={noop}
-        onUserSearch={noop}
-      />
-    );
+  if (isLoadingInitially(networkStatus)) return <GraphqlInlineLoading />;
 
   const {
-    partyCartItemsConnection: { edges }
+    partyCartItemsConnection: { edges, pageInfo },
+    pagination: { aggregate }
   } = data as DeepWithoutMaybe<Party_CartItemsConnectionQuery>;
 
   return (
@@ -178,8 +185,42 @@ export default function PartyCartItems({ cartId }: Props) {
       onStatusFilter={setStatusFilter}
       onUserSearch={setUserQuery}
       cartItems={edges}
+      numberOfCartItems={aggregate.count}
       loading={loading || updateLoading}
       onCartItemUpdate={handleCartItemUpdate}
+      onPageChange={handlePageChange}
+      hasUserQueryApplied={userQuery != undefined}
     />
   );
+
+  function handlePageChange(pageToChangeTo: number) {
+    const currentPage = currentPaginationPage.current;
+
+    if (pageToChangeTo == currentPage) return;
+
+    const pageDiff =
+      Math.abs(currentPage - pageToChangeTo) * PARTY_CART_ITEMS_PAGE_SIZE;
+
+    if (currentPage > pageToChangeTo) {
+      refetch({
+        first: undefined,
+        last: PARTY_CART_ITEMS_PAGE_SIZE,
+        before: pageInfo.startCursor,
+        after: undefined,
+        skip: pageDiff - 1
+      }).then(() => {
+        currentPaginationPage.current = pageToChangeTo;
+      });
+    } else {
+      refetch({
+        first: PARTY_CART_ITEMS_PAGE_SIZE,
+        last: undefined,
+        before: undefined,
+        after: pageInfo.endCursor,
+        skip: pageDiff - 1
+      }).then(() => {
+        currentPaginationPage.current = pageToChangeTo;
+      });
+    }
+  }
 }

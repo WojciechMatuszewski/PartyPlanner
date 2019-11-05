@@ -98,7 +98,7 @@ const PartyCartPage: PartyPage<InjectedProps> = ({ userData, partyData }) => {
           <PartyPageContentInnerWrapper style={{ background: 'white' }}>
             <PartyCartTop cartId={party.cart.id} partyTitle={party.title} />
             <PartyCartDivider cartId={party.cart.id} />
-            <PartyCartItems />
+            <PartyCartItems cartId={party.cart.id} />
           </PartyPageContentInnerWrapper>
         </PartyProvider>
       </PartyContentWrapper>

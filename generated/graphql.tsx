@@ -2390,9 +2390,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
+  joinParty?: Maybe<Scalars['Boolean']>,
   importPlaylistsToParty: Scalars['Boolean'],
   combinePlaylists: Playlist,
-  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2901,6 +2901,11 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
 export type MutationImportPlaylistsToPartyArgs = {
   playlists: Scalars['String'],
   partyId: Scalars['ID']
@@ -2910,11 +2915,6 @@ export type MutationImportPlaylistsToPartyArgs = {
 export type MutationCombinePlaylistsArgs = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
 };
 
 
@@ -9134,13 +9134,19 @@ export type Party_CartItemsConnectionQuery = (
     { __typename?: 'PartyCartItemConnection' }
     & { pageInfo: (
       { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor' | 'startCursor'>
     ), edges: Array<Maybe<(
       { __typename?: 'PartyCartItemEdge' }
       & { node: { __typename?: 'PartyCartItem' }
         & Party_Cart_Items_Connection_Node_FragmentFragment
        }
     )>> }
+  ), pagination: (
+    { __typename?: 'PartyCartItemConnection' }
+    & { aggregate: (
+      { __typename?: 'AggregatePartyCartItem' }
+      & Pick<AggregatePartyCartItem, 'count'>
+    ) }
   ) }
 );
 
@@ -9358,6 +9364,8 @@ export type Party_CartItemsConnectionPartyCartItemsConnection = Party_CartItemsC
 export type Party_CartItemsConnectionPageInfo = Party_CartItemsConnectionQuery['partyCartItemsConnection']['pageInfo'];
 export type Party_CartItemsConnectionEdges = Party_CartItemsConnectionQuery['partyCartItemsConnection']['edges'][0];
 export type Party_CartItemsConnectionNode = Party_Cart_Items_Connection_Node_FragmentFragment;
+export type Party_CartItemsConnectionPagination = Party_CartItemsConnectionQuery['pagination'];
+export type Party_CartItemsConnectionAggregate = Party_CartItemsConnectionQuery['pagination']['aggregate'];
 export const useParty_CartItemsConnection = useParty_CartItemsConnectionQuery;
 export type Party_UpdatePartyCartItemVariables = Party_UpdatePartyCartItemMutationVariables;
 export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCartItemMutation['updatePartyCartItem'];
@@ -10432,11 +10440,17 @@ export const Party_CartItemsConnectionDocument = gql`
     pageInfo {
       hasNextPage
       endCursor
+      startCursor
     }
     edges {
       node {
         ...PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT
       }
+    }
+  }
+  pagination: partyCartItemsConnection(where: $where) {
+    aggregate {
+      count
     }
   }
 }
