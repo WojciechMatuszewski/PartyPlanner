@@ -244,8 +244,6 @@ Party.getInitialProps = async (context): Promise<InjectedProps> => {
     };
   }
 
-  userData.me;
-
   try {
     const partyData = await getParty(partyId, userData.me.id, context);
     return {

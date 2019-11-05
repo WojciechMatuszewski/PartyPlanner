@@ -87,9 +87,6 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
         </Col>
       </Row>
     </header>
-    // <Row css={[RowStyles]}>
-
-    // </Row>
   );
 };
 

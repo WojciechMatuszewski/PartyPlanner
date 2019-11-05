@@ -43,7 +43,7 @@ export default function CombinePlaylistsForm({
             component={FormikInputField}
             name="name"
             formItemProps={{
-              label: 'Playlist Name',
+              label: 'Playlist name',
               colon: false,
               htmlFor: 'name',
               style: { marginBottom: 0 }

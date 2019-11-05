@@ -51,6 +51,12 @@ export default function CreatePlaylistForm({
               type="text"
               placeholder="Playlist name"
               name="playlistName"
+              id="playlistName"
+              formItemProps={{
+                label: 'Playlist name',
+                htmlFor: 'playlistName',
+                colon: false
+              }}
             />
             <Form.Item>
               <Checkbox

@@ -3003,7 +3003,7 @@ export type Party = Node & {
   inviteSecret: Scalars['String'],
   playlist?: Maybe<Array<Playlist>>,
   savedTracks?: Maybe<Array<PartySavedTrack>>,
-  cart?: Maybe<PartyCart>,
+  cart: PartyCart,
 };
 
 
@@ -3117,10 +3117,11 @@ export type PartyCartItem = Node & {
    __typename?: 'PartyCartItem',
   id: Scalars['ID'],
   cart: PartyCart,
-  user?: Maybe<User>,
+  user: User,
   name: Scalars['String'],
   description: Scalars['String'],
   price: Scalars['Float'],
+  status: PartyCartItemStatus,
   quantity: Scalars['Int'],
 };
 
@@ -3139,13 +3140,19 @@ export type PartyCartItemCreateInput = {
   name: Scalars['String'],
   description: Scalars['String'],
   price: Scalars['Float'],
+  status: PartyCartItemStatus,
   quantity?: Maybe<Scalars['Int']>,
   cart: PartyCartCreateOneWithoutItemsInput,
-  user?: Maybe<UserCreateOneInput>,
+  user: UserCreateOneWithoutCartItemsInput,
 };
 
 export type PartyCartItemCreateManyWithoutCartInput = {
   create?: Maybe<Array<PartyCartItemCreateWithoutCartInput>>,
+  connect?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
+};
+
+export type PartyCartItemCreateManyWithoutUserInput = {
+  create?: Maybe<Array<PartyCartItemCreateWithoutUserInput>>,
   connect?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
 };
 
@@ -3154,8 +3161,19 @@ export type PartyCartItemCreateWithoutCartInput = {
   name: Scalars['String'],
   description: Scalars['String'],
   price: Scalars['Float'],
+  status: PartyCartItemStatus,
   quantity?: Maybe<Scalars['Int']>,
-  user?: Maybe<UserCreateOneInput>,
+  user: UserCreateOneWithoutCartItemsInput,
+};
+
+export type PartyCartItemCreateWithoutUserInput = {
+  id?: Maybe<Scalars['ID']>,
+  name: Scalars['String'],
+  description: Scalars['String'],
+  price: Scalars['Float'],
+  status: PartyCartItemStatus,
+  quantity?: Maybe<Scalars['Int']>,
+  cart: PartyCartCreateOneWithoutItemsInput,
 };
 
 /** An edge in a connection. */
@@ -3176,6 +3194,8 @@ export enum PartyCartItemOrderByInput {
   DescriptionDesc = 'description_DESC',
   PriceAsc = 'price_ASC',
   PriceDesc = 'price_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   QuantityAsc = 'quantity_ASC',
   QuantityDesc = 'quantity_DESC'
 }
@@ -3186,6 +3206,7 @@ export type PartyCartItemPreviousValues = {
   name: Scalars['String'],
   description: Scalars['String'],
   price: Scalars['Float'],
+  status: PartyCartItemStatus,
   quantity: Scalars['Int'],
 };
 
@@ -3292,6 +3313,13 @@ export type PartyCartItemScalarWhereInput = {
   price_gt?: Maybe<Scalars['Float']>,
   /** All values greater than or equal the given value. */
   price_gte?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
+  /** All values that are not equal to given value. */
+  status_not?: Maybe<PartyCartItemStatus>,
+  /** All values that are contained in given list. */
+  status_in?: Maybe<Array<PartyCartItemStatus>>,
+  /** All values that are not contained in given list. */
+  status_not_in?: Maybe<Array<PartyCartItemStatus>>,
   quantity?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
   quantity_not?: Maybe<Scalars['Int']>,
@@ -3308,6 +3336,12 @@ export type PartyCartItemScalarWhereInput = {
   /** All values greater than or equal the given value. */
   quantity_gte?: Maybe<Scalars['Int']>,
 };
+
+export enum PartyCartItemStatus {
+  Pending = 'PENDING',
+  Accepted = 'ACCEPTED',
+  Rejected = 'REJECTED'
+}
 
 export type PartyCartItemSubscriptionPayload = {
    __typename?: 'PartyCartItemSubscriptionPayload',
@@ -3339,15 +3373,17 @@ export type PartyCartItemUpdateInput = {
   name?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
   price?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
   quantity?: Maybe<Scalars['Int']>,
   cart?: Maybe<PartyCartUpdateOneRequiredWithoutItemsInput>,
-  user?: Maybe<UserUpdateOneInput>,
+  user?: Maybe<UserUpdateOneRequiredWithoutCartItemsInput>,
 };
 
 export type PartyCartItemUpdateManyDataInput = {
   name?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
   price?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
   quantity?: Maybe<Scalars['Int']>,
 };
 
@@ -3355,6 +3391,7 @@ export type PartyCartItemUpdateManyMutationInput = {
   name?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
   price?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
   quantity?: Maybe<Scalars['Int']>,
 };
 
@@ -3370,6 +3407,18 @@ export type PartyCartItemUpdateManyWithoutCartInput = {
   upsert?: Maybe<Array<PartyCartItemUpsertWithWhereUniqueWithoutCartInput>>,
 };
 
+export type PartyCartItemUpdateManyWithoutUserInput = {
+  create?: Maybe<Array<PartyCartItemCreateWithoutUserInput>>,
+  connect?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
+  set?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
+  disconnect?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
+  delete?: Maybe<Array<PartyCartItemWhereUniqueInput>>,
+  update?: Maybe<Array<PartyCartItemUpdateWithWhereUniqueWithoutUserInput>>,
+  updateMany?: Maybe<Array<PartyCartItemUpdateManyWithWhereNestedInput>>,
+  deleteMany?: Maybe<Array<PartyCartItemScalarWhereInput>>,
+  upsert?: Maybe<Array<PartyCartItemUpsertWithWhereUniqueWithoutUserInput>>,
+};
+
 export type PartyCartItemUpdateManyWithWhereNestedInput = {
   where: PartyCartItemScalarWhereInput,
   data: PartyCartItemUpdateManyDataInput,
@@ -3379,8 +3428,18 @@ export type PartyCartItemUpdateWithoutCartDataInput = {
   name?: Maybe<Scalars['String']>,
   description?: Maybe<Scalars['String']>,
   price?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
   quantity?: Maybe<Scalars['Int']>,
-  user?: Maybe<UserUpdateOneInput>,
+  user?: Maybe<UserUpdateOneRequiredWithoutCartItemsInput>,
+};
+
+export type PartyCartItemUpdateWithoutUserDataInput = {
+  name?: Maybe<Scalars['String']>,
+  description?: Maybe<Scalars['String']>,
+  price?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
+  quantity?: Maybe<Scalars['Int']>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutItemsInput>,
 };
 
 export type PartyCartItemUpdateWithWhereUniqueWithoutCartInput = {
@@ -3388,10 +3447,21 @@ export type PartyCartItemUpdateWithWhereUniqueWithoutCartInput = {
   data: PartyCartItemUpdateWithoutCartDataInput,
 };
 
+export type PartyCartItemUpdateWithWhereUniqueWithoutUserInput = {
+  where: PartyCartItemWhereUniqueInput,
+  data: PartyCartItemUpdateWithoutUserDataInput,
+};
+
 export type PartyCartItemUpsertWithWhereUniqueWithoutCartInput = {
   where: PartyCartItemWhereUniqueInput,
   update: PartyCartItemUpdateWithoutCartDataInput,
   create: PartyCartItemCreateWithoutCartInput,
+};
+
+export type PartyCartItemUpsertWithWhereUniqueWithoutUserInput = {
+  where: PartyCartItemWhereUniqueInput,
+  update: PartyCartItemUpdateWithoutUserDataInput,
+  create: PartyCartItemCreateWithoutUserInput,
 };
 
 export type PartyCartItemWhereInput = {
@@ -3497,6 +3567,13 @@ export type PartyCartItemWhereInput = {
   price_gt?: Maybe<Scalars['Float']>,
   /** All values greater than or equal the given value. */
   price_gte?: Maybe<Scalars['Float']>,
+  status?: Maybe<PartyCartItemStatus>,
+  /** All values that are not equal to given value. */
+  status_not?: Maybe<PartyCartItemStatus>,
+  /** All values that are contained in given list. */
+  status_in?: Maybe<Array<PartyCartItemStatus>>,
+  /** All values that are not contained in given list. */
+  status_not_in?: Maybe<Array<PartyCartItemStatus>>,
   quantity?: Maybe<Scalars['Int']>,
   /** All values that are not equal to given value. */
   quantity_not?: Maybe<Scalars['Int']>,
@@ -3568,11 +3645,9 @@ export type PartyCartUpdateOneRequiredWithoutItemsInput = {
   upsert?: Maybe<PartyCartUpsertWithoutItemsInput>,
 };
 
-export type PartyCartUpdateOneWithoutPartyInput = {
+export type PartyCartUpdateOneRequiredWithoutPartyInput = {
   create?: Maybe<PartyCartCreateWithoutPartyInput>,
   connect?: Maybe<PartyCartWhereUniqueInput>,
-  disconnect?: Maybe<Scalars['Boolean']>,
-  delete?: Maybe<Scalars['Boolean']>,
   update?: Maybe<PartyCartUpdateWithoutPartyDataInput>,
   upsert?: Maybe<PartyCartUpsertWithoutPartyInput>,
 };
@@ -3665,7 +3740,7 @@ export type PartyCreateInput = {
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartCreateOneWithoutPartyInput>,
+  cart: PartyCartCreateOneWithoutPartyInput,
 };
 
 export type PartyCreateManyWithoutMembersInput = {
@@ -3726,7 +3801,7 @@ export type PartyCreateWithoutMembersInput = {
   games?: Maybe<GameCreateManyInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartCreateOneWithoutPartyInput>,
+  cart: PartyCartCreateOneWithoutPartyInput,
 };
 
 export type PartyCreateWithoutPlaylistInput = {
@@ -3744,7 +3819,7 @@ export type PartyCreateWithoutPlaylistInput = {
   games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartCreateOneWithoutPartyInput>,
+  cart: PartyCartCreateOneWithoutPartyInput,
 };
 
 export type PartyCreateWithoutSavedTracksInput = {
@@ -3762,7 +3837,7 @@ export type PartyCreateWithoutSavedTracksInput = {
   games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
-  cart?: Maybe<PartyCartCreateOneWithoutPartyInput>,
+  cart: PartyCartCreateOneWithoutPartyInput,
 };
 
 /** An edge in a connection. */
@@ -4189,7 +4264,7 @@ export type PartySavedTrack = Node & {
   explicit: Scalars['Boolean'],
   name: Scalars['String'],
   previewUrl?: Maybe<Scalars['String']>,
-  uri: Scalars['ID'],
+  uri: Scalars['String'],
   party: Party,
   stringArtists: Scalars['String'],
   length: Scalars['String'],
@@ -4214,7 +4289,7 @@ export type PartySavedTrackCreateInput = {
   explicit: Scalars['Boolean'],
   name: Scalars['String'],
   previewUrl?: Maybe<Scalars['String']>,
-  uri: Scalars['ID'],
+  uri: Scalars['String'],
   stringArtists: Scalars['String'],
   length: Scalars['String'],
   popularity: Scalars['Int'],
@@ -4239,7 +4314,7 @@ export type PartySavedTrackCreateWithoutPartyInput = {
   explicit: Scalars['Boolean'],
   name: Scalars['String'],
   previewUrl?: Maybe<Scalars['String']>,
-  uri: Scalars['ID'],
+  uri: Scalars['String'],
   stringArtists: Scalars['String'],
   length: Scalars['String'],
   popularity: Scalars['Int'],
@@ -4286,7 +4361,7 @@ export type PartySavedTrackPreviousValues = {
   explicit: Scalars['Boolean'],
   name: Scalars['String'],
   previewUrl?: Maybe<Scalars['String']>,
-  uri: Scalars['ID'],
+  uri: Scalars['String'],
   stringArtists: Scalars['String'],
   length: Scalars['String'],
   popularity: Scalars['Int'],
@@ -4425,33 +4500,33 @@ export type PartySavedTrackScalarWhereInput = {
   previewUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   previewUrl_not_ends_with?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  uri_not?: Maybe<Scalars['ID']>,
+  uri_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  uri_in?: Maybe<Array<Scalars['ID']>>,
+  uri_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  uri_not_in?: Maybe<Array<Scalars['ID']>>,
+  uri_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  uri_lt?: Maybe<Scalars['ID']>,
+  uri_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  uri_lte?: Maybe<Scalars['ID']>,
+  uri_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  uri_gt?: Maybe<Scalars['ID']>,
+  uri_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  uri_gte?: Maybe<Scalars['ID']>,
+  uri_gte?: Maybe<Scalars['String']>,
   /** All values containing the given string. */
-  uri_contains?: Maybe<Scalars['ID']>,
+  uri_contains?: Maybe<Scalars['String']>,
   /** All values not containing the given string. */
-  uri_not_contains?: Maybe<Scalars['ID']>,
+  uri_not_contains?: Maybe<Scalars['String']>,
   /** All values starting with the given string. */
-  uri_starts_with?: Maybe<Scalars['ID']>,
+  uri_starts_with?: Maybe<Scalars['String']>,
   /** All values not starting with the given string. */
-  uri_not_starts_with?: Maybe<Scalars['ID']>,
+  uri_not_starts_with?: Maybe<Scalars['String']>,
   /** All values ending with the given string. */
-  uri_ends_with?: Maybe<Scalars['ID']>,
+  uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
-  uri_not_ends_with?: Maybe<Scalars['ID']>,
+  uri_not_ends_with?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   stringArtists_not?: Maybe<Scalars['String']>,
@@ -4555,7 +4630,7 @@ export type PartySavedTrackUpdateDataInput = {
   explicit?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   previewUrl?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   length?: Maybe<Scalars['String']>,
   popularity?: Maybe<Scalars['Int']>,
@@ -4569,7 +4644,7 @@ export type PartySavedTrackUpdateInput = {
   explicit?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   previewUrl?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   length?: Maybe<Scalars['String']>,
   popularity?: Maybe<Scalars['Int']>,
@@ -4583,7 +4658,7 @@ export type PartySavedTrackUpdateManyDataInput = {
   explicit?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   previewUrl?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   length?: Maybe<Scalars['String']>,
   popularity?: Maybe<Scalars['Int']>,
@@ -4607,7 +4682,7 @@ export type PartySavedTrackUpdateManyMutationInput = {
   explicit?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   previewUrl?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   length?: Maybe<Scalars['String']>,
   popularity?: Maybe<Scalars['Int']>,
@@ -4636,7 +4711,7 @@ export type PartySavedTrackUpdateWithoutPartyDataInput = {
   explicit?: Maybe<Scalars['Boolean']>,
   name?: Maybe<Scalars['String']>,
   previewUrl?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   length?: Maybe<Scalars['String']>,
   popularity?: Maybe<Scalars['Int']>,
@@ -4798,33 +4873,33 @@ export type PartySavedTrackWhereInput = {
   previewUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   previewUrl_not_ends_with?: Maybe<Scalars['String']>,
-  uri?: Maybe<Scalars['ID']>,
+  uri?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
-  uri_not?: Maybe<Scalars['ID']>,
+  uri_not?: Maybe<Scalars['String']>,
   /** All values that are contained in given list. */
-  uri_in?: Maybe<Array<Scalars['ID']>>,
+  uri_in?: Maybe<Array<Scalars['String']>>,
   /** All values that are not contained in given list. */
-  uri_not_in?: Maybe<Array<Scalars['ID']>>,
+  uri_not_in?: Maybe<Array<Scalars['String']>>,
   /** All values less than the given value. */
-  uri_lt?: Maybe<Scalars['ID']>,
+  uri_lt?: Maybe<Scalars['String']>,
   /** All values less than or equal the given value. */
-  uri_lte?: Maybe<Scalars['ID']>,
+  uri_lte?: Maybe<Scalars['String']>,
   /** All values greater than the given value. */
-  uri_gt?: Maybe<Scalars['ID']>,
+  uri_gt?: Maybe<Scalars['String']>,
   /** All values greater than or equal the given value. */
-  uri_gte?: Maybe<Scalars['ID']>,
+  uri_gte?: Maybe<Scalars['String']>,
   /** All values containing the given string. */
-  uri_contains?: Maybe<Scalars['ID']>,
+  uri_contains?: Maybe<Scalars['String']>,
   /** All values not containing the given string. */
-  uri_not_contains?: Maybe<Scalars['ID']>,
+  uri_not_contains?: Maybe<Scalars['String']>,
   /** All values starting with the given string. */
-  uri_starts_with?: Maybe<Scalars['ID']>,
+  uri_starts_with?: Maybe<Scalars['String']>,
   /** All values not starting with the given string. */
-  uri_not_starts_with?: Maybe<Scalars['ID']>,
+  uri_not_starts_with?: Maybe<Scalars['String']>,
   /** All values ending with the given string. */
-  uri_ends_with?: Maybe<Scalars['ID']>,
+  uri_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
-  uri_not_ends_with?: Maybe<Scalars['ID']>,
+  uri_not_ends_with?: Maybe<Scalars['String']>,
   stringArtists?: Maybe<Scalars['String']>,
   /** All values that are not equal to given value. */
   stringArtists_not?: Maybe<Scalars['String']>,
@@ -4900,7 +4975,6 @@ export type PartySavedTrackWhereInput = {
 
 export type PartySavedTrackWhereUniqueInput = {
   id?: Maybe<Scalars['ID']>,
-  uri?: Maybe<Scalars['ID']>,
 };
 
 export type PartyScalarWhereInput = {
@@ -5178,7 +5252,7 @@ export type PartyUpdateDataInput = {
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartUpdateOneWithoutPartyInput>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
 };
 
 export type PartyUpdateInput = {
@@ -5196,7 +5270,7 @@ export type PartyUpdateInput = {
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartUpdateOneWithoutPartyInput>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
 };
 
 export type PartyUpdateManyDataInput = {
@@ -5302,7 +5376,7 @@ export type PartyUpdateWithoutMembersDataInput = {
   games?: Maybe<GameUpdateManyInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartUpdateOneWithoutPartyInput>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
 };
 
 export type PartyUpdateWithoutPlaylistDataInput = {
@@ -5319,7 +5393,7 @@ export type PartyUpdateWithoutPlaylistDataInput = {
   games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
-  cart?: Maybe<PartyCartUpdateOneWithoutPartyInput>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
 };
 
 export type PartyUpdateWithoutSavedTracksDataInput = {
@@ -5336,7 +5410,7 @@ export type PartyUpdateWithoutSavedTracksDataInput = {
   games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
-  cart?: Maybe<PartyCartUpdateOneWithoutPartyInput>,
+  cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
 };
 
 export type PartyUpdateWithWhereUniqueWithoutMembersInput = {
@@ -6324,6 +6398,7 @@ export type Query = {
   hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   paginateUsers: UserConnection,
@@ -6758,6 +6833,11 @@ export type QueryCanJoinPartyArgs = {
 };
 
 
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
+};
+
+
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -7126,6 +7206,7 @@ export type User = Node & {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  cartItems?: Maybe<Array<PartyCartItem>>,
   pendingInvitations?: Maybe<Array<User>>,
   status: UserStatus,
 };
@@ -7186,6 +7267,17 @@ export type UserChatsArgs = {
 };
 
 
+export type UserCartItemsArgs = {
+  where?: Maybe<PartyCartItemWhereInput>,
+  orderBy?: Maybe<PartyCartItemOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
 export type UserPendingInvitationsArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -7224,6 +7316,7 @@ export type UserCreateInput = {
   pendingFriendInvitations?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
 
 export type UserCreateManyInput = {
@@ -7246,9 +7339,34 @@ export type UserCreateOneInput = {
   connect?: Maybe<UserWhereUniqueInput>,
 };
 
+export type UserCreateOneWithoutCartItemsInput = {
+  create?: Maybe<UserCreateWithoutCartItemsInput>,
+  connect?: Maybe<UserWhereUniqueInput>,
+};
+
 export type UserCreateOneWithoutPendingPartyInvitationsInput = {
   create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>,
   connect?: Maybe<UserWhereUniqueInput>,
+};
+
+export type UserCreateWithoutCartItemsInput = {
+  id?: Maybe<Scalars['ID']>,
+  email: Scalars['String'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  password: Scalars['String'],
+  lastOnline?: Maybe<Scalars['DateTime']>,
+  deleted?: Maybe<Scalars['Boolean']>,
+  provider?: Maybe<SocialMediaType>,
+  avatar?: Maybe<Scalars['String']>,
+  thirdPartyId?: Maybe<Scalars['String']>,
+  resetToken?: Maybe<Scalars['String']>,
+  resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  parties?: Maybe<PartyCreateManyWithoutMembersInput>,
+  friends?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
+  chats?: Maybe<ChatCreateManyWithoutMembersInput>,
 };
 
 export type UserCreateWithoutChatsInput = {
@@ -7268,6 +7386,7 @@ export type UserCreateWithoutChatsInput = {
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
+  cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
 
 export type UserCreateWithoutPartiesInput = {
@@ -7287,6 +7406,7 @@ export type UserCreateWithoutPartiesInput = {
   pendingFriendInvitations?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
 
 export type UserCreateWithoutPendingPartyInvitationsInput = {
@@ -7306,6 +7426,7 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<UserCreateManyInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
 
 /** An edge in a connection. */
@@ -7709,6 +7830,7 @@ export type UserUpdateDataInput = {
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
 
 export type UserUpdateInput = {
@@ -7728,6 +7850,7 @@ export type UserUpdateInput = {
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
 
 export type UserUpdateManyDataInput = {
@@ -7799,15 +7922,6 @@ export type UserUpdateManyWithWhereNestedInput = {
   data: UserUpdateManyDataInput,
 };
 
-export type UserUpdateOneInput = {
-  create?: Maybe<UserCreateInput>,
-  connect?: Maybe<UserWhereUniqueInput>,
-  disconnect?: Maybe<Scalars['Boolean']>,
-  delete?: Maybe<Scalars['Boolean']>,
-  update?: Maybe<UserUpdateDataInput>,
-  upsert?: Maybe<UserUpsertNestedInput>,
-};
-
 export type UserUpdateOneRequiredInput = {
   create?: Maybe<UserCreateInput>,
   connect?: Maybe<UserWhereUniqueInput>,
@@ -7815,11 +7929,37 @@ export type UserUpdateOneRequiredInput = {
   upsert?: Maybe<UserUpsertNestedInput>,
 };
 
+export type UserUpdateOneRequiredWithoutCartItemsInput = {
+  create?: Maybe<UserCreateWithoutCartItemsInput>,
+  connect?: Maybe<UserWhereUniqueInput>,
+  update?: Maybe<UserUpdateWithoutCartItemsDataInput>,
+  upsert?: Maybe<UserUpsertWithoutCartItemsInput>,
+};
+
 export type UserUpdateOneRequiredWithoutPendingPartyInvitationsInput = {
   create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>,
   connect?: Maybe<UserWhereUniqueInput>,
   update?: Maybe<UserUpdateWithoutPendingPartyInvitationsDataInput>,
   upsert?: Maybe<UserUpsertWithoutPendingPartyInvitationsInput>,
+};
+
+export type UserUpdateWithoutCartItemsDataInput = {
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+  lastOnline?: Maybe<Scalars['DateTime']>,
+  deleted?: Maybe<Scalars['Boolean']>,
+  provider?: Maybe<SocialMediaType>,
+  avatar?: Maybe<Scalars['String']>,
+  thirdPartyId?: Maybe<Scalars['String']>,
+  resetToken?: Maybe<Scalars['String']>,
+  resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
+  friends?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
+  chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
 };
 
 export type UserUpdateWithoutChatsDataInput = {
@@ -7838,6 +7978,7 @@ export type UserUpdateWithoutChatsDataInput = {
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
 
 export type UserUpdateWithoutPartiesDataInput = {
@@ -7856,6 +7997,7 @@ export type UserUpdateWithoutPartiesDataInput = {
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
 
 export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
@@ -7874,6 +8016,7 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
 
 export type UserUpdateWithWhereUniqueNestedInput = {
@@ -7894,6 +8037,11 @@ export type UserUpdateWithWhereUniqueWithoutPartiesInput = {
 export type UserUpsertNestedInput = {
   update: UserUpdateDataInput,
   create: UserCreateInput,
+};
+
+export type UserUpsertWithoutCartItemsInput = {
+  update: UserUpdateWithoutCartItemsDataInput,
+  create: UserCreateWithoutCartItemsInput,
 };
 
 export type UserUpsertWithoutPendingPartyInvitationsInput = {
@@ -8227,6 +8375,9 @@ export type UserWhereInput = {
   chats_every?: Maybe<ChatWhereInput>,
   chats_some?: Maybe<ChatWhereInput>,
   chats_none?: Maybe<ChatWhereInput>,
+  cartItems_every?: Maybe<PartyCartItemWhereInput>,
+  cartItems_some?: Maybe<PartyCartItemWhereInput>,
+  cartItems_none?: Maybe<PartyCartItemWhereInput>,
 };
 
 export type UserWhereUniqueInput = {
@@ -8245,7 +8396,10 @@ export type Party_FragmentFragment = (
   ), members: Maybe<Array<(
     { __typename?: 'User' }
     & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
-  )>> }
+  )>>, cart: (
+    { __typename?: 'PartyCart' }
+    & Pick<PartyCart, 'id'>
+  ) }
 );
 
 export type Message_FragmentFragment = (
@@ -8304,6 +8458,15 @@ export type Party_Playlists_Connection_Node_FragmentFragment = (
     { __typename?: 'PartySavedTrack' }
     & Pick<PartySavedTrack, 'id' | 'uri'>
   )>> }
+);
+
+export type Party_Cart_Items_Connection_Node_FragmentFragment = (
+  { __typename?: 'PartyCartItem' }
+  & Pick<PartyCartItem, 'id' | 'name' | 'price' | 'quantity' | 'status'>
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'firstName' | 'lastName'>
+  ) }
 );
 
 export type SignupMutationVariables = {
@@ -8948,6 +9111,75 @@ export type Party_SavedTracksConnectionQuery = (
   ) }
 );
 
+export type Party_CreatePartyCartItemMutationVariables = {
+  data: PartyCartItemCreateInput
+};
+
+
+export type Party_CreatePartyCartItemMutation = (
+  { __typename?: 'Mutation' }
+  & { createPartyCartItem: { __typename?: 'PartyCartItem' }
+    & Party_Cart_Items_Connection_Node_FragmentFragment
+   }
+);
+
+export type Party_CartItemsConnectionQueryVariables = {
+  where?: Maybe<PartyCartItemWhereInput>,
+  orderBy?: Maybe<PartyCartItemOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type Party_CartItemsConnectionQuery = (
+  { __typename?: 'Query' }
+  & { partyCartItemsConnection: (
+    { __typename?: 'PartyCartItemConnection' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor' | 'startCursor'>
+    ), edges: Array<Maybe<(
+      { __typename?: 'PartyCartItemEdge' }
+      & { node: { __typename?: 'PartyCartItem' }
+        & Party_Cart_Items_Connection_Node_FragmentFragment
+       }
+    )>> }
+  ), pagination: (
+    { __typename?: 'PartyCartItemConnection' }
+    & { aggregate: (
+      { __typename?: 'AggregatePartyCartItem' }
+      & Pick<AggregatePartyCartItem, 'count'>
+    ) }
+  ) }
+);
+
+export type Party_UpdatePartyCartItemMutationVariables = {
+  data: PartyCartItemUpdateInput,
+  where: PartyCartItemWhereUniqueInput
+};
+
+
+export type Party_UpdatePartyCartItemMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePartyCartItem: Maybe<(
+    { __typename?: 'PartyCartItem' }
+    & Pick<PartyCartItem, 'id' | 'quantity' | 'price'>
+  )> }
+);
+
+export type Party_CartCostQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type Party_CartCostQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'partyCartCost'>
+);
+
 export type PartyDashboardParticipantsQueryQueryVariables = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -8989,6 +9221,7 @@ export type UserFragment = (
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
+export type Party_FragmentCart = Party_FragmentFragment['cart'];
 export type Message_FragmentAuthor = Message_FragmentFragment['author'];
 export type Party_Invitation_FragmentInvitedBy = Party_Invitation_FragmentFragment['invitedBy'];
 export type Party_Invitation_FragmentUser = Party_Invitation_FragmentFragment['user'];
@@ -8998,6 +9231,7 @@ export type Last_Chat_Message_FragmentAuthor = Last_Chat_Message_FragmentFragmen
 export type Full_Saved_Track_FragmentAlbum = Full_Saved_Track_FragmentFragment['album'];
 export type Party_Playlists_Connection_Node_FragmentUser = Party_Playlists_Connection_Node_FragmentFragment['user'];
 export type Party_Playlists_Connection_Node_FragmentTracks = Party_Playlists_Connection_Node_FragmentFragment['tracks'][0];
+export type Party_Cart_Items_Connection_Node_FragmentUser = Party_Cart_Items_Connection_Node_FragmentFragment['user'];
 export type SignupVariables = SignupMutationVariables;
 export type SignupSignup = SignupMutation['signup'];
 export const useSignup = useSignupMutation;
@@ -9138,6 +9372,22 @@ export type Party_SavedTracksConnectionEdges = Party_SavedTracksConnectionQuery[
 export type Party_SavedTracksConnectionNode = Full_Saved_Track_FragmentFragment;
 export type Party_SavedTracksConnectionPageInfo = Party_SavedTracksConnectionQuery['partySavedTracksConnection']['pageInfo'];
 export const useParty_SavedTracksConnection = useParty_SavedTracksConnectionQuery;
+export type Party_CreatePartyCartItemVariables = Party_CreatePartyCartItemMutationVariables;
+export type Party_CreatePartyCartItemCreatePartyCartItem = Party_Cart_Items_Connection_Node_FragmentFragment;
+export const useParty_CreatePartyCartItem = useParty_CreatePartyCartItemMutation;
+export type Party_CartItemsConnectionVariables = Party_CartItemsConnectionQueryVariables;
+export type Party_CartItemsConnectionPartyCartItemsConnection = Party_CartItemsConnectionQuery['partyCartItemsConnection'];
+export type Party_CartItemsConnectionPageInfo = Party_CartItemsConnectionQuery['partyCartItemsConnection']['pageInfo'];
+export type Party_CartItemsConnectionEdges = Party_CartItemsConnectionQuery['partyCartItemsConnection']['edges'][0];
+export type Party_CartItemsConnectionNode = Party_Cart_Items_Connection_Node_FragmentFragment;
+export type Party_CartItemsConnectionPagination = Party_CartItemsConnectionQuery['pagination'];
+export type Party_CartItemsConnectionAggregate = Party_CartItemsConnectionQuery['pagination']['aggregate'];
+export const useParty_CartItemsConnection = useParty_CartItemsConnectionQuery;
+export type Party_UpdatePartyCartItemVariables = Party_UpdatePartyCartItemMutationVariables;
+export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCartItemMutation['updatePartyCartItem'];
+export const useParty_UpdatePartyCartItem = useParty_UpdatePartyCartItemMutation;
+export type Party_CartCostVariables = Party_CartCostQueryVariables;
+export const useParty_CartCost = useParty_CartCostQuery;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
@@ -9169,6 +9419,9 @@ export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQ
   end
   isPublic
   inviteSecret
+  cart {
+    id
+  }
 }
     `;
 export const Message_FragmentFragmentDoc = gql`
@@ -9256,6 +9509,19 @@ export const Party_Playlists_Connection_Node_FragmentFragmentDoc = gql`
   tracks {
     id
     uri
+  }
+}
+    `;
+export const Party_Cart_Items_Connection_Node_FragmentFragmentDoc = gql`
+    fragment PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT on PartyCartItem {
+  id
+  name
+  price
+  quantity
+  status
+  user {
+    firstName
+    lastName
   }
 }
     `;
@@ -10165,6 +10431,108 @@ export type Party_SavedTracksConnectionComponentProps = Omit<ApolloReactComponen
       
 export type Party_SavedTracksConnectionQueryHookResult = ReturnType<typeof useParty_SavedTracksConnectionQuery>;
 export type Party_SavedTracksConnectionQueryResult = ApolloReactCommon.QueryResult<Party_SavedTracksConnectionQuery, Party_SavedTracksConnectionQueryVariables>;
+export const Party_CreatePartyCartItemDocument = gql`
+    mutation Party_CreatePartyCartItem($data: PartyCartItemCreateInput!) {
+  createPartyCartItem(data: $data) {
+    ...PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT
+  }
+}
+    ${Party_Cart_Items_Connection_Node_FragmentFragmentDoc}`;
+export type Party_CreatePartyCartItemMutationFn = ApolloReactCommon.MutationFunction<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>;
+export type Party_CreatePartyCartItemComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>, 'mutation'>;
+
+    export const Party_CreatePartyCartItemComponent = (props: Party_CreatePartyCartItemComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables> mutation={Party_CreatePartyCartItemDocument} {...props} />
+    );
+    
+
+    export function useParty_CreatePartyCartItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>(Party_CreatePartyCartItemDocument, baseOptions);
+    }
+export type Party_CreatePartyCartItemMutationHookResult = ReturnType<typeof useParty_CreatePartyCartItemMutation>;
+export type Party_CreatePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_CreatePartyCartItemMutation>;
+export type Party_CreatePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_CreatePartyCartItemMutation, Party_CreatePartyCartItemMutationVariables>;
+export const Party_CartItemsConnectionDocument = gql`
+    query Party_CartItemsConnection($where: PartyCartItemWhereInput, $orderBy: PartyCartItemOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
+  partyCartItemsConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
+    pageInfo {
+      hasNextPage
+      endCursor
+      startCursor
+    }
+    edges {
+      node {
+        ...PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT
+      }
+    }
+  }
+  pagination: partyCartItemsConnection(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+    ${Party_Cart_Items_Connection_Node_FragmentFragmentDoc}`;
+export type Party_CartItemsConnectionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>, 'query'>;
+
+    export const Party_CartItemsConnectionComponent = (props: Party_CartItemsConnectionComponentProps) => (
+      <ApolloReactComponents.Query<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables> query={Party_CartItemsConnectionDocument} {...props} />
+    );
+    
+
+    export function useParty_CartItemsConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>(Party_CartItemsConnectionDocument, baseOptions);
+    }
+      export function useParty_CartItemsConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>(Party_CartItemsConnectionDocument, baseOptions);
+      }
+      
+export type Party_CartItemsConnectionQueryHookResult = ReturnType<typeof useParty_CartItemsConnectionQuery>;
+export type Party_CartItemsConnectionQueryResult = ApolloReactCommon.QueryResult<Party_CartItemsConnectionQuery, Party_CartItemsConnectionQueryVariables>;
+export const Party_UpdatePartyCartItemDocument = gql`
+    mutation Party_UpdatePartyCartItem($data: PartyCartItemUpdateInput!, $where: PartyCartItemWhereUniqueInput!) {
+  updatePartyCartItem(data: $data, where: $where) {
+    id
+    quantity
+    price
+  }
+}
+    `;
+export type Party_UpdatePartyCartItemMutationFn = ApolloReactCommon.MutationFunction<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>;
+export type Party_UpdatePartyCartItemComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>, 'mutation'>;
+
+    export const Party_UpdatePartyCartItemComponent = (props: Party_UpdatePartyCartItemComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables> mutation={Party_UpdatePartyCartItemDocument} {...props} />
+    );
+    
+
+    export function useParty_UpdatePartyCartItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>(Party_UpdatePartyCartItemDocument, baseOptions);
+    }
+export type Party_UpdatePartyCartItemMutationHookResult = ReturnType<typeof useParty_UpdatePartyCartItemMutation>;
+export type Party_UpdatePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyCartItemMutation>;
+export type Party_UpdatePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>;
+export const Party_CartCostDocument = gql`
+    query Party_CartCost($id: ID!) {
+  partyCartCost(id: $id)
+}
+    `;
+export type Party_CartCostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_CartCostQuery, Party_CartCostQueryVariables>, 'query'> & ({ variables: Party_CartCostQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const Party_CartCostComponent = (props: Party_CartCostComponentProps) => (
+      <ApolloReactComponents.Query<Party_CartCostQuery, Party_CartCostQueryVariables> query={Party_CartCostDocument} {...props} />
+    );
+    
+
+    export function useParty_CartCostQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_CartCostQuery, Party_CartCostQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_CartCostQuery, Party_CartCostQueryVariables>(Party_CartCostDocument, baseOptions);
+    }
+      export function useParty_CartCostLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_CartCostQuery, Party_CartCostQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_CartCostQuery, Party_CartCostQueryVariables>(Party_CartCostDocument, baseOptions);
+      }
+      
+export type Party_CartCostQueryHookResult = ReturnType<typeof useParty_CartCostQuery>;
+export type Party_CartCostQueryResult = ApolloReactCommon.QueryResult<Party_CartCostQuery, Party_CartCostQueryVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
     query partyDashboardParticipantsQuery($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, before: $before, first: $first, last: $last, after: $after) {

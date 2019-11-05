@@ -56,6 +56,10 @@
       "dest": "party-parties"
     },
     {
+      "src": "/party/(?<id>[^/]+)/cart",
+      "dest": "party-cart?id=$id"
+    },
+    {
       "src": "/party/(?<id>[^/]+)/music/discover",
       "dest": "party-music-discover?id=$id"
     },

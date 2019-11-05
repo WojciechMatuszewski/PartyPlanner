@@ -115,6 +115,17 @@ function MenuContent(props: Props) {
             </Link>
           </Menu.Item>
         </Menu.SubMenu>
+        <Menu.Item key="party-cart">
+          <Link
+            href={`/party-cart?id=${props.partyId}`}
+            as={`/party/${props.partyId}/cart`}
+          >
+            <a>
+              <Icon type="shopping-cart" />
+              <span>Cart</span>
+            </a>
+          </Link>
+        </Menu.Item>
       </Menu>
     </React.Fragment>
   );

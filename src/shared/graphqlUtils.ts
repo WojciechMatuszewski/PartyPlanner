@@ -22,7 +22,7 @@ export type NonNullable<T> = Diff<T, null | undefined>;
 export function hasGraphqlData<GraphqlDataType extends any>(
   data: GraphqlDataType | undefined,
   pathsToCheck: string[]
-): data is DeepWithoutMaybe<GraphqlDataType> {
+): data is NonNullable<DeepWithoutMaybe<GraphqlDataType>> {
   if (data == null) return false;
 
   return compose(

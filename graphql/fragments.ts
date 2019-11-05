@@ -19,12 +19,14 @@ export const PARTY_FRAGMENT = gql`
       lastName
       id
     }
-
     colorTint
     start
     end
     isPublic
     inviteSecret
+    cart {
+      id
+    }
   }
 `;
 
@@ -117,6 +119,20 @@ export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
     tracks {
       id
       uri
+    }
+  }
+`;
+
+export const PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT = gql`
+  fragment PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT on PartyCartItem {
+    id
+    name
+    price
+    quantity
+    status
+    user {
+      firstName
+      lastName
     }
   }
 `;

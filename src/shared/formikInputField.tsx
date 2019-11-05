@@ -4,6 +4,13 @@ import FormItem from 'antd/lib/form/FormItem';
 import { Input } from 'antd';
 import { InputProps } from 'antd/lib/input';
 import { FormItemProps } from 'antd/es/form/FormItem';
+import css from '@emotion/css';
+
+const FormItemStyles = css`
+  .ant-form-item-label {
+    line-height: 1;
+  }
+`;
 
 /* eslint-disable */
 const FormikInputField: React.FC<
@@ -16,6 +23,7 @@ const FormikInputField: React.FC<
     <FormItem
       {...formItemProps}
       hasFeedback={true}
+      css={[FormItemStyles]}
       help={isInvalid ? errorFeedback : null}
       validateStatus={isInvalid ? 'error' : isValid ? 'success' : ''}
     >

@@ -102,7 +102,10 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
         inviteSecret: uuid(),
         normalizedTitle: restOfFormFields.title
           .toLowerCase()
-          .replace(/[ -.,]/g, '')
+          .replace(/[ -.,]/g, ''),
+        cart: {
+          create: {}
+        }
       }
     };
   }
