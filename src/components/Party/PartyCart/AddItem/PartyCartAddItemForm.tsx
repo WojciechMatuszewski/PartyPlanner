@@ -77,6 +77,11 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
             id="name"
             type="text"
             placeholder="Name..."
+            formItemProps={{
+              label: 'Name',
+              colon: false,
+              htmlFor: 'name'
+            }}
           />
           <Field
             component={FormikInputField}
@@ -86,6 +91,11 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
             rows={2}
             style={{ marginBottom: 0 }}
             placeholder="Description"
+            formItemProps={{
+              label: 'Description',
+              colon: false,
+              htmlFor: 'description'
+            }}
           />
           <Row gutter={12}>
             <Col span={16}>
@@ -98,6 +108,7 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
                 formItemProps={{
                   label: 'Price',
                   colon: false,
+                  htmlFor: 'price',
                   css: [BlockFormItemStyles]
                 }}
               />
@@ -110,6 +121,7 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
                 formItemProps={{
                   label: 'Quantity',
                   colon: false,
+                  htmlFor: 'quantity',
                   css: [BlockFormItemStyles]
                 }}
               />

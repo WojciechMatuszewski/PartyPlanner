@@ -1,8 +1,8 @@
 import React from 'react';
 import { FieldProps } from 'formik';
-import InputNumber, { InputNumberProps } from 'antd/lib/input-number';
+import { InputNumberProps } from 'antd/lib/input-number';
 import { FormItemProps } from 'antd/es/form/FormItem';
-import { Form } from 'antd';
+import { Form, InputNumber } from 'antd';
 
 type Props = FieldProps & InputNumberProps & { formItemProps: FormItemProps };
 export default function FormikNumberField({

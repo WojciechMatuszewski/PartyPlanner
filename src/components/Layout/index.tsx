@@ -10,7 +10,6 @@ const LayoutStyles = css`
     min-height: calc(100vh - 66px);
     display: flex;
     position: relative;
-    overflow: hidden;
     background: #fafafa;
   }
 `;

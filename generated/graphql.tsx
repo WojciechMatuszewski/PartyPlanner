@@ -2390,9 +2390,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
-  joinParty?: Maybe<Scalars['Boolean']>,
   importPlaylistsToParty: Scalars['Boolean'],
   combinePlaylists: Playlist,
+  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2901,11 +2901,6 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type MutationImportPlaylistsToPartyArgs = {
   playlists: Scalars['String'],
   partyId: Scalars['ID']
@@ -2915,6 +2910,11 @@ export type MutationImportPlaylistsToPartyArgs = {
 export type MutationCombinePlaylistsArgs = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
@@ -6398,6 +6398,7 @@ export type Query = {
   hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   paginateUsers: UserConnection,
@@ -6829,6 +6830,11 @@ export type QueryCanJoinPartyArgs = {
   userId: Scalars['String'],
   inviteSecret: Scalars['String'],
   partyId: Scalars['String']
+};
+
+
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
 };
 
 
@@ -9160,8 +9166,18 @@ export type Party_UpdatePartyCartItemMutation = (
   { __typename?: 'Mutation' }
   & { updatePartyCartItem: Maybe<(
     { __typename?: 'PartyCartItem' }
-    & Pick<PartyCartItem, 'id'>
+    & Pick<PartyCartItem, 'id' | 'quantity' | 'price'>
   )> }
+);
+
+export type Party_CartCostQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type Party_CartCostQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'partyCartCost'>
 );
 
 export type PartyDashboardParticipantsQueryQueryVariables = {
@@ -9370,6 +9386,8 @@ export const useParty_CartItemsConnection = useParty_CartItemsConnectionQuery;
 export type Party_UpdatePartyCartItemVariables = Party_UpdatePartyCartItemMutationVariables;
 export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCartItemMutation['updatePartyCartItem'];
 export const useParty_UpdatePartyCartItem = useParty_UpdatePartyCartItemMutation;
+export type Party_CartCostVariables = Party_CartCostQueryVariables;
+export const useParty_CartCost = useParty_CartCostQuery;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
@@ -10475,6 +10493,8 @@ export const Party_UpdatePartyCartItemDocument = gql`
     mutation Party_UpdatePartyCartItem($data: PartyCartItemUpdateInput!, $where: PartyCartItemWhereUniqueInput!) {
   updatePartyCartItem(data: $data, where: $where) {
     id
+    quantity
+    price
   }
 }
     `;
@@ -10492,6 +10512,27 @@ export type Party_UpdatePartyCartItemComponentProps = Omit<ApolloReactComponents
 export type Party_UpdatePartyCartItemMutationHookResult = ReturnType<typeof useParty_UpdatePartyCartItemMutation>;
 export type Party_UpdatePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyCartItemMutation>;
 export type Party_UpdatePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>;
+export const Party_CartCostDocument = gql`
+    query Party_CartCost($id: ID!) {
+  partyCartCost(id: $id)
+}
+    `;
+export type Party_CartCostComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_CartCostQuery, Party_CartCostQueryVariables>, 'query'> & ({ variables: Party_CartCostQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const Party_CartCostComponent = (props: Party_CartCostComponentProps) => (
+      <ApolloReactComponents.Query<Party_CartCostQuery, Party_CartCostQueryVariables> query={Party_CartCostDocument} {...props} />
+    );
+    
+
+    export function useParty_CartCostQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_CartCostQuery, Party_CartCostQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_CartCostQuery, Party_CartCostQueryVariables>(Party_CartCostDocument, baseOptions);
+    }
+      export function useParty_CartCostLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_CartCostQuery, Party_CartCostQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_CartCostQuery, Party_CartCostQueryVariables>(Party_CartCostDocument, baseOptions);
+      }
+      
+export type Party_CartCostQueryHookResult = ReturnType<typeof useParty_CartCostQuery>;
+export type Party_CartCostQueryResult = ApolloReactCommon.QueryResult<Party_CartCostQuery, Party_CartCostQueryVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
     query partyDashboardParticipantsQuery($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, before: $before, first: $first, last: $last, after: $after) {

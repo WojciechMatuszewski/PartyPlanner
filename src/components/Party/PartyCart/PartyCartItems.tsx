@@ -8,7 +8,9 @@ import {
   Party_CartItemsConnectionQuery,
   Party_CartItemsConnectionVariables,
   useParty_CartItemsConnection,
-  useParty_UpdatePartyCartItem
+  useParty_UpdatePartyCartItem,
+  PartyCartItemStatus,
+  Party_CartCostQuery
 } from '@generated/graphql';
 import { PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 import { DeepWithoutMaybe, isLoadingInitially } from '@shared/graphqlUtils';
@@ -16,6 +18,7 @@ import { message, Modal } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
 import { BehaviorSubject } from 'rxjs';
+import { PARTY_CART_COST_QUERY } from './PartyCartTop';
 
 const variablesSubject = new BehaviorSubject<
   Party_CartItemsConnectionVariables
@@ -70,11 +73,13 @@ export const UPDATE_PARTY_CART_ITEM_MUTATION = gql`
   ) {
     updatePartyCartItem(data: $data, where: $where) {
       id
+      quantity
+      price
     }
   }
 `;
 
-export const PARTY_CART_ITEMS_PAGE_SIZE = 1;
+export const PARTY_CART_ITEMS_PAGE_SIZE = 20;
 
 interface Props {
   cartId: string;
@@ -162,10 +167,60 @@ export default function PartyCartItems({ cartId }: Props) {
             variables: variables
           }
         ],
-        awaitRefetchQueries: true
+        awaitRefetchQueries: true,
+        update: (proxy, { data }) => {
+          if (!data || data.updatePartyCartItem == undefined) return;
+          const prevUpdateStatus = cartItem.node.status;
+          const itemCost =
+            data.updatePartyCartItem.price * data.updatePartyCartItem.quantity;
+
+          const cacheQueryBasePayload = {
+            query: PARTY_CART_COST_QUERY,
+            variables: { id: cartId }
+          };
+
+          const costQueryInCache = proxy.readQuery<Party_CartCostQuery>(
+            cacheQueryBasePayload
+          );
+
+          function writeNewCostToCache(newCost: number) {
+            proxy.writeQuery<Party_CartCostQuery>({
+              ...cacheQueryBasePayload,
+              data: {
+                __typename: 'Query',
+                partyCartCost: newCost
+              }
+            });
+          }
+
+          if (!costQueryInCache) return;
+
+          const { partyCartCost: costInCache } = costQueryInCache;
+
+          if (prevUpdateStatus == PartyCartItemStatus.Pending) {
+            if (newStatus == PartyCartItemStatus.Accepted) {
+              return writeNewCostToCache(costInCache + itemCost);
+            }
+          }
+
+          if (prevUpdateStatus == PartyCartItemStatus.Rejected) {
+            if (newStatus == PartyCartItemStatus.Accepted) {
+              return writeNewCostToCache(costInCache + itemCost);
+            }
+          }
+
+          if (prevUpdateStatus == PartyCartItemStatus.Accepted) {
+            if (
+              newStatus == PartyCartItemStatus.Pending ||
+              newStatus == PartyCartItemStatus.Rejected
+            ) {
+              return writeNewCostToCache(costInCache - itemCost);
+            }
+          }
+        }
       });
     } catch (e) {
-      // e
+      // noop, handled in onFinished/onError hooks
     }
   }
 
@@ -173,7 +228,8 @@ export default function PartyCartItems({ cartId }: Props) {
     variablesSubject.next(variables);
   }, [variables]);
 
-  if (isLoadingInitially(networkStatus)) return <GraphqlInlineLoading />;
+  if (isLoadingInitially(networkStatus))
+    return <GraphqlInlineLoading style={{ marginTop: 64 }} />;
 
   const {
     partyCartItemsConnection: { edges, pageInfo },
@@ -198,16 +254,16 @@ export default function PartyCartItems({ cartId }: Props) {
 
     if (pageToChangeTo == currentPage) return;
 
-    const pageDiff =
-      Math.abs(currentPage - pageToChangeTo) * PARTY_CART_ITEMS_PAGE_SIZE;
+    // const pageDiff =
+    //   Math.abs(currentPage - pageToChangeTo) * PARTY_CART_ITEMS_PAGE_SIZE;
 
     if (currentPage > pageToChangeTo) {
       refetch({
         first: undefined,
         last: PARTY_CART_ITEMS_PAGE_SIZE,
         before: pageInfo.startCursor,
-        after: undefined,
-        skip: pageDiff - 1
+        after: undefined
+        // skip: pageDiff - 1
       }).then(() => {
         currentPaginationPage.current = pageToChangeTo;
       });
@@ -216,8 +272,8 @@ export default function PartyCartItems({ cartId }: Props) {
         first: PARTY_CART_ITEMS_PAGE_SIZE,
         last: undefined,
         before: undefined,
-        after: pageInfo.endCursor,
-        skip: pageDiff - 1
+        after: pageInfo.endCursor
+        // skip: pageDiff - 1
       }).then(() => {
         currentPaginationPage.current = pageToChangeTo;
       });

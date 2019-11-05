@@ -8,11 +8,20 @@ import React from 'react';
 import { PaginationConfig } from 'antd/lib/table';
 import { PARTY_CART_ITEMS_PAGE_SIZE } from './PartyCartItems';
 import css from '@emotion/css';
+import { callAll } from '@shared/functionUtils';
+import useMedia from '@hooks/useMedia';
 
 const TableStyles = css`
   .ant-pagination {
     margin-right: 16px;
   }
+  .ant-table-thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  background: white;
+  min-width: 600px;
 `;
 
 export type CartItem = DeepWithoutMaybe<Party_CartItemsConnectionEdges>;
@@ -54,10 +63,13 @@ export default function PartyCartItemsTable({
       : onStatusFilter(sorter.status);
   }
 
+  const shouldTableBeSmall = useMedia('(max-width:800px)');
+
   return (
     <Table
       css={[TableStyles]}
       rowKey={cartItem => cartItem.node.id}
+      size={shouldTableBeSmall ? 'small' : 'default'}
       pagination={{
         pageSize: PARTY_CART_ITEMS_PAGE_SIZE,
         hideOnSinglePage: true,
@@ -77,12 +89,7 @@ export default function PartyCartItemsTable({
             style={{ color: hasUserQueryApplied ? '#1890ff' : undefined }}
           />
         }
-        filterDropdown={() => (
-          <NameFilter
-            onSearch={onUserSearch}
-            onClear={() => onUserSearch(undefined)}
-          />
-        )}
+        filterDropdown={() => <NameFilter onSearch={onUserSearch} />}
         render={(_, { node: { user } }) => (
           <span>
             {user.firstName} {user.lastName}
@@ -198,28 +205,34 @@ function renderActions({ item, onAction }: RenderActionsProps) {
 
 interface NameFilterProps {
   onSearch: (query: string | undefined) => void;
-  onClear: VoidFunction;
 }
-function NameFilter({ onSearch, onClear }: NameFilterProps) {
-  const searchQueryRef = React.useRef<string | undefined>(undefined);
+function NameFilter({ onSearch }: NameFilterProps) {
+  const [searchQuery, setSearchQuery] = React.useState<string | undefined>(
+    undefined
+  );
 
   return (
     <div style={{ padding: 8 }}>
       <Input
+        value={searchQuery}
         placeholder="Search..."
-        onChange={e => (searchQueryRef.current = e.target.value)}
+        onChange={e => setSearchQuery(e.target.value)}
         style={{ width: 188, marginBottom: 8, display: 'block' }}
       />
       <Button
         type="primary"
-        onClick={() => onSearch(searchQueryRef.current)}
+        onClick={() => onSearch(searchQuery)}
         icon="search"
         size="small"
         style={{ width: 90, marginRight: 8 }}
       >
         Search
       </Button>
-      <Button onClick={onClear} size="small" style={{ width: 90 }}>
+      <Button
+        onClick={() => callAll(setSearchQuery, onSearch)(undefined)}
+        size="small"
+        style={{ width: 90 }}
+      >
         Reset
       </Button>
     </div>

@@ -114,16 +114,6 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
                 <UserDashboardTile.Text text="Here you can catch up with your friends about the party you all waiting for" />
               </UserDashboardTile>
               <UserDashboardTile
-                index={3}
-                key={3}
-                onClick={() =>
-                  router && router.push('/user-profile', '/user/profile')
-                }
-              >
-                <UserDashboardTile.Title iconType="user" text="Profile" />
-                <UserDashboardTile.Text text="Here you can edit your profile, make changes to your bio, edit avatars" />
-              </UserDashboardTile>
-              <UserDashboardTile
                 index={4}
                 key={4}
                 onClick={() =>
