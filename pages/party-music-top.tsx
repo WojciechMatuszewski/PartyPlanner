@@ -1,7 +1,9 @@
 import PartyAuthenticator from '@auth/party-auth';
 import GraphqlLoading from '@components/GraphqlLoading';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
-import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import BigMusicPlayerStickedToBottom, {
+  BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT
+} from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import SavedTracksProvider from '@components/Party/Music/SavedTracks/SavedTracksProvider';
 import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModal';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
@@ -19,8 +21,6 @@ import { NetworkStatus } from 'apollo-client';
 import React from 'react';
 
 const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
-  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
-
   const { data, error, refetch, networkStatus } = useParty_SavedTracks({
     variables: { where: { party: { id: partyId } } },
     notifyOnNetworkStatusChange: true
@@ -74,14 +74,14 @@ const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
             <BigMusicPlayerProvider>
               <TrackInfoModalProvider>
                 <PartyProvider partyId={partyId} userId={userId}>
-                  <UserTopTracks />
+                  <BigMusicPlayerStickedToBottom partyId={partyId}>
+                    {playerVisible => (
+                      <UserTopTracks
+                        paddingBottom={getContentPaddingBottom(playerVisible)}
+                      />
+                    )}
+                  </BigMusicPlayerStickedToBottom>
                 </PartyProvider>
-                <BigMusicPlayerStickedToBottom
-                  partyId={partyId}
-                  onTrackChanged={handleTrackChanged}
-                  onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                  visible={playerVisible}
-                />
                 <TrackInfoModal />
               </TrackInfoModalProvider>
             </BigMusicPlayerProvider>
@@ -91,14 +91,8 @@ const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
     </React.Fragment>
   );
 
-  function handleTrackChanged() {
-    if (!playerVisible) {
-      setPlayerVisible(true);
-    }
-  }
-
-  function handleMusicPlayerVisibilityChange() {
-    setPlayerVisible(!playerVisible);
+  function getContentPaddingBottom(isPlayerVisible: boolean) {
+    return isPlayerVisible ? BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT : 0;
   }
 };
 

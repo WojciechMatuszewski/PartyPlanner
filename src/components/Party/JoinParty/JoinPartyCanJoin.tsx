@@ -10,7 +10,7 @@ import { CallToActionButtonStyles } from '@shared/styles';
 import { ApolloError } from 'apollo-client';
 
 import GraphqlError from '@components/GraphqlError';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { DeepWithoutMaybe, NonNullable } from '@shared/graphqlUtils';
 import { User, JoinPartyFindQuery } from '@generated/graphql';
 

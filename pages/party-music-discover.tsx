@@ -21,8 +21,6 @@ import { NetworkStatus } from 'apollo-client';
 import React from 'react';
 
 const PartyMusicDiscoverPage: PartyPage = ({ isInParty, partyId, userId }) => {
-  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
-
   const { data, error, refetch, networkStatus } = useParty_SavedTracks({
     variables: { where: { party: { id: partyId } } },
     notifyOnNetworkStatusChange: true
@@ -76,16 +74,14 @@ const PartyMusicDiscoverPage: PartyPage = ({ isInParty, partyId, userId }) => {
             <SavedTracksProvider savedTracks={partySavedTracks}>
               <BigMusicPlayerProvider>
                 <TrackInfoModalProvider>
-                  <PartyMusicDiscover paddingBottom={getContentPadding()} />
+                  <BigMusicPlayerStickedToBottom partyId={partyId}>
+                    {playerVisible => (
+                      <PartyMusicDiscover
+                        paddingBottom={gerContentPadding(playerVisible)}
+                      />
+                    )}
+                  </BigMusicPlayerStickedToBottom>
                   <TrackInfoModal />
-                  <BigMusicPlayerStickedToBottom
-                    partyId={partyId}
-                    onTrackChanged={handleTrackChanged}
-                    onVisibilityTriggerClicked={
-                      handleMusicPlayerVisibilityChange
-                    }
-                    visible={playerVisible}
-                  />
                 </TrackInfoModalProvider>
               </BigMusicPlayerProvider>
             </SavedTracksProvider>
@@ -95,17 +91,7 @@ const PartyMusicDiscoverPage: PartyPage = ({ isInParty, partyId, userId }) => {
     </React.Fragment>
   );
 
-  function handleTrackChanged() {
-    if (!playerVisible) {
-      setPlayerVisible(true);
-    }
-  }
-
-  function handleMusicPlayerVisibilityChange() {
-    setPlayerVisible(!playerVisible);
-  }
-
-  function getContentPadding() {
+  function gerContentPadding(playerVisible: boolean) {
     return playerVisible ? BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT + 12 : 12;
   }
 };

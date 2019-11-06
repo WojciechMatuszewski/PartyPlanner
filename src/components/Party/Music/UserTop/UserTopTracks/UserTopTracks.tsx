@@ -21,7 +21,11 @@ const PosedWrapper = posed.div({
   loaded: { staggerChildren: 300, opacity: 1 }
 });
 
-const UserTopTracks: React.FC = () => {
+interface Props {
+  paddingBottom: number;
+}
+
+const UserTopTracks: React.FC<Props> = ({ paddingBottom }) => {
   useSpotifyWebSdk();
   const [state, setState] = React.useState<State>({
     loading: true,
@@ -72,6 +76,7 @@ const UserTopTracks: React.FC = () => {
     <PosedWrapper
       pose={state.loading ? 'loading' : 'loaded'}
       initialPose="loading"
+      style={{ paddingBottom }}
     >
       <UserTopHeading headingText="Your top tracks" />
       <UserTopTracksList tracks={state.data} />

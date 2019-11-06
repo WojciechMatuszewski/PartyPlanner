@@ -31,12 +31,14 @@ const validationSchema = yup.object().shape<PartyCartAddItemFormValues>({
     .min(2),
   price: yup
     .number()
-    .required()
+    .typeError('Has to be a number')
+    .required('Has to be a number')
     .moreThan(0),
   quantity: yup
     .number()
-    .required()
-    .integer()
+    .typeError('Has to be a number')
+    .required('Has to be a number')
+    .integer('Has to be an integer')
     .moreThan(0)
 });
 
@@ -106,7 +108,7 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
                 formatter={handleFormatPrice}
                 parser={handleParsePrice}
                 formItemProps={{
-                  label: 'Price',
+                  label: 'Price (PLN)',
                   colon: false,
                   htmlFor: 'price',
                   css: [BlockFormItemStyles]

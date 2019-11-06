@@ -1,7 +1,7 @@
 import React from 'react';
 import { PartyInvitationsConnectionQueryEdges } from '@generated/graphql';
 import moment from 'moment';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { Typography } from 'antd';
 
 const PartyInvitesNoticeInvitation = (

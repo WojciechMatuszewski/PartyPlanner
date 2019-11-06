@@ -2,7 +2,7 @@ import React from 'react';
 
 import css from '@emotion/css';
 import { List } from 'antd';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 
 const ListItemStyles = css`
   @media screen and (max-width: 800px) {

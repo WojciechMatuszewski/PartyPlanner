@@ -7,7 +7,7 @@ import {
   PartyInvitationsQueryComponent,
   useJoinPartyMutation
 } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import styled from '@emotion/styled';
 import { withRouter, WithRouterProps } from 'next/router';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { PaginateMessagesQueryNode } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { Typography, Tooltip } from 'antd';
 import css from '@emotion/css';
 import OptimisticStatusDot from './OptimisticStatusDot';

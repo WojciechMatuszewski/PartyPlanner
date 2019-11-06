@@ -6,7 +6,7 @@ import {
 } from './Playlists';
 
 import { useParty } from '@components/Party/PartyProvider';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import SpotifyIcon from '@customIcons/spotify.svg';
 import {
   Party_PlaylistsConnectionEdges,

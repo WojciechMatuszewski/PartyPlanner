@@ -88,7 +88,8 @@ export default function ImportPlaylists({ isOnMobile }: Props) {
           query: PARTY_PLAYLISTS_CONNECTION_QUERY,
           variables: getPartyPlaylistConnectionVariables()
         }
-      ]
+      ],
+      awaitRefetchQueries: true
     }
   );
 

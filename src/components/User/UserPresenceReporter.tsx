@@ -11,7 +11,7 @@ interface Props {
 }
 
 const UserPresenceReporter: React.FC<Props> = props => {
-  const mutate = useUpdateUser();
+  const [updatePresence] = useUpdateUser();
   const { retrieveFromStorage, saveToStorage } = useLocalStorage(
     'last-heartbeat'
   );
@@ -58,7 +58,7 @@ const UserPresenceReporter: React.FC<Props> = props => {
 
   // TODO: edge case here, when it tries to update and user logs off
   async function lastOnlineUpdater() {
-    await mutate({
+    await updatePresence({
       variables: {
         where: {
           id: props.userId

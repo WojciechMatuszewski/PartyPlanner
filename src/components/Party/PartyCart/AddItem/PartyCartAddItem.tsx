@@ -38,6 +38,13 @@ export default function PartyCartAddItem({ cartId }: Props) {
     'idle'
   );
 
+  const isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => void (isMounted.current = false);
+  }, []);
+
   const formValuesRef = React.useRef<PartyCartAddItemFormValues | undefined>(
     undefined
   );
@@ -81,9 +88,13 @@ export default function PartyCartAddItem({ cartId }: Props) {
     }
   }, [called, error, data]);
 
-  React.useEffect(() => () => void setTimeout(() => setStatus('idle'), 100), [
-    modalVisible
-  ]);
+  React.useEffect(() => {}, [modalVisible]);
+
+  React.useEffect(
+    () => () =>
+      void setTimeout(() => isMounted.current && setStatus('idle'), 100),
+    [modalVisible]
+  );
 
   return (
     <React.Fragment>
