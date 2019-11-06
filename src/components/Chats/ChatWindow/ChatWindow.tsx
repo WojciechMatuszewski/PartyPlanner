@@ -151,7 +151,9 @@ const ChatWindow: React.FC = () => {
         emotionCSS={css`
           margin: auto;
           img {
-            max-width: 600px;
+            max-width: calc(100% - 24px);
+            max-height: calc(100vh - 200px);
+            width: auto;
           }
         `}
       />
@@ -173,8 +175,9 @@ const ChatWindow: React.FC = () => {
             ${FlexBoxFullCenteredStyles};
             flex: 1;
             img {
-              max-width: 600px;
-              margin-bottom: 0;
+              max-width: calc(100% - 24px);
+              max-height: calc(100% - 100px);
+              width: auto;
             }
           `}
         />

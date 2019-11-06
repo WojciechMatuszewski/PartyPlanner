@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { PaginateUsersQueryNode } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { Typography } from 'antd';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import ChatUserStatus from './ChatUserStatus';
-import UserPresenceChecker from '@components/UserPresenceChecker';
+import UserPresenceChecker from '@components/User/UserPresenceChecker';
 
 const ChatUserWrapper = styled.li`
   padding: 4px 0;

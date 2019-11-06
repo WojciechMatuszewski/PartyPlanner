@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Typography, Icon } from 'antd';
 import { PartyFragmentAuthor } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from 'antd';
 import { PartyDashboardParticipantsQueryQuery } from '@generated/graphql';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 
 interface Props {
@@ -18,9 +18,7 @@ export default function PartyDashboardParticipant(props: Props) {
     <List.Item style={{ ...props.style, padding: '0px 24px' }}>
       <List.Item.Meta
         avatar={<UserAvatar userData={props.participant.node} />}
-        title={`${props.participant.node.firstName} ${
-          props.participant.node.lastName
-        }`}
+        title={`${props.participant.node.firstName} ${props.participant.node.lastName}`}
       />
     </List.Item>
   );

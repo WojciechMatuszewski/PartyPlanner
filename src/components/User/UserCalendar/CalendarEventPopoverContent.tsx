@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
 import { Icon, Tooltip } from 'antd';
 import { AvatarList } from 'ant-design-pro';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { CalendarContext } from './UserCalendar';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
 import Link from 'next/link';

@@ -1,6 +1,8 @@
 import PartyAuthenticator from '@auth/party-auth';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
-import BigMusicPlayerStickedToBottom from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
+import BigMusicPlayerStickedToBottom, {
+  BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT
+} from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerStickedToBottom';
 import SavedTracks from '@components/Party/Music/SavedTracks/SavedTracks';
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
@@ -12,8 +14,6 @@ import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModa
 import { PartyPage } from '@components/Party/shared';
 
 const PartyMusicSavedTracks: PartyPage = ({ isInParty, partyId, userId }) => {
-  const [playerVisible, setPlayerVisible] = React.useState<boolean>(false);
-
   if (!isInParty)
     return (
       <PageException
@@ -31,14 +31,17 @@ const PartyMusicSavedTracks: PartyPage = ({ isInParty, partyId, userId }) => {
           <TrackInfoModalProvider>
             <BigMusicPlayerProvider>
               <TrackInfoModal />
-              <SavedTracks partyId={partyId} />
               <BigMusicPlayerStickedToBottom
                 partyId={partyId}
                 isUsingSavedTracksContext={false}
-                onTrackChanged={handleTrackChanged}
-                onVisibilityTriggerClicked={handleMusicPlayerVisibilityChange}
-                visible={playerVisible}
-              />
+              >
+                {playerVisible => (
+                  <SavedTracks
+                    partyId={partyId}
+                    paddingBottom={getContentPaddingBottom(playerVisible)}
+                  />
+                )}
+              </BigMusicPlayerStickedToBottom>
             </BigMusicPlayerProvider>
           </TrackInfoModalProvider>
         </PartyContentWrapper>
@@ -46,14 +49,8 @@ const PartyMusicSavedTracks: PartyPage = ({ isInParty, partyId, userId }) => {
     </React.Fragment>
   );
 
-  function handleTrackChanged() {
-    if (!playerVisible) {
-      setPlayerVisible(true);
-    }
-  }
-
-  function handleMusicPlayerVisibilityChange() {
-    setPlayerVisible(!playerVisible);
+  function getContentPaddingBottom(playerVisible: boolean) {
+    return playerVisible ? BIG_MUSIC_PLAYER_STICKED_TO_BOTTOM_HEIGHT + 12 : 12;
   }
 };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { List, Badge, Icon, Typography } from 'antd';
 import css from '@emotion/css';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import UserAvatar from '@components/UserDefaultAvatar';
+import UserAvatar from '@components/User/UserDefaultAvatar';
 import { User } from '@generated/graphql';
 
 interface Props {

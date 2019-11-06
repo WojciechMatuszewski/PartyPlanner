@@ -1,5 +1,5 @@
 import React from 'react';
-import UserAvatar, { UserAvatarData } from '@components/UserDefaultAvatar';
+import UserAvatar, { UserAvatarData } from '@components/User/UserDefaultAvatar';
 import css from '@emotion/css';
 import styled from '@emotion/styled';
 

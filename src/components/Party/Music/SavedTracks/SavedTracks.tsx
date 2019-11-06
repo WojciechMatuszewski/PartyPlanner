@@ -26,9 +26,9 @@ import { ListRowRenderer } from 'react-virtualized';
 
 const SavedTracksInnerWrapper = styled(PartyContentInnerWrapper)`
   padding: 12px;
+  padding-bottom: 0;
   @media screen and (max-width: ${MOBILE_LIST_BREAKPOINT}) {
     padding: 0;
-    padding-bottom: 12px;
     .discover-tracks-list {
       border-radius: 0;
       box-shadow: none;
@@ -80,9 +80,10 @@ export const PARTY_SAVED_TRACKS_CONNECTION_QUERY = gql`
 
 interface Props {
   partyId: string;
+  paddingBottom: number;
 }
 
-export default function SavedTracks({ partyId }: Props) {
+export default function SavedTracks({ partyId, paddingBottom }: Props) {
   const [selectingTracks, setSelectingTracks] = React.useState(false);
 
   const [selectedTracks, setSelectedTracks] = React.useState<
@@ -184,6 +185,8 @@ export default function SavedTracks({ partyId }: Props) {
     );
   };
 
+  const contentBottomMargin = hasNextPage ? 0 : 24;
+
   return (
     <React.Fragment>
       {createPlaylistModalVisible && (
@@ -209,7 +212,9 @@ export default function SavedTracks({ partyId }: Props) {
           />
         </AffixedBarContainer>
       </Affix>
-      <SavedTracksInnerWrapper>
+      <SavedTracksInnerWrapper
+        style={{ paddingBottom, marginBottom: contentBottomMargin }}
+      >
         {edges.length == 0 ? (
           <EmptySection
             emotionCSS={EmptySectionStyles}

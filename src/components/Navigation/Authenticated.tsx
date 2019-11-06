@@ -7,8 +7,8 @@ import { MeQueryMe, useMeQuery } from '@generated/graphql';
 import css from '@emotion/css';
 import { handleLogout } from '@services/AuthService';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
-import UserAvatar from '@components/UserDefaultAvatar';
-import UserPresenceReporter from '@components/UserPresenceReporter';
+import UserAvatar from '@components/User/UserDefaultAvatar';
+import UserPresenceReporter from '@components/User/UserPresenceReporter';
 import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
 import { HeaderLoadingData } from '.';
 
