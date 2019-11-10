@@ -9698,7 +9698,7 @@ export type User_FriendInvitationsConnectionQuery = (
       { __typename?: 'FriendInvitationEdge' }
       & { node: (
         { __typename?: 'FriendInvitation' }
-        & Pick<FriendInvitation, 'id' | 'invitedUserId'>
+        & Pick<FriendInvitation, 'createdAt' | 'id' | 'invitedUserId'>
         & { invitedBy: (
           { __typename?: 'User' }
           & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
@@ -9732,9 +9732,13 @@ export type User_FriendInvitationsSubscriptionSubscription = (
       & Pick<FriendInvitationPreviousValues, 'id' | 'invitedUserId'>
     )>, node: Maybe<(
       { __typename?: 'FriendInvitation' }
-      & { user: (
+      & Pick<FriendInvitation, 'createdAt' | 'id' | 'invitedUserId'>
+      & { invitedBy: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
+      ), user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
       ) }
     )> }
   )> }
@@ -10008,6 +10012,7 @@ export type User_FriendInvitationsSubscriptionVariables = User_FriendInvitations
 export type User_FriendInvitationsSubscriptionFriendInvitation = User_FriendInvitationsSubscriptionSubscription['friendInvitation'];
 export type User_FriendInvitationsSubscriptionPreviousValues = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['previousValues'];
 export type User_FriendInvitationsSubscriptionNode = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node'];
+export type User_FriendInvitationsSubscriptionInvitedBy = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['invitedBy'];
 export type User_FriendInvitationsSubscriptionUser = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['user'];
 export const useUser_FriendInvitationsSubscription = useUser_FriendInvitationsSubscriptionSubscription;
 export type User_PeopleConnectionVariables = User_PeopleConnectionQueryVariables;
@@ -11236,6 +11241,7 @@ export const User_FriendInvitationsConnectionDocument = gql`
     }
     edges {
       node {
+        createdAt
         invitedBy {
           id
           firstName
@@ -11282,11 +11288,17 @@ export const User_FriendInvitationsSubscriptionDocument = gql`
       invitedUserId
     }
     node {
-      user {
+      createdAt
+      invitedBy {
         id
         firstName
         lastName
         avatar
+      }
+      id
+      invitedUserId
+      user {
+        id
       }
     }
   }

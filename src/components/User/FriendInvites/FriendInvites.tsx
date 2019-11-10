@@ -1,16 +1,29 @@
-import React from 'react';
-import gql from 'graphql-tag';
 import FriendInvitesNoticeIcon from './FriendInvitesNoticeIcon';
+
 import {
-  useUser_FriendInvitationsConnection,
-  User_FriendInvitationsSubscriptionDocument
+  FriendInvitationSubscriptionPayload,
+  MutationType,
+  User_FriendInvitationsConnectionQuery,
+  User_FriendInvitationsSubscriptionDocument,
+  useUser_FriendInvitationsConnection
 } from '@generated/graphql';
 import {
-  isLoadingInitially,
+  DeepWithoutMaybe,
   hasGraphqlData,
+  isLoadingInitially,
   isLoadingMore
 } from '@shared/graphqlUtils';
 import { Icon } from 'antd';
+import gql from 'graphql-tag';
+import React from 'react';
+
+interface SubscribeForMoreSubscribeData {
+  subscriptionData: {
+    data: {
+      friendInvitation: FriendInvitationSubscriptionPayload;
+    };
+  };
+}
 
 export const FRIEND_INVITATIONS_CONNECTION = gql`
   query User_FriendInvitationsConnection(
@@ -37,6 +50,7 @@ export const FRIEND_INVITATIONS_CONNECTION = gql`
       }
       edges {
         node {
+          createdAt
           invitedBy {
             id
             firstName
@@ -70,11 +84,17 @@ export const FRIEND_INVITATIONS_SUBSCRIPTION = gql`
         invitedUserId
       }
       node {
-        user {
+        createdAt
+        invitedBy {
           id
           firstName
           lastName
           avatar
+        }
+        id
+        invitedUserId
+        user {
+          id
         }
       }
     }
@@ -143,12 +163,33 @@ export default function FriendInvites({ userId }: Props) {
   function handleSubscribeToMore() {
     subscribeToMore({
       document: User_FriendInvitationsSubscriptionDocument,
-      updateQuery: (prev, { subscriptionData }) => {
+      variables: {
+        where: {
+          node: {
+            invitedUserId: userId
+          }
+        }
+      },
+      updateQuery: (
+        prev,
+        { subscriptionData }: SubscribeForMoreSubscribeData
+      ) => {
         if (!subscriptionData || subscriptionData.data == undefined)
           return prev;
-        // const { data } = subscriptionData;
-        // console.log(data);
-        return prev;
+
+        const {
+          data: { friendInvitation }
+        } = subscriptionData;
+
+        switch (friendInvitation.mutation) {
+          case MutationType.Deleted:
+            if (!hasDeletedMyExistingInvitation(friendInvitation)) return prev;
+            return handleInvitationDeleted(prev, friendInvitation);
+          case MutationType.Created:
+            return handleNewInvitation(prev, friendInvitation);
+          default:
+            return prev;
+        }
       }
     });
   }
@@ -164,4 +205,82 @@ export default function FriendInvites({ userId }: Props) {
       onLoadMore={onLoadMore}
     />
   );
+
+  function handleNewInvitation(
+    currentCachedData: User_FriendInvitationsConnectionQuery,
+    subPayload: FriendInvitationSubscriptionPayload
+  ): User_FriendInvitationsConnectionQuery {
+    const {
+      friendInvitationsConnection: { edges },
+      counts
+    } = currentCachedData;
+    if (edges == undefined || subPayload.node == undefined)
+      return currentCachedData;
+    const { node } = subPayload;
+    const surelyEdges = edges as DeepWithoutMaybe<typeof edges>;
+    const newEdges: typeof surelyEdges = [
+      ...surelyEdges,
+      {
+        __typename: 'FriendInvitationEdge',
+        node: { ...node, __typename: 'FriendInvitation' } as any
+      }
+    ];
+    return {
+      __typename: 'Query',
+      friendInvitationsConnection: {
+        __typename: 'FriendInvitationConnection',
+        edges: newEdges,
+        pageInfo: currentCachedData.friendInvitationsConnection.pageInfo
+      },
+      counts: {
+        __typename: 'FriendInvitationConnection',
+        aggregate: {
+          __typename: 'AggregateFriendInvitation',
+          count: counts.aggregate.count + 1
+        }
+      }
+    };
+  }
+
+  function handleInvitationDeleted(
+    currentCachedData: User_FriendInvitationsConnectionQuery,
+    subPayload: FriendInvitationSubscriptionPayload
+  ): User_FriendInvitationsConnectionQuery {
+    const {
+      friendInvitationsConnection: { edges },
+      counts
+    } = currentCachedData;
+    if (edges == undefined || subPayload.previousValues == undefined)
+      return currentCachedData;
+    const { previousValues } = subPayload;
+    const surelyEdges = edges as DeepWithoutMaybe<typeof edges>;
+    const filteredEdges = surelyEdges.filter(
+      edge => edge.node.id != previousValues.id
+    );
+    return {
+      __typename: 'Query',
+      friendInvitationsConnection: {
+        __typename: 'FriendInvitationConnection',
+        edges: filteredEdges,
+        pageInfo: currentCachedData.friendInvitationsConnection.pageInfo
+      },
+      counts: {
+        __typename: 'FriendInvitationConnection',
+        aggregate: {
+          __typename: 'AggregateFriendInvitation',
+          count: counts.aggregate.count - 1
+        }
+      }
+    };
+  }
+
+  function hasDeletedMyExistingInvitation(
+    friendInvitation: FriendInvitationSubscriptionPayload
+  ) {
+    if (!friendInvitation) return false;
+    return (
+      friendInvitation.previousValues &&
+      friendInvitation.previousValues.invitedUserId == userId
+    );
+  }
 }

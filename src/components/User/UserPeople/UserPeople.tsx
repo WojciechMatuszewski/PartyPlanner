@@ -26,7 +26,8 @@ const UserPeopleContentWrapper = styled.div`
   margin: 0 auto;
   flex: 1;
   width: 100%;
-  margin-top: 12px;
+
+  padding: 12px;
 `;
 export const USER_PEOPLE_CONNECTION_QUERY = gql`
   query User_PeopleConnection(

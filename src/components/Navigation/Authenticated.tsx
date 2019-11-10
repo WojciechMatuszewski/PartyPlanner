@@ -188,6 +188,10 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
               <PartyInvitesNoticeIcon userId={props.userData.id} />
             </Menu.Item>
 
+            <Menu.Item css={[NoticeIconStyles]} style={{}}>
+              <FriendInvites userId={props.userData.id} />
+            </Menu.Item>
+
             <Menu.Item key="/user-profile">
               <Link href="/user-profile" as="/user/profile">
                 <a>

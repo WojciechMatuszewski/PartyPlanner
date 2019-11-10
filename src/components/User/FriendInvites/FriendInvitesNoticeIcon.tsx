@@ -6,7 +6,7 @@ import { User_FriendInvitationsConnectionEdges } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import UserAvatar from '../UserDefaultAvatar';
 import { NoticeIconData } from 'ant-design-pro/lib/NoticeIcon/NoticeIconTab';
-
+import moment from 'moment';
 type FriendInvite = User_FriendInvitationsConnectionEdges;
 
 interface Props {
@@ -26,7 +26,10 @@ function createNoticeIconListItem(
   return {
     title: `${invitedBy.firstName} wants to be your friend!`,
     description: `${invitedBy.firstName} ${invitedBy.lastName} have sent you a friend invite`,
-    avatar: <UserAvatar userData={invitedBy} />
+    avatar: <UserAvatar userData={invitedBy} />,
+    datetime: (
+      <p>{moment(friendInvite.node.createdAt).format('YYYY-MM-DD HH:mm')}</p>
+    )
   };
 }
 
@@ -42,7 +45,11 @@ export default function FriendInvitesNoticeIcon({
   }, []);
 
   return (
-    <NoticeIcon bell={<Icon type="user" />} count={notificationCount}>
+    <NoticeIcon
+      bell={<Icon type="user" />}
+      count={notificationCount}
+      // onItemClick={() => console.log('clicked')}
+    >
       <NoticeIcon.Tab
         showClear={false}
         title="Friend Invitations"
