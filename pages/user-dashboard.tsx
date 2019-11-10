@@ -123,6 +123,16 @@ const UserDashboard: React.FC<WithRouterProps> = ({ router }) => {
                 <UserDashboardTile.Title iconType="calendar" text="Calendar" />
                 <UserDashboardTile.Text text="Here you can make plans, create new parties" />
               </UserDashboardTile>
+              <UserDashboardTile
+                index={3}
+                key={3}
+                onClick={() =>
+                  router && router.push('/user-people', '/user/people')
+                }
+              >
+                <UserDashboardTile.Title text="People" iconType="user" />
+                <UserDashboardTile.Text text="Find your friends, make connections" />
+              </UserDashboardTile>
             </PoseGroup>
           </UserDashboardGrid>
         </GridTitleWrapper>

@@ -35,6 +35,11 @@ export type AggregateChat = {
   count: Scalars['Int'],
 };
 
+export type AggregateFriendInvitation = {
+   __typename?: 'AggregateFriendInvitation',
+  count: Scalars['Int'],
+};
+
 export type AggregateGame = {
    __typename?: 'AggregateGame',
   count: Scalars['Int'],
@@ -1117,6 +1122,303 @@ export type CombinePlaylistPartyPlannerData = {
   deleteAffected: Scalars['Boolean'],
 };
 
+
+export type FriendInvitation = Node & {
+   __typename?: 'FriendInvitation',
+  id: Scalars['ID'],
+  invitedBy: User,
+  user: User,
+  createdAt: Scalars['DateTime'],
+  invitedUserId: Scalars['String'],
+};
+
+/** A connection to a list of items. */
+export type FriendInvitationConnection = {
+   __typename?: 'FriendInvitationConnection',
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo,
+  /** A list of edges. */
+  edges: Array<Maybe<FriendInvitationEdge>>,
+  aggregate: AggregateFriendInvitation,
+};
+
+export type FriendInvitationCreateInput = {
+  id?: Maybe<Scalars['ID']>,
+  invitedUserId: Scalars['String'],
+  invitedBy: UserCreateOneInput,
+  user: UserCreateOneWithoutPendingFriendInvitationsInput,
+};
+
+export type FriendInvitationCreateManyWithoutUserInput = {
+  create?: Maybe<Array<FriendInvitationCreateWithoutUserInput>>,
+  connect?: Maybe<Array<FriendInvitationWhereUniqueInput>>,
+};
+
+export type FriendInvitationCreateWithoutUserInput = {
+  id?: Maybe<Scalars['ID']>,
+  invitedUserId: Scalars['String'],
+  invitedBy: UserCreateOneInput,
+};
+
+/** An edge in a connection. */
+export type FriendInvitationEdge = {
+   __typename?: 'FriendInvitationEdge',
+  /** The item at the end of the edge. */
+  node: FriendInvitation,
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'],
+};
+
+export enum FriendInvitationOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  InvitedUserIdAsc = 'invitedUserId_ASC',
+  InvitedUserIdDesc = 'invitedUserId_DESC'
+}
+
+export type FriendInvitationPreviousValues = {
+   __typename?: 'FriendInvitationPreviousValues',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  invitedUserId: Scalars['String'],
+};
+
+export type FriendInvitationScalarWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<Array<FriendInvitationScalarWhereInput>>,
+  /** Logical OR on all given filters. */
+  OR?: Maybe<Array<FriendInvitationScalarWhereInput>>,
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<Array<FriendInvitationScalarWhereInput>>,
+  id?: Maybe<Scalars['ID']>,
+  /** All values that are not equal to given value. */
+  id_not?: Maybe<Scalars['ID']>,
+  /** All values that are contained in given list. */
+  id_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values that are not contained in given list. */
+  id_not_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values less than the given value. */
+  id_lt?: Maybe<Scalars['ID']>,
+  /** All values less than or equal the given value. */
+  id_lte?: Maybe<Scalars['ID']>,
+  /** All values greater than the given value. */
+  id_gt?: Maybe<Scalars['ID']>,
+  /** All values greater than or equal the given value. */
+  id_gte?: Maybe<Scalars['ID']>,
+  /** All values containing the given string. */
+  id_contains?: Maybe<Scalars['ID']>,
+  /** All values not containing the given string. */
+  id_not_contains?: Maybe<Scalars['ID']>,
+  /** All values starting with the given string. */
+  id_starts_with?: Maybe<Scalars['ID']>,
+  /** All values not starting with the given string. */
+  id_not_starts_with?: Maybe<Scalars['ID']>,
+  /** All values ending with the given string. */
+  id_ends_with?: Maybe<Scalars['ID']>,
+  /** All values not ending with the given string. */
+  id_not_ends_with?: Maybe<Scalars['ID']>,
+  createdAt?: Maybe<Scalars['DateTime']>,
+  /** All values that are not equal to given value. */
+  createdAt_not?: Maybe<Scalars['DateTime']>,
+  /** All values that are contained in given list. */
+  createdAt_in?: Maybe<Array<Scalars['DateTime']>>,
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
+  /** All values less than the given value. */
+  createdAt_lt?: Maybe<Scalars['DateTime']>,
+  /** All values less than or equal the given value. */
+  createdAt_lte?: Maybe<Scalars['DateTime']>,
+  /** All values greater than the given value. */
+  createdAt_gt?: Maybe<Scalars['DateTime']>,
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: Maybe<Scalars['DateTime']>,
+  invitedUserId?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  invitedUserId_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  invitedUserId_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  invitedUserId_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  invitedUserId_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  invitedUserId_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  invitedUserId_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  invitedUserId_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  invitedUserId_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  invitedUserId_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  invitedUserId_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  invitedUserId_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  invitedUserId_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  invitedUserId_not_ends_with?: Maybe<Scalars['String']>,
+};
+
+export type FriendInvitationSubscriptionPayload = {
+   __typename?: 'FriendInvitationSubscriptionPayload',
+  mutation: MutationType,
+  node?: Maybe<FriendInvitation>,
+  updatedFields?: Maybe<Array<Scalars['String']>>,
+  previousValues?: Maybe<FriendInvitationPreviousValues>,
+};
+
+export type FriendInvitationSubscriptionWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<Array<FriendInvitationSubscriptionWhereInput>>,
+  /** Logical OR on all given filters. */
+  OR?: Maybe<Array<FriendInvitationSubscriptionWhereInput>>,
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<Array<FriendInvitationSubscriptionWhereInput>>,
+  /** The subscription event gets dispatched when it's listed in mutation_in */
+  mutation_in?: Maybe<Array<MutationType>>,
+  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
+  updatedFields_contains?: Maybe<Scalars['String']>,
+  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
+  updatedFields_contains_every?: Maybe<Array<Scalars['String']>>,
+  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
+  updatedFields_contains_some?: Maybe<Array<Scalars['String']>>,
+  node?: Maybe<FriendInvitationWhereInput>,
+};
+
+export type FriendInvitationUpdateInput = {
+  invitedUserId?: Maybe<Scalars['String']>,
+  invitedBy?: Maybe<UserUpdateOneRequiredInput>,
+  user?: Maybe<UserUpdateOneRequiredWithoutPendingFriendInvitationsInput>,
+};
+
+export type FriendInvitationUpdateManyDataInput = {
+  invitedUserId?: Maybe<Scalars['String']>,
+};
+
+export type FriendInvitationUpdateManyMutationInput = {
+  invitedUserId?: Maybe<Scalars['String']>,
+};
+
+export type FriendInvitationUpdateManyWithoutUserInput = {
+  create?: Maybe<Array<FriendInvitationCreateWithoutUserInput>>,
+  connect?: Maybe<Array<FriendInvitationWhereUniqueInput>>,
+  set?: Maybe<Array<FriendInvitationWhereUniqueInput>>,
+  disconnect?: Maybe<Array<FriendInvitationWhereUniqueInput>>,
+  delete?: Maybe<Array<FriendInvitationWhereUniqueInput>>,
+  update?: Maybe<Array<FriendInvitationUpdateWithWhereUniqueWithoutUserInput>>,
+  updateMany?: Maybe<Array<FriendInvitationUpdateManyWithWhereNestedInput>>,
+  deleteMany?: Maybe<Array<FriendInvitationScalarWhereInput>>,
+  upsert?: Maybe<Array<FriendInvitationUpsertWithWhereUniqueWithoutUserInput>>,
+};
+
+export type FriendInvitationUpdateManyWithWhereNestedInput = {
+  where: FriendInvitationScalarWhereInput,
+  data: FriendInvitationUpdateManyDataInput,
+};
+
+export type FriendInvitationUpdateWithoutUserDataInput = {
+  invitedUserId?: Maybe<Scalars['String']>,
+  invitedBy?: Maybe<UserUpdateOneRequiredInput>,
+};
+
+export type FriendInvitationUpdateWithWhereUniqueWithoutUserInput = {
+  where: FriendInvitationWhereUniqueInput,
+  data: FriendInvitationUpdateWithoutUserDataInput,
+};
+
+export type FriendInvitationUpsertWithWhereUniqueWithoutUserInput = {
+  where: FriendInvitationWhereUniqueInput,
+  update: FriendInvitationUpdateWithoutUserDataInput,
+  create: FriendInvitationCreateWithoutUserInput,
+};
+
+export type FriendInvitationWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: Maybe<Array<FriendInvitationWhereInput>>,
+  /** Logical OR on all given filters. */
+  OR?: Maybe<Array<FriendInvitationWhereInput>>,
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: Maybe<Array<FriendInvitationWhereInput>>,
+  id?: Maybe<Scalars['ID']>,
+  /** All values that are not equal to given value. */
+  id_not?: Maybe<Scalars['ID']>,
+  /** All values that are contained in given list. */
+  id_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values that are not contained in given list. */
+  id_not_in?: Maybe<Array<Scalars['ID']>>,
+  /** All values less than the given value. */
+  id_lt?: Maybe<Scalars['ID']>,
+  /** All values less than or equal the given value. */
+  id_lte?: Maybe<Scalars['ID']>,
+  /** All values greater than the given value. */
+  id_gt?: Maybe<Scalars['ID']>,
+  /** All values greater than or equal the given value. */
+  id_gte?: Maybe<Scalars['ID']>,
+  /** All values containing the given string. */
+  id_contains?: Maybe<Scalars['ID']>,
+  /** All values not containing the given string. */
+  id_not_contains?: Maybe<Scalars['ID']>,
+  /** All values starting with the given string. */
+  id_starts_with?: Maybe<Scalars['ID']>,
+  /** All values not starting with the given string. */
+  id_not_starts_with?: Maybe<Scalars['ID']>,
+  /** All values ending with the given string. */
+  id_ends_with?: Maybe<Scalars['ID']>,
+  /** All values not ending with the given string. */
+  id_not_ends_with?: Maybe<Scalars['ID']>,
+  createdAt?: Maybe<Scalars['DateTime']>,
+  /** All values that are not equal to given value. */
+  createdAt_not?: Maybe<Scalars['DateTime']>,
+  /** All values that are contained in given list. */
+  createdAt_in?: Maybe<Array<Scalars['DateTime']>>,
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
+  /** All values less than the given value. */
+  createdAt_lt?: Maybe<Scalars['DateTime']>,
+  /** All values less than or equal the given value. */
+  createdAt_lte?: Maybe<Scalars['DateTime']>,
+  /** All values greater than the given value. */
+  createdAt_gt?: Maybe<Scalars['DateTime']>,
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: Maybe<Scalars['DateTime']>,
+  invitedUserId?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  invitedUserId_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  invitedUserId_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  invitedUserId_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  invitedUserId_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  invitedUserId_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  invitedUserId_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  invitedUserId_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  invitedUserId_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  invitedUserId_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  invitedUserId_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  invitedUserId_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  invitedUserId_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  invitedUserId_not_ends_with?: Maybe<Scalars['String']>,
+  invitedBy?: Maybe<UserWhereInput>,
+  user?: Maybe<UserWhereInput>,
+};
+
+export type FriendInvitationWhereUniqueInput = {
+  id?: Maybe<Scalars['ID']>,
+};
 
 export type Game = Node & {
    __typename?: 'Game',
@@ -2304,6 +2606,7 @@ export type Mutation = {
    __typename?: 'Mutation',
   createMessage: Message,
   createPartyInvitation: PartyInvitation,
+  createFriendInvitation: FriendInvitation,
   createChat: Chat,
   createPlaylist: Playlist,
   createPartyCart: PartyCart,
@@ -2319,6 +2622,7 @@ export type Mutation = {
   createAlbum: Album,
   updateMessage?: Maybe<Message>,
   updatePartyInvitation?: Maybe<PartyInvitation>,
+  updateFriendInvitation?: Maybe<FriendInvitation>,
   updateChat?: Maybe<Chat>,
   updatePlaylist?: Maybe<Playlist>,
   updatePartyCart?: Maybe<PartyCart>,
@@ -2334,6 +2638,7 @@ export type Mutation = {
   updateAlbum?: Maybe<Album>,
   deleteMessage?: Maybe<Message>,
   deletePartyInvitation?: Maybe<PartyInvitation>,
+  deleteFriendInvitation?: Maybe<FriendInvitation>,
   deleteChat?: Maybe<Chat>,
   deletePlaylist?: Maybe<Playlist>,
   deletePartyCart?: Maybe<PartyCart>,
@@ -2349,6 +2654,7 @@ export type Mutation = {
   deleteAlbum?: Maybe<Album>,
   upsertMessage: Message,
   upsertPartyInvitation: PartyInvitation,
+  upsertFriendInvitation: FriendInvitation,
   upsertChat: Chat,
   upsertPlaylist: Playlist,
   upsertPartyCart: PartyCart,
@@ -2364,6 +2670,7 @@ export type Mutation = {
   upsertAlbum: Album,
   updateManyMessages: BatchPayload,
   updateManyPartyInvitations: BatchPayload,
+  updateManyFriendInvitations: BatchPayload,
   updateManyPlaylists: BatchPayload,
   updateManyPartyCartItems: BatchPayload,
   updateManyTracks: BatchPayload,
@@ -2377,6 +2684,7 @@ export type Mutation = {
   updateManyAlbums: BatchPayload,
   deleteManyMessages: BatchPayload,
   deleteManyPartyInvitations: BatchPayload,
+  deleteManyFriendInvitations: BatchPayload,
   deleteManyChats: BatchPayload,
   deleteManyPlaylists: BatchPayload,
   deleteManyPartyCarts: BatchPayload,
@@ -2397,7 +2705,6 @@ export type Mutation = {
   login: AuthPayload,
   socialLogin: AuthPayload,
   updateMe: User,
-  inviteToFriends: User,
   requestReset?: Maybe<SuccessMessage>,
   resetPassword?: Maybe<AuthPayload>,
 };
@@ -2410,6 +2717,11 @@ export type MutationCreateMessageArgs = {
 
 export type MutationCreatePartyInvitationArgs = {
   data: PartyInvitationCreateInput
+};
+
+
+export type MutationCreateFriendInvitationArgs = {
+  data: FriendInvitationCreateInput
 };
 
 
@@ -2487,6 +2799,12 @@ export type MutationUpdateMessageArgs = {
 export type MutationUpdatePartyInvitationArgs = {
   data: PartyInvitationUpdateInput,
   where: PartyInvitationWhereUniqueInput
+};
+
+
+export type MutationUpdateFriendInvitationArgs = {
+  data: FriendInvitationUpdateInput,
+  where: FriendInvitationWhereUniqueInput
 };
 
 
@@ -2578,6 +2896,11 @@ export type MutationDeletePartyInvitationArgs = {
 };
 
 
+export type MutationDeleteFriendInvitationArgs = {
+  where: FriendInvitationWhereUniqueInput
+};
+
+
 export type MutationDeleteChatArgs = {
   where: ChatWhereUniqueInput
 };
@@ -2654,6 +2977,13 @@ export type MutationUpsertPartyInvitationArgs = {
   where: PartyInvitationWhereUniqueInput,
   create: PartyInvitationCreateInput,
   update: PartyInvitationUpdateInput
+};
+
+
+export type MutationUpsertFriendInvitationArgs = {
+  where: FriendInvitationWhereUniqueInput,
+  create: FriendInvitationCreateInput,
+  update: FriendInvitationUpdateInput
 };
 
 
@@ -2760,6 +3090,12 @@ export type MutationUpdateManyPartyInvitationsArgs = {
 };
 
 
+export type MutationUpdateManyFriendInvitationsArgs = {
+  data: FriendInvitationUpdateManyMutationInput,
+  where?: Maybe<FriendInvitationWhereInput>
+};
+
+
 export type MutationUpdateManyPlaylistsArgs = {
   data: PlaylistUpdateManyMutationInput,
   where?: Maybe<PlaylistWhereInput>
@@ -2833,6 +3169,11 @@ export type MutationDeleteManyMessagesArgs = {
 
 export type MutationDeleteManyPartyInvitationsArgs = {
   where?: Maybe<PartyInvitationWhereInput>
+};
+
+
+export type MutationDeleteManyFriendInvitationsArgs = {
+  where?: Maybe<FriendInvitationWhereInput>
 };
 
 
@@ -2939,12 +3280,6 @@ export type MutationSocialLoginArgs = {
 
 export type MutationUpdateMeArgs = {
   name?: Maybe<Scalars['String']>
-};
-
-
-export type MutationInviteToFriendsArgs = {
-  sender: Scalars['ID'],
-  receiver: Scalars['ID']
 };
 
 
@@ -6350,6 +6685,7 @@ export type Query = {
    __typename?: 'Query',
   messages: Array<Maybe<Message>>,
   partyInvitations: Array<Maybe<PartyInvitation>>,
+  friendInvitations: Array<Maybe<FriendInvitation>>,
   chats: Array<Maybe<Chat>>,
   playlists: Array<Maybe<Playlist>>,
   partyCarts: Array<Maybe<PartyCart>>,
@@ -6365,6 +6701,7 @@ export type Query = {
   albums: Array<Maybe<Album>>,
   message?: Maybe<Message>,
   partyInvitation?: Maybe<PartyInvitation>,
+  friendInvitation?: Maybe<FriendInvitation>,
   chat?: Maybe<Chat>,
   playlist?: Maybe<Playlist>,
   partyCart?: Maybe<PartyCart>,
@@ -6380,6 +6717,7 @@ export type Query = {
   album?: Maybe<Album>,
   messagesConnection: MessageConnection,
   partyInvitationsConnection: PartyInvitationConnection,
+  friendInvitationsConnection: FriendInvitationConnection,
   chatsConnection: ChatConnection,
   playlistsConnection: PlaylistConnection,
   partyCartsConnection: PartyCartConnection,
@@ -6401,6 +6739,7 @@ export type Query = {
   partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
+  userFriends: UserFriends,
   paginateUsers: UserConnection,
   temp__?: Maybe<Scalars['Boolean']>,
 };
@@ -6420,6 +6759,17 @@ export type QueryMessagesArgs = {
 export type QueryPartyInvitationsArgs = {
   where?: Maybe<PartyInvitationWhereInput>,
   orderBy?: Maybe<PartyInvitationOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryFriendInvitationsArgs = {
+  where?: Maybe<FriendInvitationWhereInput>,
+  orderBy?: Maybe<FriendInvitationOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6581,6 +6931,11 @@ export type QueryPartyInvitationArgs = {
 };
 
 
+export type QueryFriendInvitationArgs = {
+  where: FriendInvitationWhereUniqueInput
+};
+
+
 export type QueryChatArgs = {
   where: ChatWhereUniqueInput
 };
@@ -6660,6 +7015,17 @@ export type QueryMessagesConnectionArgs = {
 export type QueryPartyInvitationsConnectionArgs = {
   where?: Maybe<PartyInvitationWhereInput>,
   orderBy?: Maybe<PartyInvitationOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryFriendInvitationsConnectionArgs = {
+  where?: Maybe<FriendInvitationWhereInput>,
+  orderBy?: Maybe<FriendInvitationOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6849,6 +7215,11 @@ export type QueryGetUsersArgs = {
 };
 
 
+export type QueryUserFriendsArgs = {
+  userId: Scalars['ID']
+};
+
+
 export type QueryPaginateUsersArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -6869,6 +7240,7 @@ export type Subscription = {
    __typename?: 'Subscription',
   message?: Maybe<MessageSubscriptionPayload>,
   partyInvitation?: Maybe<PartyInvitationSubscriptionPayload>,
+  friendInvitation?: Maybe<FriendInvitationSubscriptionPayload>,
   chat?: Maybe<ChatSubscriptionPayload>,
   playlist?: Maybe<PlaylistSubscriptionPayload>,
   partyCart?: Maybe<PartyCartSubscriptionPayload>,
@@ -6892,6 +7264,11 @@ export type SubscriptionMessageArgs = {
 
 export type SubscriptionPartyInvitationArgs = {
   where?: Maybe<PartyInvitationSubscriptionWhereInput>
+};
+
+
+export type SubscriptionFriendInvitationArgs = {
+  where?: Maybe<FriendInvitationSubscriptionWhereInput>
 };
 
 
@@ -7194,7 +7571,7 @@ export type User = Node & {
   password: Scalars['String'],
   parties?: Maybe<Array<Party>>,
   friends?: Maybe<Array<User>>,
-  pendingFriendInvitations?: Maybe<Array<User>>,
+  pendingFriendInvitations?: Maybe<Array<FriendInvitation>>,
   pendingPartyInvitations?: Maybe<Array<PartyInvitation>>,
   chats?: Maybe<Array<Chat>>,
   createdAt: Scalars['DateTime'],
@@ -7235,8 +7612,8 @@ export type UserFriendsArgs = {
 
 
 export type UserPendingFriendInvitationsArgs = {
-  where?: Maybe<UserWhereInput>,
-  orderBy?: Maybe<UserOrderByInput>,
+  where?: Maybe<FriendInvitationWhereInput>,
+  orderBy?: Maybe<FriendInvitationOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -7313,7 +7690,7 @@ export type UserCreateInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
-  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
@@ -7344,6 +7721,11 @@ export type UserCreateOneWithoutCartItemsInput = {
   connect?: Maybe<UserWhereUniqueInput>,
 };
 
+export type UserCreateOneWithoutPendingFriendInvitationsInput = {
+  create?: Maybe<UserCreateWithoutPendingFriendInvitationsInput>,
+  connect?: Maybe<UserWhereUniqueInput>,
+};
+
 export type UserCreateOneWithoutPendingPartyInvitationsInput = {
   create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>,
   connect?: Maybe<UserWhereUniqueInput>,
@@ -7364,7 +7746,7 @@ export type UserCreateWithoutCartItemsInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
-  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
 };
@@ -7384,7 +7766,7 @@ export type UserCreateWithoutChatsInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
-  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
@@ -7403,7 +7785,27 @@ export type UserCreateWithoutPartiesInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   friends?: Maybe<UserCreateManyInput>,
-  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
+  pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
+  chats?: Maybe<ChatCreateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
+};
+
+export type UserCreateWithoutPendingFriendInvitationsInput = {
+  id?: Maybe<Scalars['ID']>,
+  email: Scalars['String'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  password: Scalars['String'],
+  lastOnline?: Maybe<Scalars['DateTime']>,
+  deleted?: Maybe<Scalars['Boolean']>,
+  provider?: Maybe<SocialMediaType>,
+  avatar?: Maybe<Scalars['String']>,
+  thirdPartyId?: Maybe<Scalars['String']>,
+  resetToken?: Maybe<Scalars['String']>,
+  resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  parties?: Maybe<PartyCreateManyWithoutMembersInput>,
+  friends?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
@@ -7424,7 +7826,7 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
-  pendingFriendInvitations?: Maybe<UserCreateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   chats?: Maybe<ChatCreateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemCreateManyWithoutUserInput>,
 };
@@ -7436,6 +7838,12 @@ export type UserEdge = {
   node: User,
   /** A cursor for use in pagination. */
   cursor: Scalars['String'],
+};
+
+export type UserFriends = {
+   __typename?: 'UserFriends',
+  current: Array<Scalars['String']>,
+  pending: Array<UserPendingFriend>,
 };
 
 export enum UserOrderByInput {
@@ -7468,6 +7876,12 @@ export enum UserOrderByInput {
   ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
   ResetTokenExpiryDesc = 'resetTokenExpiry_DESC'
 }
+
+export type UserPendingFriend = {
+   __typename?: 'UserPendingFriend',
+  id: Scalars['String'],
+  invitedUserId: Scalars['String'],
+};
 
 export type UserPreviousValues = {
    __typename?: 'UserPreviousValues',
@@ -7827,7 +8241,7 @@ export type UserUpdateDataInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
@@ -7847,7 +8261,7 @@ export type UserUpdateInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
@@ -7936,6 +8350,13 @@ export type UserUpdateOneRequiredWithoutCartItemsInput = {
   upsert?: Maybe<UserUpsertWithoutCartItemsInput>,
 };
 
+export type UserUpdateOneRequiredWithoutPendingFriendInvitationsInput = {
+  create?: Maybe<UserCreateWithoutPendingFriendInvitationsInput>,
+  connect?: Maybe<UserWhereUniqueInput>,
+  update?: Maybe<UserUpdateWithoutPendingFriendInvitationsDataInput>,
+  upsert?: Maybe<UserUpsertWithoutPendingFriendInvitationsInput>,
+};
+
 export type UserUpdateOneRequiredWithoutPendingPartyInvitationsInput = {
   create?: Maybe<UserCreateWithoutPendingPartyInvitationsInput>,
   connect?: Maybe<UserWhereUniqueInput>,
@@ -7957,7 +8378,7 @@ export type UserUpdateWithoutCartItemsDataInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
 };
@@ -7976,7 +8397,7 @@ export type UserUpdateWithoutChatsDataInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
@@ -7994,7 +8415,26 @@ export type UserUpdateWithoutPartiesDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
+  pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
+  chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
+  cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
+};
+
+export type UserUpdateWithoutPendingFriendInvitationsDataInput = {
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+  lastOnline?: Maybe<Scalars['DateTime']>,
+  deleted?: Maybe<Scalars['Boolean']>,
+  provider?: Maybe<SocialMediaType>,
+  avatar?: Maybe<Scalars['String']>,
+  thirdPartyId?: Maybe<Scalars['String']>,
+  resetToken?: Maybe<Scalars['String']>,
+  resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
+  friends?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
@@ -8014,7 +8454,7 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
-  pendingFriendInvitations?: Maybe<UserUpdateManyInput>,
+  pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   chats?: Maybe<ChatUpdateManyWithoutMembersInput>,
   cartItems?: Maybe<PartyCartItemUpdateManyWithoutUserInput>,
 };
@@ -8042,6 +8482,11 @@ export type UserUpsertNestedInput = {
 export type UserUpsertWithoutCartItemsInput = {
   update: UserUpdateWithoutCartItemsDataInput,
   create: UserCreateWithoutCartItemsInput,
+};
+
+export type UserUpsertWithoutPendingFriendInvitationsInput = {
+  update: UserUpdateWithoutPendingFriendInvitationsDataInput,
+  create: UserCreateWithoutPendingFriendInvitationsInput,
 };
 
 export type UserUpsertWithoutPendingPartyInvitationsInput = {
@@ -8366,9 +8811,9 @@ export type UserWhereInput = {
   friends_every?: Maybe<UserWhereInput>,
   friends_some?: Maybe<UserWhereInput>,
   friends_none?: Maybe<UserWhereInput>,
-  pendingFriendInvitations_every?: Maybe<UserWhereInput>,
-  pendingFriendInvitations_some?: Maybe<UserWhereInput>,
-  pendingFriendInvitations_none?: Maybe<UserWhereInput>,
+  pendingFriendInvitations_every?: Maybe<FriendInvitationWhereInput>,
+  pendingFriendInvitations_some?: Maybe<FriendInvitationWhereInput>,
+  pendingFriendInvitations_none?: Maybe<FriendInvitationWhereInput>,
   pendingPartyInvitations_every?: Maybe<PartyInvitationWhereInput>,
   pendingPartyInvitations_some?: Maybe<PartyInvitationWhereInput>,
   pendingPartyInvitations_none?: Maybe<PartyInvitationWhereInput>,
@@ -9002,6 +9447,23 @@ export type JoinPartyFindQuery = (
   ) }
 );
 
+export type User_FriendsQueryVariables = {
+  userId: Scalars['ID']
+};
+
+
+export type User_FriendsQuery = (
+  { __typename?: 'Query' }
+  & { userFriends: (
+    { __typename?: 'UserFriends' }
+    & Pick<UserFriends, 'current'>
+    & { pending: Array<(
+      { __typename?: 'UserPendingFriend' }
+      & Pick<UserPendingFriend, 'id' | 'invitedUserId'>
+    )> }
+  ) }
+);
+
 export type Is_Unread_ThreadFragment = (
   { __typename?: 'Chat' }
   & Pick<Chat, 'hasUnreadMessages'>
@@ -9214,6 +9676,138 @@ export type PartyDashboardParticipantsQueryQuery = (
   ) }
 );
 
+export type User_FriendInvitationsConnectionQueryVariables = {
+  where?: Maybe<FriendInvitationWhereInput>,
+  orderBy?: Maybe<FriendInvitationOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type User_FriendInvitationsConnectionQuery = (
+  { __typename?: 'Query' }
+  & { friendInvitationsConnection: (
+    { __typename?: 'FriendInvitationConnection' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
+    ), edges: Array<Maybe<(
+      { __typename?: 'FriendInvitationEdge' }
+      & { node: (
+        { __typename?: 'FriendInvitation' }
+        & Pick<FriendInvitation, 'id' | 'invitedUserId'>
+        & { invitedBy: (
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
+        ), user: (
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) }
+      ) }
+    )>> }
+  ), counts: (
+    { __typename?: 'FriendInvitationConnection' }
+    & { aggregate: (
+      { __typename?: 'AggregateFriendInvitation' }
+      & Pick<AggregateFriendInvitation, 'count'>
+    ) }
+  ) }
+);
+
+export type User_FriendInvitationsSubscriptionSubscriptionVariables = {
+  where?: Maybe<FriendInvitationSubscriptionWhereInput>
+};
+
+
+export type User_FriendInvitationsSubscriptionSubscription = (
+  { __typename?: 'Subscription' }
+  & { friendInvitation: Maybe<(
+    { __typename?: 'FriendInvitationSubscriptionPayload' }
+    & Pick<FriendInvitationSubscriptionPayload, 'mutation'>
+    & { previousValues: Maybe<(
+      { __typename?: 'FriendInvitationPreviousValues' }
+      & Pick<FriendInvitationPreviousValues, 'id' | 'invitedUserId'>
+    )>, node: Maybe<(
+      { __typename?: 'FriendInvitation' }
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
+      ) }
+    )> }
+  )> }
+);
+
+export type User_PeopleConnectionQueryVariables = {
+  where?: Maybe<UserWhereInput>,
+  orderBy?: Maybe<UserOrderByInput>,
+  skip?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>,
+  before?: Maybe<Scalars['String']>,
+  first?: Maybe<Scalars['Int']>,
+  last?: Maybe<Scalars['Int']>
+};
+
+
+export type User_PeopleConnectionQuery = (
+  { __typename?: 'Query' }
+  & { usersConnection: (
+    { __typename?: 'UserConnection' }
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
+    ), edges: Array<Maybe<(
+      { __typename?: 'UserEdge' }
+      & { node: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar' | 'createdAt'>
+      ) }
+    )>> }
+  ) }
+);
+
+export type User_UnfriendUserMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UnfriendUserMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type User_CreateFriendInvitationMutationVariables = {
+  data: FriendInvitationCreateInput
+};
+
+
+export type User_CreateFriendInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { createFriendInvitation: (
+    { __typename?: 'FriendInvitation' }
+    & Pick<FriendInvitation, 'id'>
+  ) }
+);
+
+export type User_DeleteFriendInvitationMutationVariables = {
+  where: FriendInvitationWhereUniqueInput
+};
+
+
+export type User_DeleteFriendInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteFriendInvitation: Maybe<(
+    { __typename?: 'FriendInvitation' }
+    & Pick<FriendInvitation, 'id'>
+  )> }
+);
+
 export type UserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'status'>
@@ -9349,6 +9943,10 @@ export type JoinPartyFindMembers = JoinPartyFindQuery['parties'][0]['members'][0
 export type JoinPartyFindMembersCount = JoinPartyFindQuery['membersCount'];
 export type JoinPartyFindAggregate = JoinPartyFindQuery['membersCount']['aggregate'];
 export const useJoinPartyFind = useJoinPartyFindQuery;
+export type User_FriendsVariables = User_FriendsQueryVariables;
+export type User_FriendsUserFriends = User_FriendsQuery['userFriends'];
+export type User_FriendsPending = User_FriendsQuery['userFriends']['pending'][0];
+export const useUser_Friends = useUser_FriendsQuery;
 export type Party_CombinePlaylistsVariables = Party_CombinePlaylistsMutationVariables;
 export type Party_CombinePlaylistsCombinePlaylists = Party_CombinePlaylistsMutation['combinePlaylists'];
 export const useParty_CombinePlaylists = useParty_CombinePlaylistsMutation;
@@ -9395,7 +9993,38 @@ export type PartyDashboardParticipantsQueryEdges = PartyDashboardParticipantsQue
 export type PartyDashboardParticipantsQueryNode = PartyDashboardParticipantsQueryQuery['usersConnection']['edges'][0]['node'];
 export type PartyDashboardParticipantsQueryAggregated = PartyDashboardParticipantsQueryQuery['aggregated'];
 export type PartyDashboardParticipantsQueryAggregate = PartyDashboardParticipantsQueryQuery['aggregated']['aggregate'];
-export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQueryQuery;export const Party_FragmentFragmentDoc = gql`
+export const usePartyDashboardParticipantsQuery = usePartyDashboardParticipantsQueryQuery;
+export type User_FriendInvitationsConnectionVariables = User_FriendInvitationsConnectionQueryVariables;
+export type User_FriendInvitationsConnectionFriendInvitationsConnection = User_FriendInvitationsConnectionQuery['friendInvitationsConnection'];
+export type User_FriendInvitationsConnectionPageInfo = User_FriendInvitationsConnectionQuery['friendInvitationsConnection']['pageInfo'];
+export type User_FriendInvitationsConnectionEdges = User_FriendInvitationsConnectionQuery['friendInvitationsConnection']['edges'][0];
+export type User_FriendInvitationsConnectionNode = User_FriendInvitationsConnectionQuery['friendInvitationsConnection']['edges'][0]['node'];
+export type User_FriendInvitationsConnectionInvitedBy = User_FriendInvitationsConnectionQuery['friendInvitationsConnection']['edges'][0]['node']['invitedBy'];
+export type User_FriendInvitationsConnectionUser = User_FriendInvitationsConnectionQuery['friendInvitationsConnection']['edges'][0]['node']['user'];
+export type User_FriendInvitationsConnectionCounts = User_FriendInvitationsConnectionQuery['counts'];
+export type User_FriendInvitationsConnectionAggregate = User_FriendInvitationsConnectionQuery['counts']['aggregate'];
+export const useUser_FriendInvitationsConnection = useUser_FriendInvitationsConnectionQuery;
+export type User_FriendInvitationsSubscriptionVariables = User_FriendInvitationsSubscriptionSubscriptionVariables;
+export type User_FriendInvitationsSubscriptionFriendInvitation = User_FriendInvitationsSubscriptionSubscription['friendInvitation'];
+export type User_FriendInvitationsSubscriptionPreviousValues = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['previousValues'];
+export type User_FriendInvitationsSubscriptionNode = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node'];
+export type User_FriendInvitationsSubscriptionUser = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['user'];
+export const useUser_FriendInvitationsSubscription = useUser_FriendInvitationsSubscriptionSubscription;
+export type User_PeopleConnectionVariables = User_PeopleConnectionQueryVariables;
+export type User_PeopleConnectionUsersConnection = User_PeopleConnectionQuery['usersConnection'];
+export type User_PeopleConnectionPageInfo = User_PeopleConnectionQuery['usersConnection']['pageInfo'];
+export type User_PeopleConnectionEdges = User_PeopleConnectionQuery['usersConnection']['edges'][0];
+export type User_PeopleConnectionNode = User_PeopleConnectionQuery['usersConnection']['edges'][0]['node'];
+export const useUser_PeopleConnection = useUser_PeopleConnectionQuery;
+export type User_UnfriendUserVariables = User_UnfriendUserMutationVariables;
+export type User_UnfriendUserUpdateUser = User_UnfriendUserMutation['updateUser'];
+export const useUser_UnfriendUser = useUser_UnfriendUserMutation;
+export type User_CreateFriendInvitationVariables = User_CreateFriendInvitationMutationVariables;
+export type User_CreateFriendInvitationCreateFriendInvitation = User_CreateFriendInvitationMutation['createFriendInvitation'];
+export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;
+export type User_DeleteFriendInvitationVariables = User_DeleteFriendInvitationMutationVariables;
+export type User_DeleteFriendInvitationDeleteFriendInvitation = User_DeleteFriendInvitationMutation['deleteFriendInvitation'];
+export const useUser_DeleteFriendInvitation = useUser_DeleteFriendInvitationMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10287,6 +10916,33 @@ export type JoinPartyFindComponentProps = Omit<ApolloReactComponents.QueryCompon
       
 export type JoinPartyFindQueryHookResult = ReturnType<typeof useJoinPartyFindQuery>;
 export type JoinPartyFindQueryResult = ApolloReactCommon.QueryResult<JoinPartyFindQuery, JoinPartyFindQueryVariables>;
+export const User_FriendsDocument = gql`
+    query User_Friends($userId: ID!) {
+  userFriends(userId: $userId) {
+    current
+    pending {
+      id
+      invitedUserId
+    }
+  }
+}
+    `;
+export type User_FriendsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<User_FriendsQuery, User_FriendsQueryVariables>, 'query'> & ({ variables: User_FriendsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const User_FriendsComponent = (props: User_FriendsComponentProps) => (
+      <ApolloReactComponents.Query<User_FriendsQuery, User_FriendsQueryVariables> query={User_FriendsDocument} {...props} />
+    );
+    
+
+    export function useUser_FriendsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<User_FriendsQuery, User_FriendsQueryVariables>) {
+      return ApolloReactHooks.useQuery<User_FriendsQuery, User_FriendsQueryVariables>(User_FriendsDocument, baseOptions);
+    }
+      export function useUser_FriendsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<User_FriendsQuery, User_FriendsQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<User_FriendsQuery, User_FriendsQueryVariables>(User_FriendsDocument, baseOptions);
+      }
+      
+export type User_FriendsQueryHookResult = ReturnType<typeof useUser_FriendsQuery>;
+export type User_FriendsQueryResult = ApolloReactCommon.QueryResult<User_FriendsQuery, User_FriendsQueryVariables>;
 export const Party_CombinePlaylistsDocument = gql`
     mutation Party_CombinePlaylists($partyPlannerData: CombinePlaylistPartyPlannerData!, $spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput!) {
   combinePlaylists(partyPlannerData: $partyPlannerData, spotifyData: $spotifyData) {
@@ -10571,3 +11227,178 @@ export type PartyDashboardParticipantsQueryComponentProps = Omit<ApolloReactComp
       
 export type PartyDashboardParticipantsQueryQueryHookResult = ReturnType<typeof usePartyDashboardParticipantsQueryQuery>;
 export type PartyDashboardParticipantsQueryQueryResult = ApolloReactCommon.QueryResult<PartyDashboardParticipantsQueryQuery, PartyDashboardParticipantsQueryQueryVariables>;
+export const User_FriendInvitationsConnectionDocument = gql`
+    query User_FriendInvitationsConnection($where: FriendInvitationWhereInput, $orderBy: FriendInvitationOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
+  friendInvitationsConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        invitedBy {
+          id
+          firstName
+          lastName
+          avatar
+        }
+        id
+        invitedUserId
+        user {
+          id
+        }
+      }
+    }
+  }
+  counts: friendInvitationsConnection(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+    `;
+export type User_FriendInvitationsConnectionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>, 'query'>;
+
+    export const User_FriendInvitationsConnectionComponent = (props: User_FriendInvitationsConnectionComponentProps) => (
+      <ApolloReactComponents.Query<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables> query={User_FriendInvitationsConnectionDocument} {...props} />
+    );
+    
+
+    export function useUser_FriendInvitationsConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>) {
+      return ApolloReactHooks.useQuery<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>(User_FriendInvitationsConnectionDocument, baseOptions);
+    }
+      export function useUser_FriendInvitationsConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>(User_FriendInvitationsConnectionDocument, baseOptions);
+      }
+      
+export type User_FriendInvitationsConnectionQueryHookResult = ReturnType<typeof useUser_FriendInvitationsConnectionQuery>;
+export type User_FriendInvitationsConnectionQueryResult = ApolloReactCommon.QueryResult<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>;
+export const User_FriendInvitationsSubscriptionDocument = gql`
+    subscription User_FriendInvitationsSubscription($where: FriendInvitationSubscriptionWhereInput) {
+  friendInvitation(where: $where) {
+    mutation
+    previousValues {
+      id
+      invitedUserId
+    }
+    node {
+      user {
+        id
+        firstName
+        lastName
+        avatar
+      }
+    }
+  }
+}
+    `;
+export type User_FriendInvitationsSubscriptionComponentProps = Omit<ApolloReactComponents.SubscriptionComponentOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>, 'subscription'>;
+
+    export const User_FriendInvitationsSubscriptionComponent = (props: User_FriendInvitationsSubscriptionComponentProps) => (
+      <ApolloReactComponents.Subscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables> subscription={User_FriendInvitationsSubscriptionDocument} {...props} />
+    );
+    
+
+    export function useUser_FriendInvitationsSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>) {
+      return ApolloReactHooks.useSubscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>(User_FriendInvitationsSubscriptionDocument, baseOptions);
+    }
+export type User_FriendInvitationsSubscriptionSubscriptionHookResult = ReturnType<typeof useUser_FriendInvitationsSubscriptionSubscription>;
+export type User_FriendInvitationsSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<User_FriendInvitationsSubscriptionSubscription>;
+export const User_PeopleConnectionDocument = gql`
+    query User_PeopleConnection($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
+  usersConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        firstName
+        lastName
+        avatar
+        createdAt
+      }
+    }
+  }
+}
+    `;
+export type User_PeopleConnectionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>, 'query'>;
+
+    export const User_PeopleConnectionComponent = (props: User_PeopleConnectionComponentProps) => (
+      <ApolloReactComponents.Query<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables> query={User_PeopleConnectionDocument} {...props} />
+    );
+    
+
+    export function useUser_PeopleConnectionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>) {
+      return ApolloReactHooks.useQuery<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>(User_PeopleConnectionDocument, baseOptions);
+    }
+      export function useUser_PeopleConnectionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>(User_PeopleConnectionDocument, baseOptions);
+      }
+      
+export type User_PeopleConnectionQueryHookResult = ReturnType<typeof useUser_PeopleConnectionQuery>;
+export type User_PeopleConnectionQueryResult = ApolloReactCommon.QueryResult<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>;
+export const User_UnfriendUserDocument = gql`
+    mutation User_UnfriendUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type User_UnfriendUserMutationFn = ApolloReactCommon.MutationFunction<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>;
+export type User_UnfriendUserComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>, 'mutation'>;
+
+    export const User_UnfriendUserComponent = (props: User_UnfriendUserComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UnfriendUserMutation, User_UnfriendUserMutationVariables> mutation={User_UnfriendUserDocument} {...props} />
+    );
+    
+
+    export function useUser_UnfriendUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>(User_UnfriendUserDocument, baseOptions);
+    }
+export type User_UnfriendUserMutationHookResult = ReturnType<typeof useUser_UnfriendUserMutation>;
+export type User_UnfriendUserMutationResult = ApolloReactCommon.MutationResult<User_UnfriendUserMutation>;
+export type User_UnfriendUserMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>;
+export const User_CreateFriendInvitationDocument = gql`
+    mutation User_CreateFriendInvitation($data: FriendInvitationCreateInput!) {
+  createFriendInvitation(data: $data) {
+    id
+  }
+}
+    `;
+export type User_CreateFriendInvitationMutationFn = ApolloReactCommon.MutationFunction<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>;
+export type User_CreateFriendInvitationComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>, 'mutation'>;
+
+    export const User_CreateFriendInvitationComponent = (props: User_CreateFriendInvitationComponentProps) => (
+      <ApolloReactComponents.Mutation<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables> mutation={User_CreateFriendInvitationDocument} {...props} />
+    );
+    
+
+    export function useUser_CreateFriendInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>(User_CreateFriendInvitationDocument, baseOptions);
+    }
+export type User_CreateFriendInvitationMutationHookResult = ReturnType<typeof useUser_CreateFriendInvitationMutation>;
+export type User_CreateFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_CreateFriendInvitationMutation>;
+export type User_CreateFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>;
+export const User_DeleteFriendInvitationDocument = gql`
+    mutation User_DeleteFriendInvitation($where: FriendInvitationWhereUniqueInput!) {
+  deleteFriendInvitation(where: $where) {
+    id
+  }
+}
+    `;
+export type User_DeleteFriendInvitationMutationFn = ApolloReactCommon.MutationFunction<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;
+export type User_DeleteFriendInvitationComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>, 'mutation'>;
+
+    export const User_DeleteFriendInvitationComponent = (props: User_DeleteFriendInvitationComponentProps) => (
+      <ApolloReactComponents.Mutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables> mutation={User_DeleteFriendInvitationDocument} {...props} />
+    );
+    
+
+    export function useUser_DeleteFriendInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>(User_DeleteFriendInvitationDocument, baseOptions);
+    }
+export type User_DeleteFriendInvitationMutationHookResult = ReturnType<typeof useUser_DeleteFriendInvitationMutation>;
+export type User_DeleteFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_DeleteFriendInvitationMutation>;
+export type User_DeleteFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;
