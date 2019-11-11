@@ -96,6 +96,10 @@
       "dest": "user-dashboard"
     },
     {
+      "src": "/user/people",
+      "dest": "user-people"
+    },
+    {
       "src": "/user/profile",
       "dest": "user-profile"
     }

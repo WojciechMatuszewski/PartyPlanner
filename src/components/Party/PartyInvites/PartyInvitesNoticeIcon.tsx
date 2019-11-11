@@ -81,7 +81,7 @@ const PartyInvitesNoticeIcon: React.FC<Props> = props => {
           )
             return (
               <span>
-                <Icon type="bell" />
+                <Icon type="bell" style={{ opacity: 0.3 }} />
               </span>
             );
 

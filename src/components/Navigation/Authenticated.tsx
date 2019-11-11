@@ -11,6 +11,7 @@ import UserAvatar from '@components/User/UserDefaultAvatar';
 import UserPresenceReporter from '@components/User/UserPresenceReporter';
 import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
 import { HeaderLoadingData } from '.';
+import FriendInvites from '@components/User/FriendInvites/FriendInvites';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -92,9 +93,18 @@ const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
               <a>Your Parties</a>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/user-people">
+            <Link href="/user-people" as="/user/people">
+              <a>People</a>
+            </Link>
+          </Menu.Item>
 
           <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
             <PartyInvitesNoticeIcon userId={props.userData.id} />
+          </Menu.Item>
+
+          <Menu.Item css={[NoticeIconStyles]}>
+            <FriendInvites userId={props.userData.id} />
           </Menu.Item>
 
           <Menu.Item key="/user-profile">
@@ -157,6 +167,11 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
               <a>Your Parties</a>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/user-people">
+            <Link href="/user-people" as="/user/people">
+              <a>People</a>
+            </Link>
+          </Menu.Item>
         </Menu>
       </Drawer>
 
@@ -171,6 +186,10 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
           >
             <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
               <PartyInvitesNoticeIcon userId={props.userData.id} />
+            </Menu.Item>
+
+            <Menu.Item css={[NoticeIconStyles]} style={{}}>
+              <FriendInvites userId={props.userData.id} />
             </Menu.Item>
 
             <Menu.Item key="/user-profile">

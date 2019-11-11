@@ -43,3 +43,31 @@ export const PARTY_INVITATION_SUBSCRIPTION = gql`
   }
   ${PARTY_INVITATION_FRAGMENT}
 `;
+
+export const FRIEND_INVITATIONS_SUBSCRIPTION = gql`
+  subscription User_FriendInvitationsSubscription(
+    $where: FriendInvitationSubscriptionWhereInput
+  ) {
+    friendInvitation(where: $where) {
+      mutation
+      previousValues {
+        id
+        invitedUserId
+      }
+      node {
+        createdAt
+        invitedBy {
+          id
+          firstName
+          lastName
+          avatar
+        }
+        id
+        invitedUserId
+        user {
+          id
+        }
+      }
+    }
+  }
+`;
