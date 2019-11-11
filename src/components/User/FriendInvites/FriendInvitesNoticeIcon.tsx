@@ -20,6 +20,8 @@ interface Props {
   onLoadMore: VoidFunction;
   friendInvites: FriendInvite[];
   subscribeToMore: VoidFunction;
+  loadingMore: boolean;
+  locale: any;
 }
 
 function createNoticeIconListItem(friendInvite: FriendInvite): NoticeIconData {
@@ -43,7 +45,9 @@ export default function FriendInvitesNoticeIcon({
   canLoadMore,
   onLoadMore,
   friendInvites,
-  subscribeToMore
+  subscribeToMore,
+  loadingMore,
+  locale
 }: Props) {
   const [modalState, setModalState] = React.useState<{
     visible: boolean;
@@ -74,15 +78,22 @@ export default function FriendInvitesNoticeIcon({
         {...modalState}
         onClose={() => toggleModalVisibility()}
       />
+
       <NoticeIcon
+        style={{ zIndex: 2, background: 'red' }}
+        onViewMore={onLoadMore}
+        loading={loadingMore}
         bell={<Icon type="user" />}
+        locale={locale}
         count={notificationCount}
         onItemClick={(itemData: any) => handleItemClick(itemData.friendInvite)}
       >
         <NoticeIcon.Tab
+          style={{ zIndex: 2, background: 'red' }}
           showClear={false}
           title="Friend Invitations"
           locale={{}}
+          count={notificationCount}
           showViewMore={canLoadMore}
           onClick={noop}
           onClear={noop}

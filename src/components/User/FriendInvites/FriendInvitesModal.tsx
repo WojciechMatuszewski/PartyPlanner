@@ -123,6 +123,8 @@ export default function FriendInvitesModal({
       maskClosable={true}
       title="Friend Invitation!"
       visible={visible}
+      maskStyle={{ zIndex: 3 }}
+      style={{ zIndex: 4 }}
       onCancel={onClose}
       footer={<Button onClick={onClose}>Close</Button>}
     >

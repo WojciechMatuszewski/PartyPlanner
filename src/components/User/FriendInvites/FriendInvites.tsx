@@ -11,11 +11,14 @@ import {
   DeepWithoutMaybe,
   hasGraphqlData,
   isLoadingInitially,
-  isLoadingMore
+  isLoadingMore,
+  handleRefetch,
+  isLoadingError
 } from '@shared/graphqlUtils';
 import { Icon } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
+import GraphqlInlineError from '@components/GraphqlInlineError';
 
 interface SubscribeForMoreSubscribeData {
   subscriptionData: {
@@ -24,7 +27,7 @@ interface SubscribeForMoreSubscribeData {
     };
   };
 }
-
+const PAGE_SIZE = 5;
 export const FRIEND_INVITATIONS_CONNECTION = gql`
   query User_FriendInvitationsConnection(
     $where: FriendInvitationWhereInput
@@ -79,15 +82,18 @@ interface Props {
 export default function FriendInvites({ userId }: Props) {
   const {
     data,
-
     networkStatus,
     subscribeToMore,
-    fetchMore
+    fetchMore,
+    refetch,
+    error
   } = useUser_FriendInvitationsConnection({
     variables: {
-      where: { invitedUserId: userId }
+      where: { invitedUserId: userId },
+      first: PAGE_SIZE
     },
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
+    errorPolicy: 'all'
   });
 
   if (
@@ -170,11 +176,30 @@ export default function FriendInvites({ userId }: Props) {
 
   return (
     <FriendInvitesNoticeIcon
-      friendInvites={edges}
+      locale={
+        error
+          ? {
+              viewMore: 'Load more',
+              clear: '',
+              emptyText: (
+                <GraphqlInlineError.WithButton
+                  title="Something went wrong"
+                  onRetry={() => handleRefetch(refetch)}
+                  loading={isLoadingError(networkStatus)}
+                />
+              ) as any
+            }
+          : {
+              viewMore: 'Load More',
+              emptyText: 'No new friend invites'
+            }
+      }
+      friendInvites={error ? [] : edges}
       subscribeToMore={handleSubscribeToMore}
       notificationCount={aggregate.count}
       canLoadMore={canLoadMore}
       onLoadMore={onLoadMore}
+      loadingMore={isLoadingMore(networkStatus)}
     />
   );
 
