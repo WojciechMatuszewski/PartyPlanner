@@ -2706,6 +2706,7 @@ export type Mutation = {
   socialLogin: AuthPayload,
   updateMe: User,
   requestReset?: Maybe<SuccessMessage>,
+  acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
 };
 
@@ -3285,6 +3286,12 @@ export type MutationUpdateMeArgs = {
 
 export type MutationRequestResetArgs = {
   email: Scalars['String']
+};
+
+
+export type MutationAcceptFriendInvitationArgs = {
+  invitationId: Scalars['ID'],
+  invitingUserId: Scalars['ID']
 };
 
 
@@ -9079,6 +9086,19 @@ export type AddTrackToPartyMutation = (
    }
 );
 
+export type User_DeleteFriendInvitationMutationVariables = {
+  where: FriendInvitationWhereUniqueInput
+};
+
+
+export type User_DeleteFriendInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteFriendInvitation: Maybe<(
+    { __typename?: 'FriendInvitation' }
+    & Pick<FriendInvitation, 'id'>
+  )> }
+);
+
 export type MeQueryQueryVariables = {};
 
 
@@ -9744,6 +9764,17 @@ export type User_FriendInvitationsSubscriptionSubscription = (
   )> }
 );
 
+export type User_AcceptFriendInvitationMutationVariables = {
+  invitationId: Scalars['ID'],
+  invitingUserId: Scalars['ID']
+};
+
+
+export type User_AcceptFriendInvitationMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'acceptFriendInvitation'>
+);
+
 export type User_PeopleConnectionQueryVariables = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -9797,19 +9828,6 @@ export type User_CreateFriendInvitationMutation = (
     { __typename?: 'FriendInvitation' }
     & Pick<FriendInvitation, 'id'>
   ) }
-);
-
-export type User_DeleteFriendInvitationMutationVariables = {
-  where: FriendInvitationWhereUniqueInput
-};
-
-
-export type User_DeleteFriendInvitationMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteFriendInvitation: Maybe<(
-    { __typename?: 'FriendInvitation' }
-    & Pick<FriendInvitation, 'id'>
-  )> }
 );
 
 export type UserFragment = (
@@ -9866,6 +9884,9 @@ export const useJoinPartyMutation = useJoinPartyMutationMutation;
 export type AddTrackToPartyVariables = AddTrackToPartyMutationVariables;
 export type AddTrackToPartyCreatePartySavedTrack = Full_Saved_Track_FragmentFragment;
 export const useAddTrackToParty = useAddTrackToPartyMutation;
+export type User_DeleteFriendInvitationVariables = User_DeleteFriendInvitationMutationVariables;
+export type User_DeleteFriendInvitationDeleteFriendInvitation = User_DeleteFriendInvitationMutation['deleteFriendInvitation'];
+export const useUser_DeleteFriendInvitation = useUser_DeleteFriendInvitationMutation;
 export type MeQueryVariables = MeQueryQueryVariables;
 export type MeQueryMe = MeQueryQuery['me'];
 export const useMeQuery = useMeQueryQuery;
@@ -10015,6 +10036,8 @@ export type User_FriendInvitationsSubscriptionNode = User_FriendInvitationsSubsc
 export type User_FriendInvitationsSubscriptionInvitedBy = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['invitedBy'];
 export type User_FriendInvitationsSubscriptionUser = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['user'];
 export const useUser_FriendInvitationsSubscription = useUser_FriendInvitationsSubscriptionSubscription;
+export type User_AcceptFriendInvitationVariables = User_AcceptFriendInvitationMutationVariables;
+export const useUser_AcceptFriendInvitation = useUser_AcceptFriendInvitationMutation;
 export type User_PeopleConnectionVariables = User_PeopleConnectionQueryVariables;
 export type User_PeopleConnectionUsersConnection = User_PeopleConnectionQuery['usersConnection'];
 export type User_PeopleConnectionPageInfo = User_PeopleConnectionQuery['usersConnection']['pageInfo'];
@@ -10026,10 +10049,7 @@ export type User_UnfriendUserUpdateUser = User_UnfriendUserMutation['updateUser'
 export const useUser_UnfriendUser = useUser_UnfriendUserMutation;
 export type User_CreateFriendInvitationVariables = User_CreateFriendInvitationMutationVariables;
 export type User_CreateFriendInvitationCreateFriendInvitation = User_CreateFriendInvitationMutation['createFriendInvitation'];
-export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;
-export type User_DeleteFriendInvitationVariables = User_DeleteFriendInvitationMutationVariables;
-export type User_DeleteFriendInvitationDeleteFriendInvitation = User_DeleteFriendInvitationMutation['deleteFriendInvitation'];
-export const useUser_DeleteFriendInvitation = useUser_DeleteFriendInvitationMutation;export const Party_FragmentFragmentDoc = gql`
+export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10432,6 +10452,27 @@ export type AddTrackToPartyComponentProps = Omit<ApolloReactComponents.MutationC
 export type AddTrackToPartyMutationHookResult = ReturnType<typeof useAddTrackToPartyMutation>;
 export type AddTrackToPartyMutationResult = ApolloReactCommon.MutationResult<AddTrackToPartyMutation>;
 export type AddTrackToPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTrackToPartyMutation, AddTrackToPartyMutationVariables>;
+export const User_DeleteFriendInvitationDocument = gql`
+    mutation User_DeleteFriendInvitation($where: FriendInvitationWhereUniqueInput!) {
+  deleteFriendInvitation(where: $where) {
+    id
+  }
+}
+    `;
+export type User_DeleteFriendInvitationMutationFn = ApolloReactCommon.MutationFunction<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;
+export type User_DeleteFriendInvitationComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>, 'mutation'>;
+
+    export const User_DeleteFriendInvitationComponent = (props: User_DeleteFriendInvitationComponentProps) => (
+      <ApolloReactComponents.Mutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables> mutation={User_DeleteFriendInvitationDocument} {...props} />
+    );
+    
+
+    export function useUser_DeleteFriendInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>(User_DeleteFriendInvitationDocument, baseOptions);
+    }
+export type User_DeleteFriendInvitationMutationHookResult = ReturnType<typeof useUser_DeleteFriendInvitationMutation>;
+export type User_DeleteFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_DeleteFriendInvitationMutation>;
+export type User_DeleteFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;
 export const MeQueryDocument = gql`
     query MeQuery {
   me {
@@ -11316,6 +11357,25 @@ export type User_FriendInvitationsSubscriptionComponentProps = Omit<ApolloReactC
     }
 export type User_FriendInvitationsSubscriptionSubscriptionHookResult = ReturnType<typeof useUser_FriendInvitationsSubscriptionSubscription>;
 export type User_FriendInvitationsSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<User_FriendInvitationsSubscriptionSubscription>;
+export const User_AcceptFriendInvitationDocument = gql`
+    mutation User_AcceptFriendInvitation($invitationId: ID!, $invitingUserId: ID!) {
+  acceptFriendInvitation(invitationId: $invitationId, invitingUserId: $invitingUserId)
+}
+    `;
+export type User_AcceptFriendInvitationMutationFn = ApolloReactCommon.MutationFunction<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables>;
+export type User_AcceptFriendInvitationComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables>, 'mutation'>;
+
+    export const User_AcceptFriendInvitationComponent = (props: User_AcceptFriendInvitationComponentProps) => (
+      <ApolloReactComponents.Mutation<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables> mutation={User_AcceptFriendInvitationDocument} {...props} />
+    );
+    
+
+    export function useUser_AcceptFriendInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables>(User_AcceptFriendInvitationDocument, baseOptions);
+    }
+export type User_AcceptFriendInvitationMutationHookResult = ReturnType<typeof useUser_AcceptFriendInvitationMutation>;
+export type User_AcceptFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_AcceptFriendInvitationMutation>;
+export type User_AcceptFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_AcceptFriendInvitationMutation, User_AcceptFriendInvitationMutationVariables>;
 export const User_PeopleConnectionDocument = gql`
     query User_PeopleConnection($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
@@ -11393,24 +11453,3 @@ export type User_CreateFriendInvitationComponentProps = Omit<ApolloReactComponen
 export type User_CreateFriendInvitationMutationHookResult = ReturnType<typeof useUser_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>;
-export const User_DeleteFriendInvitationDocument = gql`
-    mutation User_DeleteFriendInvitation($where: FriendInvitationWhereUniqueInput!) {
-  deleteFriendInvitation(where: $where) {
-    id
-  }
-}
-    `;
-export type User_DeleteFriendInvitationMutationFn = ApolloReactCommon.MutationFunction<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;
-export type User_DeleteFriendInvitationComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>, 'mutation'>;
-
-    export const User_DeleteFriendInvitationComponent = (props: User_DeleteFriendInvitationComponentProps) => (
-      <ApolloReactComponents.Mutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables> mutation={User_DeleteFriendInvitationDocument} {...props} />
-    );
-    
-
-    export function useUser_DeleteFriendInvitationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>) {
-      return ApolloReactHooks.useMutation<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>(User_DeleteFriendInvitationDocument, baseOptions);
-    }
-export type User_DeleteFriendInvitationMutationHookResult = ReturnType<typeof useUser_DeleteFriendInvitationMutation>;
-export type User_DeleteFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_DeleteFriendInvitationMutation>;
-export type User_DeleteFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_DeleteFriendInvitationMutation, User_DeleteFriendInvitationMutationVariables>;

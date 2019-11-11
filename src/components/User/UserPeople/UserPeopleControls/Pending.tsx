@@ -1,18 +1,9 @@
 import React from 'react';
-import gql from 'graphql-tag';
+
 import { useUser_DeleteFriendInvitation } from '@generated/graphql';
 import { Tag, Button, Icon, Modal, message } from 'antd';
 import { updateUserFriends } from './utils';
 
-export const DELETE_FRIEND_INVITATION_MUTATION = gql`
-  mutation User_DeleteFriendInvitation(
-    $where: FriendInvitationWhereUniqueInput!
-  ) {
-    deleteFriendInvitation(where: $where) {
-      id
-    }
-  }
-`;
 interface Props {
   pendingInvitationId: string;
 }

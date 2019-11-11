@@ -1,5 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
+import { Tag, Button } from 'antd';
 
 export const UNFRIEND_USER_MUTATION = gql`
   mutation User_UnfriendUser(
@@ -12,7 +13,11 @@ export const UNFRIEND_USER_MUTATION = gql`
   }
 `;
 
-interface Props {}
 export default function Friend() {
-  return <div></div>;
+  return (
+    <React.Fragment>
+      <Tag color="green">Friends</Tag>
+      <Button type="danger">Unfriend</Button>
+    </React.Fragment>
+  );
 }

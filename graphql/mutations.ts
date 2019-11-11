@@ -129,3 +129,12 @@ export const ADD_TRACK_TO_PARTY_MUTATION = gql`
   }
   ${FULL_SAVED_TRACK_FRAGMENT}
 `;
+export const DELETE_FRIEND_INVITATION_MUTATION = gql`
+  mutation User_DeleteFriendInvitation(
+    $where: FriendInvitationWhereUniqueInput!
+  ) {
+    deleteFriendInvitation(where: $where) {
+      id
+    }
+  }
+`;
