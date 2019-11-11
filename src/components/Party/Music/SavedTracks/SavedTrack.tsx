@@ -80,8 +80,11 @@ function SavedTrack({
 }
 
 export default React.memo(SavedTrack, (prevProps, nextProps) => {
-  return (
+  const selecting =
     prevProps.selecting == nextProps.selecting &&
-    prevProps.isSelected == nextProps.isSelected
-  );
+    prevProps.isSelected == nextProps.isSelected;
+
+  const playing = prevProps.trackPlaying == nextProps.trackPlaying;
+
+  return selecting && playing;
 });
