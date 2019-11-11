@@ -55,6 +55,7 @@ export default function FriendInvitesModal({
 }: Props) {
   const userFriendsQueryVariables = getUserFriendsQueryVariables();
 
+  // no variables = user has not been there yet = nothing to refetch
   const queriesToRefetch = userFriendsQueryVariables
     ? [
         {

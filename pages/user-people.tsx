@@ -4,19 +4,21 @@ import {
 } from '@apolloSetup/withApolloAuth';
 import GraphqlLoading from '@components/GraphqlLoading';
 import ErrorSection from '@components/UI/ErrorSection';
-import {
-  useUser_Friends,
-  User_FriendsQueryVariables
-} from '@generated/graphql';
-import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
-import { Button } from 'antd';
-import gql from 'graphql-tag';
-import React from 'react';
-import styled from '@emotion/styled';
-import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import UserPeople from '@components/User/UserPeople/UserPeople';
 import UserPeopleProvider from '@components/User/UserPeople/UserPeopleProvider';
 import UserProvider from '@components/User/UserProvider';
+import styled from '@emotion/styled';
+import {
+  MutationType,
+  User_FriendsQueryVariables,
+  useUser_FriendInvitationsSubscription,
+  useUser_Friends
+} from '@generated/graphql';
+import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import { Button } from 'antd';
+import gql from 'graphql-tag';
+import React from 'react';
 import { BehaviorSubject } from 'rxjs';
 
 const queryVariablesSubject = new BehaviorSubject<
@@ -49,6 +51,42 @@ const PageContentWrapper = styled.div`
 function UserPeoplePage({ me }: WithApolloAuthInjectedProps) {
   const { data, loading, error, refetch, variables } = useUser_Friends({
     variables: { userId: me.id }
+  });
+
+  useUser_FriendInvitationsSubscription({
+    variables: {
+      where: {
+        OR: [
+          {
+            node: {
+              invitedBy: {
+                id: me.id
+              }
+            }
+          },
+          {
+            node: {
+              invitedUserId: me.id
+            }
+          }
+        ]
+      }
+    },
+    onSubscriptionData: ({ subscriptionData }) => {
+      if (!hasGraphqlData(subscriptionData.data, ['friendInvitation']))
+        return null;
+
+      const {
+        data: { friendInvitation }
+      } = subscriptionData;
+
+      switch (friendInvitation.mutation) {
+        case MutationType.Deleted:
+          return refetch();
+        default:
+          return;
+      }
+    }
   });
 
   React.useEffect(() => {

@@ -16,7 +16,8 @@ export default function UserPeopleControls({ controlsUserId }: Props) {
     ({ invitedUserId }) => invitedUserId == controlsUserId
   );
 
-  if (current.includes(controlsUserId)) return <Friend />;
+  if (current.includes(controlsUserId))
+    return <Friend personToUnfriendId={controlsUserId} />;
 
   if (foundPendingForThatUser)
     return <Pending pendingInvitationId={foundPendingForThatUser.id} />;

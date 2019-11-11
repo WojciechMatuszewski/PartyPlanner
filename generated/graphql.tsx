@@ -2707,6 +2707,7 @@ export type Mutation = {
   updateMe: User,
   requestReset?: Maybe<SuccessMessage>,
   acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
+  unfriendPerson?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
 };
 
@@ -3292,6 +3293,11 @@ export type MutationRequestResetArgs = {
 export type MutationAcceptFriendInvitationArgs = {
   invitationId: Scalars['ID'],
   invitingUserId: Scalars['ID']
+};
+
+
+export type MutationUnfriendPersonArgs = {
+  personToUnfriendId: Scalars['ID']
 };
 
 
@@ -9443,6 +9449,33 @@ export type PartyInvitationSubscriptionSubscription = (
   )> }
 );
 
+export type User_FriendInvitationsSubscriptionSubscriptionVariables = {
+  where?: Maybe<FriendInvitationSubscriptionWhereInput>
+};
+
+
+export type User_FriendInvitationsSubscriptionSubscription = (
+  { __typename?: 'Subscription' }
+  & { friendInvitation: Maybe<(
+    { __typename?: 'FriendInvitationSubscriptionPayload' }
+    & Pick<FriendInvitationSubscriptionPayload, 'mutation'>
+    & { previousValues: Maybe<(
+      { __typename?: 'FriendInvitationPreviousValues' }
+      & Pick<FriendInvitationPreviousValues, 'id' | 'invitedUserId'>
+    )>, node: Maybe<(
+      { __typename?: 'FriendInvitation' }
+      & Pick<FriendInvitation, 'createdAt' | 'id' | 'invitedUserId'>
+      & { invitedBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
+      ), user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
+      ) }
+    )> }
+  )> }
+);
+
 export type JoinPartyFindQueryVariables = {
   inviteSecret: Scalars['String'],
   userId: Scalars['ID']
@@ -9737,33 +9770,6 @@ export type User_FriendInvitationsConnectionQuery = (
   ) }
 );
 
-export type User_FriendInvitationsSubscriptionSubscriptionVariables = {
-  where?: Maybe<FriendInvitationSubscriptionWhereInput>
-};
-
-
-export type User_FriendInvitationsSubscriptionSubscription = (
-  { __typename?: 'Subscription' }
-  & { friendInvitation: Maybe<(
-    { __typename?: 'FriendInvitationSubscriptionPayload' }
-    & Pick<FriendInvitationSubscriptionPayload, 'mutation'>
-    & { previousValues: Maybe<(
-      { __typename?: 'FriendInvitationPreviousValues' }
-      & Pick<FriendInvitationPreviousValues, 'id' | 'invitedUserId'>
-    )>, node: Maybe<(
-      { __typename?: 'FriendInvitation' }
-      & Pick<FriendInvitation, 'createdAt' | 'id' | 'invitedUserId'>
-      & { invitedBy: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
-      ), user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id'>
-      ) }
-    )> }
-  )> }
-);
-
 export type User_AcceptFriendInvitationMutationVariables = {
   invitationId: Scalars['ID'],
   invitingUserId: Scalars['ID']
@@ -9804,17 +9810,13 @@ export type User_PeopleConnectionQuery = (
 );
 
 export type User_UnfriendUserMutationVariables = {
-  data: UserUpdateInput,
-  where: UserWhereUniqueInput
+  personToUnfriendId: Scalars['ID']
 };
 
 
 export type User_UnfriendUserMutation = (
   { __typename?: 'Mutation' }
-  & { updateUser: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  )> }
+  & Pick<Mutation, 'unfriendPerson'>
 );
 
 export type User_CreateFriendInvitationMutationVariables = {
@@ -9962,6 +9964,13 @@ export type PartyInvitationSubscriptionPartyInvitation = PartyInvitationSubscrip
 export type PartyInvitationSubscriptionNode = Party_Invitation_FragmentFragment;
 export type PartyInvitationSubscriptionPreviousValues = PartyInvitationSubscriptionSubscription['partyInvitation']['previousValues'];
 export const usePartyInvitationSubscription = usePartyInvitationSubscriptionSubscription;
+export type User_FriendInvitationsSubscriptionVariables = User_FriendInvitationsSubscriptionSubscriptionVariables;
+export type User_FriendInvitationsSubscriptionFriendInvitation = User_FriendInvitationsSubscriptionSubscription['friendInvitation'];
+export type User_FriendInvitationsSubscriptionPreviousValues = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['previousValues'];
+export type User_FriendInvitationsSubscriptionNode = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node'];
+export type User_FriendInvitationsSubscriptionInvitedBy = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['invitedBy'];
+export type User_FriendInvitationsSubscriptionUser = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['user'];
+export const useUser_FriendInvitationsSubscription = useUser_FriendInvitationsSubscriptionSubscription;
 export type JoinPartyFindVariables = JoinPartyFindQueryVariables;
 export type JoinPartyFindParties = JoinPartyFindQuery['parties'][0];
 export type JoinPartyFindMembers = JoinPartyFindQuery['parties'][0]['members'][0];
@@ -10029,13 +10038,6 @@ export type User_FriendInvitationsConnectionUser = User_FriendInvitationsConnect
 export type User_FriendInvitationsConnectionCounts = User_FriendInvitationsConnectionQuery['counts'];
 export type User_FriendInvitationsConnectionAggregate = User_FriendInvitationsConnectionQuery['counts']['aggregate'];
 export const useUser_FriendInvitationsConnection = useUser_FriendInvitationsConnectionQuery;
-export type User_FriendInvitationsSubscriptionVariables = User_FriendInvitationsSubscriptionSubscriptionVariables;
-export type User_FriendInvitationsSubscriptionFriendInvitation = User_FriendInvitationsSubscriptionSubscription['friendInvitation'];
-export type User_FriendInvitationsSubscriptionPreviousValues = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['previousValues'];
-export type User_FriendInvitationsSubscriptionNode = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node'];
-export type User_FriendInvitationsSubscriptionInvitedBy = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['invitedBy'];
-export type User_FriendInvitationsSubscriptionUser = User_FriendInvitationsSubscriptionSubscription['friendInvitation']['node']['user'];
-export const useUser_FriendInvitationsSubscription = useUser_FriendInvitationsSubscriptionSubscription;
 export type User_AcceptFriendInvitationVariables = User_AcceptFriendInvitationMutationVariables;
 export const useUser_AcceptFriendInvitation = useUser_AcceptFriendInvitationMutation;
 export type User_PeopleConnectionVariables = User_PeopleConnectionQueryVariables;
@@ -10045,7 +10047,6 @@ export type User_PeopleConnectionEdges = User_PeopleConnectionQuery['usersConnec
 export type User_PeopleConnectionNode = User_PeopleConnectionQuery['usersConnection']['edges'][0]['node'];
 export const useUser_PeopleConnection = useUser_PeopleConnectionQuery;
 export type User_UnfriendUserVariables = User_UnfriendUserMutationVariables;
-export type User_UnfriendUserUpdateUser = User_UnfriendUserMutation['updateUser'];
 export const useUser_UnfriendUser = useUser_UnfriendUserMutation;
 export type User_CreateFriendInvitationVariables = User_CreateFriendInvitationMutationVariables;
 export type User_CreateFriendInvitationCreateFriendInvitation = User_CreateFriendInvitationMutation['createFriendInvitation'];
@@ -10927,6 +10928,43 @@ export type PartyInvitationSubscriptionComponentProps = Omit<ApolloReactComponen
     }
 export type PartyInvitationSubscriptionSubscriptionHookResult = ReturnType<typeof usePartyInvitationSubscriptionSubscription>;
 export type PartyInvitationSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<PartyInvitationSubscriptionSubscription>;
+export const User_FriendInvitationsSubscriptionDocument = gql`
+    subscription User_FriendInvitationsSubscription($where: FriendInvitationSubscriptionWhereInput) {
+  friendInvitation(where: $where) {
+    mutation
+    previousValues {
+      id
+      invitedUserId
+    }
+    node {
+      createdAt
+      invitedBy {
+        id
+        firstName
+        lastName
+        avatar
+      }
+      id
+      invitedUserId
+      user {
+        id
+      }
+    }
+  }
+}
+    `;
+export type User_FriendInvitationsSubscriptionComponentProps = Omit<ApolloReactComponents.SubscriptionComponentOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>, 'subscription'>;
+
+    export const User_FriendInvitationsSubscriptionComponent = (props: User_FriendInvitationsSubscriptionComponentProps) => (
+      <ApolloReactComponents.Subscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables> subscription={User_FriendInvitationsSubscriptionDocument} {...props} />
+    );
+    
+
+    export function useUser_FriendInvitationsSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>) {
+      return ApolloReactHooks.useSubscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>(User_FriendInvitationsSubscriptionDocument, baseOptions);
+    }
+export type User_FriendInvitationsSubscriptionSubscriptionHookResult = ReturnType<typeof useUser_FriendInvitationsSubscriptionSubscription>;
+export type User_FriendInvitationsSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<User_FriendInvitationsSubscriptionSubscription>;
 export const JoinPartyFindDocument = gql`
     query JoinPartyFind($inviteSecret: String!, $userId: ID!) {
   parties(where: {inviteSecret: $inviteSecret, members_none: {id: $userId}}) {
@@ -11320,43 +11358,6 @@ export type User_FriendInvitationsConnectionComponentProps = Omit<ApolloReactCom
       
 export type User_FriendInvitationsConnectionQueryHookResult = ReturnType<typeof useUser_FriendInvitationsConnectionQuery>;
 export type User_FriendInvitationsConnectionQueryResult = ApolloReactCommon.QueryResult<User_FriendInvitationsConnectionQuery, User_FriendInvitationsConnectionQueryVariables>;
-export const User_FriendInvitationsSubscriptionDocument = gql`
-    subscription User_FriendInvitationsSubscription($where: FriendInvitationSubscriptionWhereInput) {
-  friendInvitation(where: $where) {
-    mutation
-    previousValues {
-      id
-      invitedUserId
-    }
-    node {
-      createdAt
-      invitedBy {
-        id
-        firstName
-        lastName
-        avatar
-      }
-      id
-      invitedUserId
-      user {
-        id
-      }
-    }
-  }
-}
-    `;
-export type User_FriendInvitationsSubscriptionComponentProps = Omit<ApolloReactComponents.SubscriptionComponentOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>, 'subscription'>;
-
-    export const User_FriendInvitationsSubscriptionComponent = (props: User_FriendInvitationsSubscriptionComponentProps) => (
-      <ApolloReactComponents.Subscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables> subscription={User_FriendInvitationsSubscriptionDocument} {...props} />
-    );
-    
-
-    export function useUser_FriendInvitationsSubscriptionSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>) {
-      return ApolloReactHooks.useSubscription<User_FriendInvitationsSubscriptionSubscription, User_FriendInvitationsSubscriptionSubscriptionVariables>(User_FriendInvitationsSubscriptionDocument, baseOptions);
-    }
-export type User_FriendInvitationsSubscriptionSubscriptionHookResult = ReturnType<typeof useUser_FriendInvitationsSubscriptionSubscription>;
-export type User_FriendInvitationsSubscriptionSubscriptionResult = ApolloReactCommon.SubscriptionResult<User_FriendInvitationsSubscriptionSubscription>;
 export const User_AcceptFriendInvitationDocument = gql`
     mutation User_AcceptFriendInvitation($invitationId: ID!, $invitingUserId: ID!) {
   acceptFriendInvitation(invitationId: $invitationId, invitingUserId: $invitingUserId)
@@ -11412,10 +11413,8 @@ export type User_PeopleConnectionComponentProps = Omit<ApolloReactComponents.Que
 export type User_PeopleConnectionQueryHookResult = ReturnType<typeof useUser_PeopleConnectionQuery>;
 export type User_PeopleConnectionQueryResult = ApolloReactCommon.QueryResult<User_PeopleConnectionQuery, User_PeopleConnectionQueryVariables>;
 export const User_UnfriendUserDocument = gql`
-    mutation User_UnfriendUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
-  updateUser(data: $data, where: $where) {
-    id
-  }
+    mutation User_UnfriendUser($personToUnfriendId: ID!) {
+  unfriendPerson(personToUnfriendId: $personToUnfriendId)
 }
     `;
 export type User_UnfriendUserMutationFn = ApolloReactCommon.MutationFunction<User_UnfriendUserMutation, User_UnfriendUserMutationVariables>;

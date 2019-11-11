@@ -73,34 +73,6 @@ export const FRIEND_INVITATIONS_CONNECTION = gql`
   }
 `;
 
-export const FRIEND_INVITATIONS_SUBSCRIPTION = gql`
-  subscription User_FriendInvitationsSubscription(
-    $where: FriendInvitationSubscriptionWhereInput
-  ) {
-    friendInvitation(where: $where) {
-      mutation
-      previousValues {
-        id
-        invitedUserId
-      }
-      node {
-        createdAt
-        invitedBy {
-          id
-          firstName
-          lastName
-          avatar
-        }
-        id
-        invitedUserId
-        user {
-          id
-        }
-      }
-    }
-  }
-`;
-
 interface Props {
   userId: string;
 }

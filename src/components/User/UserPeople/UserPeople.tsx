@@ -21,6 +21,7 @@ interface Props {
   userId: string;
 }
 
+const PAGE_SIZE = 20;
 const UserPeopleContentWrapper = styled.div`
   max-width: 1280px;
   margin: 0 auto;
@@ -74,7 +75,8 @@ export default function UserPeople({ userId }: Props) {
     error,
     loading,
     networkStatus,
-    refetch
+    refetch,
+    fetchMore
   } = useUser_PeopleConnection({
     variables: {
       where: {
@@ -83,10 +85,35 @@ export default function UserPeople({ userId }: Props) {
           { firstName_contains: searchQuery },
           { lastName_contains: searchQuery }
         ]
-      }
+      },
+      first: PAGE_SIZE
     },
     notifyOnNetworkStatusChange: true
   });
+
+  function handleOnLoadMore() {
+    fetchMore({
+      variables: {
+        after: pageInfo.endCursor,
+        first: PAGE_SIZE
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult || fetchMoreResult.usersConnection == undefined)
+          return prev;
+        return {
+          ...prev,
+          usersConnection: {
+            __typename: 'UserConnection',
+            edges: [
+              ...prev.usersConnection.edges,
+              ...fetchMoreResult.usersConnection.edges
+            ],
+            pageInfo: fetchMoreResult.usersConnection.pageInfo
+          }
+        };
+      }
+    });
+  }
 
   if (
     isLoadingInitially(networkStatus) ||
@@ -110,7 +137,7 @@ export default function UserPeople({ userId }: Props) {
     usersConnection: { edges, pageInfo }
   } = data;
 
-  const canLoadMore = !loading && pageInfo.hasNextPage;
+  const canLoadMore = pageInfo.hasNextPage;
 
   return (
     <React.Fragment>
@@ -126,6 +153,7 @@ export default function UserPeople({ userId }: Props) {
       <UserPeopleContentWrapper>
         <UserPeopleList
           users={edges}
+          onLoadMore={handleOnLoadMore}
           loading={loading}
           canLoadMore={canLoadMore}
           loadingMore={isLoadingMore(networkStatus)}

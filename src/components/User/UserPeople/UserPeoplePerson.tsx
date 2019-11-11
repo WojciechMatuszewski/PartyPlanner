@@ -11,8 +11,6 @@ import React from 'react';
 interface Props {
   user: DeepWithoutMaybe<User_PeopleConnectionEdges>;
   style: React.CSSProperties;
-  isPending: boolean;
-  isFriend: boolean;
 }
 
 const MetaStyles = css`

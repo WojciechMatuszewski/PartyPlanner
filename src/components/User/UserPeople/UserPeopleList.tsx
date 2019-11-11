@@ -1,10 +1,9 @@
 import UserPeoplePerson from './UserPeoplePerson';
-import { useUserFriends } from './UserPeopleProvider';
 
 import css from '@emotion/css';
 import { User_PeopleConnectionEdges } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { List, Button } from 'antd';
+import { Button, List } from 'antd';
 import React from 'react';
 import { AutoSizer, List as VList, WindowScroller } from 'react-virtualized';
 
@@ -13,6 +12,7 @@ interface Props {
   loadingMore: boolean;
   canLoadMore: boolean;
   loading: boolean;
+  onLoadMore: VoidFunction;
 }
 
 const ListStyles = css`
@@ -20,15 +20,6 @@ const ListStyles = css`
     display: none;
   }
   flex: 1;
-  //   background: white;
-  //   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  //   margin-top: 12px;
-  //   h4 {
-  //     margin-bottom: 0;
-  //   }
-  //   .ant-list-item-meta {
-  //     align-items: center;
-  //   }
 `;
 
 const LoadMoreButtonStyles = css`
@@ -45,18 +36,9 @@ export default function UserPeopleList({
   users,
   loadingMore,
   loading,
-  canLoadMore
+  canLoadMore,
+  onLoadMore
 }: Props) {
-  const { pending, current } = useUserFriends();
-
-  function isPendingInvite(userId: string) {
-    return pending.includes(userId);
-  }
-
-  function isFriend(userId: string) {
-    return current.includes(userId);
-  }
-
   return (
     <WindowScroller>
       {({ isScrolling, onChildScroll, scrollTop, height }) => (
@@ -79,8 +61,6 @@ export default function UserPeopleList({
                     return (
                       <UserPeoplePerson
                         key={user.node.id}
-                        isPending={isPendingInvite(user.node.id)}
-                        isFriend={isFriend(user.node.id)}
                         style={style}
                         user={user}
                       />
@@ -91,7 +71,11 @@ export default function UserPeopleList({
             </AutoSizer>
           </List>
           {canLoadMore && (
-            <Button css={[LoadMoreButtonStyles]} loading={loadingMore}>
+            <Button
+              css={[LoadMoreButtonStyles]}
+              loading={loadingMore}
+              onClick={onLoadMore}
+            >
               Load More
             </Button>
           )}
