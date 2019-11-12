@@ -20,13 +20,15 @@ interface Props {
   onSelectPlaylistClick: VoidFunction;
   selectingPlaylists: boolean;
   children: React.ReactNode;
+  hasAtLeastOnePlaylist: boolean;
 }
 export default function PlaylistsControls({
   onSearch,
   loading,
   onSelectPlaylistClick,
   selectingPlaylists,
-  children
+  children,
+  hasAtLeastOnePlaylist
 }: Props) {
   const isOnMobile = useMedia('(max-width:800px)');
 
@@ -34,6 +36,7 @@ export default function PlaylistsControls({
     return (
       <PlaylistControlsButtons>
         <Dropdown
+          disabled={!hasAtLeastOnePlaylist}
           trigger={['click']}
           overlay={
             <Menu selectedKeys={selectingPlaylists ? ['1'] : []}>
@@ -69,6 +72,7 @@ export default function PlaylistsControls({
       <PlaylistControlsButtons>
         {children}
         <Button
+          disabled={!hasAtLeastOnePlaylist}
           type={selectingPlaylists ? 'danger' : 'primary'}
           onClick={onSelectPlaylistClick}
         >

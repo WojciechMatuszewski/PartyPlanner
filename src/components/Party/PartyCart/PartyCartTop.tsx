@@ -56,8 +56,6 @@ interface Props {
   cartId: string;
 }
 export default function PartyCartTop({ partyTitle, cartId }: Props) {
-  // probably some kind of query here??
-
   const { data, loading, error, refetch } = useParty_CartCost({
     variables: { id: cartId }
   });
@@ -99,7 +97,7 @@ export default function PartyCartTop({ partyTitle, cartId }: Props) {
         <Typography.Title level={3}>{partyTitle}s' cart</Typography.Title>
         <Statistic
           title="Estimated cost (PLN)"
-          value={data.partyCartCost}
+          value={data.partyCartCost / 100}
           precision={2}
         />
       </RightSideWrapper>

@@ -162,6 +162,7 @@ export default function PartyMusicPlaylists({ partyId, userId }: Props) {
       <Affix>
         <AffixedBarContainer>
           <PlaylistsControls
+            hasAtLeastOnePlaylist={edges.length > 0}
             onSelectPlaylistClick={toggleSelectingPlaylists}
             selectingPlaylists={selectingPlaylists}
             loading={isLoadingOnSearch(networkStatus)}
