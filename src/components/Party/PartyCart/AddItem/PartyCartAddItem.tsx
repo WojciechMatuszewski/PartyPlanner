@@ -56,11 +56,15 @@ export default function PartyCartAddItem({ cartId }: Props) {
 
   async function handleCreateCartItem(values: PartyCartAddItemFormValues) {
     formValuesRef.current = values;
+
+    const parsedMonetaryValue = values.price * 100;
+
     try {
       await createPartyCartItem({
         variables: {
           data: {
             ...values,
+            price: parsedMonetaryValue,
             user: { connect: { id: userId } },
             cart: { connect: { id: cartId } },
             status: PartyCartItemStatus.Pending

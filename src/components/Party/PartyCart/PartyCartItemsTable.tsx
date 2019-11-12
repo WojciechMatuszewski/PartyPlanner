@@ -30,6 +30,9 @@ export type CartItemActions =
   | PartyCartItemStatus.Rejected
   | PartyCartItemStatus.Pending;
 
+function truncate(num, places) {
+  return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+}
 interface Props {
   cartItems: DeepWithoutMaybe<Party_CartItemsConnectionEdges[]>;
   loading: boolean;
@@ -156,7 +159,7 @@ const renderQuantity: SimpleRenderer = (_, { node: { quantity } }) => (
 );
 
 const renderPrice: SimpleRenderer = (_, { node: { price } }) => (
-  <span>{price}</span>
+  <span>{truncate(price / 100, 2).toFixed(2)}</span>
 );
 
 const renderWhat: SimpleRenderer = (_, { node: { name } }) => (

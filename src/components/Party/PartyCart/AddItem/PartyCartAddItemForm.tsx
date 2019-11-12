@@ -58,7 +58,9 @@ interface Props {
 }
 export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
   function handleFormatPrice(value: number) {
-    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${value}`
+      .replace(/\B(?=(\d{6})+(?!\d))/g, ',')
+      .replace(/[.,](\d{3})(?!\d)/g, '');
   }
 
   function handleParsePrice(value: string) {
@@ -107,6 +109,7 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
                 defaultValue={0}
                 formatter={handleFormatPrice}
                 parser={handleParsePrice}
+                step="0.01"
                 formItemProps={{
                   label: 'Price (PLN)',
                   colon: false,

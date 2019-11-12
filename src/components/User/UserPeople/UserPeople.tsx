@@ -16,6 +16,7 @@ import {
 import { Affix, Button } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
+import EmptySection from '@components/UI/EmptySection';
 
 interface Props {
   userId: string;
@@ -151,13 +152,21 @@ export default function UserPeople({ userId }: Props) {
         </AffixedBarContainer>
       </Affix>
       <UserPeopleContentWrapper>
-        <UserPeopleList
-          users={edges}
-          onLoadMore={handleOnLoadMore}
-          loading={loading}
-          canLoadMore={canLoadMore}
-          loadingMore={isLoadingMore(networkStatus)}
-        />
+        {edges.length == 0 ? (
+          <EmptySection
+            image="/static/people-no-results.svg"
+            title="No results"
+            description="There are no results to show"
+          />
+        ) : (
+          <UserPeopleList
+            users={edges}
+            onLoadMore={handleOnLoadMore}
+            loading={loading}
+            canLoadMore={canLoadMore}
+            loadingMore={isLoadingMore(networkStatus)}
+          />
+        )}
       </UserPeopleContentWrapper>
     </React.Fragment>
   );
