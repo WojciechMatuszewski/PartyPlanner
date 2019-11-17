@@ -1,5 +1,5 @@
 import css from '@emotion/css';
-import FormikInputField from '@shared/formikInputField';
+import FormikInputField from '@shared/FormikInputField';
 import { Button, Checkbox, Form } from 'antd';
 import { Field, Formik } from 'formik';
 import React from 'react';

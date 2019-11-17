@@ -2698,9 +2698,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
+  joinParty?: Maybe<Scalars['Boolean']>,
   importPlaylistsToParty: Scalars['Boolean'],
   combinePlaylists: Playlist,
-  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -3244,6 +3244,11 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
 export type MutationImportPlaylistsToPartyArgs = {
   playlists: Scalars['String'],
   partyId: Scalars['ID']
@@ -3253,11 +3258,6 @@ export type MutationImportPlaylistsToPartyArgs = {
 export type MutationCombinePlaylistsArgs = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
 };
 
 
@@ -9522,6 +9522,43 @@ export type Is_Unread_ThreadFragment = (
   & Pick<Chat, 'hasUnreadMessages'>
 );
 
+export type Party_UpdatePartyMutationVariables = {
+  data: PartyUpdateInput,
+  where: PartyWhereUniqueInput
+};
+
+
+export type Party_UpdatePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateParty: Maybe<(
+    { __typename?: 'Party' }
+    & { location: (
+      { __typename?: 'Location' }
+      & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+    ) }
+  )
+    & Party_FragmentFragment
+  > }
+);
+
+export type Lol_FragmentFragment = (
+  { __typename?: 'Party' }
+  & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
+  & { location: (
+    { __typename?: 'Location' }
+    & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+  ), author: (
+    { __typename?: 'User' }
+    & Pick<User, 'firstName' | 'lastName' | 'id'>
+  ), members: Maybe<Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
+  )>>, cart: (
+    { __typename?: 'PartyCart' }
+    & Pick<PartyCart, 'id'>
+  ) }
+);
+
 export type Party_CombinePlaylistsMutationVariables = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
@@ -9981,6 +10018,15 @@ export type User_FriendsVariables = User_FriendsQueryVariables;
 export type User_FriendsUserFriends = User_FriendsQuery['userFriends'];
 export type User_FriendsPending = User_FriendsQuery['userFriends']['pending'][0];
 export const useUser_Friends = useUser_FriendsQuery;
+export type Party_UpdatePartyVariables = Party_UpdatePartyMutationVariables;
+export type Party_UpdatePartyUpdateParty = Party_FragmentFragment;
+export type Party_UpdatePartyLocation = Party_UpdatePartyMutation['updateParty']['location'];
+export const useParty_UpdateParty = useParty_UpdatePartyMutation;
+export type Lol_FragmentLocation = Lol_FragmentFragment['location'];
+export type Lol_Fragment_Location = Lol_FragmentFragment['location'];
+export type Lol_FragmentAuthor = Lol_FragmentFragment['author'];
+export type Lol_FragmentMembers = Lol_FragmentFragment['members'][0];
+export type Lol_FragmentCart = Lol_FragmentFragment['cart'];
 export type Party_CombinePlaylistsVariables = Party_CombinePlaylistsMutationVariables;
 export type Party_CombinePlaylistsCombinePlaylists = Party_CombinePlaylistsMutation['combinePlaylists'];
 export const useParty_CombinePlaylists = useParty_CombinePlaylistsMutation;
@@ -10183,6 +10229,40 @@ export const Party_Cart_Items_Connection_Node_FragmentFragmentDoc = gql`
 export const Is_Unread_ThreadFragmentDoc = gql`
     fragment IS_UNREAD_THREAD on Chat {
   hasUnreadMessages @client
+}
+    `;
+export const Lol_FragmentFragmentDoc = gql`
+    fragment LOL_FRAGMENT on Party {
+  location {
+    placeName
+    latitude
+    longitude
+  }
+  id
+  title
+  description
+  location {
+    placeName
+  }
+  author {
+    firstName
+    lastName
+    id
+  }
+  members {
+    avatar
+    firstName
+    lastName
+    id
+  }
+  colorTint
+  start
+  end
+  isPublic
+  inviteSecret
+  cart {
+    id
+  }
 }
     `;
 export const UserFragmentDoc = gql`
@@ -11027,6 +11107,32 @@ export type User_FriendsComponentProps = Omit<ApolloReactComponents.QueryCompone
       
 export type User_FriendsQueryHookResult = ReturnType<typeof useUser_FriendsQuery>;
 export type User_FriendsQueryResult = ApolloReactCommon.QueryResult<User_FriendsQuery, User_FriendsQueryVariables>;
+export const Party_UpdatePartyDocument = gql`
+    mutation Party_UpdateParty($data: PartyUpdateInput!, $where: PartyWhereUniqueInput!) {
+  updateParty(data: $data, where: $where) {
+    location {
+      placeName
+      latitude
+      longitude
+    }
+    ...PARTY_FRAGMENT
+  }
+}
+    ${Party_FragmentFragmentDoc}`;
+export type Party_UpdatePartyMutationFn = ApolloReactCommon.MutationFunction<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
+export type Party_UpdatePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>, 'mutation'>;
+
+    export const Party_UpdatePartyComponent = (props: Party_UpdatePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables> mutation={Party_UpdatePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_UpdatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>(Party_UpdatePartyDocument, baseOptions);
+    }
+export type Party_UpdatePartyMutationHookResult = ReturnType<typeof useParty_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
 export const Party_CombinePlaylistsDocument = gql`
     mutation Party_CombinePlaylists($partyPlannerData: CombinePlaylistPartyPlannerData!, $spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput!) {
   combinePlaylists(partyPlannerData: $partyPlannerData, spotifyData: $spotifyData) {

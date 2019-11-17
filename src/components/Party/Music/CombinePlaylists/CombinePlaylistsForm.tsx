@@ -2,7 +2,7 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik, Field } from 'formik';
 import { Form as AntdForm, Form, Checkbox, Button } from 'antd';
-import FormikInputField from '@shared/formikInputField';
+import FormikInputField from '@shared/FormikInputField';
 
 export interface CombinePlaylistFormValues {
   name: string | undefined;

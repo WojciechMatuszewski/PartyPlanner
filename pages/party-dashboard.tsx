@@ -1,28 +1,30 @@
-import React from 'react';
-import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import { Row, Col } from 'antd';
-import dynamic from 'next/dynamic';
-import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
-import css from '@emotion/css';
-import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
-import PartyDashboardLocationSecondary from '@components/Party/PartyDashboard/PartyDashboardLocationSecondary';
-import { NextFunctionComponent } from 'next';
 import { NextContextWithApollo } from './_app';
+
 import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import {
-  PartiesQueryQuery,
-  PartiesQueryQueryVariables
-} from '@generated/graphql';
-import { PARTIES_QUERY } from '@graphql/queries';
+import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
+import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
+import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
+import PartyDashboardLocationSecondary from '@components/Party/PartyDashboard/PartyDashboardLocationSecondary';
+import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
-import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
-import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDashboardParticipants/PartyDashboardParticipants';
-import Head from 'next/head';
-import styled from '@emotion/styled';
+import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import PageException from '@components/UI/PageException';
+import css from '@emotion/css';
+import styled from '@emotion/styled';
+import {
+  PartiesQueryQuery,
+  PartiesQueryQueryVariables,
+  usePartiesQueryLazyQuery
+} from '@generated/graphql';
+import { PARTIES_QUERY } from '@graphql/queries';
+import { DeepWithoutMaybe, hasGraphqlData } from '@shared/graphqlUtils';
+import { Col, Row } from 'antd';
+import { NextFunctionComponent } from 'next';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import React from 'react';
 
 const PartyDashboardMap = dynamic(
   () =>
@@ -95,6 +97,10 @@ const PartyMapRowStyles = css`
 
 type RouteQueryProps = { id?: string };
 
+export type PartyDashboardParty = NonNullable<
+  DeepWithoutMaybe<PartiesQueryQuery['parties'][0]>
+>;
+
 interface InjectedProps {
   partyData: {
     party: PartiesQueryQuery['parties'][0] | null;
@@ -120,6 +126,10 @@ const Party: NextFunctionComponent<
   InjectedProps,
   NextContextWithApollo<RouteQueryProps>
 > = ({ partyData, userData }) => {
+  const [getParty, { data: lazyPartyData }] = usePartiesQueryLazyQuery({
+    fetchPolicy: 'cache-first'
+  });
+
   if (partyData.responseType == 'missingOrUnauthorized')
     return (
       <PageException
@@ -131,9 +141,30 @@ const Party: NextFunctionComponent<
 
   if (partyData.responseType == 'error' || !userData) return null;
 
-  const { party } = partyData as {
-    party: NonNullable<DeepWithoutMaybe<PartiesQueryQuery['parties'][0]>>;
+  const { party: partyFromTheServer } = partyData as {
+    party: PartyDashboardParty;
   };
+
+  // we cannot change or refetch queries that come from the server,
+  // but we can take advantage of them being in the cache
+  React.useEffect(() => {
+    getParty({
+      variables: {
+        where: {
+          id: partyFromTheServer.id,
+          members_some: {
+            id: userData.id
+          }
+        }
+      }
+    });
+  }, []);
+
+  // just to make sure we are displaying something asap
+  // if getParty (cached) fails, use hydrated version
+  const party = hasGraphqlData(lazyPartyData, ['parties'])
+    ? lazyPartyData.parties[0]
+    : partyFromTheServer;
 
   const contextValue = React.useMemo<PartyDashboardContextValue>(
     () => ({
@@ -156,8 +187,8 @@ const Party: NextFunctionComponent<
         <PartyDashboardContentWrapper>
           <PartyDashboardTop party={party} />
           <PartyDashboardTopMenu
-            partyId={party.id}
-            inviteSecret={party.inviteSecret!}
+            party={party}
+            canEditParty={party.author.id == userData.id}
           />
           <PartyDashboardBasicInfo
             author={party.author}

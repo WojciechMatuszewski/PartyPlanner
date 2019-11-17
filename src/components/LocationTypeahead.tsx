@@ -112,9 +112,7 @@ const LocationTypeahead = (props: Props) => {
 
   async function handleLocationSearch(searchQuery: string) {
     return await cancelableGet(
-      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=${
-        props.queryTypes
-      }&country=PL&limit=10`
+      `/geocoding/v5/mapbox.places/${searchQuery}.json?types=${props.queryTypes}&country=PL&limit=10`
     );
   }
 

@@ -4,6 +4,20 @@ import styled from '@emotion/styled';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import SearchForLocation from './CreatePartySearchForLocation';
 import { UserLocation } from '@hooks/useUserLocation';
+import css from '@emotion/css';
+
+const MobilePartyLocationWrapperStyles = css`
+  flex-direction: column;
+  button {
+    width: 100%;
+    order: 1;
+    margin-top: 0;
+  }
+  .ant-form-item {
+    order: 2;
+    padding-right: 0;
+  }
+`;
 
 const PartyLocationWrapper = styled.div`
   width: 100%;
@@ -20,16 +34,7 @@ const PartyLocationWrapper = styled.div`
   margin-bottom: 24px;
 
   @media screen and (max-width: 992px) {
-    flex-direction: column;
-    button {
-      width: 100%;
-      order: 1;
-      margin-top: 0;
-    }
-    .ant-form-item {
-      order: 2;
-      padding-right: 0;
-    }
+    ${MobilePartyLocationWrapperStyles};
   }
 `;
 
@@ -90,14 +95,20 @@ function reducer(
   }
 }
 
-const CreatePartyLocation: React.FC = () => {
+interface Props {
+  useMobileStyles?: boolean;
+}
+
+const CreatePartyLocation: React.FC<Props> = ({ useMobileStyles }) => {
   const [state, dispatch] = React.useReducer(
     reducer,
     initialLocalizeMeButtonState
   );
 
   return (
-    <PartyLocationWrapper>
+    <PartyLocationWrapper
+      css={[useMobileStyles ? MobilePartyLocationWrapperStyles : undefined]}
+    >
       <SearchForLocation state={state} />
       <LocalizeMeButton
         loading={state.loading}

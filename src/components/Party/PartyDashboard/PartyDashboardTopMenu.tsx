@@ -6,6 +6,8 @@ import PartyDashboardInviteFriends from './PartyDashboardInviteFriends/PartyDash
 import * as copy from 'copy-to-clipboard';
 import { InvitationLinkProps } from '@pages/party-join';
 import { throttle } from 'lodash';
+import { PartyDashboardParty } from '@pages/party-dashboard';
+import EditParty from '../EditParty/EditParty';
 
 const JOIN_PARTY_PAGE = 'party/join';
 
@@ -19,11 +21,11 @@ const InnerWrapper = styled.div`
   align-content: space-around;
 `;
 interface Props {
-  partyId: string;
-  inviteSecret: string;
+  party: PartyDashboardParty;
+  canEditParty: boolean;
 }
 
-const PartyDashboardTopMenu: React.FC<Props> = props => {
+const PartyDashboardTopMenu: React.FC<Props> = ({ party, canEditParty }) => {
   const isOnMobile = useMedia('(max-width:680px)');
 
   const throttledOnCopyClickRef = React.useRef(
@@ -39,23 +41,19 @@ const PartyDashboardTopMenu: React.FC<Props> = props => {
             {!isOnMobile ? 'Copy invitation link' : 'Invitation link'}
           </Button>
         </Button.Group>
-        <Button type="dashed" style={{ marginLeft: 'auto' }}>
-          Edit
-        </Button>
+        {canEditParty && <EditParty party={party} />}
       </InnerWrapper>
     </Wrapper>
   );
 
   function createInvitationLink({ token }: InvitationLinkProps): string {
-    return `${
-      process.env.NEXT_STATIC_FRONTEND_URL
-    }/${JOIN_PARTY_PAGE}/${token}`;
+    return `${process.env.NEXT_STATIC_FRONTEND_URL}/${JOIN_PARTY_PAGE}/${token}`;
   }
 
   function handleCopyInvitationLinkClick() {
     copy(
       createInvitationLink({
-        token: props.inviteSecret
+        token: party.inviteSecret
       })
     );
     message.info('Link copied');
