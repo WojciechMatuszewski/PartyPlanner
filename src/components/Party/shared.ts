@@ -1,6 +1,3 @@
-import { PartyAuthenticationResult } from '@auth/party-auth';
-import { NextContextWithApollo } from '@pages/_app';
-import { NextFunctionComponent } from 'next';
 import {
   addTracksToPlaylist,
   createPlaylist,
@@ -9,14 +6,6 @@ import {
 } from 'spotify-web-sdk';
 
 export const MOBILE_LIST_BREAKPOINT = '800px';
-
-export type PartyPage<
-  InjectedProps = PartyAuthenticationResult
-> = NextFunctionComponent<
-  InjectedProps,
-  InjectedProps,
-  NextContextWithApollo<{ id?: string }>
->;
 
 export async function createSpotifyPlaylist(
   tracksUris: string[],

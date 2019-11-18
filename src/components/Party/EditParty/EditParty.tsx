@@ -153,6 +153,7 @@ export default function EditParty({ party }: Props) {
         Edit
       </Button>
       <Modal
+        destroyOnClose={true}
         footer={null}
         centered={true}
         css={[ModalStyles]}

@@ -210,7 +210,7 @@ const CreatePartyForm: React.FC<Props> = props => {
                       name="description"
                       type="textArea"
                       placeholder="Description"
-                      autosize={{ minRows: 4 }}
+                      autoSize={{ minRows: 4 }}
                     />
                   </Tabs.TabPane>
                   <Tabs.TabPane tab="Find Time" key="2">

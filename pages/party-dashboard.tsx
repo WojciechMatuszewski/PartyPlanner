@@ -1,7 +1,3 @@
-import { NextContextWithApollo } from './_app';
-
-import ApolloAuthenticator from '@apolloSetup/apolloAuthenticator';
-import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
@@ -10,18 +6,14 @@ import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDa
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import PageException from '@components/UI/PageException';
 import css from '@emotion/css';
 import styled from '@emotion/styled';
-import {
-  PartiesQueryQuery,
-  PartiesQueryQueryVariables,
-  usePartiesQueryLazyQuery
-} from '@generated/graphql';
-import { PARTIES_QUERY } from '@graphql/queries';
-import { DeepWithoutMaybe, hasGraphqlData } from '@shared/graphqlUtils';
+import { usePartiesQueryLazyQuery } from '@generated/graphql';
+import { hasGraphqlData } from '@shared/graphqlUtils';
+import withHandledPartyPageLoad, {
+  WithHandledPageLoadInjectedProps
+} from '@shared/withHandledPageLoad';
 import { Col, Row } from 'antd';
-import { NextFunctionComponent } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React from 'react';
@@ -95,20 +87,6 @@ const PartyMapRowStyles = css`
   }
 `;
 
-type RouteQueryProps = { id?: string };
-
-export type PartyDashboardParty = NonNullable<
-  DeepWithoutMaybe<PartiesQueryQuery['parties'][0]>
->;
-
-interface InjectedProps {
-  partyData: {
-    party: PartiesQueryQuery['parties'][0] | null;
-    responseType: 'error' | 'success' | 'missingOrUnauthorized';
-  };
-  userData: WithApolloAuthInjectedProps['me'] | null;
-}
-
 interface PartyDashboardContextValue {
   currentlyAuthenticatedUserId: string;
   partyId: string;
@@ -121,29 +99,13 @@ export const PartyDashboardContext = React.createContext<
   partyId: ''
 });
 
-const Party: NextFunctionComponent<
-  InjectedProps,
-  InjectedProps,
-  NextContextWithApollo<RouteQueryProps>
-> = ({ partyData, userData }) => {
+const PartyDashboardPage = ({
+  user,
+  party: partyFromTheServer
+}: WithHandledPageLoadInjectedProps) => {
   const [getParty, { data: lazyPartyData }] = usePartiesQueryLazyQuery({
     fetchPolicy: 'cache-first'
   });
-
-  if (partyData.responseType == 'missingOrUnauthorized')
-    return (
-      <PageException
-        desc="That party does not exists or you are not invited"
-        redirectPath="/user/dashboard"
-        backText="Back to dashboard"
-      />
-    );
-
-  if (partyData.responseType == 'error' || !userData) return null;
-
-  const { party: partyFromTheServer } = partyData as {
-    party: PartyDashboardParty;
-  };
 
   // we cannot change or refetch queries that come from the server,
   // but we can take advantage of them being in the cache
@@ -153,7 +115,7 @@ const Party: NextFunctionComponent<
         where: {
           id: partyFromTheServer.id,
           members_some: {
-            id: userData.id
+            id: user.id
           }
         }
       }
@@ -168,7 +130,7 @@ const Party: NextFunctionComponent<
 
   const contextValue = React.useMemo<PartyDashboardContextValue>(
     () => ({
-      currentlyAuthenticatedUserId: userData.id,
+      currentlyAuthenticatedUserId: user.id,
       partyId: party.id
     }),
     []
@@ -188,7 +150,7 @@ const Party: NextFunctionComponent<
           <PartyDashboardTop party={party} />
           <PartyDashboardTopMenu
             party={party}
-            canEditParty={party.author.id == userData.id}
+            canEditParty={party.author.id == user.id}
           />
           <PartyDashboardBasicInfo
             author={party.author}
@@ -210,10 +172,7 @@ const Party: NextFunctionComponent<
           <PartyDashboardCommuteButtons location={party.location} />
           <Row style={{ marginTop: 12 }}>
             <Col span={24}>
-              <PartyDashboardParticipants
-                userId={userData.id}
-                partyId={partyData.party!.id}
-              />
+              <PartyDashboardParticipants userId={user.id} partyId={party.id} />
             </Col>
           </Row>
         </PartyDashboardContentWrapper>
@@ -222,71 +181,4 @@ const Party: NextFunctionComponent<
   );
 };
 
-async function getParty(
-  partyId: string,
-  userId: string,
-  context: NextContextWithApollo
-): Promise<InjectedProps['partyData']> {
-  const {
-    data: { parties }
-  } = await context.apolloClient.query<
-    PartiesQueryQuery,
-    PartiesQueryQueryVariables
-  >({
-    query: PARTIES_QUERY,
-    variables: {
-      where: {
-        id: partyId,
-        members_some: {
-          id: userId
-        }
-      }
-    }
-  });
-
-  const [party] = parties;
-
-  return {
-    party,
-    responseType: party ? 'success' : 'missingOrUnauthorized'
-  };
-}
-
-Party.getInitialProps = async (context): Promise<InjectedProps> => {
-  const userData = await ApolloAuthenticator.authenticateRoute({
-    userHasToBe: 'authenticated',
-    ctx: context
-  });
-
-  if (!userData)
-    return {
-      partyData: { party: null, responseType: 'missingOrUnauthorized' },
-      userData: null
-    };
-
-  const {
-    query: { id: partyId }
-  } = context;
-
-  if (!partyId) {
-    return {
-      partyData: { party: null, responseType: 'missingOrUnauthorized' },
-      userData: null
-    };
-  }
-
-  try {
-    const partyData = await getParty(partyId, userData.me.id, context);
-    return {
-      partyData,
-      userData: userData.me
-    };
-  } catch (e) {
-    return {
-      partyData: { party: null, responseType: 'error' },
-      userData: null
-    };
-  }
-};
-
-export default Party;
+export default withHandledPartyPageLoad(PartyDashboardPage);

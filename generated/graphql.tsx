@@ -2698,9 +2698,6 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
-  joinParty?: Maybe<Scalars['Boolean']>,
-  importPlaylistsToParty: Scalars['Boolean'],
-  combinePlaylists: Playlist,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2709,6 +2706,9 @@ export type Mutation = {
   acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
   unfriendPerson?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
+  joinParty?: Maybe<Scalars['Boolean']>,
+  importPlaylistsToParty: Scalars['Boolean'],
+  combinePlaylists: Playlist,
 };
 
 
@@ -3244,23 +3244,6 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
-export type MutationImportPlaylistsToPartyArgs = {
-  playlists: Scalars['String'],
-  partyId: Scalars['ID']
-};
-
-
-export type MutationCombinePlaylistsArgs = {
-  partyPlannerData: CombinePlaylistPartyPlannerData,
-  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
-};
-
-
 export type MutationSignupArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -3305,6 +3288,23 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
+export type MutationImportPlaylistsToPartyArgs = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
+};
+
+
+export type MutationCombinePlaylistsArgs = {
+  partyPlannerData: CombinePlaylistPartyPlannerData,
+  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
 };
 
 export enum MutationType {
@@ -3396,6 +3396,13 @@ export type PartySavedTracksArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+export type PartyAuthenticationResult = {
+   __typename?: 'PartyAuthenticationResult',
+  canJoin: Scalars['Boolean'],
+  isMember: Scalars['Boolean'],
+  party?: Maybe<Party>,
 };
 
 export type PartyCart = Node & {
@@ -6746,14 +6753,15 @@ export type Query = {
   albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
+  authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
-  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -7195,25 +7203,13 @@ export type QueryNodeArgs = {
 };
 
 
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
 export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>
-};
-
-
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
-
-export type QueryPartyCartCostArgs = {
-  id: Scalars['ID']
 };
 
 
@@ -7241,6 +7237,23 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
+};
+
+
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
 };
 
 export enum SocialMediaType {
@@ -8847,7 +8860,7 @@ export type Party_FragmentFragment = (
   & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
   & { location: (
     { __typename?: 'Location' }
-    & Pick<Location, 'placeName'>
+    & Pick<Location, 'placeName' | 'longitude' | 'latitude'>
   ), author: (
     { __typename?: 'User' }
     & Pick<User, 'firstName' | 'lastName' | 'id'>
@@ -8925,6 +8938,11 @@ export type Party_Cart_Items_Connection_Node_FragmentFragment = (
     { __typename?: 'User' }
     & Pick<User, 'firstName' | 'lastName'>
   ) }
+);
+
+export type Party_Authentication_Minimal_Party_FragmentFragment = (
+  { __typename?: 'Party' }
+  & Pick<Party, 'id'>
 );
 
 export type SignupMutationVariables = {
@@ -9517,6 +9535,22 @@ export type User_FriendsQuery = (
   ) }
 );
 
+export type Party_AuthenticateQueryVariables = {
+  partyId: Scalars['ID']
+};
+
+
+export type Party_AuthenticateQuery = (
+  { __typename?: 'Query' }
+  & { authenticateParty: (
+    { __typename?: 'PartyAuthenticationResult' }
+    & Pick<PartyAuthenticationResult, 'canJoin' | 'isMember'>
+    & { party: Maybe<{ __typename?: 'Party' }
+      & Party_FragmentFragment
+    > }
+  ) }
+);
+
 export type Is_Unread_ThreadFragment = (
   { __typename?: 'Chat' }
   & Pick<Chat, 'hasUnreadMessages'>
@@ -10018,6 +10052,10 @@ export type User_FriendsVariables = User_FriendsQueryVariables;
 export type User_FriendsUserFriends = User_FriendsQuery['userFriends'];
 export type User_FriendsPending = User_FriendsQuery['userFriends']['pending'][0];
 export const useUser_Friends = useUser_FriendsQuery;
+export type Party_AuthenticateVariables = Party_AuthenticateQueryVariables;
+export type Party_AuthenticateAuthenticateParty = Party_AuthenticateQuery['authenticateParty'];
+export type Party_AuthenticateParty = Party_FragmentFragment;
+export const useParty_Authenticate = useParty_AuthenticateQuery;
 export type Party_UpdatePartyVariables = Party_UpdatePartyMutationVariables;
 export type Party_UpdatePartyUpdateParty = Party_FragmentFragment;
 export type Party_UpdatePartyLocation = Party_UpdatePartyMutation['updateParty']['location'];
@@ -10103,6 +10141,8 @@ export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMuta
   description
   location {
     placeName
+    longitude
+    latitude
   }
   author {
     firstName
@@ -10224,6 +10264,11 @@ export const Party_Cart_Items_Connection_Node_FragmentFragmentDoc = gql`
     firstName
     lastName
   }
+}
+    `;
+export const Party_Authentication_Minimal_Party_FragmentFragmentDoc = gql`
+    fragment PARTY_AUTHENTICATION_MINIMAL_PARTY_FRAGMENT on Party {
+  id
 }
     `;
 export const Is_Unread_ThreadFragmentDoc = gql`
@@ -11107,6 +11152,33 @@ export type User_FriendsComponentProps = Omit<ApolloReactComponents.QueryCompone
       
 export type User_FriendsQueryHookResult = ReturnType<typeof useUser_FriendsQuery>;
 export type User_FriendsQueryResult = ApolloReactCommon.QueryResult<User_FriendsQuery, User_FriendsQueryVariables>;
+export const Party_AuthenticateDocument = gql`
+    query Party_Authenticate($partyId: ID!) {
+  authenticateParty(partyId: $partyId) {
+    canJoin
+    isMember
+    party {
+      ...PARTY_FRAGMENT
+    }
+  }
+}
+    ${Party_FragmentFragmentDoc}`;
+export type Party_AuthenticateComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>, 'query'> & ({ variables: Party_AuthenticateQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const Party_AuthenticateComponent = (props: Party_AuthenticateComponentProps) => (
+      <ApolloReactComponents.Query<Party_AuthenticateQuery, Party_AuthenticateQueryVariables> query={Party_AuthenticateDocument} {...props} />
+    );
+    
+
+    export function useParty_AuthenticateQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>(Party_AuthenticateDocument, baseOptions);
+    }
+      export function useParty_AuthenticateLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>(Party_AuthenticateDocument, baseOptions);
+      }
+      
+export type Party_AuthenticateQueryHookResult = ReturnType<typeof useParty_AuthenticateQuery>;
+export type Party_AuthenticateQueryResult = ApolloReactCommon.QueryResult<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>;
 export const Party_UpdatePartyDocument = gql`
     mutation Party_UpdateParty($data: PartyUpdateInput!, $where: PartyWhereUniqueInput!) {
   updateParty(data: $data, where: $where) {

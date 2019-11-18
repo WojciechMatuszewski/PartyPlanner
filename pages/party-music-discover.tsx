@@ -10,7 +10,7 @@ import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModa
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
-import { PartyPage } from '@components/Party/shared';
+
 import { PartyContentWrapper } from '@components/Party/styles';
 import PageException from '@components/UI/PageException';
 import { useParty_SavedTracks } from '@generated/graphql';

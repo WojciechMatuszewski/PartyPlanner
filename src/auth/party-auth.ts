@@ -1,58 +1,111 @@
+import { PARTY_FRAGMENT } from '@graphql/fragments';
+import { WithApolloAuthInjectedProps } from './../../apolloSetup/withApolloAuth';
+import {
+  Party_AuthenticateQuery,
+  Party_AuthenticateVariables
+} from './../../generated/graphql';
+
 import ApolloAuthenticator from '@auth/apollo-auth';
 import { NextContextWithApollo } from '@pages/_app';
-import {
-  HasPartiesQueryQuery,
-  HasPartiesQueryVariables
-} from '@generated/graphql';
-import { HAS_PARTIES_QUERY } from '@graphql/queries';
+import gql from 'graphql-tag';
+import { NextFunctionComponent } from 'next';
 
-export type PartyAuthenticationResult = {
-  isInParty: boolean;
+export const PARTY_AUTHENTICATION_QUERY = gql`
+  query Party_Authenticate($partyId: ID!) {
+    authenticateParty(partyId: $partyId) {
+      canJoin
+      isMember
+      party {
+        ...PARTY_FRAGMENT
+      }
+    }
+  }
+  ${PARTY_FRAGMENT}
+`;
+
+export type InjectedPartyFromAuth = NonNullable<
+  Party_AuthenticateQuery['authenticateParty']['party']
+>;
+
+export type PartyPage = NextFunctionComponent<
+  PartyAuthResult,
+  PartyAuthResult,
+  NextContextWithApollo<{ id?: string }>
+>;
+
+export type PartyAuthResult = {
+  canJoin: boolean;
   partyId: string;
   userId: string;
+  isMember: boolean;
+  error: boolean;
+  party: InjectedPartyFromAuth;
+  user: WithApolloAuthInjectedProps['me'] | undefined;
 };
 
-const notAuthenticated: PartyAuthenticationResult = {
-  isInParty: false,
-  partyId: '',
-  userId: ''
-};
+function notAuthenticated(
+  user: PartyAuthResult['user'] = undefined,
+  error: boolean = false
+) {
+  return {
+    canJoin: false,
+    partyId: '',
+    userId: '',
+    isMember: false,
+    error: error,
+    party: undefined as any,
+    user: user
+  };
+}
 
-async function isUserInParty<
+async function AuthenticateParty<
   RouterQuery extends Record<string, string | undefined>
->(
-  context: NextContextWithApollo<RouterQuery>
-): Promise<PartyAuthenticationResult> {
+>(context: NextContextWithApollo<RouterQuery>): Promise<PartyAuthResult> {
+  type InjectedParty = Party_AuthenticateQuery['authenticateParty']['party'];
+  const {
+    query: { id: partyId }
+  } = context;
+
+  if (!partyId) return notAuthenticated(undefined, true);
+
   const userData = await ApolloAuthenticator.authenticateRoute({
     userHasToBe: 'authenticated',
     ctx: context
   });
 
-  if (!userData || !context.query.id) return notAuthenticated;
+  if (!userData) return notAuthenticated(undefined, true);
 
-  const {
-    data: { hasParties }
-  } = await context.apolloClient.query<
-    HasPartiesQueryQuery,
-    HasPartiesQueryVariables
-  >({
-    query: HAS_PARTIES_QUERY,
-    variables: {
-      where: {
-        id: context.query.id
+  try {
+    const {
+      data: {
+        authenticateParty: { canJoin, isMember, party }
       }
-    }
-  });
+    } = await context.apolloClient.query<
+      Party_AuthenticateQuery,
+      Party_AuthenticateVariables
+    >({
+      query: PARTY_AUTHENTICATION_QUERY,
+      variables: { partyId }
+    });
 
-  return {
-    isInParty: hasParties,
-    partyId: context.query.id,
-    userId: userData.me.id
-  };
+    if ((!canJoin && !isMember) || !party) return notAuthenticated(userData.me);
+
+    return {
+      canJoin,
+      isMember,
+      partyId,
+      userId: userData.me.id,
+      error: false,
+      party: party as InjectedPartyFromAuth,
+      user: userData.me
+    };
+  } catch (e) {
+    return notAuthenticated(undefined, true);
+  }
 }
 
 const PartyAuthenticator = {
-  isUserInParty
+  AuthenticateParty
 };
 
 export default PartyAuthenticator;
