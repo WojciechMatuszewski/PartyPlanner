@@ -1,4 +1,3 @@
-import PartyAuthenticator from '@auth/party-auth';
 import GraphqlLoading from '@components/GraphqlLoading';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom, {
@@ -10,46 +9,44 @@ import TrackInfoModal from '@components/Party/Music/TrackInfoModal/TrackInfoModa
 import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/TrackInfoModalProvider';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
-
 import { PartyContentWrapper } from '@components/Party/styles';
+import withHandledPartyPageLoad, {
+  WithHandledPartyPageLoadInjectedProps
+} from '@components/Party/withHandledPartyPageLoad';
 import PageException from '@components/UI/PageException';
 import { useParty_SavedTracks } from '@generated/graphql';
 import SpotifyGuard from '@guards/SpotifyGuard';
-import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
+import {
+  handleRefetch,
+  hasGraphqlData,
+  isLoadingError
+} from '@shared/graphqlUtils';
 import { Button } from 'antd';
 import { NetworkStatus } from 'apollo-client';
 import React from 'react';
 
-const PartyMusicDiscoverPage: PartyPage = ({ isInParty, partyId, userId }) => {
+const PartyMusicDiscoverPage = ({
+  user,
+  party
+}: WithHandledPartyPageLoadInjectedProps) => {
+  const { id: partyId } = party;
+  const { id: userId } = user;
   const { data, error, refetch, networkStatus } = useParty_SavedTracks({
     variables: { where: { party: { id: partyId } } },
     notifyOnNetworkStatusChange: true
   });
 
-  if (!isInParty)
+  if (error)
     return (
-      <PageException
-        desc="Party either does not exist or you are not invited"
-        backText="Back to dashboard"
-        redirectPath="/user/dashboard"
-      />
+      <PageException>
+        <Button
+          onClick={() => handleRefetch(refetch)}
+          loading={isLoadingError(networkStatus)}
+        >
+          Try again
+        </Button>
+      </PageException>
     );
-
-  if (error || networkStatus == NetworkStatus.refetch) {
-    return (
-      <PageException
-        actions={
-          <Button
-            type="danger"
-            onClick={() => handleRefetch(refetch)}
-            loading={networkStatus == NetworkStatus.refetch}
-          >
-            Try loading again
-          </Button>
-        }
-      />
-    );
-  }
 
   if (
     networkStatus == NetworkStatus.loading ||
@@ -96,6 +93,4 @@ const PartyMusicDiscoverPage: PartyPage = ({ isInParty, partyId, userId }) => {
   }
 };
 
-PartyMusicDiscoverPage.getInitialProps = PartyAuthenticator.isUserInParty;
-
-export default PartyMusicDiscoverPage;
+export default withHandledPartyPageLoad(PartyMusicDiscoverPage);

@@ -3,9 +3,9 @@ import { PaginateUsersInviteToPartyQueryQuery, User } from '@generated/graphql';
 import styled from '@emotion/styled';
 import { List, Button, Tag } from 'antd';
 import css from '@emotion/css';
-import { PartyDashboardContext } from '@pages/party-dashboard';
 import PartyDashboardInviteFriendsModalListItem from './PartyDashboardInviteFriendsModalListItem';
 import EmptySection from '@components/UI/EmptySection';
+import { useParty } from '@components/Party/PartyProvider';
 
 const ListContainer = styled.div`
   max-height: 400px;
@@ -30,9 +30,7 @@ interface Props {
 }
 
 const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
-  const { currentlyAuthenticatedUserId } = React.useContext(
-    PartyDashboardContext
-  );
+  const { userId } = useParty();
 
   return (
     <ListContainer>
@@ -128,7 +126,7 @@ const PartyDashboardInviteFriendsModalList: React.FC<Props> = props => {
     if (!node.pendingPartyInvitations) return invitationsData;
     node.pendingPartyInvitations.forEach(pendingInvitation => {
       invitationsData.hasInvites = true;
-      if (pendingInvitation.invitedBy.id == currentlyAuthenticatedUserId) {
+      if (pendingInvitation.invitedBy.id == userId) {
         invitationsData.yourInvitationId = pendingInvitation.id;
       }
     });

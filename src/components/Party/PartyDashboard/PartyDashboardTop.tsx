@@ -43,7 +43,7 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
         border-bottom: 1px solid #e8e8e8;
         .img-wrapper {
           height: 300px;
-          width: 60%;
+          width: 66.6666%;
           padding: 12px;
           background: rgba(24, 144, 255, 0.1);
           img {
@@ -73,7 +73,7 @@ const PartyDashboardTop: React.FC<Props> = ({ party }) => {
             </Typography.Text>
           </div>
           <div>
-            <Typography.Title level={2}>{party.title}</Typography.Title>
+            <Typography.Title level={2}>{party.tiPtle}</Typography.Title>
             <Typography.Paragraph>
               by {party.author.firstName} {party.author.lastName}
             </Typography.Paragraph>

@@ -8,11 +8,7 @@ import css from '@emotion/css';
 import styled from '@emotion/styled';
 import { Form, Icon, DatePicker, Typography, Switch, Tabs, Button } from 'antd';
 import { FastField, Formik } from 'formik';
-import FormikInputField from '@shared/FormikInputField';
-import {
-  getFormItemValidateStatus,
-  getFormItemError
-} from '@shared/formikFieldUtils';
+
 import { curry } from 'ramda';
 import CreatePartyColorTintSelect from './CreatePartyColorTintSelect';
 import CreatePartyLocation from './CreatePartyLocation';
@@ -20,6 +16,11 @@ import UserCalendar from '@components/User/UserCalendar/UserCalendar';
 import InviteFriend from './InviteFriend/InviteFriend';
 import useMedia from '@hooks/useMedia';
 import { CREATE_PARTY_MOBILE_WIDTH } from './CreateParty';
+import {
+  getFormItemError,
+  getFormItemValidateStatus
+} from '@shared/formikFieldUtils';
+import FormikInputField from '@shared/FormikInputField';
 
 export const MAX_PARTY_DAYS = 3;
 

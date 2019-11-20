@@ -1,3 +1,5 @@
+import JoinPublicParty from '../src/components/Party/JoinParty/JoinPublicParty';
+
 import GraphqlInlineLoading from '@components/GraphqlInlineLoading';
 import PartyDashboardBasicInfo from '@components/Party/PartyDashboard/PartyDashboardBasicInfo';
 import PartyDashboardCommuteButtons from '@components/Party/PartyDashboard/PartyDashboardCommuteButtons';
@@ -6,13 +8,14 @@ import PartyDashboardParticipants from '@components/Party/PartyDashboard/PartyDa
 import PartyDashboardTop from '@components/Party/PartyDashboard/PartyDashboardTop';
 import PartyDashboardTopMenu from '@components/Party/PartyDashboard/PartyDashboardTopMenu';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
+import { PartyProvider } from '@components/Party/PartyProvider';
+import withHandledPartyPageLoad, {
+  WithHandledPartyPageLoadInjectedProps
+} from '@components/Party/withHandledPartyPageLoad';
 import css from '@emotion/css';
 import styled from '@emotion/styled';
 import { usePartiesQueryLazyQuery } from '@generated/graphql';
 import { hasGraphqlData } from '@shared/graphqlUtils';
-import withHandledPartyPageLoad, {
-  WithHandledPageLoadInjectedProps
-} from '@shared/withHandledPageLoad';
 import { Col, Row } from 'antd';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
@@ -31,7 +34,10 @@ const PartyDashboardMap = dynamic(
 
 const MOBILE_BREAKPOINT = '992px';
 
-const PartyDashboardContentWrapper = styled.div`
+// eslint-disable-next-line
+const PartyDashboardContentWrapper = styled.div<{
+  hasJoinPanelDisplayed: boolean;
+}>`
   margin: 24px auto 24px auto;
   display: flex;
   flex-direction: column;
@@ -45,6 +51,10 @@ const PartyDashboardContentWrapper = styled.div`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   overflow: hidden;
+
+  margin-bottom: ${props =>
+    props.hasJoinPanelDisplayed ? 'calc(24px + 88px)' : '24px'};
+
   .dashboard-content-item {
     padding: 12px 24px;
   }
@@ -55,7 +65,8 @@ const PartyDashboardContentWrapper = styled.div`
   }
   @media screen and (max-width: 1500px) {
     margin-top: auto;
-    margin-bottom: auto;
+    margin-bottom: ${props =>
+      props.hasJoinPanelDisplayed ? 'calc(24px + 88px)' : 'auto'};
     border-radius: 0;
     width: 100%;
     max-width: 100%;
@@ -87,25 +98,18 @@ const PartyMapRowStyles = css`
   }
 `;
 
-interface PartyDashboardContextValue {
-  currentlyAuthenticatedUserId: string;
-  partyId: string;
-}
-
-export const PartyDashboardContext = React.createContext<
-  PartyDashboardContextValue
->({
-  currentlyAuthenticatedUserId: '',
-  partyId: ''
-});
-
 const PartyDashboardPage = ({
   user,
-  party: partyFromTheServer
-}: WithHandledPageLoadInjectedProps) => {
+  party: partyFromTheServer,
+  canJoin
+}: WithHandledPartyPageLoadInjectedProps) => {
   const [getParty, { data: lazyPartyData }] = usePartiesQueryLazyQuery({
     fetchPolicy: 'cache-first'
   });
+
+  const [capturedCanJoinParty, setCapturedCanJoinParty] = React.useState(
+    canJoin
+  );
 
   // we cannot change or refetch queries that come from the server,
   // but we can take advantage of them being in the cache
@@ -124,17 +128,10 @@ const PartyDashboardPage = ({
 
   // just to make sure we are displaying something asap
   // if getParty (cached) fails, use hydrated version
-  const party = hasGraphqlData(lazyPartyData, ['parties'])
-    ? lazyPartyData.parties[0]
-    : partyFromTheServer;
-
-  const contextValue = React.useMemo<PartyDashboardContextValue>(
-    () => ({
-      currentlyAuthenticatedUserId: user.id,
-      partyId: party.id
-    }),
-    []
-  );
+  const party =
+    hasGraphqlData(lazyPartyData, ['parties']) && lazyPartyData.parties[0]
+      ? lazyPartyData.parties[0]
+      : partyFromTheServer;
 
   return (
     <React.Fragment>
@@ -144,14 +141,30 @@ const PartyDashboardPage = ({
           rel="stylesheet"
         />
       </Head>
-      <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
-      <PartyDashboardContext.Provider value={contextValue}>
-        <PartyDashboardContentWrapper>
+      {!capturedCanJoinParty && (
+        <PartyMenu partyId={party.id} routerPath="/party-dashboard" />
+      )}
+      <PartyProvider userId={user.id} partyId={party.id}>
+        <PartyDashboardContentWrapper
+          hasJoinPanelDisplayed={capturedCanJoinParty}
+        >
+          {capturedCanJoinParty && (
+            <JoinPublicParty
+              party={party}
+              user={user}
+              onPartyJoined={() => setCapturedCanJoinParty(false)}
+            />
+          )}
           <PartyDashboardTop party={party} />
-          <PartyDashboardTopMenu
-            party={party}
-            canEditParty={party.author.id == user.id}
-          />
+          {!capturedCanJoinParty && (
+            <PartyDashboardTopMenu
+              party={party}
+              canDeleteParty={party.author.id == user.id}
+              canLeaveParty={party.author.id != user.id}
+              canEditParty={party.author.id == user.id}
+              userId={user.id}
+            />
+          )}
           <PartyDashboardBasicInfo
             author={party.author}
             description={party.description}
@@ -176,7 +189,7 @@ const PartyDashboardPage = ({
             </Col>
           </Row>
         </PartyDashboardContentWrapper>
-      </PartyDashboardContext.Provider>
+      </PartyProvider>
     </React.Fragment>
   );
 };

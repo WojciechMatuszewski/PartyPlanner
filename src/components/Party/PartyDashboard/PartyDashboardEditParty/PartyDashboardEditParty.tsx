@@ -1,13 +1,14 @@
-import { CreatePartyFormValues } from '../CreateParty/CreatePartyForm';
-import EditPartyForm from './EditPartyForm';
+import { CreatePartyFormValues } from '../../CreateParty/CreatePartyForm';
 
 import css from '@emotion/css';
 import { useParty_UpdateParty } from '@generated/graphql';
 import { PARTY_FRAGMENT } from '@graphql/fragments';
-import { PartyDashboardParty } from '@pages/party-dashboard';
-import { Button, Modal } from 'antd';
+
+import { Button, Modal, Icon } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
+import PartyDashboardEditPartyForm from './PartyDashboardEditPartyForm';
+import { InjectedPartyFromAuth } from '@auth/party-auth';
 
 const ModalStyles = css`
   .ant-modal-body {
@@ -42,9 +43,9 @@ export type EditPartyMachineContext = {
 };
 
 interface Props {
-  party: PartyDashboardParty;
+  party: InjectedPartyFromAuth;
 }
-export default function EditParty({ party }: Props) {
+export default function PartyDashboardEditParty({ party }: Props) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const toggleModalVisibility = () => setModalVisible(prev => !prev);
 
@@ -149,7 +150,8 @@ export default function EditParty({ party }: Props) {
 
   return (
     <React.Fragment>
-      <Button type="dashed" onClick={toggleModalVisibility}>
+      <Button onClick={toggleModalVisibility}>
+        <Icon type="edit" />
         Edit
       </Button>
       <Modal
@@ -163,7 +165,7 @@ export default function EditParty({ party }: Props) {
         title="Edit party"
         maskClosable={true}
       >
-        <EditPartyForm
+        <PartyDashboardEditPartyForm
           loading={loading}
           error={Boolean(error)}
           onSubmit={handleOnSubmit}

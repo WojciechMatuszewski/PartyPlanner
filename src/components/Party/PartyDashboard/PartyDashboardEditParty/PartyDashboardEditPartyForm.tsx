@@ -4,8 +4,8 @@ import {
   CreatePartyValidationSchema,
   CreatePartyFormValues,
   MAX_PARTY_DAYS
-} from '../CreateParty/CreatePartyForm';
-import { PartyDashboardParty } from '@pages/party-dashboard';
+} from '../../CreateParty/CreatePartyForm';
+
 import { Form, Icon, Switch, DatePicker, Button, Alert } from 'antd';
 
 import { curry } from 'ramda';
@@ -17,18 +17,19 @@ import FormikInputField from '@shared/FormikInputField';
 
 import moment from 'moment';
 import { RangePickerValue } from 'antd/lib/date-picker/interface';
-import CreatePartyLocation from '../CreateParty/CreatePartyLocation';
-import CreatePartyColorTintSelect from '../CreateParty/CreatePartyColorTintSelect';
+import CreatePartyLocation from '../../CreateParty/CreatePartyLocation';
+import CreatePartyColorTintSelect from '../../CreateParty/CreatePartyColorTintSelect';
+import { InjectedPartyFromAuth } from '@auth/party-auth';
 
 interface Props {
-  party: PartyDashboardParty;
+  party: InjectedPartyFromAuth;
   onCancel: VoidFunction;
   loading: boolean;
   error: boolean;
   onSubmit: (values: CreatePartyFormValues) => void;
 }
 
-export default function EditPartyForm({
+export default function PartyDashboardEditPartyForm({
   party,
   onCancel,
   onSubmit,

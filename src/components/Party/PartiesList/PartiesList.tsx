@@ -25,8 +25,17 @@ import useLocalStorage from '@hooks/useLocalStorage';
 import { handleRefetch } from '@shared/graphqlUtils';
 import { Button, message } from 'antd';
 import React from 'react';
+import { BehaviorSubject } from 'rxjs';
 
 const NUM_OF_RESULTS_PER_PAGE = 10;
+
+const queryVariablesSubject = new BehaviorSubject<
+  PaginatePartiesQueryQueryVariables
+>({});
+
+export function getPartiesListQueryVariables() {
+  return queryVariablesSubject.getValue();
+}
 
 interface Props {
   userId: string;
@@ -153,7 +162,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     loading,
     error,
     fetchMore,
-    refetch
+    refetch,
+    variables
   } = usePaginatePartiesQueryQuery({
     variables: variablesConstructor.current(
       state.filterInputValue,
@@ -161,6 +171,10 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     ),
     notifyOnNetworkStatusChange: true
   });
+
+  React.useEffect(() => {
+    queryVariablesSubject.next(variables);
+  }, [variables]);
 
   if (error)
     return (

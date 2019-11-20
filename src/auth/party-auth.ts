@@ -61,7 +61,6 @@ function notAuthenticated(
 async function AuthenticateParty<
   RouterQuery extends Record<string, string | undefined>
 >(context: NextContextWithApollo<RouterQuery>): Promise<PartyAuthResult> {
-  type InjectedParty = Party_AuthenticateQuery['authenticateParty']['party'];
   const {
     query: { id: partyId }
   } = context;

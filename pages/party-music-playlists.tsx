@@ -1,23 +1,17 @@
-import PartyAuthenticator from '@auth/party-auth';
 import PartyMusicPlaylists from '@components/Party/Music/Playlists/Playlists';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
-import { PartyPage } from '@components/Party/shared';
-import { PartyContentWrapper } from '@components/Party/styles';
-import PageException from '@components/UI/PageException';
-import React from 'react';
 import { PartyProvider } from '@components/Party/PartyProvider';
+import { PartyContentWrapper } from '@components/Party/styles';
+import withHandledPartyPageLoad, {
+  WithHandledPartyPageLoadInjectedProps
+} from '@components/Party/withHandledPartyPageLoad';
 import SpotifyGuard from '@guards/SpotifyGuard';
+import React from 'react';
 
-const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
-  if (!isInParty)
-    return (
-      <PageException
-        desc="Party either does not exist or you are not invited"
-        backText="Back to dashboard"
-        redirectPath="/user/dashboard"
-      />
-    );
-
+const PartyMusicPlaylistsPage = ({
+  party: { id: partyId },
+  user: { id: userId }
+}: WithHandledPartyPageLoadInjectedProps) => {
   return (
     <React.Fragment>
       <PartyMenu partyId={partyId} routerPath="/party-music-playlists" />
@@ -32,6 +26,4 @@ const PartyMusicPlaylistsPage: PartyPage = ({ isInParty, partyId, userId }) => {
   );
 };
 
-PartyMusicPlaylistsPage.getInitialProps = PartyAuthenticator.isUserInParty;
-
-export default PartyMusicPlaylistsPage;
+export default withHandledPartyPageLoad(PartyMusicPlaylistsPage);

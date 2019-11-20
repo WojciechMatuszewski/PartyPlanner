@@ -2698,6 +2698,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
+  importPlaylistsToParty: Scalars['Boolean'],
+  combinePlaylists: Playlist,
+  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2706,9 +2709,6 @@ export type Mutation = {
   acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
   unfriendPerson?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
-  joinParty?: Maybe<Scalars['Boolean']>,
-  importPlaylistsToParty: Scalars['Boolean'],
-  combinePlaylists: Playlist,
 };
 
 
@@ -3244,6 +3244,23 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
+export type MutationImportPlaylistsToPartyArgs = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
+};
+
+
+export type MutationCombinePlaylistsArgs = {
+  partyPlannerData: CombinePlaylistPartyPlannerData,
+  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -3288,23 +3305,6 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
-export type MutationImportPlaylistsToPartyArgs = {
-  playlists: Scalars['String'],
-  partyId: Scalars['ID']
-};
-
-
-export type MutationCombinePlaylistsArgs = {
-  partyPlannerData: CombinePlaylistPartyPlannerData,
-  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
 };
 
 export enum MutationType {
@@ -6755,13 +6755,13 @@ export type Query = {
   node?: Maybe<Node>,
   authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
-  partyCartCost: Scalars['Float'],
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -7213,6 +7213,23 @@ export type QueryHasChatsArgs = {
 };
 
 
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
+};
+
+
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
+};
+
+
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -7237,23 +7254,6 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
-
-export type QueryPartyCartCostArgs = {
-  id: Scalars['ID']
 };
 
 export enum SocialMediaType {
@@ -9593,6 +9593,20 @@ export type Lol_FragmentFragment = (
   ) }
 );
 
+export type Party_JoinPublicPartyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type Party_JoinPublicPartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
 export type Party_CombinePlaylistsMutationVariables = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
@@ -9764,6 +9778,33 @@ export type Party_CartCostQueryVariables = {
 export type Party_CartCostQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'partyCartCost'>
+);
+
+export type Party_DeletePartyMutationVariables = {
+  where: PartyWhereUniqueInput
+};
+
+
+export type Party_DeletePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteParty: Maybe<(
+    { __typename?: 'Party' }
+    & Pick<Party, 'id'>
+  )> }
+);
+
+export type Party_LeavePartyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type Party_LeavePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
 );
 
 export type PartyDashboardParticipantsQueryQueryVariables = {
@@ -10065,6 +10106,9 @@ export type Lol_Fragment_Location = Lol_FragmentFragment['location'];
 export type Lol_FragmentAuthor = Lol_FragmentFragment['author'];
 export type Lol_FragmentMembers = Lol_FragmentFragment['members'][0];
 export type Lol_FragmentCart = Lol_FragmentFragment['cart'];
+export type Party_JoinPublicPartyVariables = Party_JoinPublicPartyMutationVariables;
+export type Party_JoinPublicPartyUpdateUser = Party_JoinPublicPartyMutation['updateUser'];
+export const useParty_JoinPublicParty = useParty_JoinPublicPartyMutation;
 export type Party_CombinePlaylistsVariables = Party_CombinePlaylistsMutationVariables;
 export type Party_CombinePlaylistsCombinePlaylists = Party_CombinePlaylistsMutation['combinePlaylists'];
 export const useParty_CombinePlaylists = useParty_CombinePlaylistsMutation;
@@ -10104,6 +10148,12 @@ export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCart
 export const useParty_UpdatePartyCartItem = useParty_UpdatePartyCartItemMutation;
 export type Party_CartCostVariables = Party_CartCostQueryVariables;
 export const useParty_CartCost = useParty_CartCostQuery;
+export type Party_DeletePartyVariables = Party_DeletePartyMutationVariables;
+export type Party_DeletePartyDeleteParty = Party_DeletePartyMutation['deleteParty'];
+export const useParty_DeleteParty = useParty_DeletePartyMutation;
+export type Party_LeavePartyVariables = Party_LeavePartyMutationVariables;
+export type Party_LeavePartyUpdateUser = Party_LeavePartyMutation['updateUser'];
+export const useParty_LeaveParty = useParty_LeavePartyMutation;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
@@ -11205,6 +11255,27 @@ export type Party_UpdatePartyComponentProps = Omit<ApolloReactComponents.Mutatio
 export type Party_UpdatePartyMutationHookResult = ReturnType<typeof useParty_UpdatePartyMutation>;
 export type Party_UpdatePartyMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyMutation>;
 export type Party_UpdatePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
+export const Party_JoinPublicPartyDocument = gql`
+    mutation Party_JoinPublicParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type Party_JoinPublicPartyMutationFn = ApolloReactCommon.MutationFunction<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>;
+export type Party_JoinPublicPartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>, 'mutation'>;
+
+    export const Party_JoinPublicPartyComponent = (props: Party_JoinPublicPartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables> mutation={Party_JoinPublicPartyDocument} {...props} />
+    );
+    
+
+    export function useParty_JoinPublicPartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>(Party_JoinPublicPartyDocument, baseOptions);
+    }
+export type Party_JoinPublicPartyMutationHookResult = ReturnType<typeof useParty_JoinPublicPartyMutation>;
+export type Party_JoinPublicPartyMutationResult = ApolloReactCommon.MutationResult<Party_JoinPublicPartyMutation>;
+export type Party_JoinPublicPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>;
 export const Party_CombinePlaylistsDocument = gql`
     mutation Party_CombinePlaylists($partyPlannerData: CombinePlaylistPartyPlannerData!, $spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput!) {
   combinePlaylists(partyPlannerData: $partyPlannerData, spotifyData: $spotifyData) {
@@ -11451,6 +11522,48 @@ export type Party_CartCostComponentProps = Omit<ApolloReactComponents.QueryCompo
       
 export type Party_CartCostQueryHookResult = ReturnType<typeof useParty_CartCostQuery>;
 export type Party_CartCostQueryResult = ApolloReactCommon.QueryResult<Party_CartCostQuery, Party_CartCostQueryVariables>;
+export const Party_DeletePartyDocument = gql`
+    mutation Party_DeleteParty($where: PartyWhereUniqueInput!) {
+  deleteParty(where: $where) {
+    id
+  }
+}
+    `;
+export type Party_DeletePartyMutationFn = ApolloReactCommon.MutationFunction<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>;
+export type Party_DeletePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>, 'mutation'>;
+
+    export const Party_DeletePartyComponent = (props: Party_DeletePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_DeletePartyMutation, Party_DeletePartyMutationVariables> mutation={Party_DeletePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_DeletePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>(Party_DeletePartyDocument, baseOptions);
+    }
+export type Party_DeletePartyMutationHookResult = ReturnType<typeof useParty_DeletePartyMutation>;
+export type Party_DeletePartyMutationResult = ApolloReactCommon.MutationResult<Party_DeletePartyMutation>;
+export type Party_DeletePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>;
+export const Party_LeavePartyDocument = gql`
+    mutation Party_LeaveParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type Party_LeavePartyMutationFn = ApolloReactCommon.MutationFunction<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>;
+export type Party_LeavePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>, 'mutation'>;
+
+    export const Party_LeavePartyComponent = (props: Party_LeavePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_LeavePartyMutation, Party_LeavePartyMutationVariables> mutation={Party_LeavePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_LeavePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>(Party_LeavePartyDocument, baseOptions);
+    }
+export type Party_LeavePartyMutationHookResult = ReturnType<typeof useParty_LeavePartyMutation>;
+export type Party_LeavePartyMutationResult = ApolloReactCommon.MutationResult<Party_LeavePartyMutation>;
+export type Party_LeavePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
     query partyDashboardParticipantsQuery($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, before: $before, first: $first, last: $last, after: $after) {

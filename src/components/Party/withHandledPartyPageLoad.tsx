@@ -7,21 +7,35 @@ import PageException from '@components/UI/PageException';
 import ErrorSection from '@components/UI/ErrorSection';
 import { WithApolloAuthInjectedProps } from '@apolloSetup/withApolloAuth';
 import { NextContextWithApollo } from '@pages/_app';
-import JoinPublicParty from '@components/Party/JoinParty/JoinPublicParty';
+import redirect from '@apolloSetup/redirect';
 
-export type WithHandledPageLoadInjectedProps = {
+export type WithHandledPartyPageLoadInjectedProps = {
   party: InjectedPartyFromAuth;
   user: WithApolloAuthInjectedProps['me'];
+  canJoin: boolean;
 };
 
 export default function withHandledPartyPageLoad(
-  ComponentToBeWrapped: React.ComponentType<WithHandledPageLoadInjectedProps>
+  ComponentToBeWrapped: React.ComponentType<
+    WithHandledPartyPageLoadInjectedProps
+  >
 ) {
   return class WithHandledPartyPageLoad extends React.Component<
     PartyAuthResult
   > {
     static async getInitialProps(context: NextContextWithApollo<any>) {
-      return await PartyAuthenticator.AuthenticateParty(context);
+      const { pathname } = context;
+      const authData = await PartyAuthenticator.AuthenticateParty(context);
+
+      if (authData.canJoin && pathname != '/party-dashboard') {
+        return redirect(
+          context,
+          `/party/${context.query.id}`,
+          `party-dashboard?id=${context.query.id}`
+        );
+      }
+
+      return authData;
     }
 
     render() {
@@ -39,11 +53,9 @@ export default function withHandledPartyPageLoad(
           />
         );
 
-      if (canJoin) {
-        return <JoinPublicParty />;
-      }
-
-      return <ComponentToBeWrapped party={party} user={user} />;
+      return (
+        <ComponentToBeWrapped party={party} user={user} canJoin={canJoin} />
+      );
     }
   };
 }
