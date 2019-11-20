@@ -7,6 +7,8 @@ export const PARTY_FRAGMENT = gql`
     description
     location {
       placeName
+      longitude
+      latitude
     }
     author {
       firstName
@@ -134,5 +136,11 @@ export const PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT = gql`
       firstName
       lastName
     }
+  }
+`;
+
+export const PARTY_AUTHENTICATION_MINIMAL_PARTY_FRAGMENT = gql`
+  fragment PARTY_AUTHENTICATION_MINIMAL_PARTY_FRAGMENT on Party {
+    id
   }
 `;

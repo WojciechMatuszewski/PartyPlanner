@@ -13,11 +13,12 @@ import {
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
 import PartyDashboardInviteFriendsModalList from './PartyDashboardInviteFriendsModalList';
-import { PartyDashboardContext } from '@pages/party-dashboard';
+
 import { map, concat } from 'ramda';
 import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal';
 import AntdSearch from '@components/AntdSearch';
 import css from '@emotion/css';
+import { useParty } from '@components/Party/PartyProvider';
 
 const SearchInputStyles = css`
   input {
@@ -44,9 +45,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   const [confirmLoading, setConfirmLoading] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>('');
 
-  const { partyId, currentlyAuthenticatedUserId } = React.useContext(
-    PartyDashboardContext
-  );
+  const { partyId, userId } = useParty();
 
   const {
     data,
@@ -65,7 +64,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
         ],
         AND: [
           { parties_none: { id: partyId } },
-          { friends_some: { id: currentlyAuthenticatedUserId } }
+          { friends_some: { id: userId } }
         ]
       }
     }
@@ -115,7 +114,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
   });
 
   // Im batching this operation in initApollo.ts
-  const deletePartyInvitation = useDeletePartyInvitationMutationMutation({
+  const [deletePartyInvitation] = useDeletePartyInvitationMutationMutation({
     refetchQueries: [
       {
         query: PaginateUsersInviteToPartyQueryDocument,
@@ -173,13 +172,9 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
         </React.Fragment>
       </PartyDashboardInviteFriendsModal>
       <Button type="primary" onClick={() => setModalVisible(true)}>
-        {isOnMobile ? (
-          <Icon type="usergroup-add" />
-        ) : (
-          <React.Fragment>
-            <Icon type="usergroup-add" /> Manage invitations
-          </React.Fragment>
-        )}
+        <React.Fragment>
+          <Icon type="usergroup-add" /> Manage invitations
+        </React.Fragment>
       </Button>
     </React.Fragment>
   );
@@ -249,7 +244,7 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
     return createPartyInvitation({
       variables: {
         data: {
-          invitedBy: { connect: { id: currentlyAuthenticatedUserId } },
+          invitedBy: { connect: { id: userId } },
           party: { connect: { id: partyId } },
           user: { connect: { id: userToInvite } },
           invitedUserId: userToInvite,

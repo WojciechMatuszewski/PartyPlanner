@@ -6,6 +6,7 @@ documents:
   - './graphql/*.ts'
   - './pages/*.tsx'
   - './src/**/*.tsx'
+  - './src/**/*.ts'
 generates:
   generated/graphql.tsx:
     config:

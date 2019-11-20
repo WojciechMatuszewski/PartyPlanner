@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button, Icon } from 'antd';
 import { Field, FormikProps } from 'formik';
-import FormikInputField from '@shared/formikInputField';
+import FormikInputField from '@shared/FormikInputField';
 import { ApolloError } from 'apollo-client';
 import { ResetPasswordFormValues } from '@pages/auth-reset-password';
 import GraphqlError from '@components/GraphqlError';

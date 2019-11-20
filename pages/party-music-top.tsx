@@ -1,4 +1,3 @@
-import PartyAuthenticator from '@auth/party-auth';
 import GraphqlLoading from '@components/GraphqlLoading';
 import { BigMusicPlayerProvider } from '@components/Party/Music/BigMusicPlayer/BigMusicPlayerProvider';
 import BigMusicPlayerStickedToBottom, {
@@ -10,8 +9,10 @@ import { TrackInfoModalProvider } from '@components/Party/Music/TrackInfoModal/T
 import UserTopTracks from '@components/Party/Music/UserTop/UserTopTracks/UserTopTracks';
 import PartyMenu from '@components/Party/PartyNavigation/PartyMenu';
 import { PartyProvider } from '@components/Party/PartyProvider';
-import { PartyPage } from '@components/Party/shared';
 import { PartyContentWrapper } from '@components/Party/styles';
+import withHandledPartyPageLoad, {
+  WithHandledPartyPageLoadInjectedProps
+} from '@components/Party/withHandledPartyPageLoad';
 import PageException from '@components/UI/PageException';
 import { useParty_SavedTracks } from '@generated/graphql';
 import SpotifyGuard from '@guards/SpotifyGuard';
@@ -20,20 +21,14 @@ import { Button } from 'antd';
 import { NetworkStatus } from 'apollo-client';
 import React from 'react';
 
-const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
+const PartyMusicTopPage = ({
+  user: { id: userId },
+  party: { id: partyId }
+}: WithHandledPartyPageLoadInjectedProps) => {
   const { data, error, refetch, networkStatus } = useParty_SavedTracks({
     variables: { where: { party: { id: partyId } } },
     notifyOnNetworkStatusChange: true
   });
-
-  if (!isInParty)
-    return (
-      <PageException
-        desc="Party either does not exist or you are not invited"
-        backText="Back to dashboard"
-        redirectPath="/user/dashboard"
-      />
-    );
 
   if (error || networkStatus == NetworkStatus.refetch) {
     return (
@@ -96,6 +91,4 @@ const PartyMusicTopPage: PartyPage = ({ isInParty, partyId, userId }) => {
   }
 };
 
-PartyMusicTopPage.getInitialProps = PartyAuthenticator.isUserInParty;
-
-export default PartyMusicTopPage;
+export default withHandledPartyPageLoad(PartyMusicTopPage);

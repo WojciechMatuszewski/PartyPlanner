@@ -8,11 +8,7 @@ import css from '@emotion/css';
 import styled from '@emotion/styled';
 import { Form, Icon, DatePicker, Typography, Switch, Tabs, Button } from 'antd';
 import { FastField, Formik } from 'formik';
-import FormikInputField from '@shared/formikInputField';
-import {
-  getFormItemValidateStatus,
-  getFormItemError
-} from '@shared/formikFieldUtils';
+
 import { curry } from 'ramda';
 import CreatePartyColorTintSelect from './CreatePartyColorTintSelect';
 import CreatePartyLocation from './CreatePartyLocation';
@@ -20,8 +16,13 @@ import UserCalendar from '@components/User/UserCalendar/UserCalendar';
 import InviteFriend from './InviteFriend/InviteFriend';
 import useMedia from '@hooks/useMedia';
 import { CREATE_PARTY_MOBILE_WIDTH } from './CreateParty';
+import {
+  getFormItemError,
+  getFormItemValidateStatus
+} from '@shared/formikFieldUtils';
+import FormikInputField from '@shared/FormikInputField';
 
-const MAX_PARTY_DAYS = 20;
+export const MAX_PARTY_DAYS = 3;
 
 const ShouldBePublicStyles = css`
   .ant-typography {
@@ -102,31 +103,33 @@ function dateValidationFn(value: RangePickerValue): boolean {
   });
   return value.length === 2 && bothElementsAreMomentInstances;
 }
-const validationSchema = yup.object().shape<CreatePartyFormValues>({
-  title: yup
-    .string()
-    .min(2, 'At least 2 characters')
-    .max(20)
-    .required('This field is required'),
-  description: yup.string(),
-  date: yup
-    .mixed()
-    .test('works', 'Please enter correct dates', dateValidationFn)
-    .required(),
-  location: yup
-    .object()
-    .shape({
-      placeName: yup.string().required(),
-      coords: yup.object().shape({
-        latitude: yup.number().required(),
-        longitude: yup.number().required()
+export const CreatePartyValidationSchema = yup
+  .object()
+  .shape<CreatePartyFormValues>({
+    title: yup
+      .string()
+      .min(2, 'At least 2 characters')
+      .max(20)
+      .required('This field is required'),
+    description: yup.string(),
+    date: yup
+      .mixed()
+      .test('works', 'Please enter correct dates', dateValidationFn)
+      .required(),
+    location: yup
+      .object()
+      .shape({
+        placeName: yup.string().required(),
+        coords: yup.object().shape({
+          latitude: yup.number().required(),
+          longitude: yup.number().required()
+        })
       })
-    })
-    .required(),
-  invitedFriends: yup.array().of(yup.string()),
-  isPublic: yup.boolean(),
-  colorTint: yup.string()
-});
+      .required(),
+    invitedFriends: yup.array().of(yup.string()),
+    isPublic: yup.boolean(),
+    colorTint: yup.string()
+  });
 
 interface Props {
   userId: string;
@@ -144,7 +147,7 @@ const CreatePartyForm: React.FC<Props> = props => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={CreatePartyValidationSchema}
       onSubmit={props.onSubmit}
     >
       {({ handleSubmit, setFieldValue, errors, touched }) => (
@@ -208,7 +211,7 @@ const CreatePartyForm: React.FC<Props> = props => {
                       name="description"
                       type="textArea"
                       placeholder="Description"
-                      autosize={{ minRows: 4 }}
+                      autoSize={{ minRows: 4 }}
                     />
                   </Tabs.TabPane>
                   <Tabs.TabPane tab="Find Time" key="2">

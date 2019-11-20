@@ -1,5 +1,5 @@
 import css from '@emotion/css';
-import FormikInputField from '@shared/formikInputField';
+import FormikInputField from '@shared/FormikInputField';
 import FormikNumberField from '@shared/FormikNumberField';
 import { Button, Col, Form, Row } from 'antd';
 import { Field, Formik } from 'formik';

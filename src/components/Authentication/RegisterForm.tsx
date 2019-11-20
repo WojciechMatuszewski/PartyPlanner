@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { withRouter, WithRouterProps } from 'next/router';
 import { Formik, FastField, Field } from 'formik';
 import { Form, Button, Icon } from 'antd';
-import FormikInputField from '@shared/formikInputField';
+import FormikInputField from '@shared/FormikInputField';
 import { SignupComponent } from '@generated/graphql';
 
 import { handleLogin } from '@services/AuthService';

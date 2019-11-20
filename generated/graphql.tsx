@@ -3398,6 +3398,13 @@ export type PartySavedTracksArgs = {
   last?: Maybe<Scalars['Int']>
 };
 
+export type PartyAuthenticationResult = {
+   __typename?: 'PartyAuthenticationResult',
+  canJoin: Scalars['Boolean'],
+  isMember: Scalars['Boolean'],
+  party?: Maybe<Party>,
+};
+
 export type PartyCart = Node & {
    __typename?: 'PartyCart',
   id: Scalars['ID'],
@@ -6746,6 +6753,7 @@ export type Query = {
   albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
+  authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
@@ -7192,6 +7200,11 @@ export type QueryAlbumsConnectionArgs = {
 
 export type QueryNodeArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
@@ -8847,7 +8860,7 @@ export type Party_FragmentFragment = (
   & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
   & { location: (
     { __typename?: 'Location' }
-    & Pick<Location, 'placeName'>
+    & Pick<Location, 'placeName' | 'longitude' | 'latitude'>
   ), author: (
     { __typename?: 'User' }
     & Pick<User, 'firstName' | 'lastName' | 'id'>
@@ -8925,6 +8938,11 @@ export type Party_Cart_Items_Connection_Node_FragmentFragment = (
     { __typename?: 'User' }
     & Pick<User, 'firstName' | 'lastName'>
   ) }
+);
+
+export type Party_Authentication_Minimal_Party_FragmentFragment = (
+  { __typename?: 'Party' }
+  & Pick<Party, 'id'>
 );
 
 export type SignupMutationVariables = {
@@ -9517,9 +9535,76 @@ export type User_FriendsQuery = (
   ) }
 );
 
+export type Party_AuthenticateQueryVariables = {
+  partyId: Scalars['ID']
+};
+
+
+export type Party_AuthenticateQuery = (
+  { __typename?: 'Query' }
+  & { authenticateParty: (
+    { __typename?: 'PartyAuthenticationResult' }
+    & Pick<PartyAuthenticationResult, 'canJoin' | 'isMember'>
+    & { party: Maybe<{ __typename?: 'Party' }
+      & Party_FragmentFragment
+    > }
+  ) }
+);
+
 export type Is_Unread_ThreadFragment = (
   { __typename?: 'Chat' }
   & Pick<Chat, 'hasUnreadMessages'>
+);
+
+export type Party_UpdatePartyMutationVariables = {
+  data: PartyUpdateInput,
+  where: PartyWhereUniqueInput
+};
+
+
+export type Party_UpdatePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateParty: Maybe<(
+    { __typename?: 'Party' }
+    & { location: (
+      { __typename?: 'Location' }
+      & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+    ) }
+  )
+    & Party_FragmentFragment
+  > }
+);
+
+export type Lol_FragmentFragment = (
+  { __typename?: 'Party' }
+  & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
+  & { location: (
+    { __typename?: 'Location' }
+    & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+  ), author: (
+    { __typename?: 'User' }
+    & Pick<User, 'firstName' | 'lastName' | 'id'>
+  ), members: Maybe<Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
+  )>>, cart: (
+    { __typename?: 'PartyCart' }
+    & Pick<PartyCart, 'id'>
+  ) }
+);
+
+export type Party_JoinPublicPartyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type Party_JoinPublicPartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
 );
 
 export type Party_CombinePlaylistsMutationVariables = {
@@ -9693,6 +9778,33 @@ export type Party_CartCostQueryVariables = {
 export type Party_CartCostQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'partyCartCost'>
+);
+
+export type Party_DeletePartyMutationVariables = {
+  where: PartyWhereUniqueInput
+};
+
+
+export type Party_DeletePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteParty: Maybe<(
+    { __typename?: 'Party' }
+    & Pick<Party, 'id'>
+  )> }
+);
+
+export type Party_LeavePartyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type Party_LeavePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
 );
 
 export type PartyDashboardParticipantsQueryQueryVariables = {
@@ -9981,6 +10093,22 @@ export type User_FriendsVariables = User_FriendsQueryVariables;
 export type User_FriendsUserFriends = User_FriendsQuery['userFriends'];
 export type User_FriendsPending = User_FriendsQuery['userFriends']['pending'][0];
 export const useUser_Friends = useUser_FriendsQuery;
+export type Party_AuthenticateVariables = Party_AuthenticateQueryVariables;
+export type Party_AuthenticateAuthenticateParty = Party_AuthenticateQuery['authenticateParty'];
+export type Party_AuthenticateParty = Party_FragmentFragment;
+export const useParty_Authenticate = useParty_AuthenticateQuery;
+export type Party_UpdatePartyVariables = Party_UpdatePartyMutationVariables;
+export type Party_UpdatePartyUpdateParty = Party_FragmentFragment;
+export type Party_UpdatePartyLocation = Party_UpdatePartyMutation['updateParty']['location'];
+export const useParty_UpdateParty = useParty_UpdatePartyMutation;
+export type Lol_FragmentLocation = Lol_FragmentFragment['location'];
+export type Lol_Fragment_Location = Lol_FragmentFragment['location'];
+export type Lol_FragmentAuthor = Lol_FragmentFragment['author'];
+export type Lol_FragmentMembers = Lol_FragmentFragment['members'][0];
+export type Lol_FragmentCart = Lol_FragmentFragment['cart'];
+export type Party_JoinPublicPartyVariables = Party_JoinPublicPartyMutationVariables;
+export type Party_JoinPublicPartyUpdateUser = Party_JoinPublicPartyMutation['updateUser'];
+export const useParty_JoinPublicParty = useParty_JoinPublicPartyMutation;
 export type Party_CombinePlaylistsVariables = Party_CombinePlaylistsMutationVariables;
 export type Party_CombinePlaylistsCombinePlaylists = Party_CombinePlaylistsMutation['combinePlaylists'];
 export const useParty_CombinePlaylists = useParty_CombinePlaylistsMutation;
@@ -10020,6 +10148,12 @@ export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCart
 export const useParty_UpdatePartyCartItem = useParty_UpdatePartyCartItemMutation;
 export type Party_CartCostVariables = Party_CartCostQueryVariables;
 export const useParty_CartCost = useParty_CartCostQuery;
+export type Party_DeletePartyVariables = Party_DeletePartyMutationVariables;
+export type Party_DeletePartyDeleteParty = Party_DeletePartyMutation['deleteParty'];
+export const useParty_DeleteParty = useParty_DeletePartyMutation;
+export type Party_LeavePartyVariables = Party_LeavePartyMutationVariables;
+export type Party_LeavePartyUpdateUser = Party_LeavePartyMutation['updateUser'];
+export const useParty_LeaveParty = useParty_LeavePartyMutation;
 export type PartyDashboardParticipantsQueryVariables = PartyDashboardParticipantsQueryQueryVariables;
 export type PartyDashboardParticipantsQueryUsersConnection = PartyDashboardParticipantsQueryQuery['usersConnection'];
 export type PartyDashboardParticipantsQueryPageInfo = PartyDashboardParticipantsQueryQuery['usersConnection']['pageInfo'];
@@ -10057,6 +10191,8 @@ export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMuta
   description
   location {
     placeName
+    longitude
+    latitude
   }
   author {
     firstName
@@ -10180,9 +10316,48 @@ export const Party_Cart_Items_Connection_Node_FragmentFragmentDoc = gql`
   }
 }
     `;
+export const Party_Authentication_Minimal_Party_FragmentFragmentDoc = gql`
+    fragment PARTY_AUTHENTICATION_MINIMAL_PARTY_FRAGMENT on Party {
+  id
+}
+    `;
 export const Is_Unread_ThreadFragmentDoc = gql`
     fragment IS_UNREAD_THREAD on Chat {
   hasUnreadMessages @client
+}
+    `;
+export const Lol_FragmentFragmentDoc = gql`
+    fragment LOL_FRAGMENT on Party {
+  location {
+    placeName
+    latitude
+    longitude
+  }
+  id
+  title
+  description
+  location {
+    placeName
+  }
+  author {
+    firstName
+    lastName
+    id
+  }
+  members {
+    avatar
+    firstName
+    lastName
+    id
+  }
+  colorTint
+  start
+  end
+  isPublic
+  inviteSecret
+  cart {
+    id
+  }
 }
     `;
 export const UserFragmentDoc = gql`
@@ -11027,6 +11202,80 @@ export type User_FriendsComponentProps = Omit<ApolloReactComponents.QueryCompone
       
 export type User_FriendsQueryHookResult = ReturnType<typeof useUser_FriendsQuery>;
 export type User_FriendsQueryResult = ApolloReactCommon.QueryResult<User_FriendsQuery, User_FriendsQueryVariables>;
+export const Party_AuthenticateDocument = gql`
+    query Party_Authenticate($partyId: ID!) {
+  authenticateParty(partyId: $partyId) {
+    canJoin
+    isMember
+    party {
+      ...PARTY_FRAGMENT
+    }
+  }
+}
+    ${Party_FragmentFragmentDoc}`;
+export type Party_AuthenticateComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>, 'query'> & ({ variables: Party_AuthenticateQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const Party_AuthenticateComponent = (props: Party_AuthenticateComponentProps) => (
+      <ApolloReactComponents.Query<Party_AuthenticateQuery, Party_AuthenticateQueryVariables> query={Party_AuthenticateDocument} {...props} />
+    );
+    
+
+    export function useParty_AuthenticateQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>) {
+      return ApolloReactHooks.useQuery<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>(Party_AuthenticateDocument, baseOptions);
+    }
+      export function useParty_AuthenticateLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>(Party_AuthenticateDocument, baseOptions);
+      }
+      
+export type Party_AuthenticateQueryHookResult = ReturnType<typeof useParty_AuthenticateQuery>;
+export type Party_AuthenticateQueryResult = ApolloReactCommon.QueryResult<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>;
+export const Party_UpdatePartyDocument = gql`
+    mutation Party_UpdateParty($data: PartyUpdateInput!, $where: PartyWhereUniqueInput!) {
+  updateParty(data: $data, where: $where) {
+    location {
+      placeName
+      latitude
+      longitude
+    }
+    ...PARTY_FRAGMENT
+  }
+}
+    ${Party_FragmentFragmentDoc}`;
+export type Party_UpdatePartyMutationFn = ApolloReactCommon.MutationFunction<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
+export type Party_UpdatePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>, 'mutation'>;
+
+    export const Party_UpdatePartyComponent = (props: Party_UpdatePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables> mutation={Party_UpdatePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_UpdatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>(Party_UpdatePartyDocument, baseOptions);
+    }
+export type Party_UpdatePartyMutationHookResult = ReturnType<typeof useParty_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
+export const Party_JoinPublicPartyDocument = gql`
+    mutation Party_JoinPublicParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type Party_JoinPublicPartyMutationFn = ApolloReactCommon.MutationFunction<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>;
+export type Party_JoinPublicPartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>, 'mutation'>;
+
+    export const Party_JoinPublicPartyComponent = (props: Party_JoinPublicPartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables> mutation={Party_JoinPublicPartyDocument} {...props} />
+    );
+    
+
+    export function useParty_JoinPublicPartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>(Party_JoinPublicPartyDocument, baseOptions);
+    }
+export type Party_JoinPublicPartyMutationHookResult = ReturnType<typeof useParty_JoinPublicPartyMutation>;
+export type Party_JoinPublicPartyMutationResult = ApolloReactCommon.MutationResult<Party_JoinPublicPartyMutation>;
+export type Party_JoinPublicPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_JoinPublicPartyMutation, Party_JoinPublicPartyMutationVariables>;
 export const Party_CombinePlaylistsDocument = gql`
     mutation Party_CombinePlaylists($partyPlannerData: CombinePlaylistPartyPlannerData!, $spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput!) {
   combinePlaylists(partyPlannerData: $partyPlannerData, spotifyData: $spotifyData) {
@@ -11273,6 +11522,48 @@ export type Party_CartCostComponentProps = Omit<ApolloReactComponents.QueryCompo
       
 export type Party_CartCostQueryHookResult = ReturnType<typeof useParty_CartCostQuery>;
 export type Party_CartCostQueryResult = ApolloReactCommon.QueryResult<Party_CartCostQuery, Party_CartCostQueryVariables>;
+export const Party_DeletePartyDocument = gql`
+    mutation Party_DeleteParty($where: PartyWhereUniqueInput!) {
+  deleteParty(where: $where) {
+    id
+  }
+}
+    `;
+export type Party_DeletePartyMutationFn = ApolloReactCommon.MutationFunction<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>;
+export type Party_DeletePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>, 'mutation'>;
+
+    export const Party_DeletePartyComponent = (props: Party_DeletePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_DeletePartyMutation, Party_DeletePartyMutationVariables> mutation={Party_DeletePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_DeletePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>(Party_DeletePartyDocument, baseOptions);
+    }
+export type Party_DeletePartyMutationHookResult = ReturnType<typeof useParty_DeletePartyMutation>;
+export type Party_DeletePartyMutationResult = ApolloReactCommon.MutationResult<Party_DeletePartyMutation>;
+export type Party_DeletePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>;
+export const Party_LeavePartyDocument = gql`
+    mutation Party_LeaveParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type Party_LeavePartyMutationFn = ApolloReactCommon.MutationFunction<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>;
+export type Party_LeavePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>, 'mutation'>;
+
+    export const Party_LeavePartyComponent = (props: Party_LeavePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_LeavePartyMutation, Party_LeavePartyMutationVariables> mutation={Party_LeavePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_LeavePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>(Party_LeavePartyDocument, baseOptions);
+    }
+export type Party_LeavePartyMutationHookResult = ReturnType<typeof useParty_LeavePartyMutation>;
+export type Party_LeavePartyMutationResult = ApolloReactCommon.MutationResult<Party_LeavePartyMutation>;
+export type Party_LeavePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_LeavePartyMutation, Party_LeavePartyMutationVariables>;
 export const PartyDashboardParticipantsQueryDocument = gql`
     query partyDashboardParticipantsQuery($where: UserWhereInput, $orderBy: UserOrderByInput, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) {
   usersConnection(where: $where, orderBy: $orderBy, skip: $skip, before: $before, first: $first, last: $last, after: $after) {

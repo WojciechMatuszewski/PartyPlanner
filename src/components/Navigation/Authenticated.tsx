@@ -162,12 +162,15 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
               <a>Chats</a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/party-parties">
+          <Menu.Item
+            key="/party-parties"
+            onClick={() => setDrawerVisible(false)}
+          >
             <Link href="/party-parties" as="/party/parties">
               <a>Your Parties</a>
             </Link>
           </Menu.Item>
-          <Menu.Item key="/user-people">
+          <Menu.Item key="/user-people" onClick={() => setDrawerVisible(false)}>
             <Link href="/user-people" as="/user/people">
               <a>People</a>
             </Link>

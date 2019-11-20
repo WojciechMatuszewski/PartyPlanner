@@ -31,7 +31,7 @@ const IMAGE_CACHE_CONFIG = {
 };
 
 const BASE_CONFIG = {
-  target: 'server',
+  target: 'serverless',
   generateInDevMode: false,
   workboxOpts: {
     skipWaiting: true,

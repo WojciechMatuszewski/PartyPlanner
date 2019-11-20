@@ -1,30 +1,41 @@
-import React from 'react';
-import {
-  PartyWhereInput,
-  PaginatePartiesQueryQuery,
-  PaginatePartiesQueryQueryVariables,
-  usePaginatePartiesQueryQuery
-} from '@generated/graphql';
-import styled from '@emotion/styled';
-import PartiesListPane from './PartiesListPane';
-import {
-  PartiesListFilters,
-  PartiesListReducer,
-  initialPartiesListState,
-  PartiesListState,
-  PartiesListFilterActions,
-  PartiesListDrawerActions
-} from './PartiesListReducer';
-import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
-import PartiesListFilterChips from './PartiesListFilterChips';
 import PartiesListCardGrid from './PartiesListCardGrid';
+import PartiesListFilterChips from './PartiesListFilterChips';
+import PartiesListFilterDrawer from './PartiesListFilterDrawer/PartiesListFilterDrawer';
 import PartiesListLoadMore from './PartiesListLoadMore';
 import PartiesListNoResults from './PartiesListNoResults';
-import { Button, message } from 'antd';
-import { handleRefetch } from '@shared/graphqlUtils';
+import PartiesListPane from './PartiesListPane';
+import {
+  initialPartiesListState,
+  PartiesListDrawerActions,
+  PartiesListFilterActions,
+  PartiesListFilters,
+  PartiesListReducer,
+  PartiesListState
+} from './PartiesListReducer';
+
 import PageException from '@components/UI/PageException';
+import styled from '@emotion/styled';
+import {
+  PaginatePartiesQueryQuery,
+  PaginatePartiesQueryQueryVariables,
+  PartyWhereInput,
+  usePaginatePartiesQueryQuery
+} from '@generated/graphql';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { handleRefetch } from '@shared/graphqlUtils';
+import { Button, message } from 'antd';
+import React from 'react';
+import { BehaviorSubject } from 'rxjs';
 
 const NUM_OF_RESULTS_PER_PAGE = 10;
+
+const queryVariablesSubject = new BehaviorSubject<
+  PaginatePartiesQueryQueryVariables
+>({});
+
+export function getPartiesListQueryVariables() {
+  return queryVariablesSubject.getValue();
+}
 
 interface Props {
   userId: string;
@@ -104,14 +115,22 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
   );
   const isFirstRender = React.useRef<boolean>(true);
 
+  const { saveToStorage, retrieveFromStorage } = useLocalStorage(
+    'PARTIES_LIST_FILTERS'
+  );
+
   const [appliedFilters, setAppliedFilters] = React.useState<
     PartiesListFilters
-  >({});
+  >(JSON.parse(retrieveFromStorage()) || {});
 
-  const [state, dispatch] = React.useReducer(
-    PartiesListReducer,
-    initialPartiesListState
-  );
+  React.useEffect(() => {
+    saveToStorage(JSON.stringify(appliedFilters));
+  }, [appliedFilters]);
+
+  const [state, dispatch] = React.useReducer(PartiesListReducer, {
+    ...initialPartiesListState,
+    filters: appliedFilters
+  });
 
   const [contextState] = React.useState<{
     state: PartiesListState;
@@ -143,7 +162,8 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     loading,
     error,
     fetchMore,
-    refetch
+    refetch,
+    variables
   } = usePaginatePartiesQueryQuery({
     variables: variablesConstructor.current(
       state.filterInputValue,
@@ -151,6 +171,10 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
     ),
     notifyOnNetworkStatusChange: true
   });
+
+  React.useEffect(() => {
+    queryVariablesSubject.next(variables);
+  }, [variables]);
 
   if (error)
     return (

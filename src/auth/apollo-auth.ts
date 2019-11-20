@@ -16,7 +16,6 @@ async function authenticate({
   ctx
 }: ApolloAuthenticatorProps): Promise<WithApolloAuthInjectedProps | null> {
   const hasRequestToken = doesRequestTokenExists(ctx);
-
   if (!hasRequestToken) {
     if (userHasToBe == 'authenticated')
       return redirectWithCheck({}, ctx, '/auth-login', '/login');

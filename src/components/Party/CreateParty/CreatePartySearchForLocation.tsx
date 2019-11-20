@@ -11,12 +11,12 @@ import uuid from 'uuid/v4';
 interface Props {
   state: LocalizeMeButtonState;
 }
-const CreatePartySearchForLocation: React.FC<
-  Props & { formik: FormikContext<CreatePartyFormValues> }
-> = ({ formik, state }) => {
+const CreatePartySearchForLocation: React.FC<Props & {
+  formik: FormikContext<CreatePartyFormValues>;
+}> = ({ formik, state }) => {
   const [controlledInputValue, setControlledInputValue] = React.useState<
     string
-  >('');
+  >(formik.values.location.placeName);
   const [controlledResults, setControlledResults] = React.useState<
     UserSearchedLocation[]
   >([]);
