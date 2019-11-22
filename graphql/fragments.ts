@@ -112,6 +112,7 @@ export const PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT = gql`
     name
     spotifyId
     imageUrl
+    importable
     user {
       id
       firstName

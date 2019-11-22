@@ -12,7 +12,7 @@ export default function SelectedTracks({ tracks, onRemoveTrack }: Props) {
   if (tracks.length == 0) return <Empty description="No selected tracks" />;
 
   return (
-    <List header="Selected tracks" bordered={true}>
+    <List header={`Selected tracks (${tracks.length})`} bordered={true}>
       {tracks.map(track => (
         <VirtualizedListTrackItem
           key={track.id}

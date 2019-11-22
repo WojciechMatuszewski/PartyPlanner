@@ -37,6 +37,7 @@ interface MachineContext {
     tracks: Full_Saved_Track_FragmentFragment[];
     playlistName: string;
     isPrivate: boolean;
+    notImportable: boolean;
   };
   partyId: string;
   userId: string;
@@ -150,7 +151,12 @@ const playlistMachine = Machine(
     },
     services: {
       createPlaylist: async ({
-        createPlaylistPayload: { tracks, playlistName, isPrivate },
+        createPlaylistPayload: {
+          tracks,
+          playlistName,
+          isPrivate,
+          notImportable
+        },
         savePlaylist,
         partyId,
         userId
@@ -167,10 +173,10 @@ const playlistMachine = Machine(
               tracks: { connect: tracks.map(track => ({ id: track.id })) },
               parties: { connect: [{ id: partyId }] },
               name: playlistName,
-              isTemporary: false,
               user: { connect: { id: userId } },
               imageUrl: spotifyPlaylistData.images[0].url,
               uri: spotifyPlaylistData.uri,
+              importable: !notImportable,
               spotifyId: spotifyPlaylistData.id,
               spotifyExternalUrl: spotifyPlaylistData.externalUrls.spotify
             }
@@ -211,7 +217,7 @@ const playlistMachine = Machine(
             }
           }
         });
-        return spotifyPlaylistData;
+        return { ...spotifyPlaylistData, notImportable };
       }
     }
   }
@@ -230,7 +236,8 @@ export default function CreatePlaylist({ onClose, tracks }: Props) {
       createPlaylistPayload: {
         playlistName: '',
         isPrivate: false,
-        tracks: []
+        tracks: [],
+        notImportable: false
       },
       partyId,
       userId
@@ -239,8 +246,9 @@ export default function CreatePlaylist({ onClose, tracks }: Props) {
 
   const { createdPlaylist } = state.context;
 
-  const handleFormSubmit = (formValues: CreatePlaylistFormValues) =>
+  const handleFormSubmit = (formValues: CreatePlaylistFormValues) => {
     send('CREATE', { payload: { ...formValues, tracks: tracksInState } });
+  };
 
   const handleRetryClick = () => send('RETRY');
 

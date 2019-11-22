@@ -175,7 +175,8 @@ export default function CombinePlaylists({
           playlists: playlists.map(playlist => playlist.node.id).join(','),
           userId,
           partyId,
-          deleteAffected: Boolean(formData.shouldDeleteWhenCombining)
+          deleteAffected: Boolean(formData.shouldDeleteWhenCombining),
+          importable: !formData.notImportable
         },
         spotifyData: {
           imageUrl: spotifyPlaylist.images[0].url,
@@ -244,6 +245,9 @@ export default function CombinePlaylists({
               loading={formLoading}
               onSubmit={handleFormSubmit}
               disabled={localPlaylists.length < 2}
+              isRestricted={localPlaylists.some(
+                playlist => !playlist.node.importable
+              )}
             />
             <CombinePlaylistsList
               isPlaylistStillSelected={isStillSelected}

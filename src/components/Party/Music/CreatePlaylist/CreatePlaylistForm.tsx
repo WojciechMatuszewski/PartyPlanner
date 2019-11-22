@@ -1,5 +1,9 @@
+import RestrictPlaylistInfo from '../shared/RestrictPlaylistInfo';
+
 import css from '@emotion/css';
+import styled from '@emotion/styled';
 import FormikInputField from '@shared/FormikInputField';
+import { Colors } from '@shared/styles';
 import { Button, Checkbox, Form } from 'antd';
 import { Field, Formik } from 'formik';
 import React from 'react';
@@ -8,22 +12,30 @@ import * as yup from 'yup';
 export interface CreatePlaylistFormValues {
   playlistName: string | undefined;
   isPrivate: boolean;
+  notImportable: boolean;
 }
 
 const validationSchema = yup.object().shape<CreatePlaylistFormValues>({
   playlistName: yup.string().required('Playlist name is required'),
-  isPrivate: yup.boolean()
+  isPrivate: yup.boolean(),
+  notImportable: yup.boolean()
 });
 
 const initialFormValues: CreatePlaylistFormValues = {
   playlistName: undefined,
-  isPrivate: false
+  isPrivate: false,
+  notImportable: false
 };
 
 const FormStyles = css`
   .ant-form-item {
     margin: 0;
   }
+`;
+
+const RestrictImportingWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
 `;
 
 interface Props {
@@ -64,8 +76,21 @@ export default function CreatePlaylistForm({
                 checked={values.isPrivate}
                 onChange={e => setFieldValue('isPrivate', e.target.checked)}
               >
-                Make it private
+                Make it private on{' '}
+                <span style={{ color: Colors.SpotifyGreen }}>Spotify</span>
               </Checkbox>
+              <RestrictImportingWrapper>
+                <Checkbox
+                  name="notImportable"
+                  checked={values.notImportable}
+                  onChange={e =>
+                    setFieldValue('notImportable', e.target.checked)
+                  }
+                >
+                  Restrict to this party
+                </Checkbox>
+                <RestrictPlaylistInfo />
+              </RestrictImportingWrapper>
             </Form.Item>
             <Form.Item>
               <Button
