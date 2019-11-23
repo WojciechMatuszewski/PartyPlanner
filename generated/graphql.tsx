@@ -6754,7 +6754,6 @@ export type Query = {
   albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
-  authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
@@ -6763,6 +6762,7 @@ export type Query = {
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
+  authenticateParty: PartyAuthenticationResult,
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -7204,11 +7204,6 @@ export type QueryNodeArgs = {
 };
 
 
-export type QueryAuthenticatePartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>
 };
@@ -7255,6 +7250,11 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
 };
 
 export enum SocialMediaType {
@@ -7610,6 +7610,7 @@ export type User = Node & {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate: Scalars['Boolean'],
   cartItems?: Maybe<Array<PartyCartItem>>,
   pendingInvitations?: Maybe<Array<User>>,
   status: UserStatus,
@@ -7715,6 +7716,7 @@ export type UserCreateInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7771,6 +7773,7 @@ export type UserCreateWithoutCartItemsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7791,6 +7794,7 @@ export type UserCreateWithoutChatsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7811,6 +7815,7 @@ export type UserCreateWithoutPartiesInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7831,6 +7836,7 @@ export type UserCreateWithoutPendingFriendInvitationsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7851,6 +7857,7 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7901,7 +7908,9 @@ export enum UserOrderByInput {
   ResetTokenAsc = 'resetToken_ASC',
   ResetTokenDesc = 'resetToken_DESC',
   ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
-  ResetTokenExpiryDesc = 'resetTokenExpiry_DESC'
+  ResetTokenExpiryDesc = 'resetTokenExpiry_DESC',
+  IsPrivateAsc = 'isPrivate_ASC',
+  IsPrivateDesc = 'isPrivate_DESC'
 }
 
 export type UserPendingFriend = {
@@ -7926,6 +7935,7 @@ export type UserPreviousValues = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate: Scalars['Boolean'],
 };
 
 export type UserScalarWhereInput = {
@@ -8221,6 +8231,9 @@ export type UserScalarWhereInput = {
   resetTokenExpiry_gt?: Maybe<Scalars['DateTime']>,
   /** All values greater than or equal the given value. */
   resetTokenExpiry_gte?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  isPrivate_not?: Maybe<Scalars['Boolean']>,
 };
 
 export enum UserStatus {
@@ -8266,6 +8279,7 @@ export type UserUpdateDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8286,6 +8300,7 @@ export type UserUpdateInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8306,6 +8321,7 @@ export type UserUpdateManyDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
 };
 
 export type UserUpdateManyInput = {
@@ -8332,6 +8348,7 @@ export type UserUpdateManyMutationInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
 };
 
 export type UserUpdateManyWithoutChatsInput = {
@@ -8403,6 +8420,7 @@ export type UserUpdateWithoutCartItemsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8422,6 +8440,7 @@ export type UserUpdateWithoutChatsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8441,6 +8460,7 @@ export type UserUpdateWithoutPartiesDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8460,6 +8480,7 @@ export type UserUpdateWithoutPendingFriendInvitationsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8479,6 +8500,7 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8832,6 +8854,9 @@ export type UserWhereInput = {
   resetTokenExpiry_gt?: Maybe<Scalars['DateTime']>,
   /** All values greater than or equal the given value. */
   resetTokenExpiry_gte?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  isPrivate_not?: Maybe<Scalars['Boolean']>,
   parties_every?: Maybe<PartyWhereInput>,
   parties_some?: Maybe<PartyWhereInput>,
   parties_none?: Maybe<PartyWhereInput>,
@@ -9131,7 +9156,7 @@ export type MeQueryQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar'>
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate'>
   )> }
 );
 
@@ -9949,6 +9974,39 @@ export type UserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'status'>
 );
+
+export type User_UserInfoMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UserInfoMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type Information_FragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'firstName' | 'lastName'>
+);
+
+export type User_UpdatePrivacyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UpdatePrivacyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -10185,7 +10243,13 @@ export type User_UnfriendUserVariables = User_UnfriendUserMutationVariables;
 export const useUser_UnfriendUser = useUser_UnfriendUserMutation;
 export type User_CreateFriendInvitationVariables = User_CreateFriendInvitationMutationVariables;
 export type User_CreateFriendInvitationCreateFriendInvitation = User_CreateFriendInvitationMutation['createFriendInvitation'];
-export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;export const Party_FragmentFragmentDoc = gql`
+export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;
+export type User_UserInfoVariables = User_UserInfoMutationVariables;
+export type User_UserInfoUpdateUser = User_UserInfoMutation['updateUser'];
+export const useUser_UserInfo = useUser_UserInfoMutation;
+export type User_UpdatePrivacyVariables = User_UpdatePrivacyMutationVariables;
+export type User_UpdatePrivacyUpdateUser = User_UpdatePrivacyMutation['updateUser'];
+export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10365,6 +10429,12 @@ export const Lol_FragmentFragmentDoc = gql`
 export const UserFragmentDoc = gql`
     fragment user on User {
   status
+}
+    `;
+export const Information_FragmentFragmentDoc = gql`
+    fragment INFORMATION_FRAGMENT on User {
+  firstName
+  lastName
 }
     `;
 export const SignupDocument = gql`
@@ -10659,6 +10729,7 @@ export const MeQueryDocument = gql`
     firstName
     lastName
     avatar
+    isPrivate
   }
 }
     `;
@@ -11745,3 +11816,45 @@ export type User_CreateFriendInvitationComponentProps = Omit<ApolloReactComponen
 export type User_CreateFriendInvitationMutationHookResult = ReturnType<typeof useUser_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>;
+export const User_UserInfoDocument = gql`
+    mutation User_UserInfo($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type User_UserInfoMutationFn = ApolloReactCommon.MutationFunction<User_UserInfoMutation, User_UserInfoMutationVariables>;
+export type User_UserInfoComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UserInfoMutation, User_UserInfoMutationVariables>, 'mutation'>;
+
+    export const User_UserInfoComponent = (props: User_UserInfoComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UserInfoMutation, User_UserInfoMutationVariables> mutation={User_UserInfoDocument} {...props} />
+    );
+    
+
+    export function useUser_UserInfoMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UserInfoMutation, User_UserInfoMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UserInfoMutation, User_UserInfoMutationVariables>(User_UserInfoDocument, baseOptions);
+    }
+export type User_UserInfoMutationHookResult = ReturnType<typeof useUser_UserInfoMutation>;
+export type User_UserInfoMutationResult = ApolloReactCommon.MutationResult<User_UserInfoMutation>;
+export type User_UserInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UserInfoMutation, User_UserInfoMutationVariables>;
+export const User_UpdatePrivacyDocument = gql`
+    mutation User_UpdatePrivacy($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type User_UpdatePrivacyMutationFn = ApolloReactCommon.MutationFunction<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;
+export type User_UpdatePrivacyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>, 'mutation'>;
+
+    export const User_UpdatePrivacyComponent = (props: User_UpdatePrivacyComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables> mutation={User_UpdatePrivacyDocument} {...props} />
+    );
+    
+
+    export function useUser_UpdatePrivacyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>(User_UpdatePrivacyDocument, baseOptions);
+    }
+export type User_UpdatePrivacyMutationHookResult = ReturnType<typeof useUser_UpdatePrivacyMutation>;
+export type User_UpdatePrivacyMutationResult = ApolloReactCommon.MutationResult<User_UpdatePrivacyMutation>;
+export type User_UpdatePrivacyMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;

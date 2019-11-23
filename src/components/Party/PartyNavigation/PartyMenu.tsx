@@ -57,9 +57,7 @@ function MenuContent(props: Props) {
       <Menu
         css={[MenuStyles]}
         mode="inline"
-        defaultOpenKeys={
-          props.routerPath.includes('party-music') ? ['party-music'] : []
-        }
+        defaultOpenKeys={['party-music']}
         selectedKeys={[props.routerPath]}
       >
         <Menu.Item key="/party-dashboard">

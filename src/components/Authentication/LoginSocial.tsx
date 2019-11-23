@@ -22,9 +22,9 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-export const LoginSocial: React.FC<
-  { disabledFromMutation: boolean } & WithRouterProps
-> = ({ disabledFromMutation }) => {
+export const LoginSocial: React.FC<{
+  disabledFromMutation: boolean;
+} & WithRouterProps> = ({ disabledFromMutation }) => {
   async function handleSocialLogin(
     provider: 'spotify' | 'twitter' | 'facebook'
   ) {

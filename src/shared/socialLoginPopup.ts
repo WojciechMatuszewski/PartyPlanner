@@ -27,6 +27,10 @@ function calculateCorrectWindowArea(): WindowArea {
   return windowArea;
 }
 
+function isFromPartyPlanner(event: MessageEvent) {
+  return event.data && event.data.meta && event.data.meta == 'party_planner';
+}
+
 export const socialLoginPopup = <ReturnDataType>(
   myUrl: string
 ): Promise<ReturnDataType> => {
@@ -47,6 +51,7 @@ export const socialLoginPopup = <ReturnDataType>(
 
   const authorizationPromise = new Promise<ReturnDataType>(
     (resolve, reject) => {
+      // some chrome extensions seem to be interfering here, weird stuff
       eventer(messageEvent, (event: MessageEvent) => {
         if (!authWindow) {
           return reject('Window not present');
@@ -58,12 +63,9 @@ export const socialLoginPopup = <ReturnDataType>(
         if (event.data === 'close') {
           authWindow.close();
           return reject();
-        } else if (event.data !== 'close') {
+        } else if (event.data !== 'close' && isFromPartyPlanner(event)) {
           authWindow.close();
-          return resolve(event.data);
-        } else if (!event.data) {
-          authWindow.close();
-          return reject('Data not found');
+          return resolve(event.data.payload);
         }
       });
     }

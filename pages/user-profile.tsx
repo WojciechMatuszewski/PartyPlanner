@@ -1,34 +1,63 @@
 import React from 'react';
-import { MeQueryMe } from '@generated/graphql';
 import styled from '@emotion/styled';
 import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import {
+  withApolloAuth,
+  WithApolloAuthInjectedProps
+} from '@apolloSetup/withApolloAuth';
 import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
+import UserInfo from '@components/User/UserProfile/UserInfo/UserInfo';
+import { useMeQuery } from '@generated/graphql';
+import UserProfilePrivacy from '@components/User/UserProfile/UserPrivacy/UserProfilePrivacy';
 
 const UserProfileWrapper = styled.div`
-  width: 900px;
   margin: 0 auto;
-  margin-top: 40px;
   position: relative;
   display: flex;
+  flex-direction: column;
+  ${FlexWrapperFullHeightMinusHeaderStyles}
+  max-width:1280px;
+  margin-top: 24px;
+  width: 100%;
   @media screen and (max-width: 1100px) {
     width: 100%;
   }
 `;
 
-const UserProfile: React.FC<{ me: MeQueryMe }> = () => {
+const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
+  const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
+
+  const meData = data && data.me ? data.me : me;
+
+  const { firstName, lastName, avatar, id, isPrivate } = meData;
+
   return (
     <UserProfileWrapper>
-      <div style={{ width: '100%' }}>
-        <UserProfileBanner />
-        <UserProfileTile
-          anchorLink="#Your-Info"
-          title="Information's about you"
+      <UserProfileBanner
+        firstName={firstName}
+        lastName={lastName}
+        avatar={avatar}
+      />
+      <UserProfileTile title="Information about you">
+        <UserInfo
+          key={`${firstName}:${lastName}`}
+          firstName={firstName}
+          lastName={lastName}
+          userId={id}
         />
-        <UserProfileTile anchorLink="#Your-Friends" title="Your friends" />
-      </div>
+      </UserProfileTile>
+      <UserProfileTile title="Privacy">
+        <UserProfilePrivacy
+          key={`${isPrivate}`}
+          userId={id}
+          isPrivate={isPrivate}
+        />
+      </UserProfileTile>
     </UserProfileWrapper>
   );
 };
 
-// export default withApolloAuth({ userHasToBe: 'authenticated' })(Dashboard);
-export default UserProfile;
+export default withApolloAuth({ userHasToBe: 'authenticated' })(
+  UserProfilePage
+);

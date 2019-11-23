@@ -15,6 +15,7 @@ import {
   LOCAL_STORAGE_PROVIDER_NAME
 } from '@services/AuthService';
 import { isObjectMissingKeys } from '@shared/functionUtils';
+import UserMissingLastName from '@components/User/UserMissingLastName/UserMissingLastName';
 
 const SocialAuthWrapperStyles = css`
   width: 100%;
@@ -26,13 +27,15 @@ type RouterQueryProps = {
   jwt: string;
   providerToken: string;
   providerRefreshToken: string;
+  missingLastName: string;
 };
 
 const checkAgainstObj: RouterQueryProps = {
   provider: SocialMediaType.Spotify,
   jwt: '',
   providerToken: '',
-  providerRefreshToken: ''
+  providerRefreshToken: '',
+  missingLastName: ''
 };
 
 interface InjectedProps {
@@ -47,22 +50,30 @@ const AuthSocialSuccessPage: NextFunctionComponent<
 > = props => {
   const { saveToStorage } = useLocalStorage();
 
-  React.useEffect(() => {
-    if (!props.shouldBeHere) return;
-    const {
-      provider,
-      providerRefreshToken,
-      providerToken,
-      jwt
-    } = props.socialLoginProps;
+  const called = React.useRef(false);
 
+  const {
+    provider,
+    providerRefreshToken,
+    providerToken,
+    jwt,
+    missingLastName
+  } = props.socialLoginProps;
+
+  function handleSuccess() {
+    if (called.current) return;
     saveToStorage(provider, LOCAL_STORAGE_PROVIDER_NAME);
     if (provider == SocialMediaType.Spotify) {
       saveToStorage(providerToken, LOCAL_STORAGE_SPOTIFY_TOKEN);
       saveToStorage(providerRefreshToken, LOCAL_STORAGE_SPOTIFY_REFRESH_TOKEN);
     }
-    window.opener.postMessage(jwt, process.env.NEXT_STATIC_FRONTEND_URL);
-  }, []);
+
+    window.opener.postMessage(
+      { meta: 'party_planner', payload: jwt },
+      process.env.NEXT_STATIC_FRONTEND_URL
+    );
+    called.current = true;
+  }
 
   if (!props.shouldBeHere)
     return (
@@ -75,12 +86,32 @@ const AuthSocialSuccessPage: NextFunctionComponent<
       />
     );
 
+  if (missingLastName == 'true') {
+    return (
+      <div css={[SocialAuthWrapperStyles]}>
+        <UserMissingLastName jtw={jwt} onDone={handleSuccess} />
+      </div>
+    );
+  }
+
+  return <AuthSocialSpinner callOnSafeTick={handleSuccess} />;
+};
+
+function AuthSocialSpinner({
+  callOnSafeTick
+}: {
+  callOnSafeTick: VoidFunction;
+}) {
+  // for some reason window can be undefined if we call inside 'render phase'
+  React.useEffect(() => {
+    callOnSafeTick();
+  }, []);
   return (
     <div css={[SocialAuthWrapperStyles, FlexBoxFullCenteredStyles]}>
       <Spin />
     </div>
   );
-};
+}
 
 AuthSocialSuccessPage.getInitialProps = async function(
   context
@@ -99,6 +130,17 @@ AuthSocialSuccessPage.getInitialProps = async function(
       socialLoginProps: query
     };
   }
+
+  const isMissingLastNameMalformed = !['true', 'false'].includes(
+    query.missingLastName
+  );
+  if (isMissingLastNameMalformed) {
+    return {
+      shouldBeHere: false,
+      socialLoginProps: query
+    };
+  }
+
   return {
     shouldBeHere: true,
     socialLoginProps: query
