@@ -1,8 +1,9 @@
-import React from 'react';
-import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { Party_PlaylistsConnectionEdges } from '@generated/graphql';
 import ModalPlaylistItem from '../shared/ModalPlaylistItem';
+
+import { Party_PlaylistsConnectionEdges } from '@generated/graphql';
+import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { List } from 'antd';
+import React from 'react';
 
 interface Props {
   numberOfSelectedItems: number;
