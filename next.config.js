@@ -39,15 +39,13 @@ const BASE_CONFIG = {
     swDest: 'static/service-worker.js',
     runtimeCaching: [IMAGE_CACHE_CONFIG]
   },
-  publicRuntimeConfig: {
+  env: {
     NEXT_STATIC_ENDPOINT_URL: process.env.NEXT_STATIC_ENDPOINT_URL,
     NEXT_STATIC_GRAPHQL_ENDPOINT: process.env.NEXT_STATIC_ENDPOINT_URL,
     NEXT_STATIC_WEBSOCKET_URL: process.env.NEXT_STATIC_WEBSOCKET_URL,
     NEXT_STATIC_SPOTIFY_REFRESH_TOKEN_URL:
       process.env.NEXT_STATIC_SPOTIFY_REFRESH_TOKEN_URL,
     NEXT_STATIC_FRONTEND_URL: process.env.NOW_URL
-  },
-  env: {
     NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN
   },
 
