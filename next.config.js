@@ -10,6 +10,7 @@ const webpackImport = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const compose = require('lodash/fp/compose');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const withOffline = moduleExists('next-offline')
   ? require('next-offline')
@@ -64,6 +65,13 @@ const BASE_CONFIG = {
       ]
     });
 
+    // paths from tsconfig
+    if (config.resolve.plugins) {
+      config.resolve.plugins.push(new TsconfigPathsPlugin());
+    } else {
+      config.resolve.plugins = [new TsconfigPathsPlugin()];
+    }
+
     config.plugins.push(
       new FilterWarningsPlugin({
         exclude: /mini-css-extract-plugin[^]*Conflicting order between:/
@@ -71,21 +79,21 @@ const BASE_CONFIG = {
     );
     config.plugins.push(new webpackImport.IgnorePlugin(/\/iconv-loader$/));
 
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@generated': path.resolve(__dirname, 'generated'),
-      '@shared': path.resolve(__dirname, 'src/shared'),
-      '@pages': path.resolve(__dirname, 'pages'),
-      '@hooks': path.resolve(__dirname, 'src/hooks'),
-      '@apolloSetup': path.resolve(__dirname, 'apolloSetup'),
-      '@axios': path.resolve(__dirname, 'axios'),
-      '@customIcons': path.resolve(__dirname, 'custom-icons'),
-      '@graphql': path.resolve(__dirname, 'graphql'),
-      '@services': path.resolve(__dirname, 'src/services'),
-      '@guards': path.resolve(__dirname, 'src/guards'),
-      '@auth': path.resolve(__dirname, 'src/auth')
-    };
+    // config.resolve.alias = {
+    //   ...config.resolve.alias,
+    //   '@components': path.resolve(__dirname, 'src/components'),
+    //   '@generated': path.resolve(__dirname, 'generated'),
+    //   '@shared': path.resolve(__dirname, 'src/shared'),
+    //   '@pages': path.resolve(__dirname, 'pages'),
+    //   '@hooks': path.resolve(__dirname, 'src/hooks'),
+    //   '@apolloSetup': path.resolve(__dirname, 'apolloSetup'),
+    //   '@axios': path.resolve(__dirname, 'axios'),
+    //   '@customIcons': path.resolve(__dirname, 'custom-icons'),
+    //   '@graphql': path.resolve(__dirname, 'graphql'),
+    //   '@services': path.resolve(__dirname, 'src/services'),
+    //   '@guards': path.resolve(__dirname, 'src/guards'),
+    //   '@auth': path.resolve(__dirname, 'src/auth')
+    // };
     return config;
   }
 };
