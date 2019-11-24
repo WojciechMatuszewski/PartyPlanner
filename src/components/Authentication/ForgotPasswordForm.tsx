@@ -19,16 +19,23 @@ const ForgotPasswordForm: React.FC<Props> = props => {
         name="email"
         placeholder="Your email address"
         type="email"
-        aria-label="email"
+        formItemProps={{
+          htmlFor: 'email',
+          label: 'Your email address'
+        }}
         size="large"
+        id="email"
         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
         component={FormikInputField}
       />
       <Field
+        formItemProps={{
+          htmlFor: 'confirmEmail',
+          label: 'Confirm email address'
+        }}
         name="confirmEmail"
         placeholder="Confirm email address"
         type="email"
-        aria-label="confirm-email"
         size="large"
         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
         component={FormikInputField}

@@ -34,12 +34,12 @@ const validationSchema = yup.object().shape<ResetPasswordFormValues>({
     .string()
     .required('This field is required')
     .min(6, 'Password has to be at least 6 characters long')
-    .max(12, 'Password can have maximum length of 12 characters'),
+    .max(30, 'Password can have maximum length of 30 characters'),
   confirmPassword: yup
     .string()
     .required('This field is required')
     .min(6, 'Password has to be at least 6 characters long')
-    .max(12, 'Password can have maximum length of 12 characters')
+    .max(30, 'Password can have maximum length of 30 characters')
     .oneOf([yup.ref('password'), null], 'Passwords do not match')
 });
 
