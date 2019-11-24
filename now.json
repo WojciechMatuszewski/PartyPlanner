@@ -3,17 +3,13 @@
   "name": "party-planner",
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
   "env": {
-    "NEXT_PUBLIC_MAPBOX_TOKEN": "@next_public_mapbox_token",
-    "NEXT_STATIC_ENDPOINT_URL": "https://api.ppback.fun",
-    "NEXT_STATIC_GRAPHQL_ENDPOINT": "https://api.ppback.fun/graphql",
-    "NEXT_STATIC_WEBSOCKET_URL": "wss://api.ppback.fun/graphql",
-    "NEXT_STATIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
+    "NEXT_PUBLIC_MAPBOX_TOKEN": "@next_public_mapbox_token"
   },
   "build": {
     "env": {
-      "NEXT_STATIC_ENDPOINT_URL": "https://api.ppback.fun",
-      "NEXT_STATIC_GRAPHQL_ENDPOINT": "https://api.ppback.fun/graphql",
-      "NEXT_STATIC_WEBSOCKET_URL": "wss://api.ppback.fun/graphql",
+      "NEXT_STATIC_ENDPOINT_URL": "@next_static_endpoint_url",
+      "NEXT_STATIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
+      "NEXT_STATIC_WEBSOCKET_URL": "@next_static_websocket_url",
       "NEXT_STATIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
     }
   },
