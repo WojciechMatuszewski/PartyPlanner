@@ -7,7 +7,6 @@
     "NEXT_STATIC_ENDPOINT_URL": "https://api.ppback.fun",
     "NEXT_STATIC_GRAPHQL_ENDPOINT": "https://api.ppback.fun/graphql",
     "NEXT_STATIC_WEBSOCKET_URL": "wss://api.ppback.fun/graphql",
-    "NEXT_STATIC_FRONTEND_URL": "@now_url",
     "NEXT_STATIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
   },
   "build": {
