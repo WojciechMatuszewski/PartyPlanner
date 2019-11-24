@@ -8,3 +8,4 @@ coverage
 build
 out
 deploy.json
+.env.build

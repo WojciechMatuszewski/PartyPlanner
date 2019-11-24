@@ -6,10 +6,11 @@ import { WithRouterProps } from 'next/router';
 import SpotifyButton from '@components/UI/SpotifyButton';
 import FacebookButton from '@components/UI/FacebookButton';
 import TwitterButton from '@components/UI/TwitterButton';
+import { message } from 'antd';
 
 export const getSocialProviderUrl = (
   provider: 'spotify' | 'facebook' | 'twitter'
-) => `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/${provider}`;
+) => `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/${provider}`;
 
 const ButtonsWrapper = styled.div`
   button {
@@ -34,6 +35,7 @@ export const LoginSocial: React.FC<{
       );
       handleLogin(token);
     } catch (e) {
+      message.error('Something went wrong!');
       // empty for now, it's being handled by popup
     }
   }

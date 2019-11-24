@@ -31,12 +31,12 @@ if (!isBrowser()) {
 
 function create(initialState: any, { getAuthToken }: Options) {
   const httpLink = createHttpLink({
-    uri: process.env.NEXT_STATIC_GRAPHQL_ENDPOINT,
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
     credentials: 'same-origin'
   });
 
   const batchLink = new BatchHttpLink({
-    uri: process.env.NEXT_STATIC_GRAPHQL_ENDPOINT,
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
     credentials: 'same-origin'
   });
 
@@ -60,7 +60,7 @@ function create(initialState: any, { getAuthToken }: Options) {
 
   if (isBrowser()) {
     const wsLink = new WebSocketLink({
-      uri: process.env.NEXT_STATIC_WEBSOCKET_URL as string,
+      uri: process.env.NEXT_PUBLIC_WEBSOCKET_URL as string,
       options: {
         reconnect: true
       }

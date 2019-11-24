@@ -46,7 +46,7 @@ export default function SpotifyGuard(props: { children: React.ReactNode }) {
 
   async function handleReAuthClick() {
     const tokens = await socialLoginPopup<any>(
-      `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/spotify/reauth`
+      `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/spotify/reauth`
     );
     initWithNewTokens(tokens.providerToken, tokens.providerRefreshToken);
   }

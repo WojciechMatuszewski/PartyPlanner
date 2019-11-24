@@ -2,15 +2,14 @@ import React from 'react';
 import * as yup from 'yup';
 import { Formik, FastField } from 'formik';
 import { Form, Button, Icon } from 'antd';
-import FormikInputField from '../../shared/FormikInputField';
 import styled from '@emotion/styled';
 import { LoginMutation, LoginVariables } from '@generated/graphql';
 import { MutationFn, MutationResult } from 'react-apollo';
 
 import GraphqlError from '@components/GraphqlError';
-
 import Link from 'next/link';
 import { handleLogin } from '@services/AuthService';
+import FormikInputField from '@shared/FormikInputField';
 interface FormValues {
   email: string;
   password: string;

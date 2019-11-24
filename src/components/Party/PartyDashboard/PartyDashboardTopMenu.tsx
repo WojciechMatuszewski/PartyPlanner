@@ -99,7 +99,7 @@ const PartyDashboardTopMenu: React.FC<Props> = ({
   );
 
   function createInvitationLink({ token }: InvitationLinkProps): string {
-    return `${process.env.NEXT_STATIC_FRONTEND_URL}/${JOIN_PARTY_PAGE}/${token}`;
+    return `${process.env.NEXT_PUBLIC_FRONTEND_URL}/${JOIN_PARTY_PAGE}/${token}`;
   }
 
   function handleCopyInvitationLinkClick() {

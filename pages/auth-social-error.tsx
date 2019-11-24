@@ -20,7 +20,7 @@ function AuthSocialErrorPage(props: WithRouterProps) {
 
   function handleOnErrorLick() {
     if (hasWindowOpener())
-      window.opener.postMessage('close', process.env.NEXT_STATIC_FRONTEND_URL);
+      window.opener.postMessage('close', process.env.NEXT_PUBLIC_FRONTEND_URL);
     else props.router && props.router.back();
   }
 

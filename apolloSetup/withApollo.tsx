@@ -17,7 +17,8 @@ export function parseCookies(req?: IncomingMessage, options = {}) {
 }
 export default (App: AppComponentType<any>) => {
   return class WithData extends React.Component {
-    public static displayName = `WithData(${App.displayName})`;
+    public static displayName =
+      `WithData(${App.displayName})` || 'WITH_DATA(withApollo)';
     private apolloClient: ApolloClient<NormalizedCacheObject>;
     public static async getInitialProps(ctx: NextAppContext) {
       const {

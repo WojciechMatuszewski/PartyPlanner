@@ -2,6 +2,21 @@
   "version": 2,
   "name": "party-planner",
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
+  "env": {
+    "NEXT_PUBLIC_MAPBOX_TOKEN": "@next_public_mapbox_token",
+    "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
+    "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
+    "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
+    "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
+      "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
+      "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
+      "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
+    }
+  },
   "routes": [
     {
       "src": "^/service-worker.js$",
@@ -13,95 +28,95 @@
     },
     {
       "src": "/forgot-password",
-      "dest": "auth-forgot-password"
+      "dest": "/auth-forgot-password"
     },
     {
       "src": "/login",
-      "dest": "auth-login"
+      "dest": "/auth-login"
     },
     {
       "src": "/register",
-      "dest": "auth-register"
+      "dest": "/auth-register"
     },
     {
       "src": "/auth/social/success",
-      "dest": "auth-social-success"
+      "dest": "/auth-social-success"
     },
     {
       "src": "/auth/social/reauth/success",
-      "dest": "auth-social-reauth-success"
+      "dest": "/auth-social-reauth-success"
     },
     {
       "src": "/auth/social/error",
-      "dest": "auth-social-error"
+      "dest": "/auth-social-error"
     },
     {
       "src": "/reset-password/(?<token>[^/]+)",
-      "dest": "auth-reset-password?token=$token"
+      "dest": "/auth-reset-password?token=$token"
     },
     {
       "src": "/party/chats",
-      "dest": "party-chats"
+      "dest": "/party-chats"
     },
     {
       "src": "/party/chats/(?<chat>[^/]+)",
-      "dest": "party-chats?chat=$chat"
+      "dest": "/party-chats?chat=$chat"
     },
     {
       "src": "/party/create",
-      "dest": "party-create"
+      "dest": "/party-create"
     },
     {
       "src": "/party/parties",
-      "dest": "party-parties"
+      "dest": "/party-parties"
     },
     {
       "src": "/party/(?<id>[^/]+)/cart",
-      "dest": "party-cart?id=$id"
+      "dest": "/party-cart?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)/music/discover",
-      "dest": "party-music-discover?id=$id"
+      "dest": "/party-music-discover?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)/music/browse",
-      "dest": "party-music-browse?id=$id"
+      "dest": "/party-music-browse?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)/music/tracks",
-      "dest": "party-music-saved-tracks?id=$id"
+      "dest": "/party-music-saved-tracks?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)/music/playlists",
-      "dest": "party-music-playlists?id=$id"
+      "dest": "/party-music-playlists?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)/music/top",
-      "dest": "party-music-top?id=$id"
+      "dest": "/party-music-top?id=$id"
     },
     {
       "src": "/party/(?<id>[^/]+)",
-      "dest": "party-dashboard?id=$id"
+      "dest": "/party-dashboard?id=$id"
     },
     {
       "src": "/party/join/(?<token>[^/]+)",
-      "dest": "party-join?token=$token"
+      "dest": "/party-join?token=$token"
     },
     {
       "src": "/user/calendar",
-      "dest": "user-calendar"
+      "dest": "/user-calendar"
     },
     {
       "src": "/user/dashboard",
-      "dest": "user-dashboard"
+      "dest": "/user-dashboard"
     },
     {
       "src": "/user/people",
-      "dest": "user-people"
+      "dest": "/user-people"
     },
     {
       "src": "/user/profile",
-      "dest": "user-profile"
+      "dest": "/user-profile"
     }
   ]
 }
