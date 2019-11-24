@@ -39,15 +39,6 @@ const BASE_CONFIG = {
     swDest: 'static/service-worker.js',
     runtimeCaching: [IMAGE_CACHE_CONFIG]
   },
-  env: {
-    NEXT_PUBLIC_ENDPOINT_URL: process.env.NEXT_PUBLIC_ENDPOINT_URL,
-    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
-    NEXT_PUBLIC_FRONTEND_URL: process.env.NOW_URL,
-    NEXT_PUBLIC_GRAPHQL_ENDPOINT: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
-    NEXT_PUBLIC_WEBSOCKET_URL: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-    NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL:
-      process.env.NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL
-  },
 
   webpack: config => {
     config.plugins = config.plugins || [];

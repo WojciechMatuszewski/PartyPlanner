@@ -6,6 +6,7 @@ import { WithRouterProps } from 'next/router';
 import SpotifyButton from '@components/UI/SpotifyButton';
 import FacebookButton from '@components/UI/FacebookButton';
 import TwitterButton from '@components/UI/TwitterButton';
+import { message } from 'antd';
 
 export const getSocialProviderUrl = (
   provider: 'spotify' | 'facebook' | 'twitter'
@@ -34,6 +35,7 @@ export const LoginSocial: React.FC<{
       );
       handleLogin(token);
     } catch (e) {
+      message.error('Something went wrong!');
       // empty for now, it's being handled by popup
     }
   }

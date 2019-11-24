@@ -57,13 +57,9 @@ export const socialLoginPopup = <ReturnDataType>(
           return reject('Window not present');
         }
         if (event.origin !== process.env.NEXT_PUBLIC_FRONTEND_URL) {
-          // authWindow.close();
+          authWindow.close();
 
-          return reject(
-            `Origin not allowed!, ${event.origin}, ${
-              process.env.NEXT_PUBLIC_FRONTEND_URL
-            }, ${JSON.stringify(process.env)}`
-          );
+          return reject(`Origin not allowed!`);
         }
         if (event.data === 'close') {
           authWindow.close();

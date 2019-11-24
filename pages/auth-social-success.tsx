@@ -75,9 +75,6 @@ const AuthSocialSuccessPage: NextFunctionComponent<
     called.current = true;
   }
 
-  /* eslint-disable */
-  console.log(JSON.stringify(process.env));
-
   if (!props.shouldBeHere)
     return (
       <Exception

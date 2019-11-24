@@ -118,6 +118,7 @@
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "hex-rgb": "^4.1.0",
+    "hoist-non-react-statics": "^3.3.1",
     "isomorphic-unfetch": "^3.0.0",
     "less": "^3.10.3",
     "lodash": "^4.17.15",

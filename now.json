@@ -7,14 +7,16 @@
     "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
     "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
     "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
-    "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
+    "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token",
+    "NEXT_PUBLIC_FRONTEND_URL": "@next_public_frontend_url"
   },
   "build": {
     "env": {
       "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
       "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
       "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
-      "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
+      "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token",
+      "NEXT_PUBLIC_FRONTEND_URL": "@next_public_frontend_url"
     }
   },
   "routes": [
