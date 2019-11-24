@@ -105,7 +105,7 @@ export default function UserMissingLastName({ jtw, onDone }: Props) {
     setLoading(true);
     try {
       await axios.post(
-        `${process.env.NEXT_STATIC_ENDPOINT_URL}/users/patchMissingLastName`,
+        `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/users/patchMissingLastName`,
         { lastName },
         {
           headers: {

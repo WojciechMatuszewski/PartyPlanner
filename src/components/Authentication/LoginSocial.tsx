@@ -9,7 +9,7 @@ import TwitterButton from '@components/UI/TwitterButton';
 
 export const getSocialProviderUrl = (
   provider: 'spotify' | 'facebook' | 'twitter'
-) => `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/${provider}`;
+) => `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/${provider}`;
 
 const ButtonsWrapper = styled.div`
   button {

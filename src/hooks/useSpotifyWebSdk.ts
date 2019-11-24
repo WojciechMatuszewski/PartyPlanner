@@ -10,7 +10,7 @@ import { init } from 'spotify-web-sdk';
 import { Subject } from 'rxjs';
 import axios from 'axios';
 
-const NEW_ACCESS_TOKEN_ENDPOINT = `${process.env.NEXT_STATIC_ENDPOINT_URL}/auth/spotify/new-token`;
+const NEW_ACCESS_TOKEN_ENDPOINT = `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/auth/spotify/new-token`;
 
 export const SpotifyAuthenticationError$ = new Subject<void>();
 

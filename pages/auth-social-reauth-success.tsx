@@ -57,7 +57,7 @@ const AuthSocialReAuthSuccessPage: NextFunctionComponent<
         meta: 'party_planner',
         payload: { providerToken, providerRefreshToken }
       },
-      process.env.NEXT_STATIC_FRONTEND_URL
+      process.env.NEXT_PUBLIC_FRONTEND_URL
     );
   }, []);
 

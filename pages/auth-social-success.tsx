@@ -70,7 +70,7 @@ const AuthSocialSuccessPage: NextFunctionComponent<
 
     window.opener.postMessage(
       { meta: 'party_planner', payload: jwt },
-      process.env.NEXT_STATIC_FRONTEND_URL
+      process.env.NEXT_PUBLIC_FRONTEND_URL
     );
     called.current = true;
   }
