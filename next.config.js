@@ -21,7 +21,7 @@ if (typeof require !== 'undefined') {
 }
 
 const IMAGE_CACHE_CONFIG = {
-  urlPattern: /^https:\/\/party-planner\.wmmatuszewski\.now\.sh\/static\/.*\.(?:png|jpg|jpeg|svg)$/,
+  urlPattern: /static\/.*\.(?:png|jpg|jpeg|svg)$/,
   handler: 'CacheFirst',
   options: {
     cacheName: 'pp-images',
@@ -40,7 +40,8 @@ const BASE_CONFIG = {
     runtimeCaching: [IMAGE_CACHE_CONFIG]
   },
   env: {
-    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
+    NEXT_STATIC_FRONTEND_URL: process.env.NOW_URL
   },
 
   webpack: config => {
