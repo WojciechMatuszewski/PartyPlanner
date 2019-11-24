@@ -39,6 +39,9 @@ const BASE_CONFIG = {
     swDest: 'static/service-worker.js',
     runtimeCaching: [IMAGE_CACHE_CONFIG]
   },
+  env: {
+    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+  },
 
   webpack: config => {
     config.plugins = config.plugins || [];
