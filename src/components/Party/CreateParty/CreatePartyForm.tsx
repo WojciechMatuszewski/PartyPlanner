@@ -155,9 +155,15 @@ const CreatePartyForm: React.FC<Props> = props => {
           <RowsWrapper isBreakingTheGrid={isBreakingTheGrid}>
             <RowWrapper>
               <FastField
+                formItemProps={{
+                  htmlFor: 'title',
+                  label: 'Name your party',
+                  style: { marginTop: -21 }
+                }}
                 size="large"
                 component={FormikInputField}
                 name="title"
+                id="title"
                 placeholder="Name your party"
                 prefix={
                   <Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />
@@ -165,6 +171,9 @@ const CreatePartyForm: React.FC<Props> = props => {
               />
               <Form.Item
                 hasFeedback={true}
+                label="Choose date"
+                colon={false}
+                htmlFor="date"
                 validateStatus={getFormItemValidateStatus(
                   errors as any,
                   touched as any,
@@ -175,6 +184,7 @@ const CreatePartyForm: React.FC<Props> = props => {
                 <DatePicker.RangePicker
                   onChange={dates => setFieldValue('date', dates)}
                   name="date"
+                  id="date"
                   disabledDate={shouldDateBeDisabled}
                   onCalendarChange={handleDatePickerCalendarChange}
                   showTime={{ format: 'hh:mm', use12Hours: false }}
@@ -208,8 +218,13 @@ const CreatePartyForm: React.FC<Props> = props => {
                     <CreatePartyLocation />
                     <FastField
                       component={FormikInputField}
+                      formItemProps={{
+                        label: 'Description',
+                        htmlFor: 'description'
+                      }}
                       name="description"
                       type="textArea"
+                      id="description"
                       placeholder="Description"
                       autoSize={{ minRows: 4 }}
                     />

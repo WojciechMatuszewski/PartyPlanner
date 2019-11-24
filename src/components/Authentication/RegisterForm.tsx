@@ -22,12 +22,12 @@ const validationSchema = yup.object().shape<FormValues>({
     .string()
     .required('This field is required')
     .min(2, 'UserName has to be at least 2 characters long')
-    .max(12, 'UserName can have maximum length of 12 characters'),
+    .max(40, 'UserName can have maximum length of 40 characters'),
   lastName: yup
     .string()
     .required('This field is required')
     .min(2, 'UserName has to be at least 2 characters long')
-    .max(12, 'UserName can have maximum length of 12 characters'),
+    .max(40, 'UserName can have maximum length of 40 characters'),
   email: yup
     .string()
     .required('This field is required')
@@ -36,13 +36,13 @@ const validationSchema = yup.object().shape<FormValues>({
     .string()
     .required('This field is required')
     .min(6, 'Password has to be at least 6 characters long')
-    .max(12, 'Password can have maximum length of 12 characters'),
+    .max(30, 'Password can have maximum length of 30 characters'),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords do not match')
     .required('This field is required')
     .min(6, 'Password has to be at least 6 characters long')
-    .max(12, 'Password can have maximum length of 12 characters')
+    .max(30, 'Password can have maximum length of 30 characters')
 });
 
 const initialValues: FormValues = {
@@ -81,33 +81,49 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
             <Form onSubmit={handleSubmit}>
               <FastField
                 component={FormikInputField}
+                formItemProps={{
+                  htmlFor: 'firstName',
+                  label: 'Your First Name'
+                }}
+                id="firstName"
                 name="firstName"
                 type="text"
                 size="large"
                 placeholder="Your First Name"
-                aria-label="firstName-field"
               />
               <FastField
                 component={FormikInputField}
+                formItemProps={{
+                  htmlFor: 'lastName',
+                  label: 'Your Last Name'
+                }}
+                id="lastName"
                 name="lastName"
                 type="text"
                 size="large"
                 placeholder="Your Last Name"
-                aria-label="lastName-field"
               />
               <FastField
                 component={FormikInputField}
+                formItemProps={{
+                  htmlFor: 'email',
+                  label: 'Your email address'
+                }}
                 name="email"
                 type="email"
                 size="large"
-                placeholder="Your Email"
-                aria-label="email-field"
+                placeholder="Your email address"
               />
               <Field
                 component={FormikInputField}
+                formItemProps={{
+                  htmlFor: 'password',
+                  label: 'Your password'
+                }}
                 prefix={
                   <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
+                id="password"
                 name="password"
                 type="password"
                 size="large"
@@ -116,11 +132,16 @@ const RegisterForm: React.FC<WithRouterProps> = ({ router }) => {
               />
               <Field
                 component={FormikInputField}
+                formItemProps={{
+                  htmlFor: 'confirmPassword',
+                  label: 'Confirm Password'
+                }}
                 prefix={
                   <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
                 name="confirmPassword"
                 type="password"
+                id="confirmPassword"
                 size="large"
                 placeholder="Confirm Password"
                 aria-label="confirmPassword-field"

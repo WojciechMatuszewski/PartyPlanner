@@ -24,7 +24,7 @@ const validationSchema = yup.object().shape<FormValues>({
     .string()
     .required('This field is required')
     .min(6, 'Password has to be at least 6 characters long')
-    .max(12, 'Password can have maximum length of 12 characters')
+    .max(30, 'Password can have maximum length of 30 characters')
 });
 
 const initialValues: FormValues = {
@@ -61,19 +61,27 @@ const LoginForm: React.FC<{
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit}>
           <FastField
-            aria-label="email-field"
+            formItemProps={{
+              htmlFor: 'email',
+              label: 'Your email address'
+            }}
             component={FormikInputField}
             type="email"
             name="email"
+            id="email"
             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Your email address"
             size="large"
           />
           <FastField
-            aria-label="password-field"
+            formItemProps={{
+              htmlFor: 'password',
+              label: 'Your password'
+            }}
             component={FormikInputField}
             type="password"
             name="password"
+            id="password"
             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Your password"
             size="large"

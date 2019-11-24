@@ -2,18 +2,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
 
-interface Props {
-  title: string;
-  anchorLink: string;
-}
-
 const UserProfileTileWrapper = styled.div`
   width: 900px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   margin: 0 auto;
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 24px;
 
   @media screen and (max-width: 1100px) {
     width: 100%;
@@ -30,28 +24,35 @@ const UserProfileTileTitle = styled.div`
   background: white;
   border-bottom: 1px solid #d9d9d9;
   padding: 20px;
-  h1 {
+  h2 {
     margin-bottom: 0;
+  }
+
+  @media screen and (max-width: 800px) {
+    h2 {
+      font-size: 20px;
+    }
   }
 `;
 
 const UserProfileTileContent = styled.div`
   width: 100%;
-  padding: 15px;
+  padding: 24px;
   box-sizing: border-box;
-  height: 400px;
-  background: rgba(255, 255, 255, 0.5);
+  background: white;
 `;
 
-const UserProfileTile: React.FC<Props> = ({ title, anchorLink }) => {
+interface Props {
+  title: string;
+  children: React.ReactNode;
+}
+const UserProfileTile: React.FC<Props> = ({ title, children }) => {
   return (
     <UserProfileTileWrapper>
       <UserProfileTileTitle>
-        <a href={anchorLink}>
-          <Typography.Title type="secondary">{title}</Typography.Title>
-        </a>
+        <Typography.Title level={2}>{title}</Typography.Title>
       </UserProfileTileTitle>
-      <UserProfileTileContent>sosososo</UserProfileTileContent>
+      <UserProfileTileContent>{children}</UserProfileTileContent>
     </UserProfileTileWrapper>
   );
 };

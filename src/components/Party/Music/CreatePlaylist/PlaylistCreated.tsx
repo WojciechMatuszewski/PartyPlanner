@@ -21,8 +21,8 @@ const CreatedPlaylistInfo = styled.div`
 `;
 
 const PlaylistImage = styled(Avatar)`
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
@@ -46,7 +46,7 @@ const ButtonsWrapper = styled.div`
 const PlaylistCreatedParagraph = styled(Typography.Paragraph)``;
 
 interface Props {
-  createdPlaylist: Playlist;
+  createdPlaylist: Playlist & { notImportable: boolean };
 }
 
 export default function PlaylistCreated({ createdPlaylist }: Props) {
@@ -77,6 +77,12 @@ export default function PlaylistCreated({ createdPlaylist }: Props) {
           <PlaylistCreatedParagraph>
             <Icon type="lock" style={{ marginRight: 8 }} />
             {createdPlaylist.public ? 'Public' : 'Private'}
+          </PlaylistCreatedParagraph>
+          <PlaylistCreatedParagraph>
+            <Icon type="import" style={{ marginRight: 8 }} />
+            {createdPlaylist.notImportable
+              ? 'Restricted to this party'
+              : 'Not restricted to this party'}
           </PlaylistCreatedParagraph>
         </CreatedPlaylistBasicInfo>
       </CreatedPlaylistInfo>

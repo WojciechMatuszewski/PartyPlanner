@@ -1120,6 +1120,7 @@ export type CombinePlaylistPartyPlannerData = {
   partyId: Scalars['ID'],
   userId: Scalars['ID'],
   deleteAffected: Scalars['Boolean'],
+  importable: Scalars['Boolean'],
 };
 
 
@@ -6078,7 +6079,7 @@ export type Playlist = Node & {
   name: Scalars['String'],
   imageUrl: Scalars['String'],
   tracks?: Maybe<Array<PartySavedTrack>>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable: Scalars['Boolean'],
 };
 
 
@@ -6120,7 +6121,7 @@ export type PlaylistCreateInput = {
   spotifyExternalUrl: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   user: UserCreateOneInput,
   parties?: Maybe<PartyCreateManyWithoutPlaylistInput>,
   tracks?: Maybe<PartySavedTrackCreateManyInput>,
@@ -6138,7 +6139,7 @@ export type PlaylistCreateWithoutPartiesInput = {
   spotifyExternalUrl: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   user: UserCreateOneInput,
   tracks?: Maybe<PartySavedTrackCreateManyInput>,
 };
@@ -6169,8 +6170,8 @@ export enum PlaylistOrderByInput {
   NameDesc = 'name_DESC',
   ImageUrlAsc = 'imageUrl_ASC',
   ImageUrlDesc = 'imageUrl_DESC',
-  IsTemporaryAsc = 'isTemporary_ASC',
-  IsTemporaryDesc = 'isTemporary_DESC'
+  ImportableAsc = 'importable_ASC',
+  ImportableDesc = 'importable_DESC'
 }
 
 export type PlaylistPreviousValues = {
@@ -6183,7 +6184,7 @@ export type PlaylistPreviousValues = {
   spotifyExternalUrl: Scalars['String'],
   name: Scalars['String'],
   imageUrl: Scalars['String'],
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable: Scalars['Boolean'],
 };
 
 export type PlaylistScalarWhereInput = {
@@ -6385,9 +6386,9 @@ export type PlaylistScalarWhereInput = {
   imageUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
-  isTemporary_not?: Maybe<Scalars['Boolean']>,
+  importable_not?: Maybe<Scalars['Boolean']>,
 };
 
 export type PlaylistSubscriptionPayload = {
@@ -6422,7 +6423,7 @@ export type PlaylistUpdateInput = {
   spotifyExternalUrl?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   user?: Maybe<UserUpdateOneRequiredInput>,
   parties?: Maybe<PartyUpdateManyWithoutPlaylistInput>,
   tracks?: Maybe<PartySavedTrackUpdateManyInput>,
@@ -6434,7 +6435,7 @@ export type PlaylistUpdateManyDataInput = {
   spotifyExternalUrl?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
 };
 
 export type PlaylistUpdateManyMutationInput = {
@@ -6443,7 +6444,7 @@ export type PlaylistUpdateManyMutationInput = {
   spotifyExternalUrl?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
 };
 
 export type PlaylistUpdateManyWithoutPartiesInput = {
@@ -6469,7 +6470,7 @@ export type PlaylistUpdateWithoutPartiesDataInput = {
   spotifyExternalUrl?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   imageUrl?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   user?: Maybe<UserUpdateOneRequiredInput>,
   tracks?: Maybe<PartySavedTrackUpdateManyInput>,
 };
@@ -6684,9 +6685,9 @@ export type PlaylistWhereInput = {
   imageUrl_ends_with?: Maybe<Scalars['String']>,
   /** All values not ending with the given string. */
   imageUrl_not_ends_with?: Maybe<Scalars['String']>,
-  isTemporary?: Maybe<Scalars['Boolean']>,
+  importable?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
-  isTemporary_not?: Maybe<Scalars['Boolean']>,
+  importable_not?: Maybe<Scalars['Boolean']>,
   user?: Maybe<UserWhereInput>,
   parties_every?: Maybe<PartyWhereInput>,
   parties_some?: Maybe<PartyWhereInput>,
@@ -6753,7 +6754,6 @@ export type Query = {
   albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
-  authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
@@ -6762,6 +6762,7 @@ export type Query = {
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
+  authenticateParty: PartyAuthenticationResult,
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -7203,11 +7204,6 @@ export type QueryNodeArgs = {
 };
 
 
-export type QueryAuthenticatePartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>
 };
@@ -7254,6 +7250,11 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
 };
 
 export enum SocialMediaType {
@@ -7609,6 +7610,7 @@ export type User = Node & {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate: Scalars['Boolean'],
   cartItems?: Maybe<Array<PartyCartItem>>,
   pendingInvitations?: Maybe<Array<User>>,
   status: UserStatus,
@@ -7714,6 +7716,7 @@ export type UserCreateInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7770,6 +7773,7 @@ export type UserCreateWithoutCartItemsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7790,6 +7794,7 @@ export type UserCreateWithoutChatsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7810,6 +7815,7 @@ export type UserCreateWithoutPartiesInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7830,6 +7836,7 @@ export type UserCreateWithoutPendingFriendInvitationsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7850,6 +7857,7 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7900,7 +7908,9 @@ export enum UserOrderByInput {
   ResetTokenAsc = 'resetToken_ASC',
   ResetTokenDesc = 'resetToken_DESC',
   ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
-  ResetTokenExpiryDesc = 'resetTokenExpiry_DESC'
+  ResetTokenExpiryDesc = 'resetTokenExpiry_DESC',
+  IsPrivateAsc = 'isPrivate_ASC',
+  IsPrivateDesc = 'isPrivate_DESC'
 }
 
 export type UserPendingFriend = {
@@ -7925,6 +7935,7 @@ export type UserPreviousValues = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate: Scalars['Boolean'],
 };
 
 export type UserScalarWhereInput = {
@@ -8220,6 +8231,9 @@ export type UserScalarWhereInput = {
   resetTokenExpiry_gt?: Maybe<Scalars['DateTime']>,
   /** All values greater than or equal the given value. */
   resetTokenExpiry_gte?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  isPrivate_not?: Maybe<Scalars['Boolean']>,
 };
 
 export enum UserStatus {
@@ -8265,6 +8279,7 @@ export type UserUpdateDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8285,6 +8300,7 @@ export type UserUpdateInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8305,6 +8321,7 @@ export type UserUpdateManyDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
 };
 
 export type UserUpdateManyInput = {
@@ -8331,6 +8348,7 @@ export type UserUpdateManyMutationInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
 };
 
 export type UserUpdateManyWithoutChatsInput = {
@@ -8402,6 +8420,7 @@ export type UserUpdateWithoutCartItemsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8421,6 +8440,7 @@ export type UserUpdateWithoutChatsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8440,6 +8460,7 @@ export type UserUpdateWithoutPartiesDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8459,6 +8480,7 @@ export type UserUpdateWithoutPendingFriendInvitationsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8478,6 +8500,7 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   thirdPartyId?: Maybe<Scalars['String']>,
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8831,6 +8854,9 @@ export type UserWhereInput = {
   resetTokenExpiry_gt?: Maybe<Scalars['DateTime']>,
   /** All values greater than or equal the given value. */
   resetTokenExpiry_gte?: Maybe<Scalars['DateTime']>,
+  isPrivate?: Maybe<Scalars['Boolean']>,
+  /** All values that are not equal to given value. */
+  isPrivate_not?: Maybe<Scalars['Boolean']>,
   parties_every?: Maybe<PartyWhereInput>,
   parties_some?: Maybe<PartyWhereInput>,
   parties_none?: Maybe<PartyWhereInput>,
@@ -8921,7 +8947,7 @@ export type Full_Saved_Track_FragmentFragment = (
 
 export type Party_Playlists_Connection_Node_FragmentFragment = (
   { __typename?: 'Playlist' }
-  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'spotifyId' | 'imageUrl'>
+  & Pick<Playlist, 'id' | 'spotifyExternalUrl' | 'name' | 'spotifyId' | 'imageUrl' | 'importable'>
   & { user: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'firstName' | 'lastName' | 'avatar'>
@@ -9130,7 +9156,7 @@ export type MeQueryQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar'>
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate'>
   )> }
 );
 
@@ -9556,43 +9582,6 @@ export type Is_Unread_ThreadFragment = (
   & Pick<Chat, 'hasUnreadMessages'>
 );
 
-export type Party_UpdatePartyMutationVariables = {
-  data: PartyUpdateInput,
-  where: PartyWhereUniqueInput
-};
-
-
-export type Party_UpdatePartyMutation = (
-  { __typename?: 'Mutation' }
-  & { updateParty: Maybe<(
-    { __typename?: 'Party' }
-    & { location: (
-      { __typename?: 'Location' }
-      & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
-    ) }
-  )
-    & Party_FragmentFragment
-  > }
-);
-
-export type Lol_FragmentFragment = (
-  { __typename?: 'Party' }
-  & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
-  & { location: (
-    { __typename?: 'Location' }
-    & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
-  ), author: (
-    { __typename?: 'User' }
-    & Pick<User, 'firstName' | 'lastName' | 'id'>
-  ), members: Maybe<Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
-  )>>, cart: (
-    { __typename?: 'PartyCart' }
-    & Pick<PartyCart, 'id'>
-  ) }
-);
-
 export type Party_JoinPublicPartyMutationVariables = {
   data: UserUpdateInput,
   where: UserWhereUniqueInput
@@ -9793,6 +9782,43 @@ export type Party_DeletePartyMutation = (
   )> }
 );
 
+export type Party_UpdatePartyMutationVariables = {
+  data: PartyUpdateInput,
+  where: PartyWhereUniqueInput
+};
+
+
+export type Party_UpdatePartyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateParty: Maybe<(
+    { __typename?: 'Party' }
+    & { location: (
+      { __typename?: 'Location' }
+      & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+    ) }
+  )
+    & Party_FragmentFragment
+  > }
+);
+
+export type Lol_FragmentFragment = (
+  { __typename?: 'Party' }
+  & Pick<Party, 'id' | 'title' | 'description' | 'colorTint' | 'start' | 'end' | 'isPublic' | 'inviteSecret'>
+  & { location: (
+    { __typename?: 'Location' }
+    & Pick<Location, 'placeName' | 'latitude' | 'longitude'>
+  ), author: (
+    { __typename?: 'User' }
+    & Pick<User, 'firstName' | 'lastName' | 'id'>
+  ), members: Maybe<Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'avatar' | 'firstName' | 'lastName' | 'id'>
+  )>>, cart: (
+    { __typename?: 'PartyCart' }
+    & Pick<PartyCart, 'id'>
+  ) }
+);
+
 export type Party_LeavePartyMutationVariables = {
   data: UserUpdateInput,
   where: UserWhereUniqueInput
@@ -9948,6 +9974,39 @@ export type UserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'status'>
 );
+
+export type User_UserInfoMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UserInfoMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type Information_FragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'firstName' | 'lastName'>
+);
+
+export type User_UpdatePrivacyMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UpdatePrivacyMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -10097,15 +10156,6 @@ export type Party_AuthenticateVariables = Party_AuthenticateQueryVariables;
 export type Party_AuthenticateAuthenticateParty = Party_AuthenticateQuery['authenticateParty'];
 export type Party_AuthenticateParty = Party_FragmentFragment;
 export const useParty_Authenticate = useParty_AuthenticateQuery;
-export type Party_UpdatePartyVariables = Party_UpdatePartyMutationVariables;
-export type Party_UpdatePartyUpdateParty = Party_FragmentFragment;
-export type Party_UpdatePartyLocation = Party_UpdatePartyMutation['updateParty']['location'];
-export const useParty_UpdateParty = useParty_UpdatePartyMutation;
-export type Lol_FragmentLocation = Lol_FragmentFragment['location'];
-export type Lol_Fragment_Location = Lol_FragmentFragment['location'];
-export type Lol_FragmentAuthor = Lol_FragmentFragment['author'];
-export type Lol_FragmentMembers = Lol_FragmentFragment['members'][0];
-export type Lol_FragmentCart = Lol_FragmentFragment['cart'];
 export type Party_JoinPublicPartyVariables = Party_JoinPublicPartyMutationVariables;
 export type Party_JoinPublicPartyUpdateUser = Party_JoinPublicPartyMutation['updateUser'];
 export const useParty_JoinPublicParty = useParty_JoinPublicPartyMutation;
@@ -10151,6 +10201,15 @@ export const useParty_CartCost = useParty_CartCostQuery;
 export type Party_DeletePartyVariables = Party_DeletePartyMutationVariables;
 export type Party_DeletePartyDeleteParty = Party_DeletePartyMutation['deleteParty'];
 export const useParty_DeleteParty = useParty_DeletePartyMutation;
+export type Party_UpdatePartyVariables = Party_UpdatePartyMutationVariables;
+export type Party_UpdatePartyUpdateParty = Party_FragmentFragment;
+export type Party_UpdatePartyLocation = Party_UpdatePartyMutation['updateParty']['location'];
+export const useParty_UpdateParty = useParty_UpdatePartyMutation;
+export type Lol_FragmentLocation = Lol_FragmentFragment['location'];
+export type Lol_Fragment_Location = Lol_FragmentFragment['location'];
+export type Lol_FragmentAuthor = Lol_FragmentFragment['author'];
+export type Lol_FragmentMembers = Lol_FragmentFragment['members'][0];
+export type Lol_FragmentCart = Lol_FragmentFragment['cart'];
 export type Party_LeavePartyVariables = Party_LeavePartyMutationVariables;
 export type Party_LeavePartyUpdateUser = Party_LeavePartyMutation['updateUser'];
 export const useParty_LeaveParty = useParty_LeavePartyMutation;
@@ -10184,7 +10243,13 @@ export type User_UnfriendUserVariables = User_UnfriendUserMutationVariables;
 export const useUser_UnfriendUser = useUser_UnfriendUserMutation;
 export type User_CreateFriendInvitationVariables = User_CreateFriendInvitationMutationVariables;
 export type User_CreateFriendInvitationCreateFriendInvitation = User_CreateFriendInvitationMutation['createFriendInvitation'];
-export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;export const Party_FragmentFragmentDoc = gql`
+export const useUser_CreateFriendInvitation = useUser_CreateFriendInvitationMutation;
+export type User_UserInfoVariables = User_UserInfoMutationVariables;
+export type User_UserInfoUpdateUser = User_UserInfoMutation['updateUser'];
+export const useUser_UserInfo = useUser_UserInfoMutation;
+export type User_UpdatePrivacyVariables = User_UpdatePrivacyMutationVariables;
+export type User_UpdatePrivacyUpdateUser = User_UpdatePrivacyMutation['updateUser'];
+export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10291,6 +10356,7 @@ export const Party_Playlists_Connection_Node_FragmentFragmentDoc = gql`
   name
   spotifyId
   imageUrl
+  importable
   user {
     id
     firstName
@@ -10363,6 +10429,12 @@ export const Lol_FragmentFragmentDoc = gql`
 export const UserFragmentDoc = gql`
     fragment user on User {
   status
+}
+    `;
+export const Information_FragmentFragmentDoc = gql`
+    fragment INFORMATION_FRAGMENT on User {
+  firstName
+  lastName
 }
     `;
 export const SignupDocument = gql`
@@ -10657,6 +10729,7 @@ export const MeQueryDocument = gql`
     firstName
     lastName
     avatar
+    isPrivate
   }
 }
     `;
@@ -11229,32 +11302,6 @@ export type Party_AuthenticateComponentProps = Omit<ApolloReactComponents.QueryC
       
 export type Party_AuthenticateQueryHookResult = ReturnType<typeof useParty_AuthenticateQuery>;
 export type Party_AuthenticateQueryResult = ApolloReactCommon.QueryResult<Party_AuthenticateQuery, Party_AuthenticateQueryVariables>;
-export const Party_UpdatePartyDocument = gql`
-    mutation Party_UpdateParty($data: PartyUpdateInput!, $where: PartyWhereUniqueInput!) {
-  updateParty(data: $data, where: $where) {
-    location {
-      placeName
-      latitude
-      longitude
-    }
-    ...PARTY_FRAGMENT
-  }
-}
-    ${Party_FragmentFragmentDoc}`;
-export type Party_UpdatePartyMutationFn = ApolloReactCommon.MutationFunction<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
-export type Party_UpdatePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>, 'mutation'>;
-
-    export const Party_UpdatePartyComponent = (props: Party_UpdatePartyComponentProps) => (
-      <ApolloReactComponents.Mutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables> mutation={Party_UpdatePartyDocument} {...props} />
-    );
-    
-
-    export function useParty_UpdatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>) {
-      return ApolloReactHooks.useMutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>(Party_UpdatePartyDocument, baseOptions);
-    }
-export type Party_UpdatePartyMutationHookResult = ReturnType<typeof useParty_UpdatePartyMutation>;
-export type Party_UpdatePartyMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyMutation>;
-export type Party_UpdatePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
 export const Party_JoinPublicPartyDocument = gql`
     mutation Party_JoinPublicParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
@@ -11543,6 +11590,32 @@ export type Party_DeletePartyComponentProps = Omit<ApolloReactComponents.Mutatio
 export type Party_DeletePartyMutationHookResult = ReturnType<typeof useParty_DeletePartyMutation>;
 export type Party_DeletePartyMutationResult = ApolloReactCommon.MutationResult<Party_DeletePartyMutation>;
 export type Party_DeletePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_DeletePartyMutation, Party_DeletePartyMutationVariables>;
+export const Party_UpdatePartyDocument = gql`
+    mutation Party_UpdateParty($data: PartyUpdateInput!, $where: PartyWhereUniqueInput!) {
+  updateParty(data: $data, where: $where) {
+    location {
+      placeName
+      latitude
+      longitude
+    }
+    ...PARTY_FRAGMENT
+  }
+}
+    ${Party_FragmentFragmentDoc}`;
+export type Party_UpdatePartyMutationFn = ApolloReactCommon.MutationFunction<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
+export type Party_UpdatePartyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>, 'mutation'>;
+
+    export const Party_UpdatePartyComponent = (props: Party_UpdatePartyComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables> mutation={Party_UpdatePartyDocument} {...props} />
+    );
+    
+
+    export function useParty_UpdatePartyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>(Party_UpdatePartyDocument, baseOptions);
+    }
+export type Party_UpdatePartyMutationHookResult = ReturnType<typeof useParty_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyMutation>;
+export type Party_UpdatePartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyMutation, Party_UpdatePartyMutationVariables>;
 export const Party_LeavePartyDocument = gql`
     mutation Party_LeaveParty($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
   updateUser(data: $data, where: $where) {
@@ -11743,3 +11816,45 @@ export type User_CreateFriendInvitationComponentProps = Omit<ApolloReactComponen
 export type User_CreateFriendInvitationMutationHookResult = ReturnType<typeof useUser_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationResult = ApolloReactCommon.MutationResult<User_CreateFriendInvitationMutation>;
 export type User_CreateFriendInvitationMutationOptions = ApolloReactCommon.BaseMutationOptions<User_CreateFriendInvitationMutation, User_CreateFriendInvitationMutationVariables>;
+export const User_UserInfoDocument = gql`
+    mutation User_UserInfo($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type User_UserInfoMutationFn = ApolloReactCommon.MutationFunction<User_UserInfoMutation, User_UserInfoMutationVariables>;
+export type User_UserInfoComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UserInfoMutation, User_UserInfoMutationVariables>, 'mutation'>;
+
+    export const User_UserInfoComponent = (props: User_UserInfoComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UserInfoMutation, User_UserInfoMutationVariables> mutation={User_UserInfoDocument} {...props} />
+    );
+    
+
+    export function useUser_UserInfoMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UserInfoMutation, User_UserInfoMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UserInfoMutation, User_UserInfoMutationVariables>(User_UserInfoDocument, baseOptions);
+    }
+export type User_UserInfoMutationHookResult = ReturnType<typeof useUser_UserInfoMutation>;
+export type User_UserInfoMutationResult = ApolloReactCommon.MutationResult<User_UserInfoMutation>;
+export type User_UserInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UserInfoMutation, User_UserInfoMutationVariables>;
+export const User_UpdatePrivacyDocument = gql`
+    mutation User_UpdatePrivacy($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}
+    `;
+export type User_UpdatePrivacyMutationFn = ApolloReactCommon.MutationFunction<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;
+export type User_UpdatePrivacyComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>, 'mutation'>;
+
+    export const User_UpdatePrivacyComponent = (props: User_UpdatePrivacyComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables> mutation={User_UpdatePrivacyDocument} {...props} />
+    );
+    
+
+    export function useUser_UpdatePrivacyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>(User_UpdatePrivacyDocument, baseOptions);
+    }
+export type User_UpdatePrivacyMutationHookResult = ReturnType<typeof useUser_UpdatePrivacyMutation>;
+export type User_UpdatePrivacyMutationResult = ApolloReactCommon.MutationResult<User_UpdatePrivacyMutation>;
+export type User_UpdatePrivacyMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;

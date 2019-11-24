@@ -13,14 +13,19 @@ const FormItemStyles = css`
 `;
 
 /* eslint-disable */
-const FormikInputField: React.FC<
-  FieldProps & InputProps & { formItemProps?: FormItemProps }
-> = ({ field, form, formItemProps, ...antdInputProps }) => {
+const FormikInputField: React.FC<FieldProps &
+  InputProps & { formItemProps?: FormItemProps }> = ({
+  field,
+  form,
+  formItemProps,
+  ...antdInputProps
+}) => {
   const errorFeedback = form.errors[field.name];
   const isInvalid = form.errors[field.name] && form.touched[field.name];
   const isValid = !form.errors[field.name] && form.touched[field.name];
   return (
     <FormItem
+      colon={false}
       {...formItemProps}
       hasFeedback={true}
       css={[FormItemStyles]}

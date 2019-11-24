@@ -3,6 +3,7 @@ import UserPeopleList from './UserPeopleList';
 import AntdSearch from '@components/AntdSearch';
 import GraphqlLoading from '@components/GraphqlLoading';
 import { AffixedBarContainer } from '@components/Party/Music/shared/styles';
+import EmptySection from '@components/UI/EmptySection';
 import ErrorSection from '@components/UI/ErrorSection';
 import styled from '@emotion/styled';
 import { useUser_PeopleConnection } from '@generated/graphql';
@@ -16,7 +17,6 @@ import {
 import { Affix, Button } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
-import EmptySection from '@components/UI/EmptySection';
 
 interface Props {
   userId: string;
@@ -82,6 +82,7 @@ export default function UserPeople({ userId }: Props) {
     variables: {
       where: {
         id_not: userId,
+        isPrivate: false,
         OR: [
           { firstName_contains: searchQuery },
           { lastName_contains: searchQuery }
@@ -152,21 +153,23 @@ export default function UserPeople({ userId }: Props) {
         </AffixedBarContainer>
       </Affix>
       <UserPeopleContentWrapper>
-        {edges.length == 0 ? (
-          <EmptySection
-            image="/static/people-no-results.svg"
-            title="No results"
-            description="There are no results to show"
-          />
-        ) : (
-          <UserPeopleList
-            users={edges}
-            onLoadMore={handleOnLoadMore}
-            loading={loading}
-            canLoadMore={canLoadMore}
-            loadingMore={isLoadingMore(networkStatus)}
-          />
-        )}
+        <React.Fragment>
+          {edges.length == 0 ? (
+            <EmptySection
+              image="/static/people-no-results.svg"
+              title="No results"
+              description="There are no results to show"
+            />
+          ) : (
+            <UserPeopleList
+              users={edges}
+              onLoadMore={handleOnLoadMore}
+              loading={loading}
+              canLoadMore={canLoadMore}
+              loadingMore={isLoadingMore(networkStatus)}
+            />
+          )}
+        </React.Fragment>
       </UserPeopleContentWrapper>
     </React.Fragment>
   );

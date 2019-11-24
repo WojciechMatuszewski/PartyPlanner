@@ -28,6 +28,7 @@ export default function FormikNumberField({
   const { onChange, ...restOfField } = field;
   return (
     <Form.Item
+      colon={false}
       hasFeedback={true}
       help={isInvalid ? errorFeedback : null}
       validateStatus={isInvalid ? 'error' : isValid ? 'success' : ''}

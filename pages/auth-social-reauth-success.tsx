@@ -53,7 +53,10 @@ const AuthSocialReAuthSuccessPage: NextFunctionComponent<
       saveToStorage(providerToken, LOCAL_STORAGE_SPOTIFY_TOKEN);
     }
     window.opener.postMessage(
-      { providerToken, providerRefreshToken },
+      {
+        meta: 'party_planner',
+        payload: { providerToken, providerRefreshToken }
+      },
       process.env.NEXT_STATIC_FRONTEND_URL
     );
   }, []);

@@ -23,6 +23,7 @@ import { compose, flatten, map } from 'ramda';
 import React from 'react';
 import { Playlist as SDKPlaylist } from 'spotify-web-sdk';
 import { actions } from 'xstate';
+import css from '@emotion/css';
 
 export const COMBINE_PLAYLISTS_MUTATION = gql`
   mutation Party_CombinePlaylists(
@@ -34,6 +35,42 @@ export const COMBINE_PLAYLISTS_MUTATION = gql`
       spotifyData: $spotifyData
     ) {
       id
+    }
+  }
+`;
+
+const ModalStyles = css`
+  min-width: 530px;
+  width: auto;
+  top: 24px;
+
+  .ant-modal-content {
+    max-height: calc(100vh - 48px);
+
+    overflow-y: auto;
+  }
+
+  @media screen and (max-width: 680px) {
+    width: 100%;
+    min-width: 100%;
+    padding: 6px;
+    top: 0;
+
+    .ant-modal-close-x {
+      width: 47px;
+      height: 47px;
+      margin-left: auto;
+      line-height: 47px;
+    }
+    .ant-list-header {
+      padding: 12px;
+    }
+    button {
+      width: 100%;
+    }
+    .ant-modal-header,
+    .ant-modal-body {
+      padding: 12px;
     }
   }
 `;
@@ -175,7 +212,8 @@ export default function CombinePlaylists({
           playlists: playlists.map(playlist => playlist.node.id).join(','),
           userId,
           partyId,
-          deleteAffected: Boolean(formData.shouldDeleteWhenCombining)
+          deleteAffected: Boolean(formData.shouldDeleteWhenCombining),
+          importable: !formData.notImportable
         },
         spotifyData: {
           imageUrl: spotifyPlaylist.images[0].url,
@@ -216,6 +254,8 @@ export default function CombinePlaylists({
         visible={modalVisible}
         onCancel={handleClose}
         footer={null}
+        centered={true}
+        css={ModalStyles}
       >
         {showSuccess ? (
           <Result
@@ -244,6 +284,9 @@ export default function CombinePlaylists({
               loading={formLoading}
               onSubmit={handleFormSubmit}
               disabled={localPlaylists.length < 2}
+              isRestricted={localPlaylists.some(
+                playlist => !playlist.node.importable
+              )}
             />
             <CombinePlaylistsList
               isPlaylistStillSelected={isStillSelected}

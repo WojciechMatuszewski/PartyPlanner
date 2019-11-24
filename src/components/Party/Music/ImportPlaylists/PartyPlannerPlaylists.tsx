@@ -52,7 +52,8 @@ export default function PartyPlannerPlaylists({
       where: {
         parties_none: { id: partyId },
         user: { id: userId },
-        name_contains: filterQuery
+        name_contains: filterQuery,
+        importable: true
       }
     },
     notifyOnNetworkStatusChange: true
