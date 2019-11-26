@@ -25,7 +25,7 @@ import { AffixedBarContainer } from '../shared/styles';
 import PlaylistsControls from './PlaylistsControls';
 import PlaylistsList from './PlaylistsList';
 import { BehaviorSubject } from 'rxjs';
-import PlaylistCard from './PlaylistCard';
+import PlaylistCard from './PlaylistCard/PlaylistCard';
 import CombinePlaylists from '../CombinePlaylists/CombinePlaylists';
 
 const queryVariablesSubject = new BehaviorSubject<
@@ -62,6 +62,7 @@ export const PARTY_PLAYLISTS_CONNECTION_QUERY = gql`
       edges {
         node {
           ...PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
+          createdAt
         }
       }
     }

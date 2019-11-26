@@ -5,7 +5,8 @@ import TransparentModal, {
 import styled from '@emotion/styled';
 import { Party_PlaylistsConnectionNode } from '@generated/graphql';
 import { Colors } from '@shared/styles';
-import { Button, Icon } from 'antd';
+import { Icon, Typography, List } from 'antd';
+import moment from 'moment';
 import React from 'react';
 
 const ButtonsWrapper = styled.div`
@@ -27,10 +28,8 @@ const ButtonsWrapper = styled.div`
 
 interface Props {
   playlist: Party_PlaylistsConnectionNode;
-  onDelete: VoidFunction;
-  loading: boolean;
 }
-export default function PlaylistInfo({ playlist, onDelete, loading }: Props) {
+export default function PlaylistInfo({ playlist }: Props) {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const toggleModalVisible = () => setModalVisible(prev => !prev);
@@ -53,22 +52,27 @@ export default function PlaylistInfo({ playlist, onDelete, loading }: Props) {
           subtitle={`By: ${playlist.user.firstName} ${playlist.user.lastName}`}
           image={playlist.imageUrl}
         />
+        <TransparentModal.Content>
+          <Typography.Title level={3}>Detailed information</Typography.Title>
+          <List bordered={true}>
+            <List.Item>
+              <List.Item.Meta title="Restrictions" />
+              <Typography.Text className="list-item-content">
+                {playlist.importable
+                  ? 'None'
+                  : 'Cannot be imported to other parties'}
+              </Typography.Text>
+            </List.Item>
+            <List.Item>
+              <List.Item.Meta title="Created at" />
+              <Typography.Text className="list-item-content">
+                {moment(playlist.createdAt).format('YYYY-MM-DD HH:mm')}
+              </Typography.Text>
+            </List.Item>
+          </List>
+        </TransparentModal.Content>
         <ButtonsWrapper>
-          <Button
-            size="large"
-            block={true}
-            type="danger"
-            onClick={onDelete}
-            loading={loading}
-          >
-            Delete
-          </Button>
-          <GreenSpotifyButton
-            disabled={loading}
-            size="large"
-            block={true}
-            onClick={onSpotifyButtonClick}
-          >
+          <GreenSpotifyButton size="large" onClick={onSpotifyButtonClick}>
             Listen on Spotify!
           </GreenSpotifyButton>
         </ButtonsWrapper>

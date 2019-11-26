@@ -2699,9 +2699,6 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
-  importPlaylistsToParty: Scalars['Boolean'],
-  combinePlaylists: Playlist,
-  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2710,6 +2707,9 @@ export type Mutation = {
   acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
   unfriendPerson?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
+  joinParty?: Maybe<Scalars['Boolean']>,
+  importPlaylistsToParty: Scalars['Boolean'],
+  combinePlaylists: Playlist,
 };
 
 
@@ -3245,23 +3245,6 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
-export type MutationImportPlaylistsToPartyArgs = {
-  playlists: Scalars['String'],
-  partyId: Scalars['ID']
-};
-
-
-export type MutationCombinePlaylistsArgs = {
-  partyPlannerData: CombinePlaylistPartyPlannerData,
-  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type MutationSignupArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -3306,6 +3289,23 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
+export type MutationImportPlaylistsToPartyArgs = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
+};
+
+
+export type MutationCombinePlaylistsArgs = {
+  partyPlannerData: CombinePlaylistPartyPlannerData,
+  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
 };
 
 export enum MutationType {
@@ -6755,13 +6755,13 @@ export type Query = {
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
   hasChats: Scalars['Boolean'],
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
-  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   authenticateParty: PartyAuthenticationResult,
   temp__?: Maybe<Scalars['Boolean']>,
 };
@@ -7209,23 +7209,6 @@ export type QueryHasChatsArgs = {
 };
 
 
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
-
-export type QueryPartyCartCostArgs = {
-  id: Scalars['ID']
-};
-
-
 export type QueryGetUsersArgs = {
   where?: Maybe<UserWhereInput>,
   orderBy?: Maybe<UserOrderByInput>,
@@ -7250,6 +7233,23 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
+};
+
+
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
 };
 
 
@@ -9633,6 +9633,20 @@ export type Party_ImportPlaylistsToPartyMutation = (
   & Pick<Mutation, 'importPlaylistsToParty'>
 );
 
+export type Party_EditPlaylistMutationVariables = {
+  data: PlaylistUpdateInput,
+  where: PlaylistWhereUniqueInput
+};
+
+
+export type Party_EditPlaylistMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePlaylist: Maybe<(
+    { __typename?: 'Playlist' }
+    & Pick<Playlist, 'id'>
+  )> }
+);
+
 export type Party_DeletePlaylistMutationVariables = {
   where: PlaylistWhereUniqueInput
 };
@@ -9666,7 +9680,10 @@ export type Party_PlaylistsConnectionQuery = (
       & Pick<PageInfo, 'hasNextPage' | 'endCursor'>
     ), edges: Array<Maybe<(
       { __typename?: 'PlaylistEdge' }
-      & { node: { __typename?: 'Playlist' }
+      & { node: (
+        { __typename?: 'Playlist' }
+        & Pick<Playlist, 'createdAt'>
+      )
         & Party_Playlists_Connection_Node_FragmentFragment
        }
     )>> }
@@ -10007,6 +10024,11 @@ export type User_UpdatePrivacyMutation = (
     & Pick<User, 'id'>
   )> }
 );
+
+export type User_Privacy_FragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'isPrivate'>
+);
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -10167,6 +10189,9 @@ export type Party_CreatePlaylistCreatePlaylist = Party_Playlists_Connection_Node
 export const useParty_CreatePlaylist = useParty_CreatePlaylistMutation;
 export type Party_ImportPlaylistsToPartyVariables = Party_ImportPlaylistsToPartyMutationVariables;
 export const useParty_ImportPlaylistsToParty = useParty_ImportPlaylistsToPartyMutation;
+export type Party_EditPlaylistVariables = Party_EditPlaylistMutationVariables;
+export type Party_EditPlaylistUpdatePlaylist = Party_EditPlaylistMutation['updatePlaylist'];
+export const useParty_EditPlaylist = useParty_EditPlaylistMutation;
 export type Party_DeletePlaylistVariables = Party_DeletePlaylistMutationVariables;
 export type Party_DeletePlaylistDeletePlaylist = Party_DeletePlaylistMutation['deletePlaylist'];
 export const useParty_DeletePlaylist = useParty_DeletePlaylistMutation;
@@ -10435,6 +10460,11 @@ export const Information_FragmentFragmentDoc = gql`
     fragment INFORMATION_FRAGMENT on User {
   firstName
   lastName
+}
+    `;
+export const User_Privacy_FragmentFragmentDoc = gql`
+    fragment USER_PRIVACY_FRAGMENT on User {
+  isPrivate
 }
     `;
 export const SignupDocument = gql`
@@ -11384,6 +11414,27 @@ export type Party_ImportPlaylistsToPartyComponentProps = Omit<ApolloReactCompone
 export type Party_ImportPlaylistsToPartyMutationHookResult = ReturnType<typeof useParty_ImportPlaylistsToPartyMutation>;
 export type Party_ImportPlaylistsToPartyMutationResult = ApolloReactCommon.MutationResult<Party_ImportPlaylistsToPartyMutation>;
 export type Party_ImportPlaylistsToPartyMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_ImportPlaylistsToPartyMutation, Party_ImportPlaylistsToPartyMutationVariables>;
+export const Party_EditPlaylistDocument = gql`
+    mutation Party_EditPlaylist($data: PlaylistUpdateInput!, $where: PlaylistWhereUniqueInput!) {
+  updatePlaylist(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type Party_EditPlaylistMutationFn = ApolloReactCommon.MutationFunction<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables>;
+export type Party_EditPlaylistComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables>, 'mutation'>;
+
+    export const Party_EditPlaylistComponent = (props: Party_EditPlaylistComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables> mutation={Party_EditPlaylistDocument} {...props} />
+    );
+    
+
+    export function useParty_EditPlaylistMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables>(Party_EditPlaylistDocument, baseOptions);
+    }
+export type Party_EditPlaylistMutationHookResult = ReturnType<typeof useParty_EditPlaylistMutation>;
+export type Party_EditPlaylistMutationResult = ApolloReactCommon.MutationResult<Party_EditPlaylistMutation>;
+export type Party_EditPlaylistMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_EditPlaylistMutation, Party_EditPlaylistMutationVariables>;
 export const Party_DeletePlaylistDocument = gql`
     mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
   deletePlaylist(where: $where) {
@@ -11415,6 +11466,7 @@ export const Party_PlaylistsConnectionDocument = gql`
     edges {
       node {
         ...PARTY_PLAYLISTS_CONNECTION_NODE_FRAGMENT
+        createdAt
       }
     }
   }
