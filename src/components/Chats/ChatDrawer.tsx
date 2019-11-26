@@ -27,7 +27,6 @@ const LeftTriggerStyles = css`
 `;
 
 const DrawerStyles = css`
-  width: 50%;
   .ant-drawer-body {
     padding: 0;
     height: 100%;
@@ -36,12 +35,12 @@ const DrawerStyles = css`
     display: flex;
     flex-direction: column;
   }
-  overflow-y: auto;
 `;
 
-const ChatDrawer: React.FC<
-  { children: React.ReactNode; triggerIcon: string } & DrawerProps
-> = ({ children, triggerIcon, ...drawerProps }) => {
+const ChatDrawer: React.FC<{
+  children: React.ReactNode;
+  triggerIcon: string;
+} & DrawerProps> = ({ children, triggerIcon, ...drawerProps }) => {
   return (
     <Drawer
       {...drawerProps}

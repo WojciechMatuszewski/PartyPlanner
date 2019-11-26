@@ -73,7 +73,7 @@ const PartiesListPane: React.FC<Props> = props => {
       <Anchor showInkInFixed={false} css={[AnchorStyles]}>
         <AnchorInnerWrapper>
           <Typography.Title css={[PaneTitleStyles]} level={3}>
-            Your Parties
+            Parties
           </Typography.Title>
           <Form style={{ width: '100%', marginBottom: 0 }}>
             <Form.Item
