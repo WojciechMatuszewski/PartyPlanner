@@ -42,8 +42,8 @@ const CreatePartyFormWrapper = styled.div`
 const InnerWrapper = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  @media screen and (min-width: 992px) {
-    margin-top: 30px;
+  @media screen and (max-width: ${CREATE_PARTY_MOBILE_WIDTH}) {
+    padding-top: 12px;
   }
 `;
 interface Props {
