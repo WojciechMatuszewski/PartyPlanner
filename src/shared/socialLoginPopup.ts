@@ -58,12 +58,13 @@ export const socialLoginPopup = <ReturnDataType>(
         }
         if (event.origin !== process.env.NEXT_PUBLIC_FRONTEND_URL) {
           authWindow.close();
-
-          return reject(`Origin not allowed!`);
+          return reject(
+            `Origin not allowed! originated from ${event.origin}; checked with ${process.env.NEXT_PUBLIC_FRONTEND_URL}`
+          );
         }
         if (event.data === 'close') {
           authWindow.close();
-          return reject();
+          return reject('Window closed');
         } else if (event.data !== 'close' && isFromPartyPlanner(event)) {
           authWindow.close();
           return resolve(event.data.payload);

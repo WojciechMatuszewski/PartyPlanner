@@ -90,7 +90,7 @@ const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
           </Menu.Item>
           <Menu.Item key="/party-parties">
             <Link href="/party-parties" as="/party/parties">
-              <a>Your Parties</a>
+              <a>Parties</a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/user-people">
@@ -167,7 +167,7 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
             onClick={() => setDrawerVisible(false)}
           >
             <Link href="/party-parties" as="/party/parties">
-              <a>Your Parties</a>
+              <a>Parties</a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/user-people" onClick={() => setDrawerVisible(false)}>

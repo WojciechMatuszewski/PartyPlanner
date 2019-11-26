@@ -39,6 +39,8 @@ export function getPartiesListQueryVariables() {
 
 interface Props {
   userId: string;
+  isInitiallyEmpty: boolean;
+  children: React.ReactNode;
 }
 
 const PartiesListWrapper = styled.div`
@@ -109,7 +111,11 @@ export const PartiesListContext = React.createContext<{
   userId: ''
 });
 
-const PartiesList: React.FC<Props> = ({ userId }) => {
+const PartiesList: React.FC<Props> = ({
+  userId,
+  isInitiallyEmpty,
+  children
+}) => {
   const variablesConstructor = React.useRef<any>(
     partiesListVariablesConstructorFactory(userId)
   );
@@ -214,38 +220,45 @@ const PartiesList: React.FC<Props> = ({ userId }) => {
           drawerVisible={state.drawerVisible}
           filters={state.filters}
         />
-        <PartiesListFilterChips filters={state.filters} />
-        <PartiesListCardGrid
-          parties={
-            data && data.partiesConnection
-              ? (data.partiesConnection.edges as any[])
-              : []
-          }
-          filterInputValue={state.filterInputValue}
-        >
-          {hasResults => (
-            <React.Fragment>
-              <PartiesListLoadMore
-                hasResults={hasResults}
-                isLoadingMore={loading}
-                canLoadMore={
-                  data && data.partiesConnection
-                    ? data.partiesConnection.pageInfo.hasNextPage
-                    : false
-                }
-                onLoadMoreButtonClick={handleLoadMore}
-              />
-              <PartiesListNoResults
-                hasFiltersApplied={hasFiltersApplied()}
-                showBeVisible={!hasResults && !loading}
-                onClearAllFilters={() =>
-                  dispatch(PartiesListFilterActions.removeAllFilters())
-                }
-                queryString={state.filterInputValue}
-              />
-            </React.Fragment>
-          )}
-        </PartiesListCardGrid>
+
+        {isInitiallyEmpty ? (
+          children
+        ) : (
+          <React.Fragment>
+            <PartiesListFilterChips filters={state.filters} />
+            <PartiesListCardGrid
+              parties={
+                data && data.partiesConnection
+                  ? (data.partiesConnection.edges as any[])
+                  : []
+              }
+              filterInputValue={state.filterInputValue}
+            >
+              {hasResults => (
+                <React.Fragment>
+                  <PartiesListLoadMore
+                    hasResults={hasResults}
+                    isLoadingMore={loading}
+                    canLoadMore={
+                      data && data.partiesConnection
+                        ? data.partiesConnection.pageInfo.hasNextPage
+                        : false
+                    }
+                    onLoadMoreButtonClick={handleLoadMore}
+                  />
+                  <PartiesListNoResults
+                    hasFiltersApplied={hasFiltersApplied()}
+                    showBeVisible={!hasResults && !loading}
+                    onClearAllFilters={() =>
+                      dispatch(PartiesListFilterActions.removeAllFilters())
+                    }
+                    queryString={state.filterInputValue}
+                  />
+                </React.Fragment>
+              )}
+            </PartiesListCardGrid>
+          </React.Fragment>
+        )}
       </PartiesListWrapper>
     </PartiesListContext.Provider>
   );

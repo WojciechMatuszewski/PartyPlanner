@@ -8,14 +8,14 @@ import * as yup from 'yup';
 
 export interface PartyCartAddItemFormValues {
   name: string;
-  description: string;
+  description: string | undefined;
   price: number;
   quantity: number;
 }
 
 const initialValues: PartyCartAddItemFormValues = {
   name: '',
-  description: '',
+  description: undefined,
   price: 0,
   quantity: 0
 };
@@ -25,10 +25,7 @@ const validationSchema = yup.object().shape<PartyCartAddItemFormValues>({
     .string()
     .required()
     .min(2),
-  description: yup
-    .string()
-    .required()
-    .min(2),
+  description: yup.string().min(2),
   price: yup
     .number()
     .typeError('Has to be a number')
@@ -96,7 +93,7 @@ export default function PartyCartAddItemForm({ loading, onSubmit }: Props) {
             style={{ marginBottom: 0 }}
             placeholder="Description"
             formItemProps={{
-              label: 'Description',
+              label: 'Description (optional)',
               colon: false,
               htmlFor: 'description'
             }}

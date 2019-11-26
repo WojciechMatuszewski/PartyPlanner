@@ -36,11 +36,14 @@ export default function PlaylistsControls({
     return (
       <PlaylistControlsButtons>
         <Dropdown
-          disabled={!hasAtLeastOnePlaylist}
           trigger={['click']}
           overlay={
             <Menu selectedKeys={selectingPlaylists ? ['1'] : []}>
-              <Menu.Item key="1" onClick={onSelectPlaylistClick}>
+              <Menu.Item
+                key="1"
+                onClick={onSelectPlaylistClick}
+                disabled={!hasAtLeastOnePlaylist}
+              >
                 <span>
                   <Icon type="select" />
                   Select Playlists

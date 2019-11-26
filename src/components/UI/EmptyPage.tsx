@@ -8,7 +8,7 @@ import { UISectionWrapper } from './styles';
 const NoDataInnerWrapper = styled.div`
   margin: auto;
   img {
-    max-width: 600px;
+    max-width: 500px;
     width: 100%;
   }
   @media screen and (max-width: 680px) {

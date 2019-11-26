@@ -1,35 +1,19 @@
+import PlaylistEdit from '../PlaylistEdit/PlaylistEdit';
+import PlaylistInfo from '../PlaylistInfo';
 import PlaylistCardSelected from './PlaylistCardSelected';
-import PlaylistInfo from './PlaylistInfo';
-import {
-  getPartyPlaylistConnectionVariables,
-  PARTY_PLAYLISTS_CONNECTION_QUERY
-} from './Playlists';
 
 import { useParty } from '@components/Party/PartyProvider';
 import UserAvatar from '@components/User/UserDefaultAvatar';
 import SpotifyIcon from '@customIcons/spotify.svg';
-import {
-  Party_PlaylistsConnectionEdges,
-  useParty_DeletePlaylist
-} from '@generated/graphql';
+import css from '@emotion/css';
+import styled from '@emotion/styled';
+import { Party_PlaylistsConnectionEdges } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { Colors } from '@shared/styles';
-import { Card, Icon, message, Modal, Typography } from 'antd';
-import gql from 'graphql-tag';
+import { Card, Icon, Typography } from 'antd';
 import { always, ifElse } from 'ramda';
 import React from 'react';
-import { unfollowPlaylist } from 'spotify-web-sdk';
 import posed, { PoseGroup } from 'react-pose';
-import styled from '@emotion/styled';
-import css from '@emotion/css';
-
-export const PARTY_DELETE_PLAYLIST_MUTATION = gql`
-  mutation Party_DeletePlaylist($where: PlaylistWhereUniqueInput!) {
-    deletePlaylist(where: $where) {
-      id
-    }
-  }
-`;
 
 const SelectingIndicator = styled(
   posed.div({
@@ -74,7 +58,6 @@ function PlaylistCard({
   isSelected,
   onPlaylistCardDeselected
 }: Props) {
-  const [deletePlaylist, { loading }] = useParty_DeletePlaylist();
   const { node } = playlist;
 
   const { userId } = useParty();
@@ -83,33 +66,6 @@ function PlaylistCard({
 
   function handleOnSpotifyIconClick() {
     window.open(node.spotifyExternalUrl);
-  }
-
-  async function handlePlaylistDelete() {
-    try {
-      await unfollowPlaylist(node.spotifyId);
-      await deletePlaylist({
-        variables: { where: { id: node.id } },
-        refetchQueries: [
-          {
-            query: PARTY_PLAYLISTS_CONNECTION_QUERY,
-            variables: getPartyPlaylistConnectionVariables()
-          }
-        ]
-      });
-    } catch (e) {
-      message.error('Something went wrong, try again!');
-    }
-  }
-
-  function handleDeleteClick() {
-    Modal.confirm({
-      title: `Do you want to delete ${node.name} ?`,
-      content: 'This action is irreversible',
-      okType: 'danger',
-      okText: 'Delete',
-      onOk: async () => await handlePlaylistDelete()
-    });
   }
 
   const onPlaylistCardClicked = ifElse(
@@ -125,18 +81,11 @@ function PlaylistCard({
       style={{ color: Colors.SpotifyGreen }}
       onClick={handleOnSpotifyIconClick}
     />,
-    <PlaylistInfo
-      key={1}
-      playlist={playlist.node}
-      onDelete={handlePlaylistDelete}
-      loading={loading}
-    />
+    <PlaylistInfo key={1} playlist={playlist.node} />
   ];
 
   const actions = isCreatedByLoggedUser
-    ? baseActions.concat(
-        <Icon type="delete" key={2} onClick={handleDeleteClick} />
-      )
+    ? baseActions.concat(<PlaylistEdit playlist={playlist} />)
     : baseActions;
 
   return (

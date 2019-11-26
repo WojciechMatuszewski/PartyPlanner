@@ -160,7 +160,8 @@ const CreatePartyForm: React.FC<Props> = props => {
                   label: 'Name your party',
                   style: { marginTop: -21 }
                 }}
-                size="large"
+                size={isBreakingTheGrid ? 'default' : 'large'}
+                key={`${isBreakingTheGrid}`}
                 component={FormikInputField}
                 name="title"
                 id="title"

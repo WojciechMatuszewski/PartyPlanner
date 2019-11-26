@@ -18,7 +18,7 @@ const UserProfileWrapper = styled.div`
   flex-direction: column;
   ${FlexWrapperFullHeightMinusHeaderStyles}
   max-width:1280px;
-  margin-top: 24px;
+  padding-top: 24px;
   width: 100%;
   @media screen and (max-width: 1100px) {
     width: 100%;

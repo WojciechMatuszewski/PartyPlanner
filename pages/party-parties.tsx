@@ -11,12 +11,13 @@ import { withRouter, WithRouterProps } from 'next/router';
 
 import { handleRefetch } from '@shared/graphqlUtils';
 import PartiesList from '@components/Party/PartiesList/PartiesList';
-import EmptyPage from '@components/UI/EmptyPage';
-import PageException from '@components/UI/PageException';
 
-const UserParties: NextFunctionComponent<
-  WithApolloAuthInjectedProps & WithRouterProps
-> = ({ me, router }) => {
+import PageException from '@components/UI/PageException';
+import EmptyPage from '@components/UI/EmptyPage';
+import css from '@emotion/css';
+
+const UserParties: NextFunctionComponent<WithApolloAuthInjectedProps &
+  WithRouterProps> = ({ me, router }) => {
   return (
     <HasPartiesQueryComponent>
       {({ loading, data, error, refetch }) => {
@@ -40,31 +41,32 @@ const UserParties: NextFunctionComponent<
             <GraphqlLoading
               isLoadingInitially={true}
               loading={true}
-              textToDisplay="Loading your parties"
-            />
-          );
-
-        if (!data.hasParties)
-          return (
-            <EmptyPage
-              message="You currently do not have any parties"
-              action={
-                <Button
-                  icon="plus"
-                  type="primary"
-                  onClick={() =>
-                    router && router.push('/party-create', '/party/create')
-                  }
-                >
-                  Create new party
-                </Button>
-              }
+              textToDisplay="Loading parties"
             />
           );
 
         return (
           <React.Fragment>
-            <PartiesList userId={me.id} />
+            <PartiesList userId={me.id} isInitiallyEmpty={!data.hasParties}>
+              <EmptyPage
+                emotionCSS={css`
+                  height: calc(100vh - 132px);
+                  min-height: calc(100vh - 132px) !important;
+                `}
+                message="Parties list empty, create one!"
+                action={
+                  <Button
+                    icon="plus"
+                    type="primary"
+                    onClick={() =>
+                      router && router.push('/party-create', '/party/create')
+                    }
+                  >
+                    Create new party
+                  </Button>
+                }
+              />
+            </PartiesList>
             <BackTop />
           </React.Fragment>
         );
