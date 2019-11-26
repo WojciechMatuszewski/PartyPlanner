@@ -2699,6 +2699,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
+  joinParty?: Maybe<Scalars['Boolean']>,
+  importPlaylistsToParty: Scalars['Boolean'],
+  combinePlaylists: Playlist,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2707,9 +2710,6 @@ export type Mutation = {
   acceptFriendInvitation?: Maybe<Scalars['Boolean']>,
   unfriendPerson?: Maybe<Scalars['Boolean']>,
   resetPassword?: Maybe<AuthPayload>,
-  joinParty?: Maybe<Scalars['Boolean']>,
-  importPlaylistsToParty: Scalars['Boolean'],
-  combinePlaylists: Playlist,
 };
 
 
@@ -3245,6 +3245,23 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
+export type MutationImportPlaylistsToPartyArgs = {
+  playlists: Scalars['String'],
+  partyId: Scalars['ID']
+};
+
+
+export type MutationCombinePlaylistsArgs = {
+  partyPlannerData: CombinePlaylistPartyPlannerData,
+  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
@@ -3289,23 +3306,6 @@ export type MutationResetPasswordArgs = {
   resetToken: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
-};
-
-
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
-export type MutationImportPlaylistsToPartyArgs = {
-  playlists: Scalars['String'],
-  partyId: Scalars['ID']
-};
-
-
-export type MutationCombinePlaylistsArgs = {
-  partyPlannerData: CombinePlaylistPartyPlannerData,
-  spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
 };
 
 export enum MutationType {
@@ -3475,7 +3475,7 @@ export type PartyCartItem = Node & {
   cart: PartyCart,
   user: User,
   name: Scalars['String'],
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   price: Scalars['Float'],
   status: PartyCartItemStatus,
   quantity: Scalars['Int'],
@@ -3494,7 +3494,7 @@ export type PartyCartItemConnection = {
 export type PartyCartItemCreateInput = {
   id?: Maybe<Scalars['ID']>,
   name: Scalars['String'],
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   price: Scalars['Float'],
   status: PartyCartItemStatus,
   quantity?: Maybe<Scalars['Int']>,
@@ -3515,7 +3515,7 @@ export type PartyCartItemCreateManyWithoutUserInput = {
 export type PartyCartItemCreateWithoutCartInput = {
   id?: Maybe<Scalars['ID']>,
   name: Scalars['String'],
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   price: Scalars['Float'],
   status: PartyCartItemStatus,
   quantity?: Maybe<Scalars['Int']>,
@@ -3525,7 +3525,7 @@ export type PartyCartItemCreateWithoutCartInput = {
 export type PartyCartItemCreateWithoutUserInput = {
   id?: Maybe<Scalars['ID']>,
   name: Scalars['String'],
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   price: Scalars['Float'],
   status: PartyCartItemStatus,
   quantity?: Maybe<Scalars['Int']>,
@@ -3560,7 +3560,7 @@ export type PartyCartItemPreviousValues = {
    __typename?: 'PartyCartItemPreviousValues',
   id: Scalars['ID'],
   name: Scalars['String'],
-  description: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
   price: Scalars['Float'],
   status: PartyCartItemStatus,
   quantity: Scalars['Int'],
@@ -6754,15 +6754,15 @@ export type Query = {
   albumsConnection: AlbumConnection,
   /** Fetches an object given its ID */
   node?: Maybe<Node>,
+  authenticateParty: PartyAuthenticationResult,
   hasChats: Scalars['Boolean'],
+  hasParties: Scalars['Boolean'],
+  canJoinParty?: Maybe<Scalars['Boolean']>,
+  partyCartCost: Scalars['Float'],
   me?: Maybe<User>,
   getUsers: Array<Maybe<User>>,
   userFriends: UserFriends,
   paginateUsers: UserConnection,
-  hasParties: Scalars['Boolean'],
-  canJoinParty?: Maybe<Scalars['Boolean']>,
-  partyCartCost: Scalars['Float'],
-  authenticateParty: PartyAuthenticationResult,
   temp__?: Maybe<Scalars['Boolean']>,
 };
 
@@ -7204,8 +7204,30 @@ export type QueryNodeArgs = {
 };
 
 
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
+};
+
+
 export type QueryHasChatsArgs = {
   where?: Maybe<ChatWhereInput>
+};
+
+
+export type QueryHasPartiesArgs = {
+  where?: Maybe<PartyWhereInput>
+};
+
+
+export type QueryCanJoinPartyArgs = {
+  userId: Scalars['String'],
+  inviteSecret: Scalars['String'],
+  partyId: Scalars['String']
+};
+
+
+export type QueryPartyCartCostArgs = {
+  id: Scalars['ID']
 };
 
 
@@ -7233,28 +7255,6 @@ export type QueryPaginateUsersArgs = {
   before?: Maybe<Scalars['String']>,
   first?: Maybe<Scalars['Int']>,
   last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryHasPartiesArgs = {
-  where?: Maybe<PartyWhereInput>
-};
-
-
-export type QueryCanJoinPartyArgs = {
-  userId: Scalars['String'],
-  inviteSecret: Scalars['String'],
-  partyId: Scalars['String']
-};
-
-
-export type QueryPartyCartCostArgs = {
-  id: Scalars['ID']
-};
-
-
-export type QueryAuthenticatePartyArgs = {
-  partyId: Scalars['ID']
 };
 
 export enum SocialMediaType {
@@ -9660,6 +9660,11 @@ export type Party_DeletePlaylistMutation = (
   )> }
 );
 
+export type EditPlaylistCacheFragmentFragment = (
+  { __typename?: 'Playlist' }
+  & Pick<Playlist, 'name' | 'importable'>
+);
+
 export type Party_PlaylistsConnectionQueryVariables = {
   where?: Maybe<PlaylistWhereInput>,
   orderBy?: Maybe<PlaylistOrderByInput>,
@@ -10415,6 +10420,12 @@ export const Party_Authentication_Minimal_Party_FragmentFragmentDoc = gql`
 export const Is_Unread_ThreadFragmentDoc = gql`
     fragment IS_UNREAD_THREAD on Chat {
   hasUnreadMessages @client
+}
+    `;
+export const EditPlaylistCacheFragmentFragmentDoc = gql`
+    fragment EditPlaylistCacheFragment on Playlist {
+  name
+  importable
 }
     `;
 export const Lol_FragmentFragmentDoc = gql`
