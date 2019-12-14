@@ -1,17 +1,19 @@
-import React from 'react';
-import { Menu, Icon, Drawer } from 'antd';
-import { ApolloConsumer } from 'react-apollo';
-import SignOutIcon from '@customIcons/sign-out-alt.svg';
-import Link from 'next/link';
-import { MeQueryMe, useMeQuery } from '@generated/graphql';
-import css from '@emotion/css';
-import { handleLogout } from '@services/AuthService';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
+import FriendInvites from '@components/User/FriendInvites/FriendInvites';
 import UserAvatar from '@components/User/UserDefaultAvatar';
 import UserPresenceReporter from '@components/User/UserPresenceReporter';
-import PartyInvitesNoticeIcon from '@components/Party/PartyInvites/PartyInvitesNoticeIcon';
+import SignOutIcon from '@customIcons/sign-out-alt.svg';
+import css from '@emotion/css';
+import { MeQueryMe, useMeQuery } from '@generated/graphql';
+import { handleLogout } from '@services/AuthService';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { Drawer, Icon, Menu } from 'antd';
+import Link from 'next/link';
+import React from 'react';
+import { ApolloConsumer } from 'react-apollo';
+
 import { HeaderLoadingData } from '.';
-import FriendInvites from '@components/User/FriendInvites/FriendInvites';
+import NavJoyride from './NavJoyride';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -64,62 +66,70 @@ interface AuthenticatedHeaderVariantProps {
 
 const DesktopHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
   return (
-    <ApolloConsumer>
-      {client => (
-        <Menu
-          selectedKeys={[props.currentRouterPath]}
-          theme="light"
-          mode="horizontal"
-          style={{ lineHeight: '64px', display: 'flex' }}
-        >
-          <Menu.Item key="/user-dashboard">
-            <Link href="/user-dashboard" as="/user/dashboard">
-              <a>Dashboard</a>
-            </Link>
-          </Menu.Item>
+    <React.Fragment>
+      <NavJoyride />
 
-          <Menu.Item key="/user-calendar">
-            <Link href="/user-calendar" as="/user/calendar">
-              <a>Calendar</a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/party-chats">
-            <Link href="/party-chats" as="/party/chats">
-              <a>Chats</a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/party-parties">
-            <Link href="/party-parties" as="/party/parties">
-              <a>Parties</a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/user-people">
-            <Link href="/user-people" as="/user/people">
-              <a>People</a>
-            </Link>
-          </Menu.Item>
+      <ApolloConsumer>
+        {client => (
+          <Menu
+            selectedKeys={[props.currentRouterPath]}
+            theme="light"
+            mode="horizontal"
+            style={{ lineHeight: '64px', display: 'flex' }}
+          >
+            <Menu.Item key="/user-dashboard">
+              <Link href="/user-dashboard" as="/user/dashboard">
+                <a>Dashboard</a>
+              </Link>
+            </Menu.Item>
 
-          <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
-            <PartyInvitesNoticeIcon userId={props.userData.id} />
-          </Menu.Item>
+            <Menu.Item key="/user-calendar">
+              <Link href="/user-calendar" as="/user/calendar">
+                <a>Calendar</a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/party-chats">
+              <Link href="/party-chats" as="/party/chats">
+                <a>Chats</a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/party-parties">
+              <Link href="/party-parties" as="/party/parties">
+                <a>Parties</a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/user-people">
+              <Link href="/user-people" as="/user/people">
+                <a>People</a>
+              </Link>
+            </Menu.Item>
 
-          <Menu.Item css={[NoticeIconStyles]}>
-            <FriendInvites userId={props.userData.id} />
-          </Menu.Item>
+            <Menu.Item
+              css={[NoticeIconStyles]}
+              style={{ marginLeft: 'auto' }}
+              className="party-invitations"
+            >
+              <PartyInvitesNoticeIcon userId={props.userData.id} />
+            </Menu.Item>
 
-          <Menu.Item key="/user-profile">
-            <Link href="/user-profile" as="/user/profile">
-              <a>
-                <UserAvatar userData={props.userData} />
-              </a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item onClick={async () => await handleLogout(client)}>
-            Logout
-          </Menu.Item>
-        </Menu>
-      )}
-    </ApolloConsumer>
+            <Menu.Item css={[NoticeIconStyles]} className="friend-invitations">
+              <FriendInvites userId={props.userData.id} />
+            </Menu.Item>
+
+            <Menu.Item key="/user-profile" className="user-profile">
+              <Link href="/user-profile" as="/user/profile">
+                <a>
+                  <UserAvatar userData={props.userData} />
+                </a>
+              </Link>
+            </Menu.Item>
+            <Menu.Item onClick={async () => await handleLogout(client)}>
+              Logout
+            </Menu.Item>
+          </Menu>
+        )}
+      </ApolloConsumer>
+    </React.Fragment>
   );
 };
 
@@ -128,6 +138,7 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
 
   return (
     <React.Fragment>
+      <NavJoyride />
       <Drawer
         onClose={() => setDrawerVisible(false)}
         css={MobileDrawerStyles}
@@ -187,15 +198,19 @@ const MobileHeader: React.FC<AuthenticatedHeaderVariantProps> = props => {
             mode="horizontal"
             style={{ lineHeight: '64px', display: 'flex' }}
           >
-            <Menu.Item css={[NoticeIconStyles]} style={{ marginLeft: 'auto' }}>
+            <Menu.Item
+              css={[NoticeIconStyles]}
+              style={{ marginLeft: 'auto' }}
+              className="party-invitations"
+            >
               <PartyInvitesNoticeIcon userId={props.userData.id} />
             </Menu.Item>
 
-            <Menu.Item css={[NoticeIconStyles]} style={{}}>
+            <Menu.Item css={[NoticeIconStyles]} className="friend-invitations">
               <FriendInvites userId={props.userData.id} />
             </Menu.Item>
 
-            <Menu.Item key="/user-profile">
+            <Menu.Item key="/user-profile" className="user-profile">
               <Link href="/user-profile" as="/user/profile">
                 <a>
                   <UserAvatar userData={props.userData} />

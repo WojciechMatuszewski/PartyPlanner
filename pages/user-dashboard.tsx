@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import { PoseGroup } from 'react-pose';
-import { withRouter, WithRouterProps } from 'next/router';
-import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { withApolloAuth } from '@apolloSetup/withApolloAuth';
-import UserDashboardTitle from '@components/User/UserDashboard/UserDashboardTitle';
 import UserDashboardTile from '@components/User/UserDashboard/UserDashboardTile';
+import UserDashboardTitle from '@components/User/UserDashboard/UserDashboardTitle';
+import styled from '@emotion/styled';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
+import { withRouter, WithRouterProps } from 'next/router';
+import React from 'react';
 import { compose } from 'react-apollo';
+import { PoseGroup } from 'react-pose';
 
 const UserDashboardWrapper = styled.div`
   padding: 20px;
