@@ -2,21 +2,7 @@
   "version": 2,
   "name": "party-planner",
   "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "env": {
-    "NEXT_PUBLIC_MAPBOX_TOKEN": "@next_public_mapbox_token",
-    "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
-    "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
-    "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
-    "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_ENDPOINT_URL": "@next_static_endpoint_url",
-      "NEXT_PUBLIC_GRAPHQL_ENDPOINT": "@next_static_graphql_endpoint",
-      "NEXT_PUBLIC_WEBSOCKET_URL": "@next_static_websocket_url",
-      "NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL": "https://accounts.spotify.com/api/token"
-    }
-  },
+
   "routes": [
     {
       "src": "^/service-worker.js$",
