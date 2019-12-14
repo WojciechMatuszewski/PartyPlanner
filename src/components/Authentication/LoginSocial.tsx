@@ -36,7 +36,6 @@ export const LoginSocial: React.FC<{
       handleLogin(token);
     } catch (e) {
       message.error(`Something went wrong!`);
-      // empty for now, it's being handled by popup
     }
   }
 

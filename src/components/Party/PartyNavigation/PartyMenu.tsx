@@ -6,16 +6,56 @@ import RCDrawer from 'rc-drawer';
 import 'rc-drawer/dist/rc-drawer.css';
 import useMedia from '@hooks/useMedia';
 import Link from 'next/link';
+import styled from '@emotion/styled';
+import { Colors } from '@shared/styles';
 
 const MenuStyles = css`
   width: 100%;
   box-sizing: border-box;
   border: 1px solid transparent;
+  li {
+    margin: 0 !important;
+  }
 `;
 
 const AffixStyles = css`
   display: flex;
   z-index: 10;
+`;
+
+const FlowLine = styled.div`
+  height: 100%;
+  width: 3px;
+  background: ${Colors.AntdBlue};
+  position: absolute;
+  left: 29px;
+`;
+
+const FlowTip = styled.div`
+  height: 80%;
+  width: 3px;
+  left: 29px;
+  background: ${Colors.AntdBlue};
+  position: absolute;
+  z-index: 2;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+`;
+
+const FlowTipIconStyles = css`
+  height: 100%;
+  font-size: 20px !important;
+  display: flex;
+  font-size: 20px;
+  z-index: 1;
+  left: 21px;
+  align-content: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
+  color: ${Colors.AntdBlue};
+  position: absolute;
+  bottom: 3px;
+  transform: translateX(-2%);
 `;
 
 interface Props {
@@ -85,7 +125,10 @@ function MenuContent(props: Props) {
               href={`/party-music-top?id=${props.partyId}`}
               as={`/party/${props.partyId}/music/top`}
             >
-              <a>Your Top</a>
+              <a>
+                <FlowLine />
+                Your Top
+              </a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/party-music-discover">
@@ -93,7 +136,10 @@ function MenuContent(props: Props) {
               href={`/party-music-discover?id=${props.partyId}`}
               as={`/party/${props.partyId}/music/discover`}
             >
-              <a>Search on Spotify</a>
+              <a>
+                <FlowLine />
+                Search on Spotify
+              </a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/party-music-saved-tracks">
@@ -101,7 +147,10 @@ function MenuContent(props: Props) {
               href={`/party-music-saved-tracks?id=${props.partyId}`}
               as={`/party/${props.partyId}/music/tracks`}
             >
-              <a>Saved Tracks</a>
+              <a>
+                <FlowLine />
+                Saved Tracks
+              </a>
             </Link>
           </Menu.Item>
           <Menu.Item key="/party-music-playlists">
@@ -109,7 +158,11 @@ function MenuContent(props: Props) {
               href={`/party-music-playlists?id=${props.partyId}`}
               as={`/party/${props.partyId}/music/playlists`}
             >
-              <a>Playlists</a>
+              <a>
+                <FlowTip />
+                <Icon type="arrow-down" css={[FlowTipIconStyles]} />
+                Playlists
+              </a>
             </Link>
           </Menu.Item>
         </Menu.SubMenu>
