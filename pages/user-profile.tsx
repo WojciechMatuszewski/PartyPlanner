@@ -10,6 +10,8 @@ import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
 import UserInfo from '@components/User/UserProfile/UserInfo/UserInfo';
 import { useMeQuery } from '@generated/graphql';
 import UserProfilePrivacy from '@components/User/UserProfile/UserPrivacy/UserProfilePrivacy';
+import FirebaseService from '@services/FirebaseService';
+import { Button } from 'antd';
 
 const UserProfileWrapper = styled.div`
   margin: 0 auto;
@@ -53,6 +55,13 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
           userId={id}
           isPrivate={isPrivate}
         />
+      </UserProfileTile>
+      <UserProfileTile title="Push Notifications">
+        <Button
+          onClick={() => FirebaseService.requestNotificationsPermissions()}
+        >
+          Request
+        </Button>
       </UserProfileTile>
     </UserProfileWrapper>
   );

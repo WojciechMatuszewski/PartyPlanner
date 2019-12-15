@@ -14,6 +14,8 @@ import { ApolloConsumer } from 'react-apollo';
 
 import { HeaderLoadingData } from '.';
 import NavJoyride from './NavJoyride';
+import { hasGraphqlData, DeepWithoutMaybe } from '@shared/graphqlUtils';
+import registerServiceWorker from '@services/ServiceWorkerService';
 
 const MobileDrawerStyles = css`
   .ant-menu {
@@ -60,7 +62,7 @@ const NoticeIconStyles = css`
 `;
 
 interface AuthenticatedHeaderVariantProps {
-  userData: MeQueryMe;
+  userData: DeepWithoutMaybe<MeQueryMe>;
   currentRouterPath: string;
 }
 
@@ -236,8 +238,13 @@ export interface AuthenticatedHeaderProps {
 }
 
 const AppAuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = props => {
+  React.useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
   const { data, loading } = useMeQuery();
-  if (!data || !data.me || loading) return <HeaderLoadingData />;
+  if (!hasGraphqlData(data, ['me'] || loading)) return <HeaderLoadingData />;
+
   return (
     <React.Fragment>
       <UserPresenceReporter userId={data.me.id} />
