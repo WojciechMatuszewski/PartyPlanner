@@ -40,6 +40,8 @@ function isOnAuthenticatedRoute(pathname: string) {
   return !NOT_AUTHENTICATED_ROUTES.includes(pathname);
 }
 
+export const FirebaseContext = React.createContext<any>(undefined);
+
 export interface NextContextWithApollo<
   Query extends DefaultQuery = DefaultQuery
 > extends NextContext<Query> {
@@ -68,15 +70,15 @@ class MyApp extends App<{
     const { router } = this.props;
 
     const isAuthenticatedRoute = isOnAuthenticatedRoute(router.pathname);
-
     if (isAuthenticatedRoute) {
       this.swRegistration = await registerServiceWorker();
-      FirebaseService.init(this.swRegistration);
+      FirebaseService.initWithSw(this.swRegistration);
     }
+
     this.swRegistration = await registerServiceWorker();
   }
 
-  async componentWillUpdate({ router }: AppProps) {
+  async componentDidUpdate({ router }: AppProps) {
     if (!isOnAuthenticatedRoute(router.pathname)) return;
 
     if (!this.swRegistration) {
@@ -84,7 +86,7 @@ class MyApp extends App<{
     }
 
     if (!FirebaseService.get()) {
-      FirebaseService.init(this.swRegistration);
+      FirebaseService.initWithSw(this.swRegistration);
     }
   }
 

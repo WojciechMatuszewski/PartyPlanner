@@ -1,17 +1,16 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
-import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import {
   withApolloAuth,
   WithApolloAuthInjectedProps
 } from '@apolloSetup/withApolloAuth';
-import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
 import UserInfo from '@components/User/UserProfile/UserInfo/UserInfo';
-import { useMeQuery } from '@generated/graphql';
 import UserProfilePrivacy from '@components/User/UserProfile/UserPrivacy/UserProfilePrivacy';
-import FirebaseService from '@services/FirebaseService';
-import { Button } from 'antd';
+import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
+import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
+import UserProfilePushNotifications from '@components/User/UserProfile/UserPushNotifications/UserProfilePushNotifications';
+import styled from '@emotion/styled';
+import { useMeQuery } from '@generated/graphql';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import React from 'react';
 
 const UserProfileWrapper = styled.div`
   margin: 0 auto;
@@ -32,7 +31,15 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
 
   const meData = data && data.me ? data.me : me;
 
-  const { firstName, lastName, avatar, id, isPrivate } = meData;
+  const {
+    firstName,
+    lastName,
+    avatar,
+    id,
+    isPrivate,
+    pushNotificationsToken,
+    pushNotificationsScopes
+  } = meData;
 
   return (
     <UserProfileWrapper>
@@ -57,11 +64,11 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
         />
       </UserProfileTile>
       <UserProfileTile title="Push Notifications">
-        <Button
-          onClick={() => FirebaseService.requestNotificationsPermissions()}
-        >
-          Request
-        </Button>
+        <UserProfilePushNotifications
+          userId={id}
+          notificationsToken={pushNotificationsToken}
+          scopes={pushNotificationsScopes}
+        />
       </UserProfileTile>
     </UserProfileWrapper>
   );

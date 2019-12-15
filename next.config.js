@@ -34,12 +34,12 @@ const IMAGE_CACHE_CONFIG = {
 const BASE_CONFIG = {
   target: 'serverless',
   generateInDevMode: false,
+  generateSw: false,
   dontAutoRegisterSw: true,
-  devSwSrc: 'static/service-worker.js',
+  devSwSrc: './static/service-worker.js',
   workboxOpts: {
-    skipWaiting: true,
-    swDest: 'static/service-worker.js',
-    runtimeCaching: [IMAGE_CACHE_CONFIG]
+    swSrc: 'static/service-worker.js',
+    swDest: 'static/service-worker.js'
   },
   // env: {
   //   NEXT_PUBLIC_ENDPOINT_URL: process.env.NEXT_PUBLIC_ENDPOINT_URL,
@@ -88,7 +88,7 @@ const BASE_CONFIG = {
       })
     );
     config.plugins.push(new webpackImport.IgnorePlugin(/\/iconv-loader$/));
-
+    config.plugins.push(new Dotenv());
     // config.resolve.alias = {
     //   ...config.resolve.alias,
     //   '@components': path.resolve(__dirname, 'src/components'),

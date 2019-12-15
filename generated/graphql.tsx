@@ -2699,9 +2699,9 @@ export type Mutation = {
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
-  joinParty?: Maybe<Scalars['Boolean']>,
   importPlaylistsToParty: Scalars['Boolean'],
   combinePlaylists: Playlist,
+  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -3245,11 +3245,6 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type MutationImportPlaylistsToPartyArgs = {
   playlists: Scalars['String'],
   partyId: Scalars['ID']
@@ -3259,6 +3254,11 @@ export type MutationImportPlaylistsToPartyArgs = {
 export type MutationCombinePlaylistsArgs = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
@@ -3277,7 +3277,12 @@ export type MutationLoginArgs = {
 
 
 export type MutationSocialLoginArgs = {
-  id: Scalars['String']
+  id: Scalars['String'],
+  email: Scalars['String'],
+  avatar?: Maybe<Scalars['String']>,
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  provider: SocialMediaType
 };
 
 
@@ -6702,6 +6707,11 @@ export type PlaylistWhereUniqueInput = {
   spotifyId?: Maybe<Scalars['ID']>,
 };
 
+export enum PushNotificationScope {
+  PartyInvites = 'PARTY_INVITES',
+  FriendInvites = 'FRIEND_INVITES'
+}
+
 export type Query = {
    __typename?: 'Query',
   messages: Array<Maybe<Message>>,
@@ -7612,6 +7622,8 @@ export type User = Node & {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate: Scalars['Boolean'],
   cartItems?: Maybe<Array<PartyCartItem>>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes: Array<PushNotificationScope>,
   pendingInvitations?: Maybe<Array<User>>,
   status: UserStatus,
 };
@@ -7717,6 +7729,8 @@ export type UserCreateInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7760,6 +7774,10 @@ export type UserCreateOneWithoutPendingPartyInvitationsInput = {
   connect?: Maybe<UserWhereUniqueInput>,
 };
 
+export type UserCreatepushNotificationsScopesInput = {
+  set?: Maybe<Array<PushNotificationScope>>,
+};
+
 export type UserCreateWithoutCartItemsInput = {
   id?: Maybe<Scalars['ID']>,
   email: Scalars['String'],
@@ -7774,6 +7792,8 @@ export type UserCreateWithoutCartItemsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7795,6 +7815,8 @@ export type UserCreateWithoutChatsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7816,6 +7838,8 @@ export type UserCreateWithoutPartiesInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7837,6 +7861,8 @@ export type UserCreateWithoutPendingFriendInvitationsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7858,6 +7884,8 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7910,7 +7938,9 @@ export enum UserOrderByInput {
   ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
   ResetTokenExpiryDesc = 'resetTokenExpiry_DESC',
   IsPrivateAsc = 'isPrivate_ASC',
-  IsPrivateDesc = 'isPrivate_DESC'
+  IsPrivateDesc = 'isPrivate_DESC',
+  PushNotificationsTokenAsc = 'pushNotificationsToken_ASC',
+  PushNotificationsTokenDesc = 'pushNotificationsToken_DESC'
 }
 
 export type UserPendingFriend = {
@@ -7936,6 +7966,8 @@ export type UserPreviousValues = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate: Scalars['Boolean'],
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes: Array<PushNotificationScope>,
 };
 
 export type UserScalarWhereInput = {
@@ -8234,6 +8266,33 @@ export type UserScalarWhereInput = {
   isPrivate?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
   isPrivate_not?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  pushNotificationsToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  pushNotificationsToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  pushNotificationsToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  pushNotificationsToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  pushNotificationsToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  pushNotificationsToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  pushNotificationsToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  pushNotificationsToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  pushNotificationsToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  pushNotificationsToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  pushNotificationsToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  pushNotificationsToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  pushNotificationsToken_not_ends_with?: Maybe<Scalars['String']>,
 };
 
 export enum UserStatus {
@@ -8280,6 +8339,8 @@ export type UserUpdateDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8301,6 +8362,8 @@ export type UserUpdateInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8322,6 +8385,8 @@ export type UserUpdateManyDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
 };
 
 export type UserUpdateManyInput = {
@@ -8349,6 +8414,8 @@ export type UserUpdateManyMutationInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
 };
 
 export type UserUpdateManyWithoutChatsInput = {
@@ -8408,6 +8475,10 @@ export type UserUpdateOneRequiredWithoutPendingPartyInvitationsInput = {
   upsert?: Maybe<UserUpsertWithoutPendingPartyInvitationsInput>,
 };
 
+export type UserUpdatepushNotificationsScopesInput = {
+  set?: Maybe<Array<PushNotificationScope>>,
+};
+
 export type UserUpdateWithoutCartItemsDataInput = {
   email?: Maybe<Scalars['String']>,
   firstName?: Maybe<Scalars['String']>,
@@ -8421,6 +8492,8 @@ export type UserUpdateWithoutCartItemsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8441,6 +8514,8 @@ export type UserUpdateWithoutChatsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8461,6 +8536,8 @@ export type UserUpdateWithoutPartiesDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8481,6 +8558,8 @@ export type UserUpdateWithoutPendingFriendInvitationsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8501,6 +8580,8 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8857,6 +8938,33 @@ export type UserWhereInput = {
   isPrivate?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
   isPrivate_not?: Maybe<Scalars['Boolean']>,
+  pushNotificationsToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  pushNotificationsToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  pushNotificationsToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  pushNotificationsToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  pushNotificationsToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  pushNotificationsToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  pushNotificationsToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  pushNotificationsToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  pushNotificationsToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  pushNotificationsToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  pushNotificationsToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  pushNotificationsToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  pushNotificationsToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  pushNotificationsToken_not_ends_with?: Maybe<Scalars['String']>,
   parties_every?: Maybe<PartyWhereInput>,
   parties_some?: Maybe<PartyWhereInput>,
   parties_none?: Maybe<PartyWhereInput>,
@@ -9156,7 +9264,7 @@ export type MeQueryQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate'>
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate' | 'pushNotificationsToken' | 'pushNotificationsScopes'>
   )> }
 );
 
@@ -10034,6 +10142,20 @@ export type User_Privacy_FragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'isPrivate'>
 );
+
+export type User_UpdatePushNotificationsSettingsMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UpdatePushNotificationsSettingsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -10279,7 +10401,10 @@ export type User_UserInfoUpdateUser = User_UserInfoMutation['updateUser'];
 export const useUser_UserInfo = useUser_UserInfoMutation;
 export type User_UpdatePrivacyVariables = User_UpdatePrivacyMutationVariables;
 export type User_UpdatePrivacyUpdateUser = User_UpdatePrivacyMutation['updateUser'];
-export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;export const Party_FragmentFragmentDoc = gql`
+export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;
+export type User_UpdatePushNotificationsSettingsVariables = User_UpdatePushNotificationsSettingsMutationVariables;
+export type User_UpdatePushNotificationsSettingsUpdateUser = User_UpdatePushNotificationsSettingsMutation['updateUser'];
+export const useUser_UpdatePushNotificationsSettings = useUser_UpdatePushNotificationsSettingsMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10771,6 +10896,8 @@ export const MeQueryDocument = gql`
     lastName
     avatar
     isPrivate
+    pushNotificationsToken
+    pushNotificationsScopes
   }
 }
     `;
@@ -11921,3 +12048,24 @@ export type User_UpdatePrivacyComponentProps = Omit<ApolloReactComponents.Mutati
 export type User_UpdatePrivacyMutationHookResult = ReturnType<typeof useUser_UpdatePrivacyMutation>;
 export type User_UpdatePrivacyMutationResult = ApolloReactCommon.MutationResult<User_UpdatePrivacyMutation>;
 export type User_UpdatePrivacyMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;
+export const User_UpdatePushNotificationsSettingsDocument = gql`
+    mutation User_UpdatePushNotificationsSettings($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type User_UpdatePushNotificationsSettingsMutationFn = ApolloReactCommon.MutationFunction<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>;
+export type User_UpdatePushNotificationsSettingsComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>, 'mutation'>;
+
+    export const User_UpdatePushNotificationsSettingsComponent = (props: User_UpdatePushNotificationsSettingsComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables> mutation={User_UpdatePushNotificationsSettingsDocument} {...props} />
+    );
+    
+
+    export function useUser_UpdatePushNotificationsSettingsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>(User_UpdatePushNotificationsSettingsDocument, baseOptions);
+    }
+export type User_UpdatePushNotificationsSettingsMutationHookResult = ReturnType<typeof useUser_UpdatePushNotificationsSettingsMutation>;
+export type User_UpdatePushNotificationsSettingsMutationResult = ApolloReactCommon.MutationResult<User_UpdatePushNotificationsSettingsMutation>;
+export type User_UpdatePushNotificationsSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>;

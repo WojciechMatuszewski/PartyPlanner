@@ -5,7 +5,7 @@ export default function registerServiceWorker(): Promise<
     const isSwAvailable = 'serviceWorker' in navigator;
     if (!isSwAvailable) reject('sw not supported');
     navigator.serviceWorker
-      .register('/static/service-worker.js')
+      .register('/service-worker.js')
       .then(resolve)
       .catch(reject);
   });

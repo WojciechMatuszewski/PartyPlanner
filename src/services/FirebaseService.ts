@@ -15,6 +15,13 @@ let firebaseInstance: firebase.app.App;
 let swInitialized = false;
 
 function init() {
+  if (!firebaseInstance) {
+    if (firebase.apps.length != 0) {
+      firebaseInstance = firebase.apps[0];
+      return;
+    }
+  }
+
   if (firebaseInstance || firebase.apps.length != 0) return;
   firebaseInstance = firebase.initializeApp(firebaseConfig);
 }
@@ -24,6 +31,7 @@ function initWithSw(registration: ServiceWorkerRegistration) {
   init();
   firebaseInstance.messaging().useServiceWorker(registration);
   swInitialized = true;
+  return firebaseInstance;
 }
 
 function requestNotificationsPermissions() {
@@ -37,6 +45,7 @@ function get() {
 
 export default {
   get,
-  init: initWithSw,
+  init,
+  initWithSw,
   requestNotificationsPermissions
 };
