@@ -45,6 +45,10 @@ class MyDocument extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
+          <meta
+            name="google-site-verification"
+            content="YlIOZlWcGosaYGMPm6ew6fKZ9AlCiGEWfdCr1hR4-wk"
+          />
         </Head>
         <body>
           <Main />
