@@ -8,7 +8,7 @@ import React from 'react';
 export type UserProfilePushNotificationsFormValues = {
   [PushNotificationScope.FriendInvites]: boolean;
   [PushNotificationScope.PartyInvites]: boolean;
-  all: boolean;
+  all?: boolean;
 };
 
 const FormStyles = css`
@@ -63,27 +63,23 @@ export default function UserProfilePushNotificationsForm({
       {({
         values,
         handleChange,
-        handleReset,
+
         handleSubmit,
         setValues,
         dirty
       }) => (
         <Form css={[FormStyles]} onSubmit={handleSubmit}>
           <Checkbox
+            name="all"
             indeterminate={
-              (values.FRIEND_INVITES || values.PARTY_INVITES) && !values.all
+              (values.FRIEND_INVITES || values.PARTY_INVITES) &&
+              !(values.FRIEND_INVITES && values.PARTY_INVITES)
             }
-            checked={
-              values.all || (values.FRIEND_INVITES && values.PARTY_INVITES)
-            }
+            checked={values.PARTY_INVITES && values.FRIEND_INVITES}
             onChange={e => {
-              if (!e.target.checked) {
-                handleReset();
-              }
               setValues({
-                FRIEND_INVITES: true,
-                PARTY_INVITES: true,
-                all: true
+                FRIEND_INVITES: e.target.checked,
+                PARTY_INVITES: e.target.checked
               });
             }}
           >
