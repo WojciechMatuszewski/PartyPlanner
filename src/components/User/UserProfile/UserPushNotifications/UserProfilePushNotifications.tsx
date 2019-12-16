@@ -1,8 +1,11 @@
+import GraphqlInlineError from '@components/GraphqlInlineError';
+import styled from '@emotion/styled';
 import {
   PushNotificationScope,
   useUser_UpdatePushNotificationsSettings
 } from '@generated/graphql';
 import useFirebaseMessaging from '@hooks/useFirebaseMessaging';
+import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Alert, message, Spin } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
@@ -25,6 +28,11 @@ const pushNotificationsSettingsFragment = gql`
     pushNotificationsToken
     pushNotificationsScopes
   }
+`;
+
+const LoaderWrapper = styled.div`
+  ${FlexBoxFullCenteredStyles};
+  width: 100%;
 `;
 
 interface Props {
@@ -50,7 +58,9 @@ export default function UserProfilePushNotifications({
 
   const {
     loading: loadingFirebase,
-    firebaseMessaging
+    firebaseMessaging,
+    timeoutWhileLoadingFirebase,
+    retryFirebaseLoading
   } = useFirebaseMessaging();
 
   async function askForPermissions() {
@@ -89,7 +99,20 @@ export default function UserProfilePushNotifications({
     });
   }
 
-  if (loadingFirebase) return <Spin />;
+  if (timeoutWhileLoadingFirebase)
+    return (
+      <GraphqlInlineError.WithButton
+        onRetry={retryFirebaseLoading}
+        loading={false}
+      />
+    );
+
+  if (loadingFirebase)
+    return (
+      <LoaderWrapper>
+        <Spin />
+      </LoaderWrapper>
+    );
 
   return (
     <React.Fragment>
