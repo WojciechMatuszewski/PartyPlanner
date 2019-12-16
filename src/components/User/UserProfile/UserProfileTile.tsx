@@ -7,7 +7,8 @@ const UserProfileTileWrapper = styled.div`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   margin: 0 auto;
-  margin-top: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e8e8e8;
 
   @media screen and (max-width: 1100px) {
     width: 100%;
@@ -45,10 +46,11 @@ const UserProfileTileContent = styled.div`
 interface Props {
   title: string;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
-const UserProfileTile: React.FC<Props> = ({ title, children }) => {
+const UserProfileTile: React.FC<Props> = ({ title, children, style }) => {
   return (
-    <UserProfileTileWrapper>
+    <UserProfileTileWrapper style={style}>
       <UserProfileTileTitle>
         <Typography.Title level={2}>{title}</Typography.Title>
       </UserProfileTileTitle>

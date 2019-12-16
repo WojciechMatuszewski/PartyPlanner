@@ -48,7 +48,7 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
         lastName={lastName}
         avatar={avatar}
       />
-      <UserProfileTile title="Information about you">
+      <UserProfileTile title="Information about you" style={{ marginTop: 24 }}>
         <UserInfo
           key={`${firstName}:${lastName}`}
           firstName={firstName}
