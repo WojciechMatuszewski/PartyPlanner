@@ -37,7 +37,7 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
     avatar,
     id,
     isPrivate,
-    pushNotificationsToken,
+    webPushNotificationToken,
     pushNotificationsScopes
   } = meData;
 
@@ -66,7 +66,7 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
       <UserProfileTile title="Push Notifications">
         <UserProfilePushNotifications
           userId={id}
-          notificationsToken={pushNotificationsToken}
+          notificationsToken={webPushNotificationToken}
           scopes={pushNotificationsScopes}
         />
       </UserProfileTile>

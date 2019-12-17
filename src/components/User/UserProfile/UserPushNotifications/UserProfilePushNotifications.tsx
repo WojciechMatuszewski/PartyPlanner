@@ -1,9 +1,5 @@
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import styled from '@emotion/styled';
-import {
-  PushNotificationScope,
-  useUser_UpdatePushNotificationsSettings
-} from '@generated/graphql';
 import useFirebaseMessaging from '@hooks/useFirebaseMessaging';
 import { FlexBoxFullCenteredStyles } from '@shared/styles';
 import { Alert, message, Spin } from 'antd';
@@ -11,6 +7,10 @@ import gql from 'graphql-tag';
 import React from 'react';
 
 import UserProfilePushNotificationsForm from './UserProfilePushNotificationsForm';
+import {
+  PushNotificationScope,
+  useUser_UpdatePushNotificationsSettings
+} from '@generated/graphql';
 
 export const UPDATE_USER_PUSH_NOTIFICATIONS_SETTINGS_MUTATION = gql`
   mutation User_UpdatePushNotificationsSettings(
@@ -25,7 +25,7 @@ export const UPDATE_USER_PUSH_NOTIFICATIONS_SETTINGS_MUTATION = gql`
 
 const pushNotificationsSettingsFragment = gql`
   fragment PUSH_NOTIFICATIONS_SETTINGS_FRAGMENT on User {
-    pushNotificationsToken
+    webPushNotificationToken
     pushNotificationsScopes
   }
 `;
@@ -82,7 +82,7 @@ export default function UserProfilePushNotifications({
           id: userId
         },
         data: {
-          pushNotificationsToken: currentNotificationToken,
+          webPushNotificationToken: currentNotificationToken,
           pushNotificationsScopes: { set: newScopes }
         }
       },
@@ -92,7 +92,7 @@ export default function UserProfilePushNotifications({
           id: `User:${userId}`,
           data: {
             __typename: 'User',
-            pushNotificationsToken: currentNotificationToken,
+            webPushNotificationToken: currentNotificationToken,
             pushNotificationsScopes: newScopes
           }
         })

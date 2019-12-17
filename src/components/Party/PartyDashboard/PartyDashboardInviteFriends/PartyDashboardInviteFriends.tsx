@@ -8,7 +8,8 @@ import {
   usePartyInvitationSubscriptionSubscription,
   useCreatePartyInvitationMutation,
   PaginateUsersInviteToPartyQueryDocument,
-  useDeletePartyInvitationMutationMutation
+  useDeletePartyInvitationMutationMutation,
+  PushNotificationScope
 } from '@generated/graphql';
 import GraphqlInlineError from '@components/GraphqlInlineError';
 import { handleRefetch, hasGraphqlData } from '@shared/graphqlUtils';
@@ -19,6 +20,7 @@ import PartyDashboardInviteFriendsModal from './PartyDashboardInviteFriendsModal
 import AntdSearch from '@components/AntdSearch';
 import css from '@emotion/css';
 import { useParty } from '@components/Party/PartyProvider';
+import sendPushNotification from '@services/PushNotificationService';
 
 const SearchInputStyles = css`
   input {
@@ -221,15 +223,25 @@ const PartyDashboardInviteFriends: React.FC<Props> = ({ isOnMobile }) => {
       map(createDeletePartyInvitationPromise, idsToCancel)
     );
 
+    let wasSendingSuccessful = false;
+
     try {
       setConfirmLoading(true);
       await Promise.all(promises);
       setConfirmLoading(false);
       message.success('Operation successful');
       resetState();
+      wasSendingSuccessful = true;
     } catch (e) {
       setConfirmLoading(false);
       message.error('An error occurred!, try again.');
+    }
+
+    if (wasSendingSuccessful && idsToInvite.length > 0) {
+      sendPushNotification(idsToInvite, [PushNotificationScope.PartyInvites], {
+        title: 'New party invite!',
+        body: 'You have been invited to a new party.'
+      });
     }
   }
 

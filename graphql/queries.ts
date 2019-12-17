@@ -14,7 +14,7 @@ export const ME_QUERY = gql`
       lastName
       avatar
       isPrivate
-      pushNotificationsToken
+      webPushNotificationToken
       pushNotificationsScopes
     }
   }

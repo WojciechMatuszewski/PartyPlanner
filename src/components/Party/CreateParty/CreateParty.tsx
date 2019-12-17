@@ -7,7 +7,8 @@ import {
   CreatePartyMutationVariables,
   PaginateChatsQueryDocument,
   PartiesQueryQuery,
-  useCreatePartyInvitation
+  useCreatePartyInvitation,
+  PushNotificationScope
 } from '@generated/graphql';
 import {
   HAS_CHATS_QUERY,
@@ -24,6 +25,7 @@ import uuid from 'uuid/v4';
 
 import { partiesListVariablesConstructorFactory } from '../PartiesList/PartiesList';
 import CreatePartyForm, { CreatePartyFormValues } from './CreatePartyForm';
+import sendPushNotification from '@services/PushNotificationService';
 
 export const CREATE_PARTY_MOBILE_WIDTH = '992px';
 
@@ -52,7 +54,14 @@ interface Props {
 const CreateParty: React.FC<Props> = ({ userId }) => {
   const [createPartyInvitation] = useCreatePartyInvitation();
 
-  function onCreatePartySuccess(partyId: string) {
+  function onCreatePartySuccess(partyId: string, invitedUsers: string[]) {
+    if (invitedUsers.length > 0) {
+      sendPushNotification(invitedUsers, [PushNotificationScope.PartyInvites], {
+        title: 'New party invite!',
+        body: 'You have been invited to a new party.'
+      });
+    }
+
     Modal.success({
       title: 'Party created!',
       content:
@@ -144,7 +153,10 @@ const CreateParty: React.FC<Props> = ({ userId }) => {
           formValues.invitedFriends
         )
       );
-      onCreatePartySuccess(createPartyResult.data.createParty.id);
+      onCreatePartySuccess(
+        createPartyResult.data.createParty.id,
+        formValues.invitedFriends
+      );
     } catch (e) {
       onCreatePartyError();
     }
