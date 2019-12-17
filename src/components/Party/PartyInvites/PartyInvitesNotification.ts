@@ -10,9 +10,7 @@ function createNotificationBody(
 ) {
   return {
     message: 'New party invitation!',
-    description: `${
-      subscriptionNode.invitedBy.firstName
-    } invited you to a party called: ${subscriptionNode.party.title}`
+    description: `${subscriptionNode.invitedBy.firstName} invited you to a party called: ${subscriptionNode.party.title}`
   };
 }
 
@@ -29,6 +27,7 @@ export default function openPartyInvitationNotification(
   notification.open({
     ...createNotificationBody(subscriptionNode),
     key: subscriptionNode.id,
+    placement: 'bottomRight',
     onClick: () =>
       compose(
         closePartyInvitationNotification,

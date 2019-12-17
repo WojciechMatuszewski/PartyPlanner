@@ -1,7 +1,12 @@
-import React from 'react';
-import gql from 'graphql-tag';
-import { useUser_CreateFriendInvitation } from '@generated/graphql';
+import {
+  PushNotificationScope,
+  useUser_CreateFriendInvitation
+} from '@generated/graphql';
+import sendPushNotification from '@services/PushNotificationService';
 import { Button, Icon, message, Modal } from 'antd';
+import gql from 'graphql-tag';
+import React from 'react';
+
 import { updateUserFriends } from './utils';
 
 export const CREATE_FRIEND_INVITATION_MUTATION = gql`
@@ -11,6 +16,13 @@ export const CREATE_FRIEND_INVITATION_MUTATION = gql`
     }
   }
 `;
+
+function sendFriendInvitePushNotification(id: string) {
+  sendPushNotification([id], [PushNotificationScope.FriendInvites], {
+    title: 'New friend invite!',
+    body: 'Someone invited you to his friends'
+  });
+}
 
 interface Props {
   invitedById: string;
@@ -33,7 +45,10 @@ export default function NonFriend({ invitedById, invitingUserId }: Props) {
         cancelText: 'Cancel',
         onOk: () => createFriendInvitation()
       }),
-    onCompleted: () => message.success('Friend invitation send!'),
+    onCompleted: () => {
+      message.success('Friend invitation send!');
+      sendFriendInvitePushNotification(invitingUserId);
+    },
     update: (proxy, { data }) => {
       if (!data || data.createFriendInvitation == undefined) return;
       const {

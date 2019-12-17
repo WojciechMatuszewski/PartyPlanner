@@ -15,7 +15,7 @@ import {
   handleRefetch,
   isLoadingError
 } from '@shared/graphqlUtils';
-import { Icon } from 'antd';
+import { Icon, notification, Typography } from 'antd';
 import gql from 'graphql-tag';
 import React from 'react';
 import GraphqlInlineError from '@components/GraphqlInlineError';
@@ -95,6 +95,22 @@ export default function FriendInvites({ userId }: Props) {
     notifyOnNetworkStatusChange: true,
     errorPolicy: 'all'
   });
+
+  function displayLocalNotificationAboutNewInvitation(
+    invitedByFullName: string
+  ) {
+    notification.info({
+      message: 'New friend invitation',
+      description: (
+        <Typography.Paragraph>
+          <Typography.Text strong={true}>{invitedByFullName}</Typography.Text>{' '}
+          invited you to be his friend.
+        </Typography.Paragraph>
+      ),
+      placement: 'bottomRight',
+      duration: 2
+    });
+  }
 
   if (
     isLoadingInitially(networkStatus) ||
@@ -213,6 +229,7 @@ export default function FriendInvites({ userId }: Props) {
     } = currentCachedData;
     if (edges == undefined || subPayload.node == undefined)
       return currentCachedData;
+
     const { node } = subPayload;
     const surelyEdges = edges as DeepWithoutMaybe<typeof edges>;
     const newEdges: typeof surelyEdges = [
@@ -222,6 +239,11 @@ export default function FriendInvites({ userId }: Props) {
         node: { ...node, __typename: 'FriendInvitation' } as any
       }
     ];
+
+    displayLocalNotificationAboutNewInvitation(
+      `${node.invitedBy.firstName} ${node.invitedBy.lastName}`
+    );
+
     return {
       __typename: 'Query',
       friendInvitationsConnection: {

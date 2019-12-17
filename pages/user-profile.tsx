@@ -1,15 +1,16 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
-import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import {
   withApolloAuth,
   WithApolloAuthInjectedProps
 } from '@apolloSetup/withApolloAuth';
-import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
 import UserInfo from '@components/User/UserProfile/UserInfo/UserInfo';
-import { useMeQuery } from '@generated/graphql';
 import UserProfilePrivacy from '@components/User/UserProfile/UserPrivacy/UserProfilePrivacy';
+import UserProfileBanner from '@components/User/UserProfile/UserProfileBanner';
+import UserProfileTile from '@components/User/UserProfile/UserProfileTile';
+import UserProfilePushNotifications from '@components/User/UserProfile/UserPushNotifications/UserProfilePushNotifications';
+import styled from '@emotion/styled';
+import { useMeQuery } from '@generated/graphql';
+import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
+import React from 'react';
 
 const UserProfileWrapper = styled.div`
   margin: 0 auto;
@@ -30,7 +31,15 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
 
   const meData = data && data.me ? data.me : me;
 
-  const { firstName, lastName, avatar, id, isPrivate } = meData;
+  const {
+    firstName,
+    lastName,
+    avatar,
+    id,
+    isPrivate,
+    webPushNotificationToken,
+    pushNotificationsScopes
+  } = meData;
 
   return (
     <UserProfileWrapper>
@@ -39,7 +48,7 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
         lastName={lastName}
         avatar={avatar}
       />
-      <UserProfileTile title="Information about you">
+      <UserProfileTile title="Information about you" style={{ marginTop: 24 }}>
         <UserInfo
           key={`${firstName}:${lastName}`}
           firstName={firstName}
@@ -52,6 +61,13 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
           key={`${isPrivate}`}
           userId={id}
           isPrivate={isPrivate}
+        />
+      </UserProfileTile>
+      <UserProfileTile title="Push Notifications">
+        <UserProfilePushNotifications
+          userId={id}
+          notificationsToken={webPushNotificationToken}
+          scopes={pushNotificationsScopes}
         />
       </UserProfileTile>
     </UserProfileWrapper>

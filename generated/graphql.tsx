@@ -40,16 +40,6 @@ export type AggregateFriendInvitation = {
   count: Scalars['Int'],
 };
 
-export type AggregateGame = {
-   __typename?: 'AggregateGame',
-  count: Scalars['Int'],
-};
-
-export type AggregateImage = {
-   __typename?: 'AggregateImage',
-  count: Scalars['Int'],
-};
-
 export type AggregateLocation = {
    __typename?: 'AggregateLocation',
   count: Scalars['Int'],
@@ -1421,603 +1411,6 @@ export type FriendInvitationWhereUniqueInput = {
   id?: Maybe<Scalars['ID']>,
 };
 
-export type Game = Node & {
-   __typename?: 'Game',
-  id: Scalars['ID'],
-  title: Scalars['String'],
-  cover?: Maybe<Scalars['String']>,
-  type: GameType,
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
-};
-
-/** A connection to a list of items. */
-export type GameConnection = {
-   __typename?: 'GameConnection',
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo,
-  /** A list of edges. */
-  edges: Array<Maybe<GameEdge>>,
-  aggregate: AggregateGame,
-};
-
-export type GameCreateInput = {
-  id?: Maybe<Scalars['ID']>,
-  title: Scalars['String'],
-  cover?: Maybe<Scalars['String']>,
-  type: GameType,
-};
-
-export type GameCreateManyInput = {
-  create?: Maybe<Array<GameCreateInput>>,
-  connect?: Maybe<Array<GameWhereUniqueInput>>,
-};
-
-/** An edge in a connection. */
-export type GameEdge = {
-   __typename?: 'GameEdge',
-  /** The item at the end of the edge. */
-  node: Game,
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'],
-};
-
-export enum GameOrderByInput {
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  TitleAsc = 'title_ASC',
-  TitleDesc = 'title_DESC',
-  CoverAsc = 'cover_ASC',
-  CoverDesc = 'cover_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC'
-}
-
-export type GamePreviousValues = {
-   __typename?: 'GamePreviousValues',
-  id: Scalars['ID'],
-  title: Scalars['String'],
-  cover?: Maybe<Scalars['String']>,
-  type: GameType,
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
-};
-
-export type GameScalarWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<GameScalarWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<GameScalarWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<GameScalarWhereInput>>,
-  id?: Maybe<Scalars['ID']>,
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<Scalars['ID']>,
-  /** All values that are contained in given list. */
-  id_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values less than the given value. */
-  id_lt?: Maybe<Scalars['ID']>,
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<Scalars['ID']>,
-  /** All values greater than the given value. */
-  id_gt?: Maybe<Scalars['ID']>,
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<Scalars['ID']>,
-  /** All values containing the given string. */
-  id_contains?: Maybe<Scalars['ID']>,
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<Scalars['ID']>,
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<Scalars['ID']>,
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<Scalars['ID']>,
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<Scalars['ID']>,
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<Scalars['ID']>,
-  title?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  title_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  title_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  title_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  title_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  title_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  title_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  title_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  title_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  title_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  title_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  title_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  title_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  title_not_ends_with?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  cover_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  cover_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  cover_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  cover_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  cover_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  cover_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  cover_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  cover_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  cover_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  cover_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  cover_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  cover_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  cover_not_ends_with?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-  /** All values that are not equal to given value. */
-  type_not?: Maybe<GameType>,
-  /** All values that are contained in given list. */
-  type_in?: Maybe<Array<GameType>>,
-  /** All values that are not contained in given list. */
-  type_not_in?: Maybe<Array<GameType>>,
-  createdAt?: Maybe<Scalars['DateTime']>,
-  /** All values that are not equal to given value. */
-  createdAt_not?: Maybe<Scalars['DateTime']>,
-  /** All values that are contained in given list. */
-  createdAt_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values less than the given value. */
-  createdAt_lt?: Maybe<Scalars['DateTime']>,
-  /** All values less than or equal the given value. */
-  createdAt_lte?: Maybe<Scalars['DateTime']>,
-  /** All values greater than the given value. */
-  createdAt_gt?: Maybe<Scalars['DateTime']>,
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: Maybe<Scalars['DateTime']>,
-  updatedAt?: Maybe<Scalars['DateTime']>,
-  /** All values that are not equal to given value. */
-  updatedAt_not?: Maybe<Scalars['DateTime']>,
-  /** All values that are contained in given list. */
-  updatedAt_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values less than the given value. */
-  updatedAt_lt?: Maybe<Scalars['DateTime']>,
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: Maybe<Scalars['DateTime']>,
-  /** All values greater than the given value. */
-  updatedAt_gt?: Maybe<Scalars['DateTime']>,
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: Maybe<Scalars['DateTime']>,
-};
-
-export type GameSubscriptionPayload = {
-   __typename?: 'GameSubscriptionPayload',
-  mutation: MutationType,
-  node?: Maybe<Game>,
-  updatedFields?: Maybe<Array<Scalars['String']>>,
-  previousValues?: Maybe<GamePreviousValues>,
-};
-
-export type GameSubscriptionWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<GameSubscriptionWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<GameSubscriptionWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<GameSubscriptionWhereInput>>,
-  /** The subscription event gets dispatched when it's listed in mutation_in */
-  mutation_in?: Maybe<Array<MutationType>>,
-  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
-  updatedFields_contains?: Maybe<Scalars['String']>,
-  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
-  updatedFields_contains_every?: Maybe<Array<Scalars['String']>>,
-  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
-  updatedFields_contains_some?: Maybe<Array<Scalars['String']>>,
-  node?: Maybe<GameWhereInput>,
-};
-
-export enum GameType {
-  Board = 'BOARD',
-  Pc = 'PC',
-  Console = 'CONSOLE'
-}
-
-export type GameUpdateDataInput = {
-  title?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-};
-
-export type GameUpdateInput = {
-  title?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-};
-
-export type GameUpdateManyDataInput = {
-  title?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-};
-
-export type GameUpdateManyInput = {
-  create?: Maybe<Array<GameCreateInput>>,
-  connect?: Maybe<Array<GameWhereUniqueInput>>,
-  set?: Maybe<Array<GameWhereUniqueInput>>,
-  disconnect?: Maybe<Array<GameWhereUniqueInput>>,
-  delete?: Maybe<Array<GameWhereUniqueInput>>,
-  update?: Maybe<Array<GameUpdateWithWhereUniqueNestedInput>>,
-  updateMany?: Maybe<Array<GameUpdateManyWithWhereNestedInput>>,
-  deleteMany?: Maybe<Array<GameScalarWhereInput>>,
-  upsert?: Maybe<Array<GameUpsertWithWhereUniqueNestedInput>>,
-};
-
-export type GameUpdateManyMutationInput = {
-  title?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-};
-
-export type GameUpdateManyWithWhereNestedInput = {
-  where: GameScalarWhereInput,
-  data: GameUpdateManyDataInput,
-};
-
-export type GameUpdateWithWhereUniqueNestedInput = {
-  where: GameWhereUniqueInput,
-  data: GameUpdateDataInput,
-};
-
-export type GameUpsertWithWhereUniqueNestedInput = {
-  where: GameWhereUniqueInput,
-  update: GameUpdateDataInput,
-  create: GameCreateInput,
-};
-
-export type GameWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<GameWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<GameWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<GameWhereInput>>,
-  id?: Maybe<Scalars['ID']>,
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<Scalars['ID']>,
-  /** All values that are contained in given list. */
-  id_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values less than the given value. */
-  id_lt?: Maybe<Scalars['ID']>,
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<Scalars['ID']>,
-  /** All values greater than the given value. */
-  id_gt?: Maybe<Scalars['ID']>,
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<Scalars['ID']>,
-  /** All values containing the given string. */
-  id_contains?: Maybe<Scalars['ID']>,
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<Scalars['ID']>,
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<Scalars['ID']>,
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<Scalars['ID']>,
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<Scalars['ID']>,
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<Scalars['ID']>,
-  title?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  title_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  title_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  title_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  title_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  title_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  title_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  title_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  title_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  title_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  title_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  title_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  title_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  title_not_ends_with?: Maybe<Scalars['String']>,
-  cover?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  cover_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  cover_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  cover_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  cover_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  cover_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  cover_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  cover_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  cover_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  cover_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  cover_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  cover_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  cover_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  cover_not_ends_with?: Maybe<Scalars['String']>,
-  type?: Maybe<GameType>,
-  /** All values that are not equal to given value. */
-  type_not?: Maybe<GameType>,
-  /** All values that are contained in given list. */
-  type_in?: Maybe<Array<GameType>>,
-  /** All values that are not contained in given list. */
-  type_not_in?: Maybe<Array<GameType>>,
-  createdAt?: Maybe<Scalars['DateTime']>,
-  /** All values that are not equal to given value. */
-  createdAt_not?: Maybe<Scalars['DateTime']>,
-  /** All values that are contained in given list. */
-  createdAt_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values that are not contained in given list. */
-  createdAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values less than the given value. */
-  createdAt_lt?: Maybe<Scalars['DateTime']>,
-  /** All values less than or equal the given value. */
-  createdAt_lte?: Maybe<Scalars['DateTime']>,
-  /** All values greater than the given value. */
-  createdAt_gt?: Maybe<Scalars['DateTime']>,
-  /** All values greater than or equal the given value. */
-  createdAt_gte?: Maybe<Scalars['DateTime']>,
-  updatedAt?: Maybe<Scalars['DateTime']>,
-  /** All values that are not equal to given value. */
-  updatedAt_not?: Maybe<Scalars['DateTime']>,
-  /** All values that are contained in given list. */
-  updatedAt_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values that are not contained in given list. */
-  updatedAt_not_in?: Maybe<Array<Scalars['DateTime']>>,
-  /** All values less than the given value. */
-  updatedAt_lt?: Maybe<Scalars['DateTime']>,
-  /** All values less than or equal the given value. */
-  updatedAt_lte?: Maybe<Scalars['DateTime']>,
-  /** All values greater than the given value. */
-  updatedAt_gt?: Maybe<Scalars['DateTime']>,
-  /** All values greater than or equal the given value. */
-  updatedAt_gte?: Maybe<Scalars['DateTime']>,
-};
-
-export type GameWhereUniqueInput = {
-  id?: Maybe<Scalars['ID']>,
-  title?: Maybe<Scalars['String']>,
-};
-
-export type Image = Node & {
-   __typename?: 'Image',
-  id: Scalars['ID'],
-  height: Scalars['Int'],
-  width: Scalars['Int'],
-  url: Scalars['String'],
-};
-
-/** A connection to a list of items. */
-export type ImageConnection = {
-   __typename?: 'ImageConnection',
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo,
-  /** A list of edges. */
-  edges: Array<Maybe<ImageEdge>>,
-  aggregate: AggregateImage,
-};
-
-export type ImageCreateInput = {
-  id?: Maybe<Scalars['ID']>,
-  height: Scalars['Int'],
-  width: Scalars['Int'],
-  url: Scalars['String'],
-};
-
-/** An edge in a connection. */
-export type ImageEdge = {
-   __typename?: 'ImageEdge',
-  /** The item at the end of the edge. */
-  node: Image,
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'],
-};
-
-export enum ImageOrderByInput {
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  HeightAsc = 'height_ASC',
-  HeightDesc = 'height_DESC',
-  WidthAsc = 'width_ASC',
-  WidthDesc = 'width_DESC',
-  UrlAsc = 'url_ASC',
-  UrlDesc = 'url_DESC'
-}
-
-export type ImagePreviousValues = {
-   __typename?: 'ImagePreviousValues',
-  id: Scalars['ID'],
-  height: Scalars['Int'],
-  width: Scalars['Int'],
-  url: Scalars['String'],
-};
-
-export type ImageSubscriptionPayload = {
-   __typename?: 'ImageSubscriptionPayload',
-  mutation: MutationType,
-  node?: Maybe<Image>,
-  updatedFields?: Maybe<Array<Scalars['String']>>,
-  previousValues?: Maybe<ImagePreviousValues>,
-};
-
-export type ImageSubscriptionWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<ImageSubscriptionWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<ImageSubscriptionWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<ImageSubscriptionWhereInput>>,
-  /** The subscription event gets dispatched when it's listed in mutation_in */
-  mutation_in?: Maybe<Array<MutationType>>,
-  /** The subscription event gets only dispatched when one of the updated fields names is included in this list */
-  updatedFields_contains?: Maybe<Scalars['String']>,
-  /** The subscription event gets only dispatched when all of the field names included in this list have been updated */
-  updatedFields_contains_every?: Maybe<Array<Scalars['String']>>,
-  /** The subscription event gets only dispatched when some of the field names included in this list have been updated */
-  updatedFields_contains_some?: Maybe<Array<Scalars['String']>>,
-  node?: Maybe<ImageWhereInput>,
-};
-
-export type ImageUpdateInput = {
-  height?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-};
-
-export type ImageUpdateManyMutationInput = {
-  height?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-};
-
-export type ImageWhereInput = {
-  /** Logical AND on all given filters. */
-  AND?: Maybe<Array<ImageWhereInput>>,
-  /** Logical OR on all given filters. */
-  OR?: Maybe<Array<ImageWhereInput>>,
-  /** Logical NOT on all given filters combined by AND. */
-  NOT?: Maybe<Array<ImageWhereInput>>,
-  id?: Maybe<Scalars['ID']>,
-  /** All values that are not equal to given value. */
-  id_not?: Maybe<Scalars['ID']>,
-  /** All values that are contained in given list. */
-  id_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values that are not contained in given list. */
-  id_not_in?: Maybe<Array<Scalars['ID']>>,
-  /** All values less than the given value. */
-  id_lt?: Maybe<Scalars['ID']>,
-  /** All values less than or equal the given value. */
-  id_lte?: Maybe<Scalars['ID']>,
-  /** All values greater than the given value. */
-  id_gt?: Maybe<Scalars['ID']>,
-  /** All values greater than or equal the given value. */
-  id_gte?: Maybe<Scalars['ID']>,
-  /** All values containing the given string. */
-  id_contains?: Maybe<Scalars['ID']>,
-  /** All values not containing the given string. */
-  id_not_contains?: Maybe<Scalars['ID']>,
-  /** All values starting with the given string. */
-  id_starts_with?: Maybe<Scalars['ID']>,
-  /** All values not starting with the given string. */
-  id_not_starts_with?: Maybe<Scalars['ID']>,
-  /** All values ending with the given string. */
-  id_ends_with?: Maybe<Scalars['ID']>,
-  /** All values not ending with the given string. */
-  id_not_ends_with?: Maybe<Scalars['ID']>,
-  height?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  height_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  height_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  height_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  height_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  height_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  height_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  height_gte?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  /** All values that are not equal to given value. */
-  width_not?: Maybe<Scalars['Int']>,
-  /** All values that are contained in given list. */
-  width_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values that are not contained in given list. */
-  width_not_in?: Maybe<Array<Scalars['Int']>>,
-  /** All values less than the given value. */
-  width_lt?: Maybe<Scalars['Int']>,
-  /** All values less than or equal the given value. */
-  width_lte?: Maybe<Scalars['Int']>,
-  /** All values greater than the given value. */
-  width_gt?: Maybe<Scalars['Int']>,
-  /** All values greater than or equal the given value. */
-  width_gte?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
-  /** All values that are not equal to given value. */
-  url_not?: Maybe<Scalars['String']>,
-  /** All values that are contained in given list. */
-  url_in?: Maybe<Array<Scalars['String']>>,
-  /** All values that are not contained in given list. */
-  url_not_in?: Maybe<Array<Scalars['String']>>,
-  /** All values less than the given value. */
-  url_lt?: Maybe<Scalars['String']>,
-  /** All values less than or equal the given value. */
-  url_lte?: Maybe<Scalars['String']>,
-  /** All values greater than the given value. */
-  url_gt?: Maybe<Scalars['String']>,
-  /** All values greater than or equal the given value. */
-  url_gte?: Maybe<Scalars['String']>,
-  /** All values containing the given string. */
-  url_contains?: Maybe<Scalars['String']>,
-  /** All values not containing the given string. */
-  url_not_contains?: Maybe<Scalars['String']>,
-  /** All values starting with the given string. */
-  url_starts_with?: Maybe<Scalars['String']>,
-  /** All values not starting with the given string. */
-  url_not_starts_with?: Maybe<Scalars['String']>,
-  /** All values ending with the given string. */
-  url_ends_with?: Maybe<Scalars['String']>,
-  /** All values not ending with the given string. */
-  url_not_ends_with?: Maybe<Scalars['String']>,
-};
-
-export type ImageWhereUniqueInput = {
-  id?: Maybe<Scalars['ID']>,
-};
-
 export type Location = Node & {
    __typename?: 'Location',
   id: Scalars['ID'],
@@ -2613,10 +2006,8 @@ export type Mutation = {
   createPartyCart: PartyCart,
   createPartyCartItem: PartyCartItem,
   createTrack: Track,
-  createImage: Image,
   createArtist: Artist,
   createLocation: Location,
-  createGame: Game,
   createPartySavedTrack: PartySavedTrack,
   createUser: User,
   createParty: Party,
@@ -2629,10 +2020,8 @@ export type Mutation = {
   updatePartyCart?: Maybe<PartyCart>,
   updatePartyCartItem?: Maybe<PartyCartItem>,
   updateTrack?: Maybe<Track>,
-  updateImage?: Maybe<Image>,
   updateArtist?: Maybe<Artist>,
   updateLocation?: Maybe<Location>,
-  updateGame?: Maybe<Game>,
   updatePartySavedTrack?: Maybe<PartySavedTrack>,
   updateUser?: Maybe<User>,
   updateParty?: Maybe<Party>,
@@ -2645,10 +2034,8 @@ export type Mutation = {
   deletePartyCart?: Maybe<PartyCart>,
   deletePartyCartItem?: Maybe<PartyCartItem>,
   deleteTrack?: Maybe<Track>,
-  deleteImage?: Maybe<Image>,
   deleteArtist?: Maybe<Artist>,
   deleteLocation?: Maybe<Location>,
-  deleteGame?: Maybe<Game>,
   deletePartySavedTrack?: Maybe<PartySavedTrack>,
   deleteUser?: Maybe<User>,
   deleteParty?: Maybe<Party>,
@@ -2661,10 +2048,8 @@ export type Mutation = {
   upsertPartyCart: PartyCart,
   upsertPartyCartItem: PartyCartItem,
   upsertTrack: Track,
-  upsertImage: Image,
   upsertArtist: Artist,
   upsertLocation: Location,
-  upsertGame: Game,
   upsertPartySavedTrack: PartySavedTrack,
   upsertUser: User,
   upsertParty: Party,
@@ -2675,10 +2060,8 @@ export type Mutation = {
   updateManyPlaylists: BatchPayload,
   updateManyPartyCartItems: BatchPayload,
   updateManyTracks: BatchPayload,
-  updateManyImages: BatchPayload,
   updateManyArtists: BatchPayload,
   updateManyLocations: BatchPayload,
-  updateManyGames: BatchPayload,
   updateManyPartySavedTracks: BatchPayload,
   updateManyUsers: BatchPayload,
   updateManyParties: BatchPayload,
@@ -2691,17 +2074,15 @@ export type Mutation = {
   deleteManyPartyCarts: BatchPayload,
   deleteManyPartyCartItems: BatchPayload,
   deleteManyTracks: BatchPayload,
-  deleteManyImages: BatchPayload,
   deleteManyArtists: BatchPayload,
   deleteManyLocations: BatchPayload,
-  deleteManyGames: BatchPayload,
   deleteManyPartySavedTracks: BatchPayload,
   deleteManyUsers: BatchPayload,
   deleteManyParties: BatchPayload,
   deleteManyAlbums: BatchPayload,
-  joinParty?: Maybe<Scalars['Boolean']>,
   importPlaylistsToParty: Scalars['Boolean'],
   combinePlaylists: Playlist,
+  joinParty?: Maybe<Scalars['Boolean']>,
   signup: AuthPayload,
   login: AuthPayload,
   socialLogin: AuthPayload,
@@ -2753,11 +2134,6 @@ export type MutationCreateTrackArgs = {
 };
 
 
-export type MutationCreateImageArgs = {
-  data: ImageCreateInput
-};
-
-
 export type MutationCreateArtistArgs = {
   data: ArtistCreateInput
 };
@@ -2765,11 +2141,6 @@ export type MutationCreateArtistArgs = {
 
 export type MutationCreateLocationArgs = {
   data: LocationCreateInput
-};
-
-
-export type MutationCreateGameArgs = {
-  data: GameCreateInput
 };
 
 
@@ -2841,12 +2212,6 @@ export type MutationUpdateTrackArgs = {
 };
 
 
-export type MutationUpdateImageArgs = {
-  data: ImageUpdateInput,
-  where: ImageWhereUniqueInput
-};
-
-
 export type MutationUpdateArtistArgs = {
   data: ArtistUpdateInput,
   where: ArtistWhereUniqueInput
@@ -2856,12 +2221,6 @@ export type MutationUpdateArtistArgs = {
 export type MutationUpdateLocationArgs = {
   data: LocationUpdateInput,
   where: LocationWhereUniqueInput
-};
-
-
-export type MutationUpdateGameArgs = {
-  data: GameUpdateInput,
-  where: GameWhereUniqueInput
 };
 
 
@@ -2929,11 +2288,6 @@ export type MutationDeleteTrackArgs = {
 };
 
 
-export type MutationDeleteImageArgs = {
-  where: ImageWhereUniqueInput
-};
-
-
 export type MutationDeleteArtistArgs = {
   where: ArtistWhereUniqueInput
 };
@@ -2941,11 +2295,6 @@ export type MutationDeleteArtistArgs = {
 
 export type MutationDeleteLocationArgs = {
   where: LocationWhereUniqueInput
-};
-
-
-export type MutationDeleteGameArgs = {
-  where: GameWhereUniqueInput
 };
 
 
@@ -3025,13 +2374,6 @@ export type MutationUpsertTrackArgs = {
 };
 
 
-export type MutationUpsertImageArgs = {
-  where: ImageWhereUniqueInput,
-  create: ImageCreateInput,
-  update: ImageUpdateInput
-};
-
-
 export type MutationUpsertArtistArgs = {
   where: ArtistWhereUniqueInput,
   create: ArtistCreateInput,
@@ -3043,13 +2385,6 @@ export type MutationUpsertLocationArgs = {
   where: LocationWhereUniqueInput,
   create: LocationCreateInput,
   update: LocationUpdateInput
-};
-
-
-export type MutationUpsertGameArgs = {
-  where: GameWhereUniqueInput,
-  create: GameCreateInput,
-  update: GameUpdateInput
 };
 
 
@@ -3117,12 +2452,6 @@ export type MutationUpdateManyTracksArgs = {
 };
 
 
-export type MutationUpdateManyImagesArgs = {
-  data: ImageUpdateManyMutationInput,
-  where?: Maybe<ImageWhereInput>
-};
-
-
 export type MutationUpdateManyArtistsArgs = {
   data: ArtistUpdateManyMutationInput,
   where?: Maybe<ArtistWhereInput>
@@ -3132,12 +2461,6 @@ export type MutationUpdateManyArtistsArgs = {
 export type MutationUpdateManyLocationsArgs = {
   data: LocationUpdateManyMutationInput,
   where?: Maybe<LocationWhereInput>
-};
-
-
-export type MutationUpdateManyGamesArgs = {
-  data: GameUpdateManyMutationInput,
-  where?: Maybe<GameWhereInput>
 };
 
 
@@ -3205,11 +2528,6 @@ export type MutationDeleteManyTracksArgs = {
 };
 
 
-export type MutationDeleteManyImagesArgs = {
-  where?: Maybe<ImageWhereInput>
-};
-
-
 export type MutationDeleteManyArtistsArgs = {
   where?: Maybe<ArtistWhereInput>
 };
@@ -3217,11 +2535,6 @@ export type MutationDeleteManyArtistsArgs = {
 
 export type MutationDeleteManyLocationsArgs = {
   where?: Maybe<LocationWhereInput>
-};
-
-
-export type MutationDeleteManyGamesArgs = {
-  where?: Maybe<GameWhereInput>
 };
 
 
@@ -3245,11 +2558,6 @@ export type MutationDeleteManyAlbumsArgs = {
 };
 
 
-export type MutationJoinPartyArgs = {
-  partyId: Scalars['ID']
-};
-
-
 export type MutationImportPlaylistsToPartyArgs = {
   playlists: Scalars['String'],
   partyId: Scalars['ID']
@@ -3259,6 +2567,11 @@ export type MutationImportPlaylistsToPartyArgs = {
 export type MutationCombinePlaylistsArgs = {
   partyPlannerData: CombinePlaylistPartyPlannerData,
   spotifyData: CombinePlaylistCreatedSpotifyPlaylistInput
+};
+
+
+export type MutationJoinPartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
@@ -3277,7 +2590,12 @@ export type MutationLoginArgs = {
 
 
 export type MutationSocialLoginArgs = {
-  id: Scalars['String']
+  id: Scalars['String'],
+  email: Scalars['String'],
+  avatar?: Maybe<Scalars['String']>,
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  provider: SocialMediaType
 };
 
 
@@ -3343,7 +2661,6 @@ export type Party = Node & {
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   location: Location,
-  games?: Maybe<Array<Game>>,
   colorTint: Scalars['String'],
   isPublic?: Maybe<Scalars['Boolean']>,
   members?: Maybe<Array<User>>,
@@ -3353,17 +2670,6 @@ export type Party = Node & {
   playlist?: Maybe<Array<Playlist>>,
   savedTracks?: Maybe<Array<PartySavedTrack>>,
   cart: PartyCart,
-};
-
-
-export type PartyGamesArgs = {
-  where?: Maybe<GameWhereInput>,
-  orderBy?: Maybe<GameOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
 };
 
 
@@ -4092,7 +3398,6 @@ export type PartyCreateInput = {
   inviteSecret: Scalars['String'],
   author: UserCreateOneInput,
   location: LocationCreateOneInput,
-  games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
@@ -4136,7 +3441,6 @@ export type PartyCreateWithoutCartInput = {
   inviteSecret: Scalars['String'],
   author: UserCreateOneInput,
   location: LocationCreateOneInput,
-  games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
@@ -4154,7 +3458,6 @@ export type PartyCreateWithoutMembersInput = {
   inviteSecret: Scalars['String'],
   author: UserCreateOneInput,
   location: LocationCreateOneInput,
-  games?: Maybe<GameCreateManyInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
   cart: PartyCartCreateOneWithoutPartyInput,
@@ -4172,7 +3475,6 @@ export type PartyCreateWithoutPlaylistInput = {
   inviteSecret: Scalars['String'],
   author: UserCreateOneInput,
   location: LocationCreateOneInput,
-  games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackCreateManyWithoutPartyInput>,
   cart: PartyCartCreateOneWithoutPartyInput,
@@ -4190,7 +3492,6 @@ export type PartyCreateWithoutSavedTracksInput = {
   inviteSecret: Scalars['String'],
   author: UserCreateOneInput,
   location: LocationCreateOneInput,
-  games?: Maybe<GameCreateManyInput>,
   members?: Maybe<UserCreateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistCreateManyWithoutPartiesInput>,
   cart: PartyCartCreateOneWithoutPartyInput,
@@ -5604,7 +4905,6 @@ export type PartyUpdateDataInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
@@ -5622,7 +4922,6 @@ export type PartyUpdateInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
@@ -5712,7 +5011,6 @@ export type PartyUpdateWithoutCartDataInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
@@ -5729,7 +5027,6 @@ export type PartyUpdateWithoutMembersDataInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
   cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
@@ -5746,7 +5043,6 @@ export type PartyUpdateWithoutPlaylistDataInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   savedTracks?: Maybe<PartySavedTrackUpdateManyWithoutPartyInput>,
   cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
@@ -5763,7 +5059,6 @@ export type PartyUpdateWithoutSavedTracksDataInput = {
   inviteSecret?: Maybe<Scalars['String']>,
   author?: Maybe<UserUpdateOneRequiredInput>,
   location?: Maybe<LocationUpdateOneRequiredInput>,
-  games?: Maybe<GameUpdateManyInput>,
   members?: Maybe<UserUpdateManyWithoutPartiesInput>,
   playlist?: Maybe<PlaylistUpdateManyWithoutPartiesInput>,
   cart?: Maybe<PartyCartUpdateOneRequiredWithoutPartyInput>,
@@ -6046,9 +5341,6 @@ export type PartyWhereInput = {
   inviteSecret_not_ends_with?: Maybe<Scalars['String']>,
   author?: Maybe<UserWhereInput>,
   location?: Maybe<LocationWhereInput>,
-  games_every?: Maybe<GameWhereInput>,
-  games_some?: Maybe<GameWhereInput>,
-  games_none?: Maybe<GameWhereInput>,
   members_every?: Maybe<UserWhereInput>,
   members_some?: Maybe<UserWhereInput>,
   members_none?: Maybe<UserWhereInput>,
@@ -6702,6 +5994,11 @@ export type PlaylistWhereUniqueInput = {
   spotifyId?: Maybe<Scalars['ID']>,
 };
 
+export enum PushNotificationScope {
+  PartyInvites = 'PARTY_INVITES',
+  FriendInvites = 'FRIEND_INVITES'
+}
+
 export type Query = {
    __typename?: 'Query',
   messages: Array<Maybe<Message>>,
@@ -6712,10 +6009,8 @@ export type Query = {
   partyCarts: Array<Maybe<PartyCart>>,
   partyCartItems: Array<Maybe<PartyCartItem>>,
   tracks: Array<Maybe<Track>>,
-  images: Array<Maybe<Image>>,
   artists: Array<Maybe<Artist>>,
   locations: Array<Maybe<Location>>,
-  games: Array<Maybe<Game>>,
   partySavedTracks: Array<Maybe<PartySavedTrack>>,
   users: Array<Maybe<User>>,
   parties: Array<Maybe<Party>>,
@@ -6728,10 +6023,8 @@ export type Query = {
   partyCart?: Maybe<PartyCart>,
   partyCartItem?: Maybe<PartyCartItem>,
   track?: Maybe<Track>,
-  image?: Maybe<Image>,
   artist?: Maybe<Artist>,
   location?: Maybe<Location>,
-  game?: Maybe<Game>,
   partySavedTrack?: Maybe<PartySavedTrack>,
   user?: Maybe<User>,
   party?: Maybe<Party>,
@@ -6744,10 +6037,8 @@ export type Query = {
   partyCartsConnection: PartyCartConnection,
   partyCartItemsConnection: PartyCartItemConnection,
   tracksConnection: TrackConnection,
-  imagesConnection: ImageConnection,
   artistsConnection: ArtistConnection,
   locationsConnection: LocationConnection,
-  gamesConnection: GameConnection,
   partySavedTracksConnection: PartySavedTrackConnection,
   usersConnection: UserConnection,
   partiesConnection: PartyConnection,
@@ -6855,17 +6146,6 @@ export type QueryTracksArgs = {
 };
 
 
-export type QueryImagesArgs = {
-  where?: Maybe<ImageWhereInput>,
-  orderBy?: Maybe<ImageOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
 export type QueryArtistsArgs = {
   where?: Maybe<ArtistWhereInput>,
   orderBy?: Maybe<ArtistOrderByInput>,
@@ -6880,17 +6160,6 @@ export type QueryArtistsArgs = {
 export type QueryLocationsArgs = {
   where?: Maybe<LocationWhereInput>,
   orderBy?: Maybe<LocationOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryGamesArgs = {
-  where?: Maybe<GameWhereInput>,
-  orderBy?: Maybe<GameOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -6983,11 +6252,6 @@ export type QueryTrackArgs = {
 };
 
 
-export type QueryImageArgs = {
-  where: ImageWhereUniqueInput
-};
-
-
 export type QueryArtistArgs = {
   where: ArtistWhereUniqueInput
 };
@@ -6995,11 +6259,6 @@ export type QueryArtistArgs = {
 
 export type QueryLocationArgs = {
   where: LocationWhereUniqueInput
-};
-
-
-export type QueryGameArgs = {
-  where: GameWhereUniqueInput
 };
 
 
@@ -7111,17 +6370,6 @@ export type QueryTracksConnectionArgs = {
 };
 
 
-export type QueryImagesConnectionArgs = {
-  where?: Maybe<ImageWhereInput>,
-  orderBy?: Maybe<ImageOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
 export type QueryArtistsConnectionArgs = {
   where?: Maybe<ArtistWhereInput>,
   orderBy?: Maybe<ArtistOrderByInput>,
@@ -7136,17 +6384,6 @@ export type QueryArtistsConnectionArgs = {
 export type QueryLocationsConnectionArgs = {
   where?: Maybe<LocationWhereInput>,
   orderBy?: Maybe<LocationOrderByInput>,
-  skip?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  first?: Maybe<Scalars['Int']>,
-  last?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryGamesConnectionArgs = {
-  where?: Maybe<GameWhereInput>,
-  orderBy?: Maybe<GameOrderByInput>,
   skip?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>,
   before?: Maybe<Scalars['String']>,
@@ -7273,10 +6510,8 @@ export type Subscription = {
   partyCart?: Maybe<PartyCartSubscriptionPayload>,
   partyCartItem?: Maybe<PartyCartItemSubscriptionPayload>,
   track?: Maybe<TrackSubscriptionPayload>,
-  image?: Maybe<ImageSubscriptionPayload>,
   artist?: Maybe<ArtistSubscriptionPayload>,
   location?: Maybe<LocationSubscriptionPayload>,
-  game?: Maybe<GameSubscriptionPayload>,
   partySavedTrack?: Maybe<PartySavedTrackSubscriptionPayload>,
   user?: Maybe<UserSubscriptionPayload>,
   party?: Maybe<PartySubscriptionPayload>,
@@ -7324,11 +6559,6 @@ export type SubscriptionTrackArgs = {
 };
 
 
-export type SubscriptionImageArgs = {
-  where?: Maybe<ImageSubscriptionWhereInput>
-};
-
-
 export type SubscriptionArtistArgs = {
   where?: Maybe<ArtistSubscriptionWhereInput>
 };
@@ -7336,11 +6566,6 @@ export type SubscriptionArtistArgs = {
 
 export type SubscriptionLocationArgs = {
   where?: Maybe<LocationSubscriptionWhereInput>
-};
-
-
-export type SubscriptionGameArgs = {
-  where?: Maybe<GameSubscriptionWhereInput>
 };
 
 
@@ -7612,6 +6837,9 @@ export type User = Node & {
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate: Scalars['Boolean'],
   cartItems?: Maybe<Array<PartyCartItem>>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes: Array<PushNotificationScope>,
   pendingInvitations?: Maybe<Array<User>>,
   status: UserStatus,
 };
@@ -7717,6 +6945,9 @@ export type UserCreateInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7760,6 +6991,10 @@ export type UserCreateOneWithoutPendingPartyInvitationsInput = {
   connect?: Maybe<UserWhereUniqueInput>,
 };
 
+export type UserCreatepushNotificationsScopesInput = {
+  set?: Maybe<Array<PushNotificationScope>>,
+};
+
 export type UserCreateWithoutCartItemsInput = {
   id?: Maybe<Scalars['ID']>,
   email: Scalars['String'],
@@ -7774,6 +7009,9 @@ export type UserCreateWithoutCartItemsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7795,6 +7033,9 @@ export type UserCreateWithoutChatsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7816,6 +7057,9 @@ export type UserCreateWithoutPartiesInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7837,6 +7081,9 @@ export type UserCreateWithoutPendingFriendInvitationsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationCreateManyWithoutUserInput>,
@@ -7858,6 +7105,9 @@ export type UserCreateWithoutPendingPartyInvitationsInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserCreatepushNotificationsScopesInput>,
   parties?: Maybe<PartyCreateManyWithoutMembersInput>,
   friends?: Maybe<UserCreateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationCreateManyWithoutUserInput>,
@@ -7910,7 +7160,11 @@ export enum UserOrderByInput {
   ResetTokenExpiryAsc = 'resetTokenExpiry_ASC',
   ResetTokenExpiryDesc = 'resetTokenExpiry_DESC',
   IsPrivateAsc = 'isPrivate_ASC',
-  IsPrivateDesc = 'isPrivate_DESC'
+  IsPrivateDesc = 'isPrivate_DESC',
+  WebPushNotificationTokenAsc = 'webPushNotificationToken_ASC',
+  WebPushNotificationTokenDesc = 'webPushNotificationToken_DESC',
+  AppPushNotificationTokenAsc = 'appPushNotificationToken_ASC',
+  AppPushNotificationTokenDesc = 'appPushNotificationToken_DESC'
 }
 
 export type UserPendingFriend = {
@@ -7936,6 +7190,9 @@ export type UserPreviousValues = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate: Scalars['Boolean'],
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes: Array<PushNotificationScope>,
 };
 
 export type UserScalarWhereInput = {
@@ -8234,6 +7491,60 @@ export type UserScalarWhereInput = {
   isPrivate?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
   isPrivate_not?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  webPushNotificationToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  webPushNotificationToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  webPushNotificationToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  webPushNotificationToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  webPushNotificationToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  webPushNotificationToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  webPushNotificationToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  webPushNotificationToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  webPushNotificationToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  webPushNotificationToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  webPushNotificationToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  webPushNotificationToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  webPushNotificationToken_not_ends_with?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  appPushNotificationToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  appPushNotificationToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  appPushNotificationToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  appPushNotificationToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  appPushNotificationToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  appPushNotificationToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  appPushNotificationToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  appPushNotificationToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  appPushNotificationToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  appPushNotificationToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  appPushNotificationToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  appPushNotificationToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  appPushNotificationToken_not_ends_with?: Maybe<Scalars['String']>,
 };
 
 export enum UserStatus {
@@ -8280,6 +7591,9 @@ export type UserUpdateDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8301,6 +7615,9 @@ export type UserUpdateInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8322,6 +7639,9 @@ export type UserUpdateManyDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
 };
 
 export type UserUpdateManyInput = {
@@ -8349,6 +7669,9 @@ export type UserUpdateManyMutationInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
 };
 
 export type UserUpdateManyWithoutChatsInput = {
@@ -8408,6 +7731,10 @@ export type UserUpdateOneRequiredWithoutPendingPartyInvitationsInput = {
   upsert?: Maybe<UserUpsertWithoutPendingPartyInvitationsInput>,
 };
 
+export type UserUpdatepushNotificationsScopesInput = {
+  set?: Maybe<Array<PushNotificationScope>>,
+};
+
 export type UserUpdateWithoutCartItemsDataInput = {
   email?: Maybe<Scalars['String']>,
   firstName?: Maybe<Scalars['String']>,
@@ -8421,6 +7748,9 @@ export type UserUpdateWithoutCartItemsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8441,6 +7771,9 @@ export type UserUpdateWithoutChatsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8461,6 +7794,9 @@ export type UserUpdateWithoutPartiesDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8481,6 +7817,9 @@ export type UserUpdateWithoutPendingFriendInvitationsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingPartyInvitations?: Maybe<PartyInvitationUpdateManyWithoutUserInput>,
@@ -8501,6 +7840,9 @@ export type UserUpdateWithoutPendingPartyInvitationsDataInput = {
   resetToken?: Maybe<Scalars['String']>,
   resetTokenExpiry?: Maybe<Scalars['DateTime']>,
   isPrivate?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  pushNotificationsScopes?: Maybe<UserUpdatepushNotificationsScopesInput>,
   parties?: Maybe<PartyUpdateManyWithoutMembersInput>,
   friends?: Maybe<UserUpdateManyInput>,
   pendingFriendInvitations?: Maybe<FriendInvitationUpdateManyWithoutUserInput>,
@@ -8857,6 +8199,60 @@ export type UserWhereInput = {
   isPrivate?: Maybe<Scalars['Boolean']>,
   /** All values that are not equal to given value. */
   isPrivate_not?: Maybe<Scalars['Boolean']>,
+  webPushNotificationToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  webPushNotificationToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  webPushNotificationToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  webPushNotificationToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  webPushNotificationToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  webPushNotificationToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  webPushNotificationToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  webPushNotificationToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  webPushNotificationToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  webPushNotificationToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  webPushNotificationToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  webPushNotificationToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  webPushNotificationToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  webPushNotificationToken_not_ends_with?: Maybe<Scalars['String']>,
+  appPushNotificationToken?: Maybe<Scalars['String']>,
+  /** All values that are not equal to given value. */
+  appPushNotificationToken_not?: Maybe<Scalars['String']>,
+  /** All values that are contained in given list. */
+  appPushNotificationToken_in?: Maybe<Array<Scalars['String']>>,
+  /** All values that are not contained in given list. */
+  appPushNotificationToken_not_in?: Maybe<Array<Scalars['String']>>,
+  /** All values less than the given value. */
+  appPushNotificationToken_lt?: Maybe<Scalars['String']>,
+  /** All values less than or equal the given value. */
+  appPushNotificationToken_lte?: Maybe<Scalars['String']>,
+  /** All values greater than the given value. */
+  appPushNotificationToken_gt?: Maybe<Scalars['String']>,
+  /** All values greater than or equal the given value. */
+  appPushNotificationToken_gte?: Maybe<Scalars['String']>,
+  /** All values containing the given string. */
+  appPushNotificationToken_contains?: Maybe<Scalars['String']>,
+  /** All values not containing the given string. */
+  appPushNotificationToken_not_contains?: Maybe<Scalars['String']>,
+  /** All values starting with the given string. */
+  appPushNotificationToken_starts_with?: Maybe<Scalars['String']>,
+  /** All values not starting with the given string. */
+  appPushNotificationToken_not_starts_with?: Maybe<Scalars['String']>,
+  /** All values ending with the given string. */
+  appPushNotificationToken_ends_with?: Maybe<Scalars['String']>,
+  /** All values not ending with the given string. */
+  appPushNotificationToken_not_ends_with?: Maybe<Scalars['String']>,
   parties_every?: Maybe<PartyWhereInput>,
   parties_some?: Maybe<PartyWhereInput>,
   parties_none?: Maybe<PartyWhereInput>,
@@ -9156,7 +8552,7 @@ export type MeQueryQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate'>
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'avatar' | 'isPrivate' | 'webPushNotificationToken' | 'pushNotificationsScopes'>
   )> }
 );
 
@@ -10034,6 +9430,25 @@ export type User_Privacy_FragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'isPrivate'>
 );
+
+export type User_UpdatePushNotificationsSettingsMutationVariables = {
+  data: UserUpdateInput,
+  where: UserWhereUniqueInput
+};
+
+
+export type User_UpdatePushNotificationsSettingsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type Push_Notifications_Settings_FragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'webPushNotificationToken' | 'pushNotificationsScopes'>
+);
 export type Party_FragmentLocation = Party_FragmentFragment['location'];
 export type Party_FragmentAuthor = Party_FragmentFragment['author'];
 export type Party_FragmentMembers = Party_FragmentFragment['members'][0];
@@ -10279,7 +9694,10 @@ export type User_UserInfoUpdateUser = User_UserInfoMutation['updateUser'];
 export const useUser_UserInfo = useUser_UserInfoMutation;
 export type User_UpdatePrivacyVariables = User_UpdatePrivacyMutationVariables;
 export type User_UpdatePrivacyUpdateUser = User_UpdatePrivacyMutation['updateUser'];
-export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;export const Party_FragmentFragmentDoc = gql`
+export const useUser_UpdatePrivacy = useUser_UpdatePrivacyMutation;
+export type User_UpdatePushNotificationsSettingsVariables = User_UpdatePushNotificationsSettingsMutationVariables;
+export type User_UpdatePushNotificationsSettingsUpdateUser = User_UpdatePushNotificationsSettingsMutation['updateUser'];
+export const useUser_UpdatePushNotificationsSettings = useUser_UpdatePushNotificationsSettingsMutation;export const Party_FragmentFragmentDoc = gql`
     fragment PARTY_FRAGMENT on Party {
   id
   title
@@ -10476,6 +9894,12 @@ export const Information_FragmentFragmentDoc = gql`
 export const User_Privacy_FragmentFragmentDoc = gql`
     fragment USER_PRIVACY_FRAGMENT on User {
   isPrivate
+}
+    `;
+export const Push_Notifications_Settings_FragmentFragmentDoc = gql`
+    fragment PUSH_NOTIFICATIONS_SETTINGS_FRAGMENT on User {
+  webPushNotificationToken
+  pushNotificationsScopes
 }
     `;
 export const SignupDocument = gql`
@@ -10771,6 +10195,8 @@ export const MeQueryDocument = gql`
     lastName
     avatar
     isPrivate
+    webPushNotificationToken
+    pushNotificationsScopes
   }
 }
     `;
@@ -11921,3 +11347,24 @@ export type User_UpdatePrivacyComponentProps = Omit<ApolloReactComponents.Mutati
 export type User_UpdatePrivacyMutationHookResult = ReturnType<typeof useUser_UpdatePrivacyMutation>;
 export type User_UpdatePrivacyMutationResult = ApolloReactCommon.MutationResult<User_UpdatePrivacyMutation>;
 export type User_UpdatePrivacyMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePrivacyMutation, User_UpdatePrivacyMutationVariables>;
+export const User_UpdatePushNotificationsSettingsDocument = gql`
+    mutation User_UpdatePushNotificationsSettings($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateUser(data: $data, where: $where) {
+    id
+  }
+}
+    `;
+export type User_UpdatePushNotificationsSettingsMutationFn = ApolloReactCommon.MutationFunction<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>;
+export type User_UpdatePushNotificationsSettingsComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>, 'mutation'>;
+
+    export const User_UpdatePushNotificationsSettingsComponent = (props: User_UpdatePushNotificationsSettingsComponentProps) => (
+      <ApolloReactComponents.Mutation<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables> mutation={User_UpdatePushNotificationsSettingsDocument} {...props} />
+    );
+    
+
+    export function useUser_UpdatePushNotificationsSettingsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>) {
+      return ApolloReactHooks.useMutation<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>(User_UpdatePushNotificationsSettingsDocument, baseOptions);
+    }
+export type User_UpdatePushNotificationsSettingsMutationHookResult = ReturnType<typeof useUser_UpdatePushNotificationsSettingsMutation>;
+export type User_UpdatePushNotificationsSettingsMutationResult = ApolloReactCommon.MutationResult<User_UpdatePushNotificationsSettingsMutation>;
+export type User_UpdatePushNotificationsSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<User_UpdatePushNotificationsSettingsMutation, User_UpdatePushNotificationsSettingsMutationVariables>;

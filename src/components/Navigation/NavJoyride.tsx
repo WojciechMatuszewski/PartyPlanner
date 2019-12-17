@@ -12,7 +12,6 @@ const steps: Step[] = [
     target: '.party-invitations',
     title: 'Party Invitations',
     disableBeacon: true,
-
     content: (
       <Typography.Paragraph>
         This widget will let you know if anyone has invited you to his party.
@@ -22,7 +21,7 @@ const steps: Step[] = [
   {
     target: '.friend-invitations',
     title: 'Friend Invitations',
-
+    disableBeacon: true,
     content: (
       <Typography.Paragraph>
         This widget will let you know if anyone invited you to be his friend.
@@ -33,10 +32,14 @@ const steps: Step[] = [
   {
     target: '.user-profile',
     title: 'Your Profile',
+    disableBeacon: true,
     content: (
       <Typography.Paragraph>
-        Here you can change information about you or{' '}
-        <Typography.Text strong={true}>your privacy settings</Typography.Text>.
+        Here you can change information about you,
+        <Typography.Text strong={true}>
+          your privacy settings and push notification settings
+        </Typography.Text>
+        .
       </Typography.Paragraph>
     )
   }
