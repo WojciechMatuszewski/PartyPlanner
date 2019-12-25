@@ -1,14 +1,12 @@
-import React from 'react';
-import { PartiesQueryParties, Party_FragmentMembers } from '@generated/graphql';
-
-import styled from '@emotion/styled';
-import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
-import { Icon, Tooltip } from 'antd';
-import { AvatarList } from 'ant-design-pro';
 import UserAvatar from '@components/User/UserDefaultAvatar';
-import { CalendarContext } from './UserCalendar';
+import styled from '@emotion/styled';
+import { PartiesQueryParties, Party_FragmentMembers } from '@generated/graphql';
 import { getCorrectTextFromPartyDates } from '@shared/graphqlUtils';
+import { FlexBoxVerticallyCenteredStyles } from '@shared/styles';
+import { AvatarList } from 'ant-design-pro';
+import { Icon, Tooltip } from 'antd';
 import Link from 'next/link';
+import React from 'react';
 
 const CalendarEventPopoverWrapper = styled.div<{ isInModal: boolean }>`
   width: ${props => (props.isInModal ? '100%' : '300px')};
@@ -70,8 +68,6 @@ interface Props {
   onPopoverClose?: VoidFunction;
 }
 const CalendarEventPopoverContent: React.FC<Props> = props => {
-  const { userId } = React.useContext(CalendarContext);
-
   const PartyMemberAvatar = (
     partyMember: Party_FragmentMembers,
     index: number
@@ -91,13 +87,6 @@ const CalendarEventPopoverContent: React.FC<Props> = props => {
   return (
     <CalendarEventPopoverWrapper isInModal={props.isInModal}>
       <CalendarEventPopoverToolbar>
-        {props.party.author.id == userId && (
-          <React.Fragment>
-            <Icon type="edit" />
-            <Icon type="delete" />
-          </React.Fragment>
-        )}
-        <Icon type="message" />
         {!props.isInModal && (
           <Icon type="close" onClick={props.onPopoverClose} />
         )}
