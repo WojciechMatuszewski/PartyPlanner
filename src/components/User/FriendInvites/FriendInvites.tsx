@@ -108,7 +108,7 @@ export default function FriendInvites({ userId }: Props) {
         </Typography.Paragraph>
       ),
       placement: 'bottomRight',
-      duration: 2
+      duration: 4
     });
   }
 

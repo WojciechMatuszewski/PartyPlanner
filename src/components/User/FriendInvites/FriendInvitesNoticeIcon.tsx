@@ -5,7 +5,7 @@ import { User_FriendInvitationsConnectionEdges } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
 import { NoticeIcon } from 'ant-design-pro';
 import { NoticeIconData } from 'ant-design-pro/lib/NoticeIcon/NoticeIconTab';
-import { Icon } from 'antd';
+import { Icon, Typography } from 'antd';
 import { noop } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -28,15 +28,30 @@ function createNoticeIconListItem(friendInvite: FriendInvite): NoticeIconData {
   const {
     node: { invitedBy }
   } = friendInvite;
+
+  const parsedNotificationDate = moment(friendInvite.node.createdAt).calendar();
+
   return {
     // this forces me to assert any
     friendInvite,
-    title: `${invitedBy.firstName} wants to be your friend!`,
-    description: `${invitedBy.firstName} ${invitedBy.lastName} have sent you a friend invite`,
-    avatar: <UserAvatar userData={invitedBy} />,
-    datetime: (
-      <p>{moment(friendInvite.node.createdAt).format('YYYY-MM-DD HH:mm')}</p>
-    )
+    datetime: parsedNotificationDate,
+    description: (
+      <React.Fragment>
+        <Typography.Text>
+          <Typography.Text strong={true}>
+            {invitedBy.firstName} {invitedBy.lastName}
+          </Typography.Text>{' '}
+          wants you to be his friend
+        </Typography.Text>
+        <Typography.Paragraph
+          style={{ color: '#1890ff', marginBottom: 0 }}
+          type="secondary"
+        >
+          Click on this notification for more actions.
+        </Typography.Paragraph>
+      </React.Fragment>
+    ),
+    avatar: <UserAvatar userData={invitedBy} />
   } as any;
 }
 

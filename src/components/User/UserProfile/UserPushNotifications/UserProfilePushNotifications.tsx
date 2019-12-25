@@ -46,11 +46,16 @@ export default function UserProfilePushNotifications({
   scopes,
   userId
 }: Props) {
-  const [rejectedPermissions, setRejectedPermissions] = React.useState(false);
+  const [
+    errorWhileRequestingPermissions,
+    setErrorWhileRequestingPermissions
+  ] = React.useState(false);
+
+  const [loadingPermissions, setLoadingPermissions] = React.useState(false);
 
   const [
     updatePushNotificationSettings,
-    { loading }
+    { loading: loadingUpdateSettings }
   ] = useUser_UpdatePushNotificationsSettings({
     onCompleted: () => message.success('Setting updated'),
     onError: () => message.error('Something went wrong, try again!')
@@ -63,26 +68,17 @@ export default function UserProfilePushNotifications({
     retryFirebaseLoading
   } = useFirebaseMessaging();
 
-  async function askForPermissions() {
-    try {
-      return await firebaseMessaging.getToken();
-    } catch (e) {
-      setRejectedPermissions(true);
-    }
-  }
-
-  async function handleSubmit(newScopes: PushNotificationScope[]) {
-    let currentNotificationToken = notificationsToken;
-
-    currentNotificationToken = await askForPermissions();
-
+  function updateSettings(
+    notificationToken: string,
+    newScopes: PushNotificationScope[]
+  ) {
     updatePushNotificationSettings({
       variables: {
         where: {
           id: userId
         },
         data: {
-          webPushNotificationToken: currentNotificationToken,
+          webPushNotificationToken: notificationToken,
           pushNotificationsScopes: { set: newScopes }
         }
       },
@@ -92,11 +88,27 @@ export default function UserProfilePushNotifications({
           id: `User:${userId}`,
           data: {
             __typename: 'User',
-            webPushNotificationToken: currentNotificationToken,
+            webPushNotificationToken: notificationToken,
             pushNotificationsScopes: newScopes
           }
         })
     });
+  }
+
+  async function handleSubmit(newScopes: PushNotificationScope[]) {
+    let currentNotificationToken = notificationsToken;
+
+    try {
+      setLoadingPermissions(true);
+      currentNotificationToken = await firebaseMessaging.getToken();
+    } catch (e) {
+      setErrorWhileRequestingPermissions(true);
+      return;
+    } finally {
+      setLoadingPermissions(false);
+    }
+
+    updateSettings(currentNotificationToken, newScopes);
   }
 
   if (timeoutWhileLoadingFirebase)
@@ -117,15 +129,15 @@ export default function UserProfilePushNotifications({
   return (
     <React.Fragment>
       <UserProfilePushNotificationsForm
-        loading={loading}
+        loading={loadingUpdateSettings || loadingPermissions}
         initialScopes={scopes}
         onSubmit={handleSubmit}
         key={`${scopes.join('_')}`}
       />
-      {rejectedPermissions && (
+      {errorWhileRequestingPermissions && (
         <Alert
           style={{ marginTop: 14 }}
-          message="To receive notifications you have to grant us permissions!"
+          message="Something went wrong, try again"
           showIcon={true}
           type="error"
         />

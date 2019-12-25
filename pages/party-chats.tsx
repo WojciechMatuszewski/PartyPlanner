@@ -157,6 +157,7 @@ UserChats.getInitialProps = async function(context): Promise<InjectedProps> {
     userHasToBe: 'authenticated',
     ctx: context
   });
+
   if (!userData || !userData.me) {
     return {
       me: null,

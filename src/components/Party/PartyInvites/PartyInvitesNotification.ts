@@ -24,10 +24,11 @@ export default function openPartyInvitationNotification(
     edge: PartyInvitationsConnectionQueryEdges;
   }) => void
 ) {
-  notification.open({
+  notification.info({
     ...createNotificationBody(subscriptionNode),
     key: subscriptionNode.id,
     placement: 'bottomRight',
+    duration: 4,
     onClick: () =>
       compose(
         closePartyInvitationNotification,
