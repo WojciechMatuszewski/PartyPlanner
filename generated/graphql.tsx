@@ -4548,8 +4548,8 @@ export type Query = {
   users: Array<Maybe<User>>,
   usersConnection: UserConnection,
   node?: Maybe<Node>,
-  hasChats: Scalars['Boolean'],
   authenticateParty: PartyAuthenticationResult,
+  hasChats: Scalars['Boolean'],
   hasParties: Scalars['Boolean'],
   canJoinParty?: Maybe<Scalars['Boolean']>,
   partyCartCost: Scalars['Float'],
@@ -4944,13 +4944,13 @@ export type QueryNodeArgs = {
 };
 
 
-export type QueryHasChatsArgs = {
-  where?: Maybe<ChatWhereInput>
+export type QueryAuthenticatePartyArgs = {
+  partyId: Scalars['ID']
 };
 
 
-export type QueryAuthenticatePartyArgs = {
-  partyId: Scalars['ID']
+export type QueryHasChatsArgs = {
+  where?: Maybe<ChatWhereInput>
 };
 
 
@@ -6501,7 +6501,7 @@ export type Party_Cart_Items_Connection_Node_FragmentFragment = (
   & Pick<PartyCartItem, 'id' | 'name' | 'price' | 'quantity' | 'status'>
   & { user: (
     { __typename?: 'User' }
-    & Pick<User, 'firstName' | 'lastName'>
+    & Pick<User, 'firstName' | 'lastName' | 'id'>
   ) }
 );
 
@@ -7320,6 +7320,19 @@ export type Party_UpdatePartyCartItemMutation = (
   )> }
 );
 
+export type Party_DeletePartyCartItemMutationVariables = {
+  where: PartyCartItemWhereUniqueInput
+};
+
+
+export type Party_DeletePartyCartItemMutation = (
+  { __typename?: 'Mutation' }
+  & { deletePartyCartItem: Maybe<(
+    { __typename?: 'PartyCartItem' }
+    & Pick<PartyCartItem, 'id'>
+  )> }
+);
+
 export type Party_CartCostQueryVariables = {
   id: Scalars['ID']
 };
@@ -7784,6 +7797,9 @@ export const useParty_CartItemsConnection = useParty_CartItemsConnectionQuery;
 export type Party_UpdatePartyCartItemVariables = Party_UpdatePartyCartItemMutationVariables;
 export type Party_UpdatePartyCartItemUpdatePartyCartItem = Party_UpdatePartyCartItemMutation['updatePartyCartItem'];
 export const useParty_UpdatePartyCartItem = useParty_UpdatePartyCartItemMutation;
+export type Party_DeletePartyCartItemVariables = Party_DeletePartyCartItemMutationVariables;
+export type Party_DeletePartyCartItemDeletePartyCartItem = Party_DeletePartyCartItemMutation['deletePartyCartItem'];
+export const useParty_DeletePartyCartItem = useParty_DeletePartyCartItemMutation;
 export type Party_CartCostVariables = Party_CartCostQueryVariables;
 export const useParty_CartCost = useParty_CartCostQuery;
 export type Party_DeletePartyVariables = Party_DeletePartyMutationVariables;
@@ -7970,6 +7986,7 @@ export const Party_Cart_Items_Connection_Node_FragmentFragmentDoc = gql`
   user {
     firstName
     lastName
+    id
   }
 }
     `;
@@ -9180,6 +9197,27 @@ export type Party_UpdatePartyCartItemComponentProps = Omit<ApolloReactComponents
 export type Party_UpdatePartyCartItemMutationHookResult = ReturnType<typeof useParty_UpdatePartyCartItemMutation>;
 export type Party_UpdatePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_UpdatePartyCartItemMutation>;
 export type Party_UpdatePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_UpdatePartyCartItemMutation, Party_UpdatePartyCartItemMutationVariables>;
+export const Party_DeletePartyCartItemDocument = gql`
+    mutation Party_DeletePartyCartItem($where: PartyCartItemWhereUniqueInput!) {
+  deletePartyCartItem(where: $where) {
+    id
+  }
+}
+    `;
+export type Party_DeletePartyCartItemMutationFn = ApolloReactCommon.MutationFunction<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables>;
+export type Party_DeletePartyCartItemComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables>, 'mutation'>;
+
+    export const Party_DeletePartyCartItemComponent = (props: Party_DeletePartyCartItemComponentProps) => (
+      <ApolloReactComponents.Mutation<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables> mutation={Party_DeletePartyCartItemDocument} {...props} />
+    );
+    
+
+    export function useParty_DeletePartyCartItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables>) {
+      return ApolloReactHooks.useMutation<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables>(Party_DeletePartyCartItemDocument, baseOptions);
+    }
+export type Party_DeletePartyCartItemMutationHookResult = ReturnType<typeof useParty_DeletePartyCartItemMutation>;
+export type Party_DeletePartyCartItemMutationResult = ApolloReactCommon.MutationResult<Party_DeletePartyCartItemMutation>;
+export type Party_DeletePartyCartItemMutationOptions = ApolloReactCommon.BaseMutationOptions<Party_DeletePartyCartItemMutation, Party_DeletePartyCartItemMutationVariables>;
 export const Party_CartCostDocument = gql`
     query Party_CartCost($id: ID!) {
   partyCartCost(id: $id)

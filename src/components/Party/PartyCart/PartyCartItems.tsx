@@ -10,7 +10,8 @@ import {
   useParty_CartItemsConnection,
   useParty_UpdatePartyCartItem,
   PartyCartItemStatus,
-  Party_CartCostQuery
+  Party_CartCostQuery,
+  useParty_DeletePartyCartItem
 } from '@generated/graphql';
 import { PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT } from '@graphql/fragments';
 import { DeepWithoutMaybe, isLoadingInitially } from '@shared/graphqlUtils';
@@ -19,6 +20,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { BehaviorSubject } from 'rxjs';
 import { PARTY_CART_COST_QUERY } from './PartyCartTop';
+import { MutationUpdaterFn } from 'apollo-client';
 
 const variablesSubject = new BehaviorSubject<
   Party_CartItemsConnectionVariables
@@ -79,12 +81,26 @@ export const UPDATE_PARTY_CART_ITEM_MUTATION = gql`
   }
 `;
 
+export const DELETE_PARTY_CART_ITEM_MUTATION = gql`
+  mutation Party_DeletePartyCartItem($where: PartyCartItemWhereUniqueInput!) {
+    deletePartyCartItem(where: $where) {
+      id
+    }
+  }
+`;
+
 export const PARTY_CART_ITEMS_PAGE_SIZE = 20;
 
 interface Props {
   cartId: string;
+  authenticatedUserId: string;
+  partyOwnerId: string;
 }
-export default function PartyCartItems({ cartId }: Props) {
+export default function PartyCartItems({
+  cartId,
+  authenticatedUserId,
+  partyOwnerId
+}: Props) {
   const lastUpdateCartItemPayload = React.useRef<
     Parameters<typeof handleCartItemUpdate>[0] | undefined
   >(undefined);
@@ -98,6 +114,13 @@ export default function PartyCartItems({ cartId }: Props) {
   const [userQuery, setUserQuery] = React.useState<string | undefined>(
     undefined
   );
+
+  function canDeleteCartItem(userWhoCreatedItemId: string) {
+    return (
+      userWhoCreatedItemId == authenticatedUserId ||
+      authenticatedUserId == partyOwnerId
+    );
+  }
 
   const {
     data,
@@ -125,6 +148,31 @@ export default function PartyCartItems({ cartId }: Props) {
     },
     notifyOnNetworkStatusChange: true
   });
+
+  const [
+    deleteCartItem,
+    { loading: deleteLoading }
+  ] = useParty_DeletePartyCartItem({
+    onCompleted: () => message.info('Item removed'),
+    onError: () => message.error('Something went wrong, try again!')
+  });
+
+  async function handleDeleteCartItem(cartItem: CartItem) {
+    await deleteCartItem({
+      variables: { where: { id: cartItem.node.id } },
+      update: (proxy, { data }) => {
+        if (!data || !data.deletePartyCartItem) return;
+        const preDeleteStatus = cartItem.node.status;
+        const itemCost = cartItem.node.price * cartItem.node.quantity;
+
+        if (preDeleteStatus == PartyCartItemStatus.Accepted) {
+          updateCartCostCache(proxy, cartId, prev => prev - itemCost);
+        }
+
+        refetch(variables);
+      }
+    });
+  }
 
   const [
     updateCartItem,
@@ -174,38 +222,23 @@ export default function PartyCartItems({ cartId }: Props) {
           const itemCost =
             data.updatePartyCartItem.price * data.updatePartyCartItem.quantity;
 
-          const cacheQueryBasePayload = {
-            query: PARTY_CART_COST_QUERY,
-            variables: { id: cartId }
-          };
-
-          const costQueryInCache = proxy.readQuery<Party_CartCostQuery>(
-            cacheQueryBasePayload
-          );
-
-          function writeNewCostToCache(newCost: number) {
-            proxy.writeQuery<Party_CartCostQuery>({
-              ...cacheQueryBasePayload,
-              data: {
-                __typename: 'Query',
-                partyCartCost: newCost
-              }
-            });
-          }
-
-          if (!costQueryInCache) return;
-
-          const { partyCartCost: costInCache } = costQueryInCache;
-
           if (prevUpdateStatus == PartyCartItemStatus.Pending) {
             if (newStatus == PartyCartItemStatus.Accepted) {
-              return writeNewCostToCache(costInCache + itemCost);
+              return updateCartCostCache(
+                proxy,
+                cartId,
+                prev => prev + itemCost
+              );
             }
           }
 
           if (prevUpdateStatus == PartyCartItemStatus.Rejected) {
             if (newStatus == PartyCartItemStatus.Accepted) {
-              return writeNewCostToCache(costInCache + itemCost);
+              return updateCartCostCache(
+                proxy,
+                cartId,
+                prev => prev + itemCost
+              );
             }
           }
 
@@ -214,7 +247,11 @@ export default function PartyCartItems({ cartId }: Props) {
               newStatus == PartyCartItemStatus.Pending ||
               newStatus == PartyCartItemStatus.Rejected
             ) {
-              return writeNewCostToCache(costInCache - itemCost);
+              return updateCartCostCache(
+                proxy,
+                cartId,
+                prev => prev - itemCost
+              );
             }
           }
         }
@@ -242,10 +279,12 @@ export default function PartyCartItems({ cartId }: Props) {
       onUserSearch={setUserQuery}
       cartItems={edges}
       numberOfCartItems={aggregate.count}
-      loading={loading || updateLoading}
+      loading={loading || updateLoading || deleteLoading}
       onCartItemUpdate={handleCartItemUpdate}
       onPageChange={handlePageChange}
       hasUserQueryApplied={userQuery != undefined}
+      onDeleteCartItem={handleDeleteCartItem}
+      canDeleteCartItem={canDeleteCartItem}
     />
   );
 
@@ -279,4 +318,31 @@ export default function PartyCartItems({ cartId }: Props) {
       });
     }
   }
+}
+
+function updateCartCostCache(
+  proxy: Parameters<MutationUpdaterFn>[0],
+  cartId: string,
+  costModifierFn: (currentConst: number) => number
+) {
+  const cacheQueryBasePayload = {
+    query: PARTY_CART_COST_QUERY,
+    variables: { id: cartId }
+  };
+
+  const costQueryInCache = proxy.readQuery<Party_CartCostQuery>(
+    cacheQueryBasePayload
+  );
+
+  if (!costQueryInCache) return;
+
+  const { partyCartCost: costInCache } = costQueryInCache;
+
+  proxy.writeQuery<Party_CartCostQuery>({
+    ...cacheQueryBasePayload,
+    data: {
+      __typename: 'Query',
+      partyCartCost: costModifierFn(costInCache)
+    }
+  });
 }
