@@ -1,6 +1,6 @@
 /* eslint-disable */
-importScripts('https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.6.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.5.2/firebase-messaging.js');
 
 firebase.initializeApp({
   apiKey: 'AIzaSyC1eMI4ek5ta6zGGRje6NPOnHdtwc-b3nQ',
@@ -9,7 +9,7 @@ firebase.initializeApp({
   projectId: 'partyplanner-c76a2',
   storageBucket: 'partyplanner-c76a2.appspot.com',
   messagingSenderId: '115558485597',
-  appId: '1:115558485597:web:6a85b1da3500e426a307b4'
+  appId: '1:115558485597:web:433f9af22f3b2402a307b4'
 });
 
 firebase.messaging();
