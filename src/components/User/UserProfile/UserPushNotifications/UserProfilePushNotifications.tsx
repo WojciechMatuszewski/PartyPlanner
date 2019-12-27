@@ -100,7 +100,7 @@ export default function UserProfilePushNotifications({
 
     try {
       setLoadingPermissions(true);
-      currentNotificationToken = await firebaseMessaging.getToken();
+      currentNotificationToken = await firebaseMessaging!.getToken();
     } catch (e) {
       setErrorWhileRequestingPermissions(true);
       return;
