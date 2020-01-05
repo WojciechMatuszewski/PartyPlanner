@@ -136,6 +136,7 @@ export const PARTY_CART_ITEMS_CONNECTION_NODE_FRAGMENT = gql`
     user {
       firstName
       lastName
+      id
     }
   }
 `;

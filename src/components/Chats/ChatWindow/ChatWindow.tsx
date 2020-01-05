@@ -145,7 +145,7 @@ const ChatWindow: React.FC = () => {
   if (currentlySelectedChatId == null)
     return (
       <EmptySection
-        image={'../static/group-chat.svg'}
+        image={'/static/group-chat.svg'}
         title="No chat selected!"
         description="Select chat"
         emotionCSS={css`

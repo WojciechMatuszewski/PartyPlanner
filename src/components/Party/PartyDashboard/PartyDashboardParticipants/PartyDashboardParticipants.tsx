@@ -97,7 +97,7 @@ export default function PartyDashboardParticipants(props: Props) {
             return (
               <Empty
                 style={{ margin: 0, padding: 24 }}
-                description="Could not find given user"
+                description="No data to display"
               />
             );
 

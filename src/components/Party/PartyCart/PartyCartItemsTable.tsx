@@ -3,7 +3,7 @@ import {
   PartyCartItemStatus
 } from '@generated/graphql';
 import { DeepWithoutMaybe } from '@shared/graphqlUtils';
-import { Button, Divider, Icon, Input, Table, Tag } from 'antd';
+import { Button, Divider, Icon, Input, Table, Tag, Typography } from 'antd';
 import React from 'react';
 import { PaginationConfig } from 'antd/lib/table';
 import { PARTY_CART_ITEMS_PAGE_SIZE } from './PartyCartItems';
@@ -44,6 +44,8 @@ interface Props {
     cartItem: CartItem;
   }) => void;
   onUserSearch: (query: string | undefined) => void;
+  onDeleteCartItem: (cartItem: CartItem) => void;
+  canDeleteCartItem: (userWhoCreatedItemId: string) => boolean;
   onStatusFilter: (statuses: PartyCartItemStatus[] | undefined) => void;
   numberOfCartItems: number;
   onPageChange: (newPage: number) => void;
@@ -57,7 +59,9 @@ export default function PartyCartItemsTable({
   onStatusFilter,
   numberOfCartItems,
   onPageChange,
-  hasUserQueryApplied
+  hasUserQueryApplied,
+  canDeleteCartItem,
+  onDeleteCartItem
 }: Props) {
   function handleTableChange(_: PaginationConfig, sorter: any) {
     if (!sorter.status) return;
@@ -128,12 +132,23 @@ export default function PartyCartItemsTable({
       <Table.Column<CartItem>
         title="Actions"
         key="actions"
-        render={(_, cartItem) =>
-          renderActions({
-            item: cartItem,
-            onAction: newStatus => onCartItemUpdate({ newStatus, cartItem })
-          })
-        }
+        render={(_, cartItem) => (
+          <React.Fragment>
+            {renderActions({
+              item: cartItem,
+              onAction: newStatus => onCartItemUpdate({ newStatus, cartItem })
+            })}
+
+            {canDeleteCartItem(cartItem.node.id) ? (
+              <React.Fragment>
+                <Divider type="vertical" />
+                <a onClick={() => onDeleteCartItem(cartItem)}>
+                  <Typography.Text type="danger">Delete</Typography.Text>
+                </a>
+              </React.Fragment>
+            ) : null}
+          </React.Fragment>
+        )}
       />
     </Table>
   );
