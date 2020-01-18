@@ -12,6 +12,7 @@ import withApollo from '@apolloSetup/withApollo';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import FirebaseService from '@services/FirebaseService';
 import registerServiceWorker from '@services/ServiceWorkerService';
+import MobileAppBanner from '@components/MobileAppBanner';
 
 Router.onRouteChangeStart = () => NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
@@ -103,6 +104,7 @@ class MyApp extends App<{
       <Container>
         <ApolloProvider client={apolloClient}>
           <ApolloHooksProvider client={apolloClient}>
+            <MobileAppBanner />
             <AppLayout
               withHeader={withHeader}
               hasSider={router && PAGES_WITH_SIDER.includes(router.pathname)}
