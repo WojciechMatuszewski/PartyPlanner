@@ -107,7 +107,11 @@ function UserPeoplePage({ me }: WithApolloAuthInjectedProps) {
 
   return (
     <PageContentWrapper>
-      <UserProvider userId={me.id}>
+      <UserProvider
+        userId={me.id}
+        firstName={me.firstName}
+        lastName={me.lastName}
+      >
         <UserPeopleProvider {...data.userFriends}>
           <UserPeople userId={me.id} />
         </UserPeopleProvider>

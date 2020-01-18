@@ -1,21 +1,11 @@
 /* eslint-disable */
-importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js');
+// importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js');
+// importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js');
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyC1eMI4ek5ta6zGGRje6NPOnHdtwc-b3nQ',
-  authDomain: 'partyplanner-c76a2.firebaseapp.com',
-  databaseURL: 'https://partyplanner-c76a2.firebaseio.com',
-  projectId: 'partyplanner-c76a2',
-  storageBucket: 'partyplanner-c76a2.appspot.com',
-  messagingSenderId: '115558485597',
-  appId: '1:115558485597:web:433f9af22f3b2402a307b4'
-});
+// firebase.messaging();
 
-firebase.messaging();
-
-// workbox.skipWaiting();
-// workbox.clientsClaim();
+// workbox.core.skipWaiting();
+// workbox.core.clientsClaim();
 
 // workbox.routing.registerRoute(
 //   /static\/.*\.(?:png|jpg|jpeg|svg)$/,

@@ -1,6 +1,8 @@
 import React from 'react';
 
-type ContextValue = { userId: string } | undefined;
+type ContextValue =
+  | { userId: string; firstName: string; lastName: string }
+  | undefined;
 
 const UserContext = React.createContext<ContextValue>(undefined);
 

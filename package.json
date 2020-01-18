@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Frontend of PartyPlanner",
   "main": "index.js",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
     "test": "jest",
     "dev": "next dev",

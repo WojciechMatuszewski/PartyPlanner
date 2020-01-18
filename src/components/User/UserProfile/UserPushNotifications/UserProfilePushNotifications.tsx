@@ -96,7 +96,7 @@ export default function UserProfilePushNotifications({
   }
 
   async function handleSubmit(newScopes: PushNotificationScope[]) {
-    let currentNotificationToken = notificationsToken;
+    let currentNotificationToken = notificationsToken as any;
 
     try {
       setLoadingPermissions(true);

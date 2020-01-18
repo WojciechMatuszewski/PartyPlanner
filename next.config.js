@@ -20,17 +20,6 @@ if (typeof require !== 'undefined') {
   require.extensions['.css'] = file => {};
 }
 
-const IMAGE_CACHE_CONFIG = {
-  urlPattern: /static\/.*\.(?:png|jpg|jpeg|svg)$/,
-  handler: 'CacheFirst',
-  options: {
-    cacheName: 'pp-images',
-    expiration: {
-      maxEntries: 20
-    }
-  }
-};
-
 const BASE_CONFIG = {
   target: 'serverless',
   generateInDevMode: false,
@@ -41,14 +30,6 @@ const BASE_CONFIG = {
     swSrc: 'static/service-worker.js',
     swDest: 'static/service-worker.js'
   },
-  // env: {
-  //   NEXT_PUBLIC_ENDPOINT_URL: process.env.NEXT_PUBLIC_ENDPOINT_URL,
-  //   NEXT_PUBLIC_GRAPHQL_ENDPOINT: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
-  //   NEXT_PUBLIC_WEBSOCKET_URL: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-  //   NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN_URL:
-  //     'https://accounts.spotify.com/api/token',
-  //   NEXT_PUBLIC_FRONTEND_URL: process.env.NOW_URL
-  // },
 
   webpack: config => {
     config.plugins = config.plugins || [];
@@ -89,21 +70,7 @@ const BASE_CONFIG = {
     );
     config.plugins.push(new webpackImport.IgnorePlugin(/\/iconv-loader$/));
     config.plugins.push(new Dotenv());
-    // config.resolve.alias = {
-    //   ...config.resolve.alias,
-    //   '@components': path.resolve(__dirname, 'src/components'),
-    //   '@generated': path.resolve(__dirname, 'generated'),
-    //   '@shared': path.resolve(__dirname, 'src/shared'),
-    //   '@pages': path.resolve(__dirname, 'pages'),
-    //   '@hooks': path.resolve(__dirname, 'src/hooks'),
-    //   '@apolloSetup': path.resolve(__dirname, 'apolloSetup'),
-    //   '@axios': path.resolve(__dirname, 'axios'),
-    //   '@customIcons': path.resolve(__dirname, 'custom-icons'),
-    //   '@graphql': path.resolve(__dirname, 'graphql'),
-    //   '@services': path.resolve(__dirname, 'src/services'),
-    //   '@guards': path.resolve(__dirname, 'src/guards'),
-    //   '@auth': path.resolve(__dirname, 'src/auth')
-    // };
+
     return config;
   }
 };
