@@ -109,6 +109,7 @@ function PlaylistCard({
               )}
             </PoseGroup>
             <img src={node.imageUrl} key={2} />
+            {!playlist.node.importable && <Icon type="lock" />}
           </React.Fragment>
         }
         actions={actions}
