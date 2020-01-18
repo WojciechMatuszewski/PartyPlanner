@@ -81,7 +81,7 @@ export default function ModalPlaylistItem({
 }: Props) {
   const handleChange = () => ifElse(Boolean, onSelect, onDeselect)(!isSelected);
 
-  const { imageUrl, name, user, importable } = playlist;
+  const { imageUrl, name, user } = playlist;
   return (
     <List.Item
       onClick={handleChange}
@@ -117,14 +117,7 @@ export default function ModalPlaylistItem({
             By: {user.firstName} {user.lastName}
           </Typography.Text>
         }
-        title={
-          <React.Fragment>
-            {!importable ? (
-              <Typography.Text mark={true}>Restricted</Typography.Text>
-            ) : null}{' '}
-            {name}
-          </React.Fragment>
-        }
+        title={name}
       />
     </List.Item>
   );

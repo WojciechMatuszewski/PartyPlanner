@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 import { useMeQuery } from '@generated/graphql';
 import { FlexWrapperFullHeightMinusHeaderStyles } from '@shared/styles';
 import React from 'react';
+import UserProfileGeneral from '@components/User/UserProfile/UserGeneral/UserProfileGeneral';
 
 const UserProfileWrapper = styled.div`
   margin: 0 auto;
@@ -55,6 +56,9 @@ const UserProfilePage = ({ me }: WithApolloAuthInjectedProps) => {
           lastName={lastName}
           userId={id}
         />
+      </UserProfileTile>
+      <UserProfileTile title="General">
+        <UserProfileGeneral />
       </UserProfileTile>
       <UserProfileTile title="Privacy">
         <UserProfilePrivacy

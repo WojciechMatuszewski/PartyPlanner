@@ -51,7 +51,9 @@ export default function PartyPlannerPlaylists({
     variables: {
       where: {
         parties_none: { id: partyId },
-        user: { id: userId },
+        parties_every: {
+          members_some: { id: userId }
+        },
         name_contains: filterQuery,
         importable: true
       }

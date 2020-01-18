@@ -37,6 +37,7 @@ export default function PlaylistEditForm({
 }: Props) {
   return (
     <Formik
+      key={`${node.importable}`}
       onSubmit={onSubmit}
       initialValues={{
         playlistName: node.name,
@@ -61,7 +62,7 @@ export default function PlaylistEditForm({
             <RestrictImportingWrapper>
               <Checkbox
                 name="notImportable"
-                value={values.notImportable}
+                checked={values.notImportable}
                 defaultChecked={values.notImportable}
                 onChange={handleChange('notImportable')}
               >

@@ -25,6 +25,7 @@ export const PARTY_EDIT_PLAYLIST_MUTATION = gql`
   ) {
     updatePlaylist(data: $data, where: $where) {
       id
+      importable
     }
   }
 `;

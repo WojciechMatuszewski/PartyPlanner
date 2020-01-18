@@ -28,33 +28,31 @@ const validationSchema = yup.object().shape<CombinePlaylistFormValues>({
   notImportable: yup.boolean()
 });
 
-function createInitialFormValues(restricted: boolean) {
+function createInitialFormValues() {
   return {
     name: undefined,
     shouldDeleteWhenCombining: false,
-    notImportable: restricted
+    notImportable: false
   };
 }
 
 interface Props {
   disabled: boolean;
   loading: boolean;
-  isRestricted?: boolean;
   onSubmit: (formValues: CombinePlaylistFormValues) => void;
 }
 export default function CombinePlaylistsForm({
   disabled,
   onSubmit,
-  loading,
-  isRestricted = false
+  loading
 }: Props) {
   return (
     <Formik
       onSubmit={onSubmit}
-      initialValues={createInitialFormValues(isRestricted)}
+      initialValues={createInitialFormValues()}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit, handleChange, setFieldValue, values }) => (
+      {({ handleSubmit, handleChange, values }) => (
         <AntdForm onSubmit={handleSubmit}>
           <Field
             component={FormikInputField}
@@ -68,25 +66,14 @@ export default function CombinePlaylistsForm({
             placeholder="Playlist name"
             id="name"
           />
-          <Form.Item
-            validateStatus={isRestricted ? 'warning' : undefined}
-            help={isRestricted ? 'Includes restricted playlist' : undefined}
-          >
+          <Form.Item style={{ marginBottom: 0 }}>
             <DeleteWhenCombiningCheckbox
               onChange={handleChange('shouldDeleteWhenCombining')}
-              isRestricted={isRestricted}
               checked={values.shouldDeleteWhenCombining}
-              onManuallySetValue={value =>
-                setFieldValue('shouldDeleteWhenCombining', value)
-              }
             />
             <RestrictToThisPartyCheckbox
               onChange={handleChange('notImportable')}
-              isRestricted={isRestricted}
               checked={values.notImportable}
-              onManuallySetValue={value =>
-                setFieldValue('notImportable', value)
-              }
             />
           </Form.Item>
           <Form.Item>
@@ -106,29 +93,20 @@ export default function CombinePlaylistsForm({
 }
 
 interface RestrictToThisPartyCheckboxProps {
-  isRestricted: boolean;
   onChange: (e: CheckboxChangeEvent) => void;
-  onManuallySetValue: (valueToSet: boolean) => void;
   checked: boolean;
 }
 function RestrictToThisPartyCheckbox({
-  isRestricted,
   onChange,
-  onManuallySetValue,
   checked
 }: RestrictToThisPartyCheckboxProps) {
-  React.useEffect(() => {
-    onManuallySetValue(isRestricted);
-  }, [isRestricted]);
-
   return (
     <RestrictImportingWrapper>
       <Checkbox
         name="notImportable"
-        disabled={isRestricted}
-        defaultChecked={isRestricted}
         onChange={onChange}
         checked={checked}
+        defaultChecked={false}
       >
         Restrict to this party
       </Checkbox>
@@ -138,29 +116,19 @@ function RestrictToThisPartyCheckbox({
 }
 
 interface DeleteWhenCombiningCheckboxProps {
-  isRestricted: boolean;
   onChange: (e: CheckboxChangeEvent) => void;
-  onManuallySetValue: (valueToSet: boolean) => void;
   checked: boolean;
 }
 function DeleteWhenCombiningCheckbox({
-  isRestricted,
   onChange,
-  onManuallySetValue,
   checked
 }: DeleteWhenCombiningCheckboxProps) {
-  React.useEffect(() => {
-    if (checked && isRestricted) {
-      onManuallySetValue(false);
-    }
-  }, [isRestricted, checked]);
-
   return (
     <Checkbox
       name="shouldDeleteWhenCombining"
       onChange={onChange}
-      disabled={isRestricted}
       checked={checked}
+      defaultChecked={false}
     >
       Delete playlist when combining
     </Checkbox>

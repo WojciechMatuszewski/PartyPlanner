@@ -284,9 +284,6 @@ export default function CombinePlaylists({
               loading={formLoading}
               onSubmit={handleFormSubmit}
               disabled={localPlaylists.length < 2}
-              isRestricted={localPlaylists.some(
-                playlist => !playlist.node.importable
-              )}
             />
             <CombinePlaylistsList
               isPlaylistStillSelected={isStillSelected}

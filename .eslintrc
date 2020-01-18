@@ -5,7 +5,8 @@
     "es6": true,
     "node": true,
     "jest": true,
-    "serviceworker": true
+    "serviceworker": true,
+    "browser": true
   },
   "parserOptions": {
     "ecmaFeatures": {
