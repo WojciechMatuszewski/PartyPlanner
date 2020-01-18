@@ -5,7 +5,7 @@ import { isBrowser } from '@apolloSetup/initApollo';
 import JoyrideTooltip from '@shared/JoyrideTooltip';
 import useLocalStorage from '@hooks/useLocalStorage';
 
-const STORAGE_KEY = 'JOYRIDE_SHOWN';
+export const ONBOARDING_LOCAL_STORAGE_KEY = 'JOYRIDE_SHOWN';
 
 const steps: Step[] = [
   {
@@ -49,11 +49,13 @@ function NavJoyride() {
   const [isSafe, setIsSafe] = React.useState(false);
   const isMounted = React.useRef(false);
 
-  const { retrieveFromStorage, saveToStorage } = useLocalStorage(STORAGE_KEY);
+  const { retrieveFromStorage, saveToStorage } = useLocalStorage(
+    ONBOARDING_LOCAL_STORAGE_KEY
+  );
 
   function shouldShowJoyride() {
     const valueFromStorage = retrieveFromStorage();
-    return !valueFromStorage;
+    return valueFromStorage == undefined || valueFromStorage != 'true';
   }
 
   React.useEffect(() => {

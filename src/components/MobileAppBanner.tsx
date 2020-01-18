@@ -74,7 +74,7 @@ export default function MobileAppBanner() {
     <BadgeWrapper
       ref={hrefRef}
       target="_blank"
-      href="https://play.google.com/store/apps/details?id=fun.partyplanner.partyplanner"
+      href={process.env.NEXT_PUBLIC_MOBILE_APP_URL}
       onClick={trapEvent(handleOnLinkClick)}
     >
       <img src="/static/google-play-badge.png" alt="Get it on Google Play" />
