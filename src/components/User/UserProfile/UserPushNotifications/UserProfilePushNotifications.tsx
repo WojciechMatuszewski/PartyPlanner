@@ -96,11 +96,11 @@ export default function UserProfilePushNotifications({
   }
 
   async function handleSubmit(newScopes: PushNotificationScope[]) {
-    let currentNotificationToken = notificationsToken;
+    let currentNotificationToken = notificationsToken as any;
 
     try {
       setLoadingPermissions(true);
-      currentNotificationToken = await firebaseMessaging.getToken();
+      currentNotificationToken = await firebaseMessaging!.getToken();
     } catch (e) {
       setErrorWhileRequestingPermissions(true);
       return;

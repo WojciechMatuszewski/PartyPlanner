@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUserFriends } from '../UserPeopleProvider';
-import { useUser } from '@components/User/UserProvider';
+
 import Friend from './Friend';
 import Pending from './Pending';
 import NonFriend from './NonFriend';
@@ -10,7 +10,6 @@ interface Props {
 }
 export default function UserPeopleControls({ controlsUserId }: Props) {
   const { current, pending } = useUserFriends();
-  const { userId } = useUser();
 
   const foundPendingForThatUser = pending.find(
     ({ invitedUserId }) => invitedUserId == controlsUserId
@@ -22,5 +21,5 @@ export default function UserPeopleControls({ controlsUserId }: Props) {
   if (foundPendingForThatUser)
     return <Pending pendingInvitationId={foundPendingForThatUser.id} />;
 
-  return <NonFriend invitedById={userId} invitingUserId={controlsUserId} />;
+  return <NonFriend invitingUserId={controlsUserId} />;
 }

@@ -8,6 +8,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 
 import { updateUserFriends } from './utils';
+import { useUser } from '@components/User/UserProvider';
 
 export const CREATE_FRIEND_INVITATION_MUTATION = gql`
   mutation User_CreateFriendInvitation($data: FriendInvitationCreateInput!) {
@@ -17,25 +18,26 @@ export const CREATE_FRIEND_INVITATION_MUTATION = gql`
   }
 `;
 
-function sendFriendInvitePushNotification(id: string) {
+function sendFriendInvitePushNotification(id: string, body: string) {
   sendPushNotification([id], [PushNotificationScope.FriendInvites], {
-    title: 'New friend invite!',
-    body: 'Someone invited you to his friends'
+    title: 'New friend invitation!',
+    body
   });
 }
 
 interface Props {
-  invitedById: string;
   invitingUserId: string;
 }
 
-export default function NonFriend({ invitedById, invitingUserId }: Props) {
+export default function NonFriend({ invitingUserId }: Props) {
+  const { userId, firstName, lastName } = useUser();
+
   const [createFriendInvitation, { loading }] = useUser_CreateFriendInvitation({
     variables: {
       data: {
         user: { connect: { id: invitingUserId } },
         invitedUserId: invitingUserId,
-        invitedBy: { connect: { id: invitedById } }
+        invitedBy: { connect: { id: userId } }
       }
     },
     onError: () =>
@@ -47,7 +49,10 @@ export default function NonFriend({ invitedById, invitingUserId }: Props) {
       }),
     onCompleted: () => {
       message.success('Friend invitation send!');
-      sendFriendInvitePushNotification(invitingUserId);
+      sendFriendInvitePushNotification(
+        invitingUserId,
+        `${firstName} ${lastName} invited you to be his friend!`
+      );
     },
     update: (proxy, { data }) => {
       if (!data || data.createFriendInvitation == undefined) return;

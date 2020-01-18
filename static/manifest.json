@@ -6,7 +6,7 @@
   "Scope": "/",
   "lang": "en",
   "name": "PartyPlanner",
-  "start_url": "localhost:3000/",
+  "start_url": "https://partyplanner.fun",
   "icons": [
     {
       "src": "./icons/icon-72x72.png",
