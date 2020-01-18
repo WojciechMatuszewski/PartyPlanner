@@ -37,6 +37,48 @@ const SelectingIndicator = styled(
 const CardStyles = css`
   .ant-card-cover {
     position: relative;
+    overflow: hidden;
+  }
+`;
+
+const CardNotImportableRibbon = styled.div`
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  &:before,
+  &:after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 5px solid #2980b9;
+    border-top-color: transparent;
+    border-right-color: transparent;
+  }
+  &:before {
+    top: 0;
+    left: 0;
+  }
+  &:after {
+    bottom: 0;
+    right: 0;
+  }
+  span {
+    position: absolute;
+    display: block;
+    width: 225px;
+    padding: 15px 0;
+    background: ${Colors.AntdWarning};
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    left: -25px;
+    top: 30px;
+    transform: rotate(45deg);
   }
 `;
 
@@ -109,7 +151,11 @@ function PlaylistCard({
               )}
             </PoseGroup>
             <img src={node.imageUrl} key={2} />
-            {!playlist.node.importable && <Icon type="lock" />}
+            {!playlist.node.importable && (
+              <CardNotImportableRibbon>
+                <Typography.Text>Restricted</Typography.Text>
+              </CardNotImportableRibbon>
+            )}
           </React.Fragment>
         }
         actions={actions}
