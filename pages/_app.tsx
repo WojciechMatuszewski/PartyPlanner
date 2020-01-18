@@ -104,7 +104,7 @@ class MyApp extends App<{
       <Container>
         <ApolloProvider client={apolloClient}>
           <ApolloHooksProvider client={apolloClient}>
-            <MobileAppBanner />
+            {withHeader && <MobileAppBanner />}
             <AppLayout
               withHeader={withHeader}
               hasSider={router && PAGES_WITH_SIDER.includes(router.pathname)}
