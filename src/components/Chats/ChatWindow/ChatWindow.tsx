@@ -173,7 +173,7 @@ const ChatWindow: React.FC = () => {
           description="Start a conversation now!"
           emotionCSS={css`
             ${FlexBoxFullCenteredStyles};
-            flex: 1;
+            height: calc(100% - 50px);
             img {
               max-width: calc(100% - 24px);
               max-height: calc(100% - 100px);
