@@ -27,7 +27,7 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/partyplannerio/pp-front#readme",
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.7.0",
+    "@graphql-codegen/cli": "^1.21.8",
     "@graphql-codegen/typescript": "^1.7.0",
     "@graphql-codegen/typescript-compatibility": "^1.7.0",
     "@graphql-codegen/typescript-operations": "^1.7.0",
