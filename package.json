@@ -27,7 +27,7 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/partyplannerio/pp-front#readme",
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.7.0",
+    "@graphql-codegen/cli": "^1.21.8",
     "@graphql-codegen/typescript": "^1.7.0",
     "@graphql-codegen/typescript-compatibility": "^1.7.0",
     "@graphql-codegen/typescript-operations": "^1.7.0",
@@ -125,7 +125,7 @@
     "hoist-non-react-statics": "^3.3.1",
     "isomorphic-unfetch": "^3.0.0",
     "less": "^3.10.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "mapbox-gl": "^0.54.1",
     "next": "8.0.4",
     "next-compose-plugins": "^2.2.0",
